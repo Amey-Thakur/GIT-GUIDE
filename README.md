@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/git-logo.svg" alt="Git" width="72">
+<a href="https://amey-thakur.github.io/GIT-GUIDE/"><img src="docs/assets/git-logo.svg" alt="Open Git Guide" width="72"></a>
 
 # Git Guide
 
