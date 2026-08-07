@@ -26,4 +26,4 @@ jobs:
       - name: Static pages match their data
         run: |
           python3 .github/scripts/build_pages.py
-          git diff --exit-code -- docs/errors.html
+          git diff --exit-code -- docs/errors.html docs/cheatsheet.html

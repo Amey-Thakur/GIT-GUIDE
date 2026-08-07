@@ -74,6 +74,46 @@ def answer_body(intent):
     return "\n".join(lines)
 
 
+def error_answer(err):
+    lines = [f"**Why it happens:** {err['why']}", ""]
+    if err.get("fix"):
+        lines.append("```sh")
+        lines.extend(c["c"] for c in err["fix"])
+        lines.append("```")
+        for c in err["fix"]:
+            if c["n"]:
+                lines.append(f"- {c['n']}")
+        lines.append("")
+    lines.append(f"Copy-ready version: {SITE}errors.html#{err['id']}")
+    return "\n".join(lines)
+
+
+def seed_errors(repo_id, category_id, done):
+    errors = json.loads((ROOT / "docs" / "data" / "errors.json").read_text(encoding="utf-8"))["errors"]
+    todo = [e for e in errors if not e.get("intent") and e["msg"] not in done]
+    print(f"{len(errors)} errors, {len(todo)} error discussions to create")
+    for n, e in enumerate(todo, 1):
+        body = (
+            "Git printed this error. What does it mean and what is the fix?\n\n"
+            f"Answered below. Live version with copy buttons: {SITE}errors.html#{e['id']}"
+        )
+        created = gql(
+            "mutation($r:ID!,$c:ID!,$t:String!,$b:String!){createDiscussion(input:{repositoryId:$r,categoryId:$c,title:$t,body:$b}){discussion{id}}}",
+            r=repo_id, c=category_id, t=e["msg"], b=body,
+        )
+        disc_id = created["data"]["createDiscussion"]["discussion"]["id"]
+        time.sleep(SLEEP)
+        comment = gql(
+            "mutation($d:ID!,$b:String!){addDiscussionComment(input:{discussionId:$d,body:$b}){comment{id}}}",
+            d=disc_id, b=error_answer(e),
+        )
+        comment_id = comment["data"]["addDiscussionComment"]["comment"]["id"]
+        time.sleep(SLEEP)
+        gql("mutation($i:ID!){markDiscussionCommentAsAnswer(input:{id:$i}){discussion{id}}}", i=comment_id)
+        time.sleep(SLEEP)
+        print(f"[{n}/{len(todo)}] {e['msg']}")
+
+
 def main():
     intents = json.loads((ROOT / "docs" / "data" / "intents.json").read_text(encoding="utf-8"))["intents"]
     repo_id, category_id = repo_and_category()
@@ -102,6 +142,7 @@ def main():
         gql("mutation($i:ID!){markDiscussionCommentAsAnswer(input:{id:$i}){discussion{id}}}", i=comment_id)
         time.sleep(SLEEP)
         print(f"[{n}/{len(todo)}] {intent['q']}")
+    seed_errors(repo_id, category_id, done)
     print("Discussions are in sync.")
 
 
