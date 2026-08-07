@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 OWNER, REPO = "Amey-Thakur", "GIT-GUIDE"
 SITE = "https://amey-thakur.github.io/GIT-GUIDE/"
-SLEEP = 1.2
+SLEEP = 3
 
 DANGER_LABEL = {"safe": "Safe", "history": "Rewrites history", "destructive": "Destructive"}
 
@@ -26,10 +26,18 @@ def gql(query, **variables):
     cmd = ["gh", "api", "graphql", "-f", f"query={query}"]
     for k, v in variables.items():
         cmd += ["-f", f"{k}={v}"]
-    out = subprocess.run(cmd, capture_output=True, text=True)
-    if out.returncode != 0:
-        raise RuntimeError(out.stderr.strip())
-    return json.loads(out.stdout)
+    for attempt in range(6):
+        out = subprocess.run(cmd, capture_output=True, text=True)
+        if out.returncode == 0:
+            return json.loads(out.stdout)
+        stderr = out.stderr.strip()
+        if "too quickly" in stderr or "rate limit" in stderr.lower():
+            wait = 30 * (attempt + 1)
+            print(f"  rate limited, waiting {wait}s")
+            time.sleep(wait)
+            continue
+        raise RuntimeError(stderr)
+    raise RuntimeError(f"still rate limited after retries: {stderr}")
 
 
 def repo_and_category():
