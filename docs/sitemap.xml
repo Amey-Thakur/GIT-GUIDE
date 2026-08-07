@@ -30,4 +30,14 @@
     <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
   </url>
+  <url>
+    <loc>https://amey-thakur.github.io/GIT-GUIDE/setup.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://amey-thakur.github.io/GIT-GUIDE/workflows.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
 </urlset>

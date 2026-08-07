@@ -1,0 +1,115 @@
+<!doctype html>
+<!--
+  File: workflows.html
+  Purpose: How individuals and teams actually run Git: solo, feature branch, fork, trunk-based, releases.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, GitHub Pages
+  Description: The five workflows that cover real work, each as a copy-ready command sequence, plus the rules that keep shared history safe. Host-neutral: identical on GitHub, GitLab, Bitbucket, and Azure DevOps.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git workflows: solo, feature branch, fork, trunk, releases | Git Guide</title>
+  <meta name="description" content="How teams actually use Git: the solo loop, feature branch flow, fork flow for open source, trunk-based development, and release management with tags and hotfixes. Copy-ready sequences.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/workflows.html">
+  <meta property="og:title" content="Git workflows: solo, feature branch, fork, trunk, releases">
+  <meta property="og:description" content="The five workflows that cover real work, with the rules that keep teams safe.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/workflows.html">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap head-row">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <div class="head-tools">
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+          <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Site">
+        <a href="./">Finder</a>
+        <a href="setup.html">Start</a>
+        <a href="learn.html">Learn</a>
+        <a href="fix.html">Fix</a>
+        <a href="errors.html">Errors</a>
+        <a href="github.html">GitHub</a>
+        <a href="workflows.html" aria-current="page">Workflows</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>How teams run Git.</h1>
+        <p class="lede">Five workflows cover almost all real work. Pick the one that matches your situation; they are identical on every host.</p>
+      </div>
+    </section>
+
+    <section class="chapter" aria-label="Workflows">
+      <div class="wrap">
+
+        <h2 id="solo">Working alone</h2>
+        <p>No branches required, no ceremony. Commit at every working state, push as your backup, tag what you might return to.</p>
+        <div class="cmd"><code>git add -A && git commit -m "&lt;message&gt;" && git push</code><button class="copy" data-cmd="git add -A && git commit -m &quot;<message>&quot; && git push" aria-label="Copy command">Copy</button></div>
+        <p class="note">The one habit worth adding even alone: branch before an experiment, so abandoning it is <code>git switch main</code> instead of an archaeology dig.</p>
+
+        <h2 id="feature-branch">Feature branch flow</h2>
+        <p>The default for teams everywhere. main stays releasable; every change arrives by pull request.</p>
+        <div class="cmd"><code>git switch main && git pull</code><button class="copy" data-cmd="git switch main && git pull" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git switch -c &lt;change-name&gt;</code><button class="copy" data-cmd="git switch -c <change-name>" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git push -u origin &lt;change-name&gt;</code><button class="copy" data-cmd="git push -u origin <change-name>" aria-label="Copy command">Copy</button></div>
+        <p class="note">Then open the pull request and let review and checks do their work; the <a href="github.html#pr-life">life of a pull request</a> walks it visually. Branch behind main? <a href="index.html#rebase-onto-main">Rebase onto main</a>. Merged? Delete the branch without sentiment.</p>
+
+        <h2 id="fork">Fork flow</h2>
+        <p>For repositories you do not have write access to, which is all of open source. Your fork is yours; the pull request crosses the boundary.</p>
+        <div class="cmd"><code>gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone</code><button class="copy" data-cmd="gh repo fork <owner>/<repo> --clone" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git switch -c &lt;change-name&gt;</code><button class="copy" data-cmd="git switch -c <change-name>" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git push -u origin &lt;change-name&gt; && gh pr create --fill</code><button class="copy" data-cmd="git push -u origin <change-name> && gh pr create --fill" aria-label="Copy command">Copy</button></div>
+        <p class="note"><a href="index.html#sync-fork">Sync the fork</a> before every new branch, or you will build on stale ground.</p>
+
+        <h2 id="trunk">Trunk-based development</h2>
+        <p>The high-velocity variant: branches live hours, not weeks. Small changes merge to main daily behind feature flags; long-lived branches and their merge agonies disappear. It demands discipline the tooling cannot supply: tiny PRs, fast review, and CI the team actually trusts.</p>
+        <div class="cmd"><code>git config --global pull.rebase true</code><button class="copy" data-cmd="git config --global pull.rebase true" aria-label="Copy command">Copy</button></div>
+        <p class="note">With everyone integrating constantly, rebase-by-default keeps history a straight line worth reading.</p>
+
+        <h2 id="releases">Releases and hotfixes</h2>
+        <p>A release is a tag; a hotfix is a branch from that tag.</p>
+        <div class="cmd"><code>git tag -a v2.1.0 -m "&lt;release note&gt;" && git push origin v2.1.0</code><button class="copy" data-cmd="git tag -a v2.1.0 -m &quot;<release note>&quot; && git push origin v2.1.0" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git switch -c hotfix-2.1.1 v2.1.0</code><button class="copy" data-cmd="git switch -c hotfix-2.1.1 v2.1.0" aria-label="Copy command">Copy</button></div>
+        <p class="note">Fix, tag v2.1.1, ship, then merge the hotfix back to main so the bug stays dead. <a href="index.html#cherry-pick">Cherry-pick</a> carries a main fix onto a release line when work happened in the other order.</p>
+
+        <h2 id="rules">The rules that keep teams safe</h2>
+        <p>Never rewrite a branch others build on; rewrite your own PR branches freely with <a href="index.html#force-push-safely">force-with-lease</a>, never with plain force. Pull with rebase so your local commits sit on top. Protect main so nothing lands without review and green checks. And when anything is unclear, <code>git status</code> first: it names the state you are in and, usually, the way out.</p>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="render.js"></script>
+</body>
+</html>

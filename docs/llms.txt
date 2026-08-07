@@ -22,6 +22,8 @@ License: MIT
 - [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html): every common Git error, decoded, statically rendered.
 - [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html): the GitHub chapter: pull requests, forks, Issues, Actions, releases, Pages, gh CLI, power moves.
 - [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html): the complete cheatsheet, one line per command, every platform and no platform.
+- [Start](https://amey-thakur.github.io/GIT-GUIDE/setup.html): zero to first push in six ordered steps.
+- [Workflows](https://amey-thakur.github.io/GIT-GUIDE/workflows.html): solo, feature branch, fork, trunk-based, and release workflows with the team-safety rules.
 
 ## Community
 

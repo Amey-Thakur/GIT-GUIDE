@@ -2322,6 +2322,275 @@
         }
       ],
       "seealso": ["commit-messages"]
+    },
+    {
+      "id": "submodule-add",
+      "q": "Add a submodule and clone a repo that has them",
+      "aka": ["git submodule", "nested repository", "clone with submodules", "submodule empty folder"],
+      "variants": [
+        {
+          "when": "Add one",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git submodule add <url> <path>", "n": "Pins another repository at an exact commit inside yours. Commit the .gitmodules file it creates." }
+          ],
+          "undo": "See the remove-a-submodule answer"
+        },
+        {
+          "when": "Clone a repo that uses them",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git clone --recurse-submodules <url>", "n": "Empty submodule folders after a plain clone are the classic symptom. Already cloned? git submodule update --init --recursive" }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["remove-submodule", "clone-repo"]
+    },
+    {
+      "id": "shallow-in-ci",
+      "q": "Shallow clones in CI, and getting full history back",
+      "aka": ["fetch-depth", "shallow clone", "unshallow", "ci cannot find tag"],
+      "variants": [
+        {
+          "when": "Why CI history looks wrong",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch --unshallow", "n": "CI systems clone with --depth 1 for speed, so describe, blame, and changelog tools see one commit. This restores everything. In GitHub Actions set fetch-depth: 0 on actions/checkout instead." }
+          ],
+          "undo": "Nothing to undo; the clone is simply complete now"
+        }
+      ],
+      "seealso": ["clone-repo", "describe-version"]
+    },
+    {
+      "id": "diff-word",
+      "q": "Diff by word instead of by line",
+      "aka": ["word diff", "prose diff", "markdown diff", "see small changes"],
+      "variants": [
+        {
+          "when": "Prose, docs, one-word edits",
+          "danger": "safe",
+          "cmds": [{ "c": "git diff --word-diff", "n": "Shows [-removed-]{+added+} inside the line instead of two full lines. Best diff view for markdown and text." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["what-changed"]
+    },
+    {
+      "id": "switch-orphan",
+      "q": "Start a branch with no history (orphan)",
+      "aka": ["empty branch", "orphan branch", "gh-pages branch", "branch without parent"],
+      "variants": [
+        {
+          "when": "A clean, unrelated line inside the same repo",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git switch --orphan <branch>", "n": "An empty branch with no parent commits: the classic setup for a gh-pages branch or a rewrite-from-scratch." }
+          ],
+          "undo": "git switch - returns; git branch -D <branch> removes it"
+        }
+      ],
+      "seealso": ["create-branch", "fresh-history"]
+    },
+    {
+      "id": "fresh-history",
+      "q": "Delete all history and start the repository fresh",
+      "aka": ["remove all commits", "reset history", "start over one commit", "squash everything"],
+      "variants": [
+        {
+          "when": "Keep the files, drop every commit",
+          "danger": "history",
+          "cmds": [
+            { "c": "git switch --orphan fresh", "n": "" },
+            { "c": "git add -A && git commit -m \"Initial commit\"", "n": "" },
+            { "c": "git branch -M fresh main", "n": "" },
+            { "c": "git push --force origin main", "n": "The old history is gone from the branch for everyone. Anything ever pushed may live on in forks and caches; secrets still require rotation." }
+          ],
+          "undo": "git reflog still holds the old main locally for about 90 days"
+        }
+      ],
+      "seealso": ["switch-orphan", "remove-secret-from-history"]
+    },
+    {
+      "id": "two-github-accounts",
+      "q": "Use two GitHub accounts on one machine",
+      "aka": ["work and personal github", "multiple ssh keys", "second account push", "ssh config host alias"],
+      "variants": [
+        {
+          "when": "Separate SSH keys per account",
+          "danger": "safe",
+          "cmds": [
+            { "c": "ssh-keygen -t ed25519 -f ~/.ssh/id_work -C \"<work email>\"", "n": "One key per account; add each public key to its own GitHub account." },
+            { "c": "printf \"Host github-work\\n  HostName github.com\\n  IdentityFile ~/.ssh/id_work\\n  IdentitiesOnly yes\\n\" >> ~/.ssh/config", "n": "" },
+            { "c": "git remote set-url origin git@github-work:<org>/<repo>.git", "n": "Repos using the github-work alias authenticate as the work account. Pair with per-folder identities so the commit email matches too." }
+          ],
+          "undo": "Remove the Host block and set the remote back to git@github.com"
+        }
+      ],
+      "seealso": ["multiple-identities", "ssh-key-github"]
+    },
+    {
+      "id": "create-pr-cli",
+      "q": "Create a pull request from the terminal",
+      "aka": ["open pr command line", "gh pr create", "merge request cli"],
+      "variants": [
+        {
+          "when": "On GitHub",
+          "danger": "safe",
+          "cmds": [
+            { "c": "gh pr create --fill", "n": "--fill takes title and body from your commits. Add --draft while work continues, --web to finish in the browser." }
+          ],
+          "undo": "gh pr close <number>"
+        },
+        {
+          "when": "On GitLab",
+          "danger": "safe",
+          "cmds": [{ "c": "git push -o merge_request.create -u origin <branch>", "n": "GitLab accepts push options; glab mr create works too." }],
+          "undo": "Close the merge request in the UI or with glab"
+        }
+      ],
+      "seealso": ["push-new-branch", "checkout-pr"]
+    },
+    {
+      "id": "proxy-setup",
+      "q": "Use Git behind a corporate proxy",
+      "aka": ["git proxy", "clone behind firewall", "corporate network git", "unset proxy"],
+      "variants": [
+        {
+          "when": "Set it",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global http.proxy http://<proxy-host>:<port>", "n": "IT provides the address. SSH on port 22 is often blocked on such networks; HTTPS remotes are the path of least pain." }],
+          "undo": "git config --global --unset http.proxy"
+        },
+        {
+          "when": "Git is broken after leaving that network",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global --unset http.proxy", "n": "A leftover proxy setting is a classic cause of Could not resolve host errors at home." }],
+          "undo": "Set it again when back on the corporate network"
+        }
+      ],
+      "seealso": ["https-vs-ssh"]
+    },
+    {
+      "id": "autocorrect",
+      "q": "Let Git fix mistyped commands",
+      "aka": ["git statsu", "typo commands", "autocorrect"],
+      "variants": [
+        {
+          "when": "Suggest and run after a pause",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global help.autocorrect prompt", "n": "git statsu now asks: run git status instead? A number like 10 runs it automatically after one second." }],
+          "undo": "git config --global --unset help.autocorrect"
+        }
+      ],
+      "seealso": ["git-aliases"]
+    },
+    {
+      "id": "filemode",
+      "q": "Stop Git seeing every file as changed (mode changes)",
+      "aka": ["old mode new mode", "filemode false", "permissions diff", "wsl all files modified"],
+      "variants": [
+        {
+          "when": "WSL, mounted drives, copied projects",
+          "danger": "safe",
+          "cmds": [{ "c": "git config core.fileMode false", "n": "The phantom changes are executable-bit flips from crossing filesystems. This tells Git to ignore permission-only changes in this repository." }],
+          "undo": "git config --unset core.fileMode"
+        }
+      ],
+      "seealso": ["dubious-ownership", "line-endings"]
+    },
+    {
+      "id": "clone-private-ci",
+      "q": "Clone a private repository in CI or a script",
+      "aka": ["clone with token", "ci authentication", "machine clone", "headless git auth"],
+      "variants": [
+        {
+          "when": "With a token over HTTPS",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git clone https://x-access-token:${TOKEN}@github.com/<owner>/<repo>.git", "n": "Use a fine-grained token with read-only contents permission, injected as a secret, never written into code. Inside GitHub Actions, actions/checkout already handles this." }
+          ],
+          "undo": "Revoke the token in settings; that is the point of tokens"
+        }
+      ],
+      "seealso": ["stop-password-prompts", "shallow-in-ci"]
+    },
+    {
+      "id": "list-tracked-files",
+      "q": "List every file Git tracks",
+      "aka": ["ls-files", "tracked files", "how many files in repo", "is this file tracked"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git ls-files", "n": "Every tracked path. Pipe to wc -l for a count; git ls-files <path> answers is-this-tracked." },
+            { "c": "git ls-files --others --exclude-standard", "n": "The opposite: untracked files that are not ignored." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["what-changed", "untrack-file"]
+    },
+    {
+      "id": "stash-branch",
+      "q": "Turn a stash into a branch",
+      "aka": ["stash to branch", "stash conflicts on pop", "promote stash"],
+      "variants": [
+        {
+          "when": "The stash no longer applies cleanly",
+          "danger": "safe",
+          "cmds": [{ "c": "git stash branch <branch> stash@{0}", "n": "Creates a branch at the commit the stash was made from and applies it there, where it always applies cleanly." }],
+          "undo": "git switch - and git branch -D <branch>; the stash is consumed on success"
+        }
+      ],
+      "seealso": ["stash", "recover-dropped-stash"]
+    },
+    {
+      "id": "rebase-exec",
+      "q": "Run tests on every commit of a branch",
+      "aka": ["rebase exec", "test each commit", "verify every commit builds"],
+      "variants": [
+        {
+          "when": "Prove each commit stands alone",
+          "danger": "history",
+          "cmds": [{ "c": "git rebase -i --exec \"npm test\" main", "n": "Replays each commit and runs the command after it; the rebase pauses on the exact commit that fails. The professional way to keep every commit green." }],
+          "undo": "git rebase --abort while paused, ORIG_HEAD after"
+        }
+      ],
+      "seealso": ["bisect", "rebase-onto-main"]
+    },
+    {
+      "id": "range-diff",
+      "q": "Compare a branch before and after a rebase",
+      "aka": ["range-diff", "what changed in my rebase", "compare patch series"],
+      "variants": [
+        {
+          "when": "Did the rebase change my actual changes?",
+          "danger": "safe",
+          "cmds": [{ "c": "git range-diff <old-tip>...<new-tip>", "n": "Pairs old and new versions of each commit and shows what differs. Find the old tip in git reflog. The reviewer's tool for force-pushed branches." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["undo-rebase", "force-push-safely"]
+    },
+    {
+      "id": "lfs-migrate",
+      "q": "Move existing large files into LFS",
+      "aka": ["lfs migrate", "convert repo to lfs", "retroactive lfs"],
+      "variants": [
+        {
+          "when": "The big files are already committed",
+          "danger": "history",
+          "cmds": [
+            { "c": "git lfs migrate import --include=\"*.psd\" --everything", "n": "Rewrites all history moving matching files into LFS pointers. Fresh clone, backup kept, then:" },
+            { "c": "git push --force-with-lease --all", "n": "Teammates re-clone, as after any history rewrite." }
+          ],
+          "undo": "Only your backup clone"
+        }
+      ],
+      "seealso": ["git-lfs", "shrink-repo"]
     }
   ]
 }

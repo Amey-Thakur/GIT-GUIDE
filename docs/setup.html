@@ -1,0 +1,116 @@
+<!doctype html>
+<!--
+  File: setup.html
+  Purpose: Start here: from nothing installed to your first push, in order, nothing skipped.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, GitHub Pages
+  Description: The beginner runway. Install, identity, SSH, first repository, the daily loop, and where to go when stuck. Every command copy-ready.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Set up Git from zero to first push | Git Guide</title>
+  <meta name="description" content="Install Git on Windows, macOS, or Linux, set your identity, create an SSH key, make your first repository, and learn the daily loop. Every step in order with copy-ready commands.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/setup.html">
+  <meta property="og:title" content="Set up Git from zero to first push">
+  <meta property="og:description" content="Install, identity, SSH, first repository, daily loop. In order, nothing skipped.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/setup.html">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap head-row">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <div class="head-tools">
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+          <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Site">
+        <a href="./">Finder</a>
+        <a href="setup.html" aria-current="page">Start</a>
+        <a href="learn.html">Learn</a>
+        <a href="fix.html">Fix</a>
+        <a href="errors.html">Errors</a>
+        <a href="github.html">GitHub</a>
+        <a href="workflows.html">Workflows</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>From zero to first push.</h1>
+        <p class="lede">Six steps, in order, nothing skipped. Twenty minutes from a bare machine to your work published.</p>
+      </div>
+    </section>
+
+    <section class="chapter" aria-label="Setup steps">
+      <div class="wrap">
+
+        <h2 id="install">1. Install Git</h2>
+        <div class="cmd"><code>winget install Git.Git</code><button class="copy" data-cmd="winget install Git.Git" aria-label="Copy command">Copy</button></div>
+        <p class="note">Windows. macOS: <code>brew install git</code> (or run <code>git</code> once and accept the tools prompt). Debian and Ubuntu: <code>sudo apt install git</code>. Confirm with <code>git --version</code>; anything 2.23 or newer is fine.</p>
+
+        <h2 id="identity">2. Tell Git who you are</h2>
+        <div class="cmd"><code>git config --global user.name "&lt;your name&gt;"</code><button class="copy" data-cmd="git config --global user.name &quot;<your name>&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git config --global user.email "&lt;your email&gt;"</code><button class="copy" data-cmd="git config --global user.email &quot;<your email>&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git config --global init.defaultBranch main</code><button class="copy" data-cmd="git config --global init.defaultBranch main" aria-label="Copy command">Copy</button></div>
+        <p class="note">Use the same email as your GitHub account, or your commits will not count on your profile.</p>
+
+        <h2 id="ssh">3. One key, every host</h2>
+        <div class="cmd"><code>ssh-keygen -t ed25519 -C "&lt;your email&gt;"</code><button class="copy" data-cmd="ssh-keygen -t ed25519 -C &quot;<your email>&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>cat ~/.ssh/id_ed25519.pub</code><button class="copy" data-cmd="cat ~/.ssh/id_ed25519.pub" aria-label="Copy command">Copy</button></div>
+        <p class="note">Copy the output into GitHub: Settings, SSH and GPG keys, New SSH key. The same public key works on GitLab, Bitbucket, and Azure DevOps. Test with <code>ssh -T git@github.com</code>; it should greet you by name.</p>
+
+        <h2 id="first-repo">4. Your first repository</h2>
+        <p>Joining something that exists:</p>
+        <div class="cmd"><code>git clone git@github.com:&lt;user&gt;/&lt;repo&gt;.git</code><button class="copy" data-cmd="git clone git@github.com:<user>/<repo>.git" aria-label="Copy command">Copy</button></div>
+        <p>Publishing something of yours:</p>
+        <div class="cmd"><code>git init -b main</code><button class="copy" data-cmd="git init -b main" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git add . && git commit -m "Initial commit"</code><button class="copy" data-cmd="git add . && git commit -m &quot;Initial commit&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh repo create &lt;name&gt; --public --source . --push</code><button class="copy" data-cmd="gh repo create <name> --public --source . --push" aria-label="Copy command">Copy</button></div>
+        <p class="note">The last command uses <a href="github.html#cli">GitHub CLI</a>. Without it: create an empty repository on the website, then <code>git remote add origin &lt;url&gt;</code> and <code>git push -u origin main</code>.</p>
+
+        <h2 id="loop">5. The loop you will run forever</h2>
+        <div class="cmd"><code>git status -sb</code><button class="copy" data-cmd="git status -sb" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git add &lt;file&gt;</code><button class="copy" data-cmd="git add <file>" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git commit -m "&lt;what and why&gt;"</code><button class="copy" data-cmd="git commit -m &quot;<what and why>&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git push</code><button class="copy" data-cmd="git push" aria-label="Copy command">Copy</button></div>
+        <p class="note">Edit, stage, commit, push. Everything else is a variation. <a href="learn.html">See what each step actually moves</a>, once, and the commands stop being magic words.</p>
+
+        <h2 id="stuck">6. When it goes wrong</h2>
+        <p>It will, for everyone, forever. That is what the rest of this guide is for: <a href="./">ask the finder</a> in plain language, <a href="fix.html">walk the rescue triage</a>, or <a href="errors.html">paste the exact error</a>. Nothing you can do as a beginner is unrecoverable if you stop and look before typing a command marked destructive.</p>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="render.js"></script>
+</body>
+</html>

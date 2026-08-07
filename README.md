@@ -34,6 +34,21 @@ This guide answers that, for everyone from a student's first push to an engineer
 
 <br>
 
+## Inside the guide
+
+| Page | What it does |
+| --- | --- |
+| [Finder](https://amey-thakur.github.io/GIT-GUIDE/) | Ask anything in plain language, or paste an error. Copy the answer. |
+| [Start](https://amey-thakur.github.io/GIT-GUIDE/setup.html) | Zero to first push in six ordered steps. |
+| [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html) | Interactive diagrams: where code lives, what each command moves, branches and HEAD. |
+| [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html) | A few questions, then the exact way out of any mess. |
+| [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html) | Git's real error messages, decoded, with fixes. |
+| [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html) | Pull requests, forks, Actions, releases, Pages, and the power moves, with the PR lifecycle as an interactive diagram. |
+| [Workflows](https://amey-thakur.github.io/GIT-GUIDE/workflows.html) | How individuals and teams actually run Git, solo to trunk-based. |
+| [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) | Every command worth knowing, one line each, danger-marked. |
+
+<br>
+
 ## Read the badge before you run the command
 
 Every answer carries one of three danger levels.
