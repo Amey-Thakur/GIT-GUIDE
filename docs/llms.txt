@@ -1,0 +1,22 @@
+# Git Guide
+
+> Every Git and GitHub answer in one place. Ask in plain language, paste an error, follow a rescue, or learn the model. Each answer gives exact commands, a danger level, and its own undo.
+
+Author: Amey Thakur (https://github.com/Amey-Thakur)
+Repository: https://github.com/Amey-Thakur/GIT-GUIDE
+Site: https://amey-thakur.github.io/GIT-GUIDE/
+License: MIT
+
+## Data
+
+- [intents.json](https://amey-thakur.github.io/GIT-GUIDE/data/intents.json): plain-language questions mapped to exact commands, with variants, danger levels, and undo for each.
+
+## Pages
+
+- [Finder](https://amey-thakur.github.io/GIT-GUIDE/): search any Git question, copy the answer.
+
+## Conventions
+
+- danger levels: "safe" (changes nothing you cannot get back), "history" (rewrites commit history), "destructive" (can lose work permanently).
+- every command entry includes an undo, or states that none exists.
+- commands are current Git (2.23+): switch and restore first, legacy forms noted.

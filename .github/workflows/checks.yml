@@ -1,0 +1,25 @@
+# File: checks.yml
+# Purpose: Run the data and house-style validation on every push and pull request.
+# Author: Amey Thakur
+# GitHub: https://github.com/Amey-Thakur
+# Tech: GitHub Actions, Python 3 on ubuntu-latest, actions pinned to commit SHAs
+# Description: Single job that checks out the repository and runs .github/scripts/validate.py. A red check means the data contract or house style is broken.
+# Date: 2026-08-07
+
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate data and house style
+        run: python3 .github/scripts/validate.py

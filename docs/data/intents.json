@@ -1,0 +1,991 @@
+{
+  "_file": "intents.json",
+  "_purpose": "Plain-language Git questions mapped to exact commands. Each variant states when it applies, how dangerous it is, and how to undo it.",
+  "_author": "Amey Thakur",
+  "_github": "https://github.com/Amey-Thakur",
+  "_tech": "JSON, consumed by app.js and served raw for scripts and AI agents",
+  "_description": "Seed set covers the highest-voted Git questions on Stack Overflow plus daily essentials. Modern commands (switch, restore) first, legacy forms noted.",
+  "_date": "2026-08-07",
+  "updated": "2026-08-07",
+  "danger_levels": {
+    "safe": "Changes nothing you cannot get back.",
+    "history": "Rewrites commit history. Coordinate before doing this to shared branches.",
+    "destructive": "Can lose work permanently. Read the note before running."
+  },
+  "intents": [
+    {
+      "id": "undo-last-commit",
+      "q": "Undo the last commit",
+      "aka": ["uncommit", "remove last commit", "cancel commit", "revert most recent commit", "delete last commit"],
+      "variants": [
+        {
+          "when": "Keep the work, remove only the commit",
+          "danger": "safe",
+          "cmds": [{ "c": "git reset --soft HEAD~1", "n": "The commit is gone. Your files and staging area are exactly as they were." }],
+          "undo": "git reset --soft HEAD@{1}"
+        },
+        {
+          "when": "Throw away the commit and the work in it",
+          "danger": "destructive",
+          "cmds": [{ "c": "git reset --hard HEAD~1", "n": "Deletes the commit and its changes from your working tree." }],
+          "undo": "git reflog, then git reset --hard <hash> of the lost commit"
+        },
+        {
+          "when": "Already pushed and others may have it",
+          "danger": "safe",
+          "cmds": [{ "c": "git revert HEAD", "n": "Adds a new commit that cancels the last one. History stays intact, nothing breaks for teammates." }],
+          "undo": "git revert the revert commit"
+        }
+      ],
+      "seealso": ["undo-git-add", "revert-to-commit", "edit-commit-message"]
+    },
+    {
+      "id": "undo-git-add",
+      "q": "Unstage a file (undo git add)",
+      "aka": ["unstage", "remove from staging", "undo add", "remove file from index"],
+      "variants": [
+        {
+          "when": "One file",
+          "danger": "safe",
+          "cmds": [{ "c": "git restore --staged <file>", "n": "The file leaves the staging area. Your edits stay in the file." }],
+          "undo": "git add <file>"
+        },
+        {
+          "when": "Everything you staged",
+          "danger": "safe",
+          "cmds": [{ "c": "git restore --staged .", "n": "Legacy form: git reset HEAD" }],
+          "undo": "git add ."
+        }
+      ],
+      "seealso": ["discard-changes", "undo-last-commit"]
+    },
+    {
+      "id": "delete-branch",
+      "q": "Delete a branch, locally and on the remote",
+      "aka": ["remove branch", "delete local branch", "delete remote branch", "drop branch"],
+      "variants": [
+        {
+          "when": "Local branch, already merged",
+          "danger": "safe",
+          "cmds": [{ "c": "git branch -d <branch>", "n": "Refuses if the branch has unmerged commits, which is the protection you want." }],
+          "undo": "git branch <branch> <hash> (find the hash with git reflog)"
+        },
+        {
+          "when": "Local branch, merged or not",
+          "danger": "destructive",
+          "cmds": [{ "c": "git branch -D <branch>", "n": "Deletes even with unmerged commits." }],
+          "undo": "git reflog, then git branch <branch> <hash>, within about 90 days"
+        },
+        {
+          "when": "On the remote",
+          "danger": "destructive",
+          "cmds": [{ "c": "git push origin --delete <branch>", "n": "Removes the branch for everyone." }],
+          "undo": "git push origin <hash>:refs/heads/<branch> if you still have the commit locally"
+        }
+      ],
+      "seealso": ["rename-branch", "create-branch"]
+    },
+    {
+      "id": "pull-vs-fetch",
+      "q": "git pull vs git fetch, the difference",
+      "aka": ["difference between pull and fetch", "what does fetch do", "what does pull do"],
+      "variants": [
+        {
+          "when": "You want to see what changed before touching your work",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch", "n": "Downloads new commits from the remote and stops. Your branches and files do not move." },
+            { "c": "git log HEAD..origin/<branch> --oneline", "n": "Shows what came in before you decide to merge it." }
+          ],
+          "undo": "Nothing to undo. fetch never touches your work."
+        },
+        {
+          "when": "You want the remote changes in your branch now",
+          "danger": "safe",
+          "cmds": [{ "c": "git pull", "n": "fetch plus merge in one step. Use git pull --rebase to replay your local commits on top instead of creating a merge commit." }],
+          "undo": "git reset --hard ORIG_HEAD (only if you had no uncommitted changes)"
+        }
+      ],
+      "seealso": ["update-branch", "reset-to-remote"]
+    },
+    {
+      "id": "rename-branch",
+      "q": "Rename a branch",
+      "aka": ["change branch name", "rename local branch", "rename remote branch"],
+      "variants": [
+        {
+          "when": "Local only",
+          "danger": "safe",
+          "cmds": [{ "c": "git branch -m <old> <new>", "n": "From the branch itself: git branch -m <new>" }],
+          "undo": "git branch -m <new> <old>"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "history",
+          "cmds": [
+            { "c": "git branch -m <old> <new>", "n": "Rename locally first." },
+            { "c": "git push -u origin <new>", "n": "Publish the new name and track it." },
+            { "c": "git push origin --delete <old>", "n": "Remove the old name. Tell teammates: they run git fetch --prune." }
+          ],
+          "undo": "Repeat the three steps with the names swapped"
+        }
+      ],
+      "seealso": ["delete-branch", "push-new-branch"]
+    },
+    {
+      "id": "overwrite-local",
+      "q": "Force pull: make my copy exactly match the remote",
+      "aka": ["force pull", "overwrite local files", "discard everything local", "reset to remote", "local changes would be overwritten"],
+      "variants": [
+        {
+          "when": "Discard local commits and edits on this branch",
+          "danger": "destructive",
+          "cmds": [
+            { "c": "git fetch origin", "n": "Get the remote state first." },
+            { "c": "git reset --hard origin/<branch>", "n": "Your branch now matches the remote exactly. Local commits and edits to tracked files are gone." }
+          ],
+          "undo": "git reflog, then git reset --hard <hash> of your old state"
+        },
+        {
+          "when": "Keep your edits, just in case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git stash -u", "n": "Saves tracked and untracked changes to the stash first." },
+            { "c": "git fetch origin", "n": "" },
+            { "c": "git reset --hard origin/<branch>", "n": "Recover the saved work later with git stash pop." }
+          ],
+          "undo": "git stash pop restores what you set aside"
+        }
+      ],
+      "seealso": ["stash", "remove-untracked"]
+    },
+    {
+      "id": "checkout-remote-branch",
+      "q": "Check out a branch that exists on the remote",
+      "aka": ["switch to remote branch", "get remote branch", "track remote branch", "checkout origin branch"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch", "n": "Make sure you know about it." },
+            { "c": "git switch <branch>", "n": "Creates a local branch tracking origin/<branch> automatically. Legacy form: git checkout -t origin/<branch>" }
+          ],
+          "undo": "git switch - returns to your previous branch"
+        }
+      ],
+      "seealso": ["clone-all-branches", "create-branch"]
+    },
+    {
+      "id": "untrack-file",
+      "q": "Make Git forget a tracked file that is now in .gitignore",
+      "aka": ["gitignore not working", "stop tracking file", "remove from repo keep on disk", "untrack"],
+      "variants": [
+        {
+          "when": "One file",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git rm --cached <file>", "n": "Stops tracking. The file stays on your disk. .gitignore only affects untracked files, which is why ignoring it was not enough." },
+            { "c": "git commit -m \"Stop tracking <file>\"", "n": "Note: the file is deleted for others when they pull, and it remains in old history." }
+          ],
+          "undo": "git add <file> before committing, or git revert afterwards"
+        },
+        {
+          "when": "A whole folder",
+          "danger": "safe",
+          "cmds": [{ "c": "git rm -r --cached <folder>", "n": "Then commit as above." }],
+          "undo": "git add <folder> before committing"
+        }
+      ],
+      "seealso": ["ignore-files", "remove-untracked"]
+    },
+    {
+      "id": "remove-untracked",
+      "q": "Delete untracked files from the working tree",
+      "aka": ["clean untracked", "remove new files", "git clean", "delete files not in repo"],
+      "variants": [
+        {
+          "when": "Always preview first",
+          "danger": "safe",
+          "cmds": [{ "c": "git clean -nd", "n": "Lists what would be deleted. Nothing happens yet." }],
+          "undo": "Nothing to undo. This only prints."
+        },
+        {
+          "when": "Actually delete",
+          "danger": "destructive",
+          "cmds": [{ "c": "git clean -fd", "n": "Deletes untracked files and folders. Add -x to also delete ignored files (build output, .env). There is no reflog for untracked files." }],
+          "undo": "None. This is why you run the preview first."
+        }
+      ],
+      "seealso": ["untrack-file", "discard-changes"]
+    },
+    {
+      "id": "edit-commit-message",
+      "q": "Change a commit message",
+      "aka": ["amend message", "fix commit message", "reword commit", "modify unpushed commit message"],
+      "variants": [
+        {
+          "when": "Last commit, not pushed",
+          "danger": "safe",
+          "cmds": [{ "c": "git commit --amend -m \"<new message>\"", "n": "Drop the -m flag to write it in your editor." }],
+          "undo": "git commit --amend -m \"<old message>\" again"
+        },
+        {
+          "when": "Last commit, already pushed",
+          "danger": "history",
+          "cmds": [
+            { "c": "git commit --amend -m \"<new message>\"", "n": "" },
+            { "c": "git push --force-with-lease", "n": "Rewrites the remote commit. force-with-lease aborts if someone pushed meanwhile, unlike plain --force." }
+          ],
+          "undo": "git reflog to find the old commit, then amend back and force-with-lease again"
+        },
+        {
+          "when": "An older commit",
+          "danger": "history",
+          "cmds": [{ "c": "git rebase -i <hash>^", "n": "Change pick to reword on the commit's line, save, write the new message." }],
+          "undo": "git reset --hard ORIG_HEAD right after the rebase"
+        }
+      ],
+      "seealso": ["add-to-last-commit", "squash-commits"]
+    },
+    {
+      "id": "revert-to-commit",
+      "q": "Go back to a previous commit",
+      "aka": ["revert repository", "restore old version", "rollback", "return to earlier commit", "time travel"],
+      "variants": [
+        {
+          "when": "Just look around, change nothing",
+          "danger": "safe",
+          "cmds": [{ "c": "git switch --detach <hash>", "n": "You are viewing the old state. Return with git switch -" }],
+          "undo": "git switch -"
+        },
+        {
+          "when": "Undo pushed commits without rewriting history",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git revert --no-commit <hash>..HEAD", "n": "Stages the exact undo of everything after <hash>." },
+            { "c": "git commit -m \"Revert to <hash>\"", "n": "One clean commit that returns the project to that state." }
+          ],
+          "undo": "git revert that revert commit"
+        },
+        {
+          "when": "Erase everything after a commit, not pushed",
+          "danger": "destructive",
+          "cmds": [{ "c": "git reset --hard <hash>", "n": "The later commits and any uncommitted work are gone from your copy." }],
+          "undo": "git reflog, then git reset --hard <hash> of the state you left"
+        }
+      ],
+      "seealso": ["undo-last-commit", "restore-file"]
+    },
+    {
+      "id": "change-remote-url",
+      "q": "Change the remote URL",
+      "aka": ["set-url", "switch remote", "https to ssh", "update origin", "change origin url"],
+      "variants": [
+        {
+          "when": "Point origin somewhere else",
+          "danger": "safe",
+          "cmds": [{ "c": "git remote set-url origin <url>", "n": "Works for moving between HTTPS and SSH forms of the same repo too." }],
+          "undo": "git remote set-url origin <old-url>"
+        }
+      ],
+      "seealso": ["find-remote-url", "upload-existing-project"]
+    },
+    {
+      "id": "move-commits-to-branch",
+      "q": "Move recent commits to a new branch",
+      "aka": ["committed to wrong branch", "move commits off main", "commits on wrong branch"],
+      "variants": [
+        {
+          "when": "The commits are not pushed",
+          "danger": "history",
+          "cmds": [
+            { "c": "git branch <new-branch>", "n": "The new branch now holds the commits. Your current branch still points at them too." },
+            { "c": "git reset --hard HEAD~<n>", "n": "Move the current branch back n commits. Commit or stash anything uncommitted first." },
+            { "c": "git switch <new-branch>", "n": "Continue working where the commits live." }
+          ],
+          "undo": "git reflog on the original branch, then git reset --hard <hash>"
+        }
+      ],
+      "seealso": ["cherry-pick", "undo-last-commit"]
+    },
+    {
+      "id": "discard-changes",
+      "q": "Discard uncommitted changes",
+      "aka": ["throw away changes", "undo local edits", "restore file to last commit", "discard unstaged"],
+      "variants": [
+        {
+          "when": "One file",
+          "danger": "destructive",
+          "cmds": [{ "c": "git restore <file>", "n": "The file returns to its last committed state. Legacy form: git checkout -- <file>" }],
+          "undo": "None. The edits were never committed, so Git has no copy."
+        },
+        {
+          "when": "Every tracked file",
+          "danger": "destructive",
+          "cmds": [{ "c": "git restore .", "n": "Untracked files are not touched. Use git clean for those." }],
+          "undo": "None. Stash instead if you are not sure: git stash"
+        }
+      ],
+      "seealso": ["stash", "remove-untracked", "undo-git-add"]
+    },
+    {
+      "id": "reset-to-remote",
+      "q": "Reset a branch to exactly match the remote",
+      "aka": ["local branch same as remote", "match origin", "sync with remote discard local"],
+      "variants": [
+        {
+          "when": "Discard local commits on this branch",
+          "danger": "destructive",
+          "cmds": [
+            { "c": "git fetch origin", "n": "" },
+            { "c": "git reset --hard origin/<branch>", "n": "Add git clean -fd after it if you also want untracked files gone." }
+          ],
+          "undo": "git reflog, then git reset --hard <hash> of your old state"
+        }
+      ],
+      "seealso": ["overwrite-local", "update-branch"]
+    },
+    {
+      "id": "restore-file",
+      "q": "Restore a file from an older commit",
+      "aka": ["get old version of file", "revert single file", "file from previous commit"],
+      "variants": [
+        {
+          "when": "Bring the old version into your working tree",
+          "danger": "destructive",
+          "cmds": [{ "c": "git restore --source=<hash> <file>", "n": "Overwrites the current file. Legacy form: git checkout <hash> -- <file>" }],
+          "undo": "git restore <file> returns to the committed version, but uncommitted edits are lost"
+        },
+        {
+          "when": "Just view it, touch nothing",
+          "danger": "safe",
+          "cmds": [{ "c": "git show <hash>:<path/to/file>", "n": "Prints that version to the terminal. Redirect with > to save a copy." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["revert-to-commit", "file-history"]
+    },
+    {
+      "id": "squash-commits",
+      "q": "Squash the last N commits into one",
+      "aka": ["combine commits", "merge commits together", "clean up commits before pr"],
+      "variants": [
+        {
+          "when": "No editor, one clean commit",
+          "danger": "history",
+          "cmds": [
+            { "c": "git reset --soft HEAD~<n>", "n": "The commits vanish; all their changes are staged." },
+            { "c": "git commit -m \"<message>\"", "n": "One commit now holds the work of n." }
+          ],
+          "undo": "git reset --soft HEAD@{2} (check git reflog for the right step)"
+        },
+        {
+          "when": "Pick and choose interactively",
+          "danger": "history",
+          "cmds": [{ "c": "git rebase -i HEAD~<n>", "n": "Keep the first line as pick, change the rest to squash or fixup, save." }],
+          "undo": "git reset --hard ORIG_HEAD right after"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "history",
+          "cmds": [{ "c": "git push --force-with-lease", "n": "After either method above. Only on branches where teammates expect rewrites, like your own PR branch." }],
+          "undo": "git reflog locally still has the pre-squash state"
+        }
+      ],
+      "seealso": ["edit-commit-message", "undo-rebase"]
+    },
+    {
+      "id": "push-new-branch",
+      "q": "Push a new local branch and track it",
+      "aka": ["publish branch", "push branch first time", "set upstream", "no upstream branch"],
+      "variants": [
+        {
+          "when": "First push of the branch",
+          "danger": "safe",
+          "cmds": [{ "c": "git push -u origin <branch>", "n": "-u links local and remote so plain git push and git pull work from now on." }],
+          "undo": "git push origin --delete <branch> removes it from the remote"
+        }
+      ],
+      "seealso": ["create-branch", "delete-branch"]
+    },
+    {
+      "id": "find-remote-url",
+      "q": "Find where this repository was cloned from",
+      "aka": ["show remote url", "what is origin", "remote address", "list remotes"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git remote -v", "n": "Shows every remote with its fetch and push URLs." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["change-remote-url"]
+    },
+    {
+      "id": "empty-directory",
+      "q": "Add an empty directory to the repository",
+      "aka": ["commit empty folder", "keep folder", "gitkeep"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "touch <folder>/.gitkeep", "n": "Git tracks files, never directories, so the folder needs one file. .gitkeep is a convention, not a Git feature; any file works." }],
+          "undo": "git rm <folder>/.gitkeep"
+        }
+      ],
+      "seealso": ["ignore-files"]
+    },
+    {
+      "id": "merge-conflict",
+      "q": "Resolve a merge conflict",
+      "aka": ["fix conflicts", "conflict markers", "both modified", "merge failed"],
+      "variants": [
+        {
+          "when": "Work through it",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git status", "n": "Lists the conflicted files under Unmerged paths." },
+            { "c": "git diff", "n": "Shows the conflicting regions between <<<<<<< and >>>>>>> markers. Edit each file to the final text and delete the markers." },
+            { "c": "git add <file>", "n": "Marks each file resolved." },
+            { "c": "git commit", "n": "Completes the merge. During a rebase, run git rebase --continue instead." }
+          ],
+          "undo": "git merge --abort or git rebase --abort at any point before the final step"
+        },
+        {
+          "when": "Take one side wholesale for a file",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git checkout --ours <file>", "n": "Keeps your side. Use --theirs for the incoming side. Then git add <file>." }
+          ],
+          "undo": "Re-edit the file before git add; nothing is final until the merge commit"
+        }
+      ],
+      "seealso": ["undo-merge", "update-branch"]
+    },
+    {
+      "id": "delete-tag",
+      "q": "Delete a tag, locally and on the remote",
+      "aka": ["remove tag", "delete remote tag", "untag"],
+      "variants": [
+        {
+          "when": "Both places",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git tag -d <tag>", "n": "Local." },
+            { "c": "git push origin --delete <tag>", "n": "Remote. Anyone who fetched the tag keeps it until they delete it too." }
+          ],
+          "undo": "git tag <tag> <hash> and push it again"
+        }
+      ],
+      "seealso": ["tag-release"]
+    },
+    {
+      "id": "undo-merge",
+      "q": "Undo a merge",
+      "aka": ["abort merge", "cancel merge", "revert merge commit"],
+      "variants": [
+        {
+          "when": "Mid-merge, conflicts everywhere",
+          "danger": "safe",
+          "cmds": [{ "c": "git merge --abort", "n": "Returns to the state before the merge started." }],
+          "undo": "Run the merge again"
+        },
+        {
+          "when": "Merged, not pushed",
+          "danger": "destructive",
+          "cmds": [{ "c": "git reset --hard ORIG_HEAD", "n": "ORIG_HEAD is where you stood before the merge. Uncommitted changes are lost." }],
+          "undo": "git reflog, then git reset --hard <hash> of the merge"
+        },
+        {
+          "when": "Merged and pushed",
+          "danger": "safe",
+          "cmds": [{ "c": "git revert -m 1 <merge-hash>", "n": "-m 1 keeps the branch you merged into. History stays intact." }],
+          "undo": "git revert the revert commit"
+        }
+      ],
+      "seealso": ["merge-conflict", "undo-rebase"]
+    },
+    {
+      "id": "clone-all-branches",
+      "q": "Clone a repository with all branches",
+      "aka": ["get every branch", "clone branches", "see remote branches after clone"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git clone <url>", "n": "This already downloads every branch. They are just not checked out." },
+            { "c": "git branch -r", "n": "Lists them." },
+            { "c": "git switch <branch>", "n": "Creates a local tracking branch for any of them." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["checkout-remote-branch", "clone-repo"]
+    },
+    {
+      "id": "sync-fork",
+      "q": "Sync a fork with the original repository",
+      "aka": ["update fork", "fork behind upstream", "pull upstream changes"],
+      "variants": [
+        {
+          "when": "From the command line",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git remote add upstream <original-repo-url>", "n": "Once per clone. Check with git remote -v." },
+            { "c": "git fetch upstream", "n": "" },
+            { "c": "git switch main", "n": "" },
+            { "c": "git merge upstream/main", "n": "Or git rebase upstream/main for a straight-line history." },
+            { "c": "git push", "n": "Your fork on GitHub is now current." }
+          ],
+          "undo": "git reset --hard ORIG_HEAD before pushing"
+        },
+        {
+          "when": "One command with GitHub CLI",
+          "danger": "safe",
+          "cmds": [{ "c": "gh repo sync <your-user>/<fork>", "n": "GitHub's web UI also has a Sync fork button on the fork's page." }],
+          "undo": "Restore from reflog if a fast-forward went wrong"
+        }
+      ],
+      "seealso": ["update-branch", "pull-vs-fetch"]
+    },
+    {
+      "id": "remove-submodule",
+      "q": "Remove a submodule",
+      "aka": ["delete submodule", "unregister submodule"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git submodule deinit -f <path>", "n": "Unregisters it." },
+            { "c": "git rm -f <path>", "n": "Removes the tracked link and the working files." },
+            { "c": "rm -rf .git/modules/<path>", "n": "Clears the leftover internal clone." },
+            { "c": "git commit -m \"Remove submodule <path>\"", "n": "" }
+          ],
+          "undo": "git revert the commit, then git submodule update --init <path>"
+        }
+      ],
+      "seealso": []
+    },
+    {
+      "id": "delete-commit",
+      "q": "Delete a specific commit from a branch",
+      "aka": ["remove commit from history", "drop commit"],
+      "variants": [
+        {
+          "when": "Not pushed",
+          "danger": "history",
+          "cmds": [{ "c": "git rebase -i <hash>^", "n": "Change pick to drop on the commit's line, save. Later commits are replayed without it; conflicts possible." }],
+          "undo": "git reset --hard ORIG_HEAD right after"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "safe",
+          "cmds": [{ "c": "git revert <hash>", "n": "Adds a commit that cancels it. The honest option on shared branches." }],
+          "undo": "git revert the revert commit"
+        }
+      ],
+      "seealso": ["undo-last-commit", "undo-rebase"]
+    },
+    {
+      "id": "undo-rebase",
+      "q": "Undo a rebase",
+      "aka": ["rebase went wrong", "revert rebase", "recover after rebase"],
+      "variants": [
+        {
+          "when": "Right after it finished",
+          "danger": "destructive",
+          "cmds": [{ "c": "git reset --hard ORIG_HEAD", "n": "ORIG_HEAD is where the branch stood before the rebase." }],
+          "undo": "git reflog still shows the post-rebase state"
+        },
+        {
+          "when": "Some commands ran since",
+          "danger": "destructive",
+          "cmds": [
+            { "c": "git reflog", "n": "Find the entry just before the line that says rebase (start)." },
+            { "c": "git reset --hard HEAD@{<n>}", "n": "Use that entry's number." }
+          ],
+          "undo": "The reflog keeps every state for about 90 days; you can move again"
+        }
+      ],
+      "seealso": ["squash-commits", "recover-lost-commit"]
+    },
+    {
+      "id": "current-branch",
+      "q": "Show the current branch name",
+      "aka": ["what branch am i on", "print branch"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git branch --show-current", "n": "Empty output means detached HEAD: you are on a commit, not a branch." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["detached-head"]
+    },
+    {
+      "id": "detached-head",
+      "q": "Fix a detached HEAD",
+      "aka": ["you are in detached head state", "not on a branch", "head detached at"],
+      "variants": [
+        {
+          "when": "You made no commits here",
+          "danger": "safe",
+          "cmds": [{ "c": "git switch <branch>", "n": "Back on a branch. Detached HEAD just means you checked out a commit directly; nothing is wrong." }],
+          "undo": "git switch --detach <hash> to go back"
+        },
+        {
+          "when": "You made commits you want to keep",
+          "danger": "safe",
+          "cmds": [{ "c": "git switch -c <new-branch>", "n": "Creates a branch at your current commit. The work is safe and named." }],
+          "undo": "git branch -D <new-branch> discards it again"
+        }
+      ],
+      "seealso": ["current-branch", "recover-lost-commit"]
+    },
+    {
+      "id": "stash",
+      "q": "Set work aside temporarily (stash)",
+      "aka": ["save changes without commit", "stash changes", "switch branch with uncommitted work"],
+      "variants": [
+        {
+          "when": "Set aside",
+          "danger": "safe",
+          "cmds": [{ "c": "git stash push -u -m \"<label>\"", "n": "-u includes untracked files, which plain stash silently skips. Your tree is clean now." }],
+          "undo": "git stash pop brings it straight back"
+        },
+        {
+          "when": "Bring back",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git stash list", "n": "Every stash with its label." },
+            { "c": "git stash pop", "n": "Applies the newest and drops it. git stash apply stash@{<n>} applies a specific one and keeps it in the list." }
+          ],
+          "undo": "If pop conflicted, the stash is kept automatically; resolve or git checkout . to retry"
+        }
+      ],
+      "seealso": ["discard-changes", "overwrite-local"]
+    },
+    {
+      "id": "create-branch",
+      "q": "Create a branch and switch to it",
+      "aka": ["new branch", "make branch", "start feature branch"],
+      "variants": [
+        {
+          "when": "From where you are",
+          "danger": "safe",
+          "cmds": [{ "c": "git switch -c <branch>", "n": "Legacy form: git checkout -b <branch>" }],
+          "undo": "git switch - then git branch -d <branch>"
+        },
+        {
+          "when": "From a specific commit or branch",
+          "danger": "safe",
+          "cmds": [{ "c": "git switch -c <branch> <start-point>", "n": "Start point can be a hash, a tag, or another branch." }],
+          "undo": "git switch - then git branch -d <branch>"
+        }
+      ],
+      "seealso": ["push-new-branch", "delete-branch"]
+    },
+    {
+      "id": "clone-repo",
+      "q": "Clone a repository",
+      "aka": ["download repo", "git clone", "copy repository"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git clone <url>", "n": "The URL is on the repo page behind the Code button, HTTPS or SSH." }],
+          "undo": "Delete the folder. The remote is untouched."
+        },
+        {
+          "when": "Huge repository, you need it fast",
+          "danger": "safe",
+          "cmds": [{ "c": "git clone --depth 1 <url>", "n": "Only the latest commit, no history. Deepen later with git fetch --unshallow." }],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": ["clone-all-branches", "upload-existing-project"]
+    },
+    {
+      "id": "first-time-setup",
+      "q": "First-time Git setup on a new machine",
+      "aka": ["configure git", "set name and email", "git config global", "initial setup"],
+      "variants": [
+        {
+          "when": "The three settings that matter",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config --global user.name \"<your name>\"", "n": "Goes into every commit you make." },
+            { "c": "git config --global user.email \"<your email>\"", "n": "Use the same email as your GitHub account so commits link to your profile." },
+            { "c": "git config --global init.defaultBranch main", "n": "New repositories start on main, matching GitHub." }
+          ],
+          "undo": "git config --global --unset <key>"
+        }
+      ],
+      "seealso": ["upload-existing-project", "clone-repo"]
+    },
+    {
+      "id": "see-history",
+      "q": "See the commit history",
+      "aka": ["git log", "view commits", "history graph", "show log"],
+      "variants": [
+        {
+          "when": "Readable one-liners",
+          "danger": "safe",
+          "cmds": [{ "c": "git log --oneline --graph --all", "n": "Every branch as a graph, one line per commit." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "What each commit changed",
+          "danger": "safe",
+          "cmds": [{ "c": "git log -p -3", "n": "Full diffs for the last three commits. Drop -3 for all." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["file-history", "what-changed"]
+    },
+    {
+      "id": "what-changed",
+      "q": "See what I changed and what is staged",
+      "aka": ["git diff", "git status", "show my changes", "staged vs unstaged"],
+      "variants": [
+        {
+          "when": "The overview",
+          "danger": "safe",
+          "cmds": [{ "c": "git status", "n": "What is staged, what is modified, what is untracked." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The actual edits",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git diff", "n": "Unstaged edits only." },
+            { "c": "git diff --staged", "n": "What will go into the next commit." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["see-history", "undo-git-add"]
+    },
+    {
+      "id": "file-history",
+      "q": "See the history of one file",
+      "aka": ["who changed this file", "file log", "blame", "who wrote this line"],
+      "variants": [
+        {
+          "when": "Commits that touched the file",
+          "danger": "safe",
+          "cmds": [{ "c": "git log --follow -p -- <file>", "n": "--follow keeps the trail across renames." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Who last touched each line",
+          "danger": "safe",
+          "cmds": [{ "c": "git blame -L <start>,<end> <file>", "n": "Drop -L for the whole file. Add -w to ignore whitespace-only changes." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Find the commit that removed or added some text",
+          "danger": "safe",
+          "cmds": [{ "c": "git log -S \"<text>\" --oneline", "n": "The pickaxe: finds commits where that text appeared or disappeared." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["restore-file", "see-history"]
+    },
+    {
+      "id": "tag-release",
+      "q": "Tag a release and push the tag",
+      "aka": ["create tag", "version tag", "annotated tag", "push tags"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git tag -a v1.0.0 -m \"<release note>\"", "n": "Annotated tags carry author, date, and message. Plain git tag v1.0.0 is a bare pointer." },
+            { "c": "git push origin v1.0.0", "n": "Tags are not pushed by default. git push --tags sends all of them." }
+          ],
+          "undo": "git tag -d v1.0.0 and git push origin --delete v1.0.0"
+        }
+      ],
+      "seealso": ["delete-tag"]
+    },
+    {
+      "id": "add-to-last-commit",
+      "q": "Add a forgotten file to the last commit",
+      "aka": ["forgot file in commit", "amend commit add file", "include file in previous commit"],
+      "variants": [
+        {
+          "when": "Not pushed",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git add <file>", "n": "" },
+            { "c": "git commit --amend --no-edit", "n": "The file joins the last commit; the message stays." }
+          ],
+          "undo": "git reset --soft HEAD@{1} restores the pre-amend commit"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "history",
+          "cmds": [
+            { "c": "git add <file>", "n": "" },
+            { "c": "git commit --amend --no-edit", "n": "" },
+            { "c": "git push --force-with-lease", "n": "Only on branches where rewrites are expected, like your own PR branch." }
+          ],
+          "undo": "git reflog holds the old commit"
+        }
+      ],
+      "seealso": ["edit-commit-message", "undo-last-commit"]
+    },
+    {
+      "id": "upload-existing-project",
+      "q": "Put an existing project on GitHub",
+      "aka": ["first push", "existing folder to github", "init and push", "publish project"],
+      "variants": [
+        {
+          "when": "From the terminal",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git init -b main", "n": "Run inside the project folder." },
+            { "c": "git add .", "n": "Check git status first; add a .gitignore before this if build output or secrets are present." },
+            { "c": "git commit -m \"Initial commit\"", "n": "" },
+            { "c": "git remote add origin <url>", "n": "Create the empty repository on GitHub first and copy its URL." },
+            { "c": "git push -u origin main", "n": "" }
+          ],
+          "undo": "Delete the GitHub repository in its settings; delete the local .git folder to unversion"
+        },
+        {
+          "when": "One command with GitHub CLI",
+          "danger": "safe",
+          "cmds": [{ "c": "gh repo create <name> --public --source . --push", "n": "Creates the repository and pushes in one step. Use --private to keep it private." }],
+          "undo": "gh repo delete <name> (asks for confirmation)"
+        }
+      ],
+      "seealso": ["first-time-setup", "ignore-files"]
+    },
+    {
+      "id": "cherry-pick",
+      "q": "Copy a commit from another branch (cherry-pick)",
+      "aka": ["apply commit from other branch", "pick one commit", "port a fix"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git cherry-pick <hash>", "n": "Replays that commit onto your current branch as a new commit. On conflict: resolve, git add, git cherry-pick --continue, or --abort." }],
+          "undo": "git reset --hard HEAD~1 if not pushed, git revert otherwise"
+        }
+      ],
+      "seealso": ["move-commits-to-branch", "merge-conflict"]
+    },
+    {
+      "id": "update-branch",
+      "q": "Get the latest changes from the remote",
+      "aka": ["pull latest", "update local branch", "get new commits"],
+      "variants": [
+        {
+          "when": "Merge them in",
+          "danger": "safe",
+          "cmds": [{ "c": "git pull", "n": "fetch plus merge. May create a merge commit if you have local commits." }],
+          "undo": "git reset --hard ORIG_HEAD (only if you had no uncommitted changes)"
+        },
+        {
+          "when": "Keep history straight",
+          "danger": "history",
+          "cmds": [{ "c": "git pull --rebase", "n": "Replays your local commits on top of the remote ones. Set it as the default: git config --global pull.rebase true" }],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": ["pull-vs-fetch", "merge-conflict"]
+    },
+    {
+      "id": "force-push-safely",
+      "q": "Force push without destroying teammates' work",
+      "aka": ["force push", "push rejected after rebase", "force with lease"],
+      "variants": [
+        {
+          "when": "Always prefer this form",
+          "danger": "history",
+          "cmds": [{ "c": "git push --force-with-lease", "n": "Overwrites the remote branch only if nobody pushed since you last fetched. Plain --force overwrites unconditionally and can erase a teammate's commits." }],
+          "undo": "git reflog has your old branch tip; the remote's old tip is on any machine that fetched it"
+        }
+      ],
+      "seealso": ["squash-commits", "undo-rebase"]
+    },
+    {
+      "id": "recover-lost-commit",
+      "q": "Recover a lost commit or branch",
+      "aka": ["deleted branch recover", "find lost commit", "reflog", "accidentally reset"],
+      "variants": [
+        {
+          "when": "The safety net",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git reflog", "n": "Every position HEAD has held, with hashes, kept about 90 days. Find the state you lost." },
+            { "c": "git branch <rescue> <hash>", "n": "Names the lost commit so nothing can garbage-collect it. Inspect it with git switch <rescue>." }
+          ],
+          "undo": "git branch -D <rescue> if it was not what you wanted"
+        }
+      ],
+      "seealso": ["undo-rebase", "delete-branch"]
+    },
+    {
+      "id": "ignore-files",
+      "q": "Ignore files with .gitignore",
+      "aka": ["gitignore", "exclude files", "ignore node_modules", "ignore env file"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "printf \"node_modules/\\n.env\\ndist/\\n\" >> .gitignore", "n": "One pattern per line. Directories end with /. Patterns match untracked files only." },
+            { "c": "git rm -r --cached <already-tracked-path>", "n": "Only needed for files Git already tracks; then commit." }
+          ],
+          "undo": "Delete the line from .gitignore"
+        },
+        {
+          "when": "Start from a proven template",
+          "danger": "safe",
+          "cmds": [{ "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore", "n": "github/gitignore has maintained templates for every major language. Swap Node for yours." }],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": ["untrack-file", "empty-directory"]
+    },
+    {
+      "id": "rename-file",
+      "q": "Rename or move a file and keep its history",
+      "aka": ["move file", "git mv", "rename keep history"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git mv <old-path> <new-path>", "n": "Stage and rename in one step. git log --follow <new-path> keeps the pre-rename history visible." }],
+          "undo": "git mv <new-path> <old-path> before committing"
+        }
+      ],
+      "seealso": ["file-history"]
+    },
+    {
+      "id": "src-refspec-error",
+      "q": "Fix: src refspec main does not match any",
+      "aka": ["src refspec master does not match any", "error failed to push some refs"],
+      "variants": [
+        {
+          "when": "Usually there is no commit yet",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git status", "n": "If it says No commits yet, the branch does not exist until the first commit." },
+            { "c": "git add . && git commit -m \"Initial commit\"", "n": "" },
+            { "c": "git push -u origin main", "n": "If your branch is actually named master, push that name or rename with git branch -m master main first." }
+          ],
+          "undo": "Nothing destructive here"
+        }
+      ],
+      "seealso": ["upload-existing-project", "push-new-branch"]
+    }
+  ]
+}

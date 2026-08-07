@@ -1,0 +1,92 @@
+<!doctype html>
+<!--
+  File: index.html
+  Purpose: The finder. Type any Git question, get the exact commands with danger levels and undo.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, vanilla JavaScript, GitHub Pages
+  Description: Home page of Git Guide. One search box over the intent data, quick chips for the most asked questions, and a browsable index of every answer.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git Guide: every Git and GitHub answer in one place</title>
+  <meta name="description" content="Type what you want to do in plain language and get the exact Git commands, how dangerous they are, and how to undo them. Free, fast, no ads, works offline.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/">
+  <meta property="og:title" content="Git Guide: every Git and GitHub answer in one place">
+  <meta property="og:description" content="Ask in plain language. Get exact commands, danger levels, and the undo for each.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="./" aria-current="page">Finder</a>
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button">Theme</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>Every Git and GitHub answer in one place.</h1>
+        <p class="lede">Type what you want to do. Get the exact commands, what each one does, how dangerous it is, and how to undo it.</p>
+      </div>
+    </section>
+
+    <section class="finder" aria-label="Search">
+      <div class="wrap">
+        <div class="searchbox">
+          <input id="q" type="search" placeholder="undo the last commit, delete a branch, fix a conflict..."
+                 autocomplete="off" autocapitalize="off" spellcheck="false" autofocus
+                 aria-label="Search Git questions">
+          <span class="hint" aria-hidden="true">/</span>
+        </div>
+        <div class="chips" role="list" aria-label="Most asked">
+          <button class="chip" type="button">undo the last commit</button>
+          <button class="chip" type="button">delete a branch</button>
+          <button class="chip" type="button">pull vs fetch</button>
+          <button class="chip" type="button">resolve a merge conflict</button>
+          <button class="chip" type="button">stash</button>
+          <button class="chip" type="button">sync a fork</button>
+        </div>
+        <div id="results" class="results" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="browse" aria-label="Every question">
+      <div class="wrap">
+        <h2>Every answer, one click away</h2>
+        <p class="muted"><span id="count">...</span> questions answered so far. Missing yours? <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Ask in Discussions</a> and it will be added.</p>
+        <ul id="all-questions" class="qlist"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE">Star on GitHub</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a> ·
+          <a href="https://git-scm.com/doc">Official Git docs</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
