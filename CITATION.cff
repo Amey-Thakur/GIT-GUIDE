@@ -1,0 +1,34 @@
+# Name: CITATION.cff
+# Purpose: Machine-readable citation metadata for this repository.
+# Description: GitHub reads this file to offer a "Cite this repository" button
+#   and to format the reference, so anyone can credit this project correctly in
+#   papers, posts, and other work.
+# License: MIT
+# Author: Amey Thakur (https://github.com/Amey-Thakur)
+# Date: 2026-08-07
+cff-version: 1.2.0
+title: "Git Guide: every Git and GitHub answer in one place"
+message: "If you use this resource, please cite it using the metadata below."
+abstract: "A dependency-free site where you type what you want to do in plain language and get the exact Git commands, a danger level for each, and its undo. Covers first setup through history surgery, and every major host: GitHub, GitLab, Bitbucket, Azure DevOps, and AWS CodeCommit."
+type: software
+authors:
+  - given-names: Amey
+    family-names: Thakur
+    email: ameythakur20@gmail.com
+    website: "https://github.com/Amey-Thakur"
+repository-code: "https://github.com/Amey-Thakur/GIT-GUIDE"
+url: "https://amey-thakur.github.io/GIT-GUIDE/"
+license: MIT
+version: "1.0.0"
+date-released: "2026-08-07"
+keywords:
+  - git
+  - github
+  - git-guide
+  - git-commands
+  - git-tutorial
+  - git-cheatsheet
+  - version-control
+  - learn-git
+  - developer-tools
+  - education
