@@ -129,10 +129,23 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   background: var(--card);
   color: var(--ink);
   border-radius: 6px;
-  padding: 0.25rem 0.6rem;
+  padding: 0.3rem 0.45rem;
   font: inherit;
-  font-size: 0.85rem;
+  line-height: 0;
   cursor: pointer;
+}
+
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+.theme-toggle .sun { display: none; }
+.theme-toggle .moon { display: block; }
+
+:root[data-theme="dark"] .theme-toggle .sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .moon { display: none; }
 }
 
 /* Hero */

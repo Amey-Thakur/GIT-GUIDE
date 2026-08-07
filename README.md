@@ -9,40 +9,65 @@
 Type what you want to do. Get the exact commands, what each one does,
 how dangerous it is, and how to undo it.
 
-**[Open the guide](https://amey-thakur.github.io/GIT-GUIDE/)**
+**[Open the guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
 
 </div>
+
+<br>
 
 ## Why this exists
 
 Four of the ten highest-voted questions on all of Stack Overflow are Git questions. The top thirty alone have been read about 180 million times. People do not struggle to find Git tutorials; they struggle to find the right command at the moment they need it, and to know whether running it is safe.
 
-This guide answers that. Every entry states when it applies, carries a danger level, and ships with its own undo.
+This guide answers that, for everyone from a student's first push to an engineer rewriting history.
 
-| Danger level | Meaning |
-| --- | --- |
-| Safe | Changes nothing you cannot get back |
-| Rewrites history | Coordinate before doing this to shared branches |
-| Destructive | Can lose work permanently, the note tells you the escape route first |
+<br>
 
 ## How to use it
 
-1. Open [the guide](https://amey-thakur.github.io/GIT-GUIDE/).
-2. Type what you want to do in plain language: `undo the last commit`, `delete a branch`, `gitignore not working`.
-3. Copy the command with one click. Press `/` to jump to the search box.
+1. Open **[the guide](https://amey-thakur.github.io/GIT-GUIDE/)**.
+2. Type what you want in plain language: `undo the last commit`, `gitignore not working`, `permission denied publickey`.
+3. Copy the command with one click.
 
-No account, no ads, no tracking, no framework. The site makes zero external requests, so it loads instantly and keeps working offline and behind restrictive corporate networks.
+> [!TIP]
+> Press <kbd>/</kbd> anywhere on the site to jump straight to the search box. Every answer has its own link, so you can send a teammate exactly the fix they need.
+
+<br>
+
+## Read the badge before you run the command
+
+Every answer carries one of three danger levels.
+
+| Badge | Meaning |
+| --- | --- |
+| `Safe` | Changes nothing you cannot get back |
+| `Rewrites history` | Coordinate before doing this to shared branches |
+| `Destructive` | Can lose work permanently |
+
+> [!WARNING]
+> Commands marked `Destructive` can erase work forever. The guide always states the escape route, or the absence of one, before you run the command, never after.
+
+<br>
 
 ## What makes it different
 
-- **An undo for every command.** Where no undo exists, it says so before you run the command, not after.
-- **Current Git, not 2015 Git.** `git switch` and `git restore` first, `git checkout` noted for recognition. `--force-with-lease` instead of `--force`.
-- **Written from use, not from other tutorials.** Variants match real situations: not pushed, already pushed, teammates have it.
-- **Readable by machines too.** The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms.txt) map for AI agents. Build on it: [intents.json](docs/data/intents.json).
+- **An undo for every command.** Where no undo exists, it says so up front.
+- **Current Git, not 2015 Git.** `git switch` and `git restore` first, `--force-with-lease` instead of `--force`.
+- **Real situations, not abstract syntax.** Answers split by the case you are in: not pushed, already pushed, teammates have it.
+- **No dependencies, no ads, no tracking.** The site makes zero external requests, loads instantly, and keeps working offline and behind corporate proxies.
 
-## Ask for an answer
+> [!NOTE]
+> Git is not GitHub. Everything here works the same on GitLab, Bitbucket, Azure DevOps, and AWS CodeCommit, and much of Git needs no host at all: patches by mail, repositories over USB, air-gapped machines. The guide covers that world too.
 
-If the finder cannot answer your question, [ask in Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions). Real questions decide what gets added next.
+<br>
+
+## Ask, answer, build on it
+
+Every answer on the site also lives in [Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions), where you can ask follow-ups or request answers that are missing. Real questions decide what gets added next.
+
+The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms.txt) map for AI agents: [intents.json](docs/data/intents.json).
+
+<br>
 
 ## Author
 
@@ -51,6 +76,8 @@ If the finder cannot answer your question, [ask in Discussions](https://github.c
 **[Amey Thakur](https://github.com/Amey-Thakur)** · Everything in this guide is the Git I actually use. It is written the way I wish someone had shown me: the command, the risk, the way back.
 
 <br clear="left">
+
+<br>
 
 ## License
 

@@ -26,11 +26,9 @@
 
   var toggle = document.getElementById("theme-toggle");
   if (toggle) {
-    toggle.textContent = currentTheme() === "dark" ? "Light" : "Dark";
     toggle.addEventListener("click", function () {
       var next = currentTheme() === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
-      toggle.textContent = next === "dark" ? "Light" : "Dark";
       try { localStorage.setItem("theme", next); } catch (e) { /* private mode */ }
     });
   }
