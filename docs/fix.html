@@ -1,0 +1,82 @@
+<!doctype html>
+<!--
+  File: fix.html
+  Purpose: The rescue triage. A few questions lead from panic to the exact recipe.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, vanilla JavaScript, GitHub Pages
+  Description: Guided decision tree over data/scenarios.json. Every path ends at a full answer with danger levels and undo, rendered by render.js. Nothing runs automatically; the user copies what they choose.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fix my Git: guided rescue for any mess | Git Guide</title>
+  <meta name="description" content="Committed the wrong thing, lost work, push rejected, wrong branch, or stuck mid-rebase? Answer a few questions and get the exact commands out, with danger levels and undo.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/fix.html">
+  <meta property="og:title" content="Fix my Git: guided rescue for any mess">
+  <meta property="og:description" content="A few honest questions, then the exact way out.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/fix.html">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap head-row">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <div class="head-tools">
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+          <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Site">
+        <a href="./">Finder</a>
+        <a href="learn.html">Learn</a>
+        <a href="fix.html" aria-current="page">Fix</a>
+        <a href="errors.html">Errors</a>
+        <a href="github.html">GitHub</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>Fix my Git.</h1>
+        <p class="lede">A few honest questions, then the exact way out. Nothing runs without you; every recipe shows its danger level and its undo.</p>
+      </div>
+    </section>
+
+    <section aria-label="Rescue triage">
+      <div class="wrap">
+        <nav id="crumbs" class="crumbs" aria-label="Your answers"></nav>
+        <div id="wizard" class="wizard" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="render.js"></script>
+  <script src="fix.js"></script>
+</body>
+</html>

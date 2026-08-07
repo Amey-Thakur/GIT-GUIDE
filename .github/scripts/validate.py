@@ -68,6 +68,65 @@ def check_intents(path):
     print(f"{path.name}: {len(intents)} intents OK" if not errors else f"{path.name}: checked")
 
 
+def intent_ids():
+    data = json.loads((DATA / "intents.json").read_text(encoding="utf-8"))
+    return {i["id"] for i in data.get("intents", [])}
+
+
+def check_errors(path, known):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    seen = set()
+    for e in data.get("errors", []):
+        where = f"{path.name}:{e.get('id', '?')}"
+        if not KEBAB.match(e.get("id", "")):
+            err(f"{where}: id is not kebab-case")
+        if e["id"] in seen:
+            err(f"{where}: duplicate id")
+        seen.add(e["id"])
+        if not e.get("msg") or not e.get("why"):
+            err(f"{where}: msg and why are required")
+        if e.get("intent") and e["intent"] not in known:
+            err(f"{where}: intent '{e['intent']}' does not exist")
+        if not e.get("intent") and not e.get("fix"):
+            err(f"{where}: needs either an intent link or fix commands")
+        for c in e.get("fix", []):
+            if not c.get("c"):
+                err(f"{where}: empty fix command")
+        for ref in e.get("seealso", []):
+            if ref not in known:
+                err(f"{where}: seealso '{ref}' does not exist")
+    print(f"{path.name}: {len(data.get('errors', []))} errors OK")
+
+
+def check_scenarios(path, known):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    nodes = data.get("nodes", {})
+    if data.get("start") not in nodes:
+        err(f"{path.name}: start node missing")
+    reachable = set()
+    stack = [data.get("start")]
+    while stack:
+        nid = stack.pop()
+        if nid in reachable or nid not in nodes:
+            continue
+        reachable.add(nid)
+        for opt in nodes[nid].get("opts", []):
+            if "next" in opt:
+                if opt["next"] not in nodes:
+                    err(f"{path.name}:{nid}: next '{opt['next']}' does not exist")
+                else:
+                    stack.append(opt["next"])
+            elif "leaf" in opt:
+                if opt["leaf"] not in known:
+                    err(f"{path.name}:{nid}: leaf '{opt['leaf']}' does not exist in intents")
+            else:
+                err(f"{path.name}:{nid}: option '{opt.get('label')}' has neither next nor leaf")
+    for nid in nodes:
+        if nid not in reachable:
+            err(f"{path.name}:{nid}: node is unreachable")
+    print(f"{path.name}: {len(nodes)} nodes OK")
+
+
 def check_house_style():
     em_dash = "—"
     for p in ROOT.rglob("*"):
@@ -81,9 +140,18 @@ def check_house_style():
 
 
 def main():
+    known = set()
     for path in sorted(DATA.glob("*.json")):
         try:
-            check_intents(path) if path.name == "intents.json" else json.loads(path.read_text(encoding="utf-8"))
+            if path.name == "intents.json":
+                check_intents(path)
+                known = intent_ids()
+            elif path.name == "errors.json":
+                check_errors(path, known or intent_ids())
+            elif path.name == "scenarios.json":
+                check_scenarios(path, known or intent_ids())
+            else:
+                json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as e:
             err(f"{path.name}: invalid JSON: {e}")
     check_house_style()

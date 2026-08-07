@@ -1,0 +1,649 @@
+<!doctype html>
+<!--
+  File: cheatsheet.html
+  Purpose: The complete Git cheatsheet: every command worth knowing, one line each, everywhere Git runs.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, static content generated from data/cheatsheet.json by build_pages.py, GitHub Pages
+  Description: One page, print-friendly, not restricted to any host: setup, daily loop, branches, undo, history surgery, every platform, and Git with no host at all. Red-marked commands rewrite history or can destroy work.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The complete Git cheatsheet | Git Guide</title>
+  <meta name="description" content="Every Git command worth knowing on one page: setup, daily loop, branches, merge and rebase, undo, stash, tags, history surgery, and the same Git on GitHub, GitLab, Bitbucket, Azure DevOps, AWS, or no host at all.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html">
+  <meta property="og:title" content="The complete Git cheatsheet">
+  <meta property="og:description" content="Every command worth knowing, one line each, everywhere Git runs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap head-row">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <div class="head-tools">
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+          <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Site">
+        <a href="./">Finder</a>
+        <a href="learn.html">Learn</a>
+        <a href="fix.html">Fix</a>
+        <a href="errors.html">Errors</a>
+        <a href="github.html">GitHub</a>
+        <a href="cheatsheet.html" aria-current="page">Cheatsheet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>The complete Git cheatsheet.</h1>
+        <p class="lede">Every command worth knowing, one line each. Commands in red rewrite history or can destroy work; each has a full answer with its undo in <a href="./">the finder</a>.</p>
+      </div>
+    </section>
+
+    <section aria-label="Cheatsheet">
+      <div class="wrap cheatsheet">
+<!-- cheatsheet:start -->
+<section class="cs-section">
+  <h2>Setup and identity</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git config --global user.name &quot;&lt;name&gt;&quot;</code>
+      <span>Name stamped into your commits</span>
+      <button class="copy" data-cmd="git config --global user.name &quot;&lt;name&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global user.email &quot;&lt;email&gt;&quot;</code>
+      <span>Use your host account email so commits link to your profile</span>
+      <button class="copy" data-cmd="git config --global user.email &quot;&lt;email&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global init.defaultBranch main</code>
+      <span>New repositories start on main</span>
+      <button class="copy" data-cmd="git config --global init.defaultBranch main" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global core.editor &quot;code --wait&quot;</code>
+      <span>Commit messages open in VS Code</span>
+      <button class="copy" data-cmd="git config --global core.editor &quot;code --wait&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global pull.ff only</code>
+      <span>Pull never creates surprise merge commits</span>
+      <button class="copy" data-cmd="git config --global pull.ff only" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global fetch.prune true</code>
+      <span>Deleted remote branches disappear locally too</span>
+      <button class="copy" data-cmd="git config --global fetch.prune true" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global rebase.autoStash true</code>
+      <span>Pull with rebase works even with edits in progress</span>
+      <button class="copy" data-cmd="git config --global rebase.autoStash true" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --list --show-origin</code>
+      <span>Every setting and the file it comes from</span>
+      <button class="copy" data-cmd="git config --list --show-origin" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Start a project</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git init -b main</code>
+      <span>Turn this folder into a repository</span>
+      <button class="copy" data-cmd="git init -b main" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone &lt;url&gt;</code>
+      <span>Copy a repository, any host, full history</span>
+      <button class="copy" data-cmd="git clone &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone --depth 1 &lt;url&gt;</code>
+      <span>Latest snapshot only, fastest</span>
+      <button class="copy" data-cmd="git clone --depth 1 &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git remote add origin &lt;url&gt;</code>
+      <span>Connect a local repository to a host</span>
+      <button class="copy" data-cmd="git remote add origin &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git push -u origin main</code>
+      <span>First push; -u links the branches for good</span>
+      <button class="copy" data-cmd="git push -u origin main" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>The daily loop</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git status -sb</code>
+      <span>What changed, one line per file</span>
+      <button class="copy" data-cmd="git status -sb" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git diff</code>
+      <span>Unstaged edits, line by line</span>
+      <button class="copy" data-cmd="git diff" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git diff --staged</code>
+      <span>What the next commit will contain</span>
+      <button class="copy" data-cmd="git diff --staged" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git add &lt;file&gt;</code>
+      <span>Stage a change; git add -p picks piece by piece</span>
+      <button class="copy" data-cmd="git add &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git commit -m &quot;&lt;message&gt;&quot;</code>
+      <span>Seal the staged snapshot</span>
+      <button class="copy" data-cmd="git commit -m &quot;&lt;message&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git commit --amend --no-edit</code>
+      <span>Add staged changes to the last commit</span>
+      <button class="copy" data-cmd="git commit --amend --no-edit" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git pull --rebase</code>
+      <span>Get remote commits, replay yours on top</span>
+      <button class="copy" data-cmd="git pull --rebase" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git push</code>
+      <span>Publish your commits</span>
+      <button class="copy" data-cmd="git push" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Branches</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git switch -c &lt;branch&gt;</code>
+      <span>Create and move in one step</span>
+      <button class="copy" data-cmd="git switch -c &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git switch &lt;branch&gt;</code>
+      <span>Move to an existing branch; - returns to the previous one</span>
+      <button class="copy" data-cmd="git switch &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git branch --show-current</code>
+      <span>Where am I</span>
+      <button class="copy" data-cmd="git branch --show-current" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git branch -a</code>
+      <span>Every branch, local and remote</span>
+      <button class="copy" data-cmd="git branch -a" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git push -u origin &lt;branch&gt;</code>
+      <span>Publish a new branch</span>
+      <button class="copy" data-cmd="git push -u origin &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git branch -d &lt;branch&gt;</code>
+      <span>Delete a merged branch; -D forces</span>
+      <button class="copy" data-cmd="git branch -d &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git push origin --delete &lt;branch&gt;</code>
+      <span>Delete it on the remote too</span>
+      <button class="copy" data-cmd="git push origin --delete &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git branch -m &lt;old&gt; &lt;new&gt;</code>
+      <span>Rename</span>
+      <button class="copy" data-cmd="git branch -m &lt;old&gt; &lt;new&gt;" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Merge and rebase</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git merge &lt;branch&gt;</code>
+      <span>Bring a branch in; history stays true</span>
+      <button class="copy" data-cmd="git merge &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git merge --no-ff &lt;branch&gt;</code>
+      <span>Always keep the feature visible as one bubble</span>
+      <button class="copy" data-cmd="git merge --no-ff &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git rebase main</code>
+      <span>Replay your branch on top of main</span>
+      <button class="copy" data-cmd="git rebase main" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git rebase -i HEAD~&lt;n&gt;</code>
+      <span>Rewrite, reorder, squash your last n commits</span>
+      <button class="copy" data-cmd="git rebase -i HEAD~&lt;n&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git cherry-pick &lt;hash&gt;</code>
+      <span>Copy one commit onto this branch</span>
+      <button class="copy" data-cmd="git cherry-pick &lt;hash&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git merge --abort</code>
+      <span>Back out of a conflicted merge</span>
+      <button class="copy" data-cmd="git merge --abort" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git rebase --continue</code>
+      <span>Resume after resolving a conflict</span>
+      <button class="copy" data-cmd="git rebase --continue" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Undo and rescue</h2>
+  <div class="cs-rows">
+    <div class="cs-row cs-danger">
+      <code>git restore &lt;file&gt;</code>
+      <span>Discard edits, back to last commit</span>
+      <button class="copy" data-cmd="git restore &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git restore --staged &lt;file&gt;</code>
+      <span>Unstage, keep the edits</span>
+      <button class="copy" data-cmd="git restore --staged &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git reset --soft HEAD~1</code>
+      <span>Uncommit, keep everything staged</span>
+      <button class="copy" data-cmd="git reset --soft HEAD~1" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git reset --hard HEAD~1</code>
+      <span>Erase the last commit and its work</span>
+      <button class="copy" data-cmd="git reset --hard HEAD~1" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git revert &lt;hash&gt;</code>
+      <span>Undo by adding an opposite commit; safe when pushed</span>
+      <button class="copy" data-cmd="git revert &lt;hash&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git reflog</code>
+      <span>Every state you have been in; the safety net</span>
+      <button class="copy" data-cmd="git reflog" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git reset --hard ORIG_HEAD</code>
+      <span>Undo the merge, rebase, or pull that just happened</span>
+      <button class="copy" data-cmd="git reset --hard ORIG_HEAD" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git clean -nd</code>
+      <span>Preview deleting untracked files; -fd deletes</span>
+      <button class="copy" data-cmd="git clean -nd" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Stash</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git stash push -u -m &quot;&lt;label&gt;&quot;</code>
+      <span>Set everything aside, untracked included</span>
+      <button class="copy" data-cmd="git stash push -u -m &quot;&lt;label&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git stash list</code>
+      <span>What is shelved</span>
+      <button class="copy" data-cmd="git stash list" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git stash pop</code>
+      <span>Bring the newest back and drop it</span>
+      <button class="copy" data-cmd="git stash pop" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git stash apply stash@{&lt;n&gt;}</code>
+      <span>Bring a specific one back, keep it shelved</span>
+      <button class="copy" data-cmd="git stash apply stash@{&lt;n&gt;}" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git stash show -p</code>
+      <span>See inside before applying</span>
+      <button class="copy" data-cmd="git stash show -p" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Inspect and search</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git log --oneline --graph --all</code>
+      <span>The whole history as a graph</span>
+      <button class="copy" data-cmd="git log --oneline --graph --all" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git log -p -- &lt;file&gt;</code>
+      <span>Every change to one file; --follow crosses renames</span>
+      <button class="copy" data-cmd="git log -p -- &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git log --grep=&quot;&lt;text&gt;&quot;</code>
+      <span>Find commits by message</span>
+      <button class="copy" data-cmd="git log --grep=&quot;&lt;text&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git log -S &quot;&lt;text&gt;&quot;</code>
+      <span>Find commits that added or removed this text</span>
+      <button class="copy" data-cmd="git log -S &quot;&lt;text&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git blame -w &lt;file&gt;</code>
+      <span>Who last touched each line, ignoring whitespace</span>
+      <button class="copy" data-cmd="git blame -w &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git show &lt;hash&gt;</code>
+      <span>One commit in full; --stat for files only</span>
+      <button class="copy" data-cmd="git show &lt;hash&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git bisect start</code>
+      <span>Binary-search history for the commit that broke it</span>
+      <button class="copy" data-cmd="git bisect start" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git branch -a --contains &lt;hash&gt;</code>
+      <span>Which branches carry this commit</span>
+      <button class="copy" data-cmd="git branch -a --contains &lt;hash&gt;" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Tags and releases</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git tag -a v1.0.0 -m &quot;&lt;note&gt;&quot;</code>
+      <span>Mark a release</span>
+      <button class="copy" data-cmd="git tag -a v1.0.0 -m &quot;&lt;note&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git push origin v1.0.0</code>
+      <span>Tags do not push themselves</span>
+      <button class="copy" data-cmd="git push origin v1.0.0" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git tag -d &lt;tag&gt;</code>
+      <span>Delete locally; push origin --delete &lt;tag&gt; for the remote</span>
+      <button class="copy" data-cmd="git tag -d &lt;tag&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git describe --tags</code>
+      <span>Nearest release to where you stand</span>
+      <button class="copy" data-cmd="git describe --tags" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git switch --detach v1.0.0</code>
+      <span>Visit a release; switch - to come back</span>
+      <button class="copy" data-cmd="git switch --detach v1.0.0" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Every platform, same Git</h2>
+  <p class="note">Git is identical everywhere; only the remote URL and sign-in differ. The same SSH public key works on every host.</p>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git clone git@github.com:&lt;user&gt;/&lt;repo&gt;.git</code>
+      <span>GitHub over SSH</span>
+      <button class="copy" data-cmd="git clone git@github.com:&lt;user&gt;/&lt;repo&gt;.git" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone git@gitlab.com:&lt;user&gt;/&lt;repo&gt;.git</code>
+      <span>GitLab</span>
+      <button class="copy" data-cmd="git clone git@gitlab.com:&lt;user&gt;/&lt;repo&gt;.git" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone git@bitbucket.org:&lt;workspace&gt;/&lt;repo&gt;.git</code>
+      <span>Bitbucket</span>
+      <button class="copy" data-cmd="git clone git@bitbucket.org:&lt;workspace&gt;/&lt;repo&gt;.git" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone https://dev.azure.com/&lt;org&gt;/&lt;project&gt;/_git/&lt;repo&gt;</code>
+      <span>Azure DevOps (Azure Repos)</span>
+      <button class="copy" data-cmd="git clone https://dev.azure.com/&lt;org&gt;/&lt;project&gt;/_git/&lt;repo&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone https://git-codecommit.&lt;region&gt;.amazonaws.com/v1/repos/&lt;repo&gt;</code>
+      <span>AWS CodeCommit</span>
+      <button class="copy" data-cmd="git clone https://git-codecommit.&lt;region&gt;.amazonaws.com/v1/repos/&lt;repo&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global credential.helper manager</code>
+      <span>Browser sign-in for HTTPS remotes, all hosts</span>
+      <button class="copy" data-cmd="git config --global credential.helper manager" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git remote set-url origin &lt;url&gt;</code>
+      <span>Move between hosts or between HTTPS and SSH</span>
+      <button class="copy" data-cmd="git remote set-url origin &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone --mirror &lt;old&gt; &amp;&amp; git push --mirror &lt;new&gt;</code>
+      <span>Migrate anywhere with full history</span>
+      <button class="copy" data-cmd="git clone --mirror &lt;old&gt; &amp;&amp; git push --mirror &lt;new&gt;" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>No host at all</h2>
+  <p class="note">Git predates the hosts and needs none of them.</p>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git init --bare ~/server/repo.git</code>
+      <span>Your own remote on any machine or shared drive</span>
+      <button class="copy" data-cmd="git init --bare ~/server/repo.git" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git bundle create repo.bundle --all</code>
+      <span>The whole repository as one file: USB, email, air gap</span>
+      <button class="copy" data-cmd="git bundle create repo.bundle --all" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone repo.bundle -b main &lt;folder&gt;</code>
+      <span>Clone from the file, no network</span>
+      <button class="copy" data-cmd="git clone repo.bundle -b main &lt;folder&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git format-patch -3</code>
+      <span>Last three commits as mailable patch files</span>
+      <button class="copy" data-cmd="git format-patch -3" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git am &lt;file&gt;.patch</code>
+      <span>Apply mailed patches, authorship intact</span>
+      <button class="copy" data-cmd="git am &lt;file&gt;.patch" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git archive --format=zip -o src.zip HEAD</code>
+      <span>Clean source export, no .git</span>
+      <button class="copy" data-cmd="git archive --format=zip -o src.zip HEAD" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Files and ignoring</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>printf &quot;node_modules/\n&quot; &gt;&gt; .gitignore</code>
+      <span>Ignore by pattern; affects untracked files only</span>
+      <button class="copy" data-cmd="printf &quot;node_modules/\n&quot; &gt;&gt; .gitignore" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git rm --cached &lt;file&gt;</code>
+      <span>Stop tracking, keep on disk</span>
+      <button class="copy" data-cmd="git rm --cached &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git mv &lt;old&gt; &lt;new&gt;</code>
+      <span>Rename and stage in one step</span>
+      <button class="copy" data-cmd="git mv &lt;old&gt; &lt;new&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git update-index --skip-worktree &lt;file&gt;</code>
+      <span>Ignore your local edits to a tracked file</span>
+      <button class="copy" data-cmd="git update-index --skip-worktree &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>touch &lt;folder&gt;/.gitkeep</code>
+      <span>Keep an empty folder</span>
+      <button class="copy" data-cmd="touch &lt;folder&gt;/.gitkeep" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>History surgery</h2>
+  <p class="note">Everything here rewrites history. Fresh clone first, backup kept, force-with-lease after, teammates re-clone.</p>
+  <div class="cs-rows">
+    <div class="cs-row cs-danger">
+      <code>git commit --fixup &lt;hash&gt;</code>
+      <span>Mark a fix as belonging to an earlier commit</span>
+      <button class="copy" data-cmd="git commit --fixup &lt;hash&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git rebase -i --autosquash &lt;hash&gt;^</code>
+      <span>Melt fixups into their targets</span>
+      <button class="copy" data-cmd="git rebase -i --autosquash &lt;hash&gt;^" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git filter-repo --invert-paths --path &lt;file&gt;</code>
+      <span>Erase a file from all history</span>
+      <button class="copy" data-cmd="git filter-repo --invert-paths --path &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git filter-repo --strip-blobs-bigger-than 10M</code>
+      <span>Erase every giant blob</span>
+      <button class="copy" data-cmd="git filter-repo --strip-blobs-bigger-than 10M" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git push --force-with-lease</code>
+      <span>The only force push worth typing</span>
+      <button class="copy" data-cmd="git push --force-with-lease" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Scale and speed</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git clone --filter=blob:none --sparse &lt;url&gt;</code>
+      <span>Huge repository, download almost nothing</span>
+      <button class="copy" data-cmd="git clone --filter=blob:none --sparse &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git sparse-checkout set &lt;folders&gt;</code>
+      <span>Materialize only what you work on</span>
+      <button class="copy" data-cmd="git sparse-checkout set &lt;folders&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git worktree add ../&lt;repo&gt;-review &lt;branch&gt;</code>
+      <span>Second folder, second branch, zero stashing</span>
+      <button class="copy" data-cmd="git worktree add ../&lt;repo&gt;-review &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git lfs track &quot;*.psd&quot;</code>
+      <span>Large binaries stored properly</span>
+      <button class="copy" data-cmd="git lfs track &quot;*.psd&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git count-objects -vH</code>
+      <span>How heavy is this repository really</span>
+      <button class="copy" data-cmd="git count-objects -vH" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git maintenance start</code>
+      <span>Background upkeep keeps big repositories fast</span>
+      <button class="copy" data-cmd="git maintenance start" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
+  <h2>Quality of life</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git config --global alias.st &quot;status -sb&quot;</code>
+      <span>git st forever</span>
+      <button class="copy" data-cmd="git config --global alias.st &quot;status -sb&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global alias.lg &quot;log --oneline --graph --all&quot;</code>
+      <span>git lg: the graph</span>
+      <button class="copy" data-cmd="git config --global alias.lg &quot;log --oneline --graph --all&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global rerere.enabled true</code>
+      <span>Never resolve the same conflict twice</span>
+      <button class="copy" data-cmd="git config --global rerere.enabled true" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global gpg.format ssh</code>
+      <span>First of three lines to signed, Verified commits</span>
+      <button class="copy" data-cmd="git config --global gpg.format ssh" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git commit --allow-empty -m &quot;rerun&quot;</code>
+      <span>Retrigger CI without touching code</span>
+      <button class="copy" data-cmd="git commit --allow-empty -m &quot;rerun&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config core.hooksPath .githooks</code>
+      <span>Versioned hooks the whole team shares</span>
+      <button class="copy" data-cmd="git config core.hooksPath .githooks" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<!-- cheatsheet:end -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="render.js"></script>
+</body>
+</html>

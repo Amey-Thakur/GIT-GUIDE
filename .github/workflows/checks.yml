@@ -23,3 +23,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate data and house style
         run: python3 .github/scripts/validate.py
+      - name: Static pages match their data
+        run: |
+          python3 .github/scripts/build_pages.py
+          git diff --exit-code -- docs/errors.html

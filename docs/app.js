@@ -1,59 +1,39 @@
 /*
   File: app.js
-  Purpose: The finder. Loads the intent data, searches it as you type, and renders copy-ready answers.
+  Purpose: The finder. Searches every answer and every known error message as you type.
   Author: Amey Thakur
   GitHub: https://github.com/Amey-Thakur
-  Tech: Vanilla JavaScript, no dependencies, DOM built with createElement and textContent only
-  Description: Client-side search over docs/data/intents.json with danger badges, per-command copy buttons, undo lines, and deep links. Also handles the theme toggle.
+  Tech: Vanilla JavaScript, no dependencies
+  Description: Loads intents.json and errors.json, ranks matches for plain-language questions and pasted error text, and renders copy-ready answers through render.js. Handles chips, deep links, and the / shortcut.
   Date: 2026-08-07
 */
 
 (function () {
   "use strict";
 
-  /* Theme */
-
-  var root = document.documentElement;
-  var stored = null;
-  try { stored = localStorage.getItem("theme"); } catch (e) { /* private mode */ }
-  if (stored === "light" || stored === "dark") root.setAttribute("data-theme", stored);
-
-  function currentTheme() {
-    var t = root.getAttribute("data-theme");
-    if (t) return t;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-
-  var toggle = document.getElementById("theme-toggle");
-  if (toggle) {
-    toggle.addEventListener("click", function () {
-      var next = currentTheme() === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      try { localStorage.setItem("theme", next); } catch (e) { /* private mode */ }
-    });
-  }
-
-  /* Finder */
-
   var input = document.getElementById("q");
   if (!input) return;
 
+  var GG = window.GG;
   var resultsEl = document.getElementById("results");
   var indexEl = document.getElementById("all-questions");
   var DATA = null;
+  var ERRORS = [];
 
-  fetch("data/intents.json")
-    .then(function (r) { return r.json(); })
-    .then(function (d) {
-      DATA = d.intents;
-      renderIndex();
-      var initial = decodeURIComponent(location.hash.replace("#", ""));
-      if (initial) showById(initial);
-    });
+  Promise.all([
+    fetch("data/intents.json").then(function (r) { return r.json(); }),
+    fetch("data/errors.json").then(function (r) { return r.json(); })
+  ]).then(function (loaded) {
+    DATA = loaded[0].intents;
+    ERRORS = loaded[1].errors;
+    renderIndex();
+    var initial = decodeURIComponent(location.hash.replace("#", ""));
+    if (initial) showById(initial);
+  });
 
   function norm(s) { return s.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim(); }
 
-  function haystack(intent) {
+  function intentHaystack(intent) {
     var parts = [intent.q, intent.id.replace(/-/g, " ")].concat(intent.aka);
     intent.variants.forEach(function (v) {
       v.cmds.forEach(function (c) { parts.push(c.c); });
@@ -66,8 +46,9 @@
     if (!q) return [];
     var tokens = q.split(" ");
     var scored = [];
+
     DATA.forEach(function (intent) {
-      var hs = haystack(intent);
+      var hs = intentHaystack(intent);
       var title = norm(intent.q + " " + intent.aka.join(" "));
       var score = 0;
       if (title.indexOf(q) !== -1) score += 100;
@@ -75,93 +56,54 @@
       tokens.forEach(function (t) { if (hs.indexOf(t) !== -1) hit += 1; });
       if (hit === tokens.length) score += 20 * hit;
       else score += 4 * hit;
-      if (hit > 0) scored.push({ intent: intent, score: score });
+      if (hit > 0) scored.push({ kind: "intent", item: intent, score: score });
     });
+
+    ERRORS.forEach(function (err) {
+      var hs = norm(err.msg + " " + err.why);
+      var score = 0;
+      if (norm(err.msg).indexOf(q) !== -1) score += 140;
+      var hit = 0;
+      tokens.forEach(function (t) { if (hs.indexOf(t) !== -1) hit += 1; });
+      if (hit === tokens.length) score += 18 * hit;
+      else score += 3 * hit;
+      if (hit > 0) scored.push({ kind: "error", item: err, score: score });
+    });
+
     scored.sort(function (a, b) { return b.score - a.score; });
-    return scored.slice(0, 8).map(function (s) { return s.intent; });
+    return scored.slice(0, 8);
   }
 
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text) e.textContent = text;
-    return e;
-  }
-
-  function copyButton(text) {
-    var b = el("button", "copy", "Copy");
-    b.setAttribute("aria-label", "Copy command");
-    b.addEventListener("click", function () {
-      var done = function () {
-        b.textContent = "Copied";
-        b.classList.add("done");
-        setTimeout(function () { b.textContent = "Copy"; b.classList.remove("done"); }, 1500);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done);
-      } else {
-        var ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-        done();
-      }
-    });
-    return b;
-  }
-
-  var DANGER_LABEL = { safe: "Safe", history: "Rewrites history", destructive: "Destructive" };
-
-  function renderIntent(intent) {
-    var card = el("article", "result");
-    card.id = intent.id;
-
-    var h = el("h2", null, intent.q);
-    var a = el("a", "anchor", "#");
-    a.href = "#" + intent.id;
-    a.setAttribute("aria-label", "Link to this answer");
-    h.appendChild(a);
+  function renderError(err) {
+    var card = GG.el("article", "result errcard");
+    var h = GG.el("h2", null, "");
+    var code = GG.el("code", "errmsg", err.msg);
+    h.appendChild(code);
     card.appendChild(h);
-
-    intent.variants.forEach(function (v) {
-      var box = el("div", "variant");
-      var when = el("div", "when");
-      when.appendChild(el("span", null, v.when));
-      when.appendChild(el("span", "badge " + v.danger, DANGER_LABEL[v.danger]));
-      box.appendChild(when);
-
-      v.cmds.forEach(function (c) {
-        var row = el("div", "cmd");
-        var code = el("code", null, c.c);
-        row.appendChild(code);
-        row.appendChild(copyButton(c.c));
-        box.appendChild(row);
-        if (c.n) box.appendChild(el("p", "note", c.n));
+    card.appendChild(GG.el("p", "note", err.why));
+    if (err.intent) {
+      var ref = DATA.find(function (x) { return x.id === err.intent; });
+      if (ref) {
+        var p = GG.el("p", "seealso", "Full answer: ");
+        var link = GG.el("a", null, ref.q);
+        link.href = "#" + ref.id;
+        p.appendChild(link);
+        card.appendChild(p);
+      }
+    } else {
+      (err.fix || []).forEach(function (c) {
+        var row = GG.el("div", "cmd");
+        row.appendChild(GG.el("code", null, c.c));
+        row.appendChild(GG.copyButton(c.c));
+        card.appendChild(row);
+        if (c.n) card.appendChild(GG.el("p", "note", c.n));
       });
-
-      var undo = el("p", "undo");
-      undo.appendChild(el("strong", null, "Undo: "));
-      undo.appendChild(document.createTextNode(v.undo));
-      box.appendChild(undo);
-
-      card.appendChild(box);
-    });
-
-    if (intent.seealso && intent.seealso.length) {
-      var sa = el("p", "seealso", "See also: ");
-      intent.seealso.forEach(function (id, i) {
-        var ref = DATA.find(function (x) { return x.id === id; });
-        if (!ref) return;
-        if (i > 0) sa.appendChild(document.createTextNode(" · "));
-        var link = el("a", null, ref.q);
-        link.href = "#" + id;
-        sa.appendChild(link);
-      });
-      card.appendChild(sa);
+      var more = GG.el("p", "seealso", "");
+      var a = GG.el("a", null, "Every Git error, decoded");
+      a.href = "errors.html#" + err.id;
+      more.appendChild(a);
+      card.appendChild(more);
     }
-
     return card;
   }
 
@@ -170,23 +112,26 @@
   function render(list, query) {
     clear(resultsEl);
     if (!list.length && query) {
-      var empty = el("p", "empty");
+      var empty = GG.el("p", "empty");
       empty.appendChild(document.createTextNode("No answer for that yet. "));
-      var ask = el("a", null, "Ask in Discussions");
+      var ask = GG.el("a", null, "Ask in Discussions");
       ask.href = "https://github.com/Amey-Thakur/GIT-GUIDE/discussions";
       empty.appendChild(ask);
       empty.appendChild(document.createTextNode(" and it will be added."));
       resultsEl.appendChild(empty);
       return;
     }
-    list.forEach(function (intent) { resultsEl.appendChild(renderIntent(intent)); });
+    list.forEach(function (r) {
+      resultsEl.appendChild(r.kind === "error" ? renderError(r.item) : GG.renderIntent(r.item, DATA));
+    });
   }
 
   function showById(id) {
     var intent = DATA.find(function (x) { return x.id === id; });
     if (intent) {
       input.value = "";
-      render([intent]);
+      clear(resultsEl);
+      resultsEl.appendChild(GG.renderIntent(intent, DATA));
       window.scrollTo({ top: 0 });
     }
   }
@@ -196,8 +141,8 @@
     clear(indexEl);
     var sorted = DATA.slice().sort(function (a, b) { return a.q.localeCompare(b.q); });
     sorted.forEach(function (intent) {
-      var li = el("li");
-      var a = el("a", null, intent.q);
+      var li = GG.el("li");
+      var a = GG.el("a", null, intent.q);
       a.href = "#" + intent.id;
       li.appendChild(a);
       indexEl.appendChild(li);

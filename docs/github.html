@@ -1,0 +1,174 @@
+<!doctype html>
+<!--
+  File: github.html
+  Purpose: The GitHub chapter: everything that is GitHub rather than Git, done properly.
+  Author: Amey Thakur
+  GitHub: https://github.com/Amey-Thakur
+  Tech: HTML5, GitHub Pages
+  Description: Pull requests, forks, Issues, Actions, releases, Pages, the gh CLI, and the power moves experienced users lean on daily. Ends where GitHub ends: the same Git works on every other host.
+  Date: 2026-08-07
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The GitHub guide: pull requests, forks, Actions, releases | Git Guide</title>
+  <meta name="description" content="What belongs to GitHub rather than Git: pull requests done properly, forks and open source flow, Issues, GitHub Actions, releases, GitHub Pages, the gh CLI, and power-user shortcuts.">
+  <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/github.html">
+  <meta property="og:title" content="The GitHub guide: pull requests, forks, Actions, releases">
+  <meta property="og:description" content="Everything that is GitHub rather than Git, done properly.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/github.html">
+  <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap head-row">
+      <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="20" height="20"> Git Guide<span class="dot">.</span></a>
+      <div class="head-tools">
+        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+          <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="site-nav" aria-label="Site">
+        <a href="./">Finder</a>
+        <a href="learn.html">Learn</a>
+        <a href="fix.html">Fix</a>
+        <a href="errors.html">Errors</a>
+        <a href="github.html" aria-current="page">GitHub</a>
+        <a href="cheatsheet.html">Cheatsheet</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>The GitHub guide.</h1>
+        <p class="lede">Git is the tool; GitHub is the place teams meet around it. This chapter covers everything that belongs to the place: pull requests, forks, Issues, Actions, releases, Pages, and the shortcuts experienced users lean on daily.</p>
+      </div>
+    </section>
+
+    <section class="chapter" aria-label="GitHub guide">
+      <div class="wrap">
+
+        <h2 id="pull-requests">Pull requests, done properly</h2>
+        <p>A pull request is a conversation about a branch. The mechanics are three commands and a link:</p>
+        <div class="cmd"><code>git switch -c fix-login-timeout</code><button class="copy" data-cmd="git switch -c fix-login-timeout" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git push -u origin fix-login-timeout</code><button class="copy" data-cmd="git push -u origin fix-login-timeout" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh pr create --fill</code><button class="copy" data-cmd="gh pr create --fill" aria-label="Copy command">Copy</button></div>
+        <p class="note">Or click the yellow "Compare &amp; pull request" banner GitHub shows after the push. Open it as a draft if it is not ready for review.</p>
+        <p>What separates a good PR from a painful one: it is small enough to review in one sitting, its description says why rather than what, and it stays alive by responding to review with new commits, not force pushes, until the reviewer approves. On your own PR branch, rebasing to clean up before merge is normal; add <code>Fixes #123</code> to the description and the issue closes itself on merge.</p>
+        <p class="note">Review one locally with <a href="index.html#checkout-pr">check out a pull request</a>; keep your branch current with <a href="index.html#rebase-onto-main">rebase onto main</a>.</p>
+
+        <h2 id="pr-life">The life of a pull request</h2>
+        <div class="diagram">
+          <svg viewBox="0 0 920 300" role="img" aria-label="Diagram of a pull request from branch to merge: commits, checks, review, and the merged result">
+            <g id="p-m1" class="reveal"><circle cx="100" cy="90" r="14" class="commit"></circle></g>
+            <g id="p-m2" class="reveal"><circle cx="220" cy="90" r="14" class="commit"></circle></g>
+            <line id="p-em" class="edge reveal" x1="114" y1="90" x2="206" y2="90"></line>
+            <g id="p-main" class="reveal"><rect x="188" y="36" width="64" height="24" rx="6" class="tag"></rect><text x="220" y="52" class="tagtext" text-anchor="middle">main</text><line x1="220" y1="60" x2="220" y2="74" class="tick"></line></g>
+            <path id="p-branch" class="edge reveal" d="M231,101 C270,140 262,200 286,200" fill="none"></path>
+            <g id="p-f1" class="reveal"><circle cx="300" cy="200" r="14" class="commit"></circle></g>
+            <g id="p-feat" class="reveal"><rect x="268" y="240" width="64" height="24" rx="6" class="tag"></rect><text x="300" y="256" class="tagtext" text-anchor="middle">feature</text><line x1="300" y1="240" x2="300" y2="216" class="tick"></line></g>
+            <g id="p-f2" class="reveal"><circle cx="380" cy="200" r="14" class="commit"></circle></g>
+            <line id="p-e12" class="edge reveal" x1="314" y1="200" x2="366" y2="200"></line>
+            <g id="p-f3" class="reveal"><circle cx="460" cy="200" r="14" class="commit"></circle></g>
+            <line id="p-e23" class="edge reveal" x1="394" y1="200" x2="446" y2="200"></line>
+            <g id="p-M" class="reveal"><circle cx="520" cy="90" r="14" class="commit"></circle></g>
+            <line id="p-e2M" class="edge reveal" x1="234" y1="90" x2="506" y2="90"></line>
+            <path id="p-efM" class="edge reveal" d="M471,189 C500,160 505,120 514,102" fill="none"></path>
+            <g id="p-mainM" class="reveal"><rect x="488" y="36" width="64" height="24" rx="6" class="tag"></rect><text x="520" y="52" class="tagtext" text-anchor="middle">main</text><line x1="520" y1="60" x2="520" y2="74" class="tick"></line></g>
+            <g id="p-panel" class="reveal">
+              <rect x="560" y="50" width="340" height="200" rx="10" class="prpanel"></rect>
+              <text x="580" y="82" class="prtitle">Pull request #7</text>
+              <text x="580" y="102" class="prsub">feature into main</text>
+            </g>
+            <g id="p-ci" class="reveal"><circle cx="592" cy="132" r="7" class="prok"></circle><path d="M588 132 l3 3 l6 -6" class="prok" fill="none"></path><text x="610" y="136" class="prtext">Checks passed</text></g>
+            <g id="p-review" class="reveal"><circle cx="592" cy="162" r="7" class="prwarn"></circle><text x="610" y="166" class="prtext">Review: changes requested</text></g>
+            <g id="p-merged" class="reveal"><rect x="580" y="186" width="96" height="26" rx="13" class="prbadge"></rect><text x="628" y="204" class="prbadgetext" text-anchor="middle">Merged</text></g>
+          </svg>
+        </div>
+        <div class="stepcap">
+          <code id="d3-cmd"></code>
+          <p id="d3-text"></p>
+        </div>
+        <div class="stepper-controls" data-stepper="d3">
+          <button class="wizard-opt" id="d3-prev" type="button">Previous</button>
+          <span class="stepdots" id="d3-dots" aria-hidden="true"></span>
+          <button class="wizard-opt" id="d3-next" type="button">Next</button>
+        </div>
+
+        <h2 id="forks">Forks and the open source flow</h2>
+        <p>A fork is your own copy of someone else's repository, the door to contributing anywhere on GitHub:</p>
+        <div class="cmd"><code>gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone</code><button class="copy" data-cmd="gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone" aria-label="Copy command">Copy</button></div>
+        <p class="note">Fork, clone, branch, commit, push to your fork, open the PR against the original. The original repository is conventionally the remote named upstream; <a href="index.html#sync-fork">keep your fork in sync</a> before every new branch.</p>
+
+        <h2 id="issues">Issues that get fixed</h2>
+        <p>An issue that names the version, the exact steps, what happened, and what you expected gets fixed. One topic per issue, real error text pasted as text, and a minimal reproduction beats a paragraph of description. Reference code precisely: press <kbd>y</kbd> on any file view to get a permalink to that exact commit, then click a line number to link the line.</p>
+
+        <h2 id="actions">GitHub Actions</h2>
+        <p>Actions runs commands for you on every push: tests, checks, deploys. One file in the repository is the whole setup. This very site validates its data and house style on every commit with a workflow of a dozen lines:</p>
+        <div class="cmd"><code>mkdir -p .github/workflows</code><button class="copy" data-cmd="mkdir -p .github/workflows" aria-label="Copy command">Copy</button></div>
+        <p class="note">A minimal workflow file, <code>.github/workflows/checks.yml</code>: run on push, check out the code, run your test command. Start from <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/.github/workflows/checks.yml">this repository's real one</a>. Two habits worth copying from day one: give workflows only the permissions they need, and pin third-party actions to a commit hash, not a tag.</p>
+
+        <h2 id="releases">Releases</h2>
+        <p>A release is a tag with a face: notes, downloadable assets, a permanent link.</p>
+        <div class="cmd"><code>git tag -a v1.0.0 -m "First stable release"</code><button class="copy" data-cmd="git tag -a v1.0.0 -m &quot;First stable release&quot;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>git push origin v1.0.0</code><button class="copy" data-cmd="git push origin v1.0.0" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh release create v1.0.0 --generate-notes</code><button class="copy" data-cmd="gh release create v1.0.0 --generate-notes" aria-label="Copy command">Copy</button></div>
+        <p class="note">--generate-notes writes the changelog from merged PRs since the last release.</p>
+
+        <h2 id="pages">GitHub Pages</h2>
+        <p>Free hosting for static sites, straight from a repository. Settings, Pages, choose the branch and folder, done: the page you are reading is served exactly this way from the <code>docs/</code> folder. Project sites live at <code>&lt;user&gt;.github.io/&lt;repo&gt;</code>; name a repository <code>&lt;user&gt;.github.io</code> and it becomes your root site.</p>
+
+        <h2 id="cli">The gh CLI</h2>
+        <p>GitHub's command line brings the site to your terminal. The handful that pay for themselves daily:</p>
+        <div class="cmd"><code>gh auth login</code><button class="copy" data-cmd="gh auth login" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh repo create &lt;name&gt; --public --source . --push</code><button class="copy" data-cmd="gh repo create &lt;name&gt; --public --source . --push" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh pr checkout &lt;number&gt;</code><button class="copy" data-cmd="gh pr checkout &lt;number&gt;" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh pr status</code><button class="copy" data-cmd="gh pr status" aria-label="Copy command">Copy</button></div>
+        <div class="cmd"><code>gh run watch</code><button class="copy" data-cmd="gh run watch" aria-label="Copy command">Copy</button></div>
+
+        <h2 id="power">Power moves</h2>
+        <p>Press <kbd>.</kbd> in any repository and it opens in a browser VS Code. Press <kbd>t</kbd> to fuzzy-find any file, <kbd>/</kbd> to search code. Append <code>.patch</code> to any commit URL for the raw patch, or <code>#L10-L20</code> to link exact lines. Blame view has a "view blame prior to this change" button that digs through reformats. Your profile README is a repository named after your username. And drag any image into an issue or PR comment to host it instantly.</p>
+
+        <h2 id="protection">Protect the branch</h2>
+        <p>On a team, nobody writes to main directly, not even you. Settings, Branches, one ruleset: require a pull request, require the checks to pass. From that moment main cannot break by accident, only by review. Assign reviewers by path with a CODEOWNERS file:</p>
+        <div class="cmd"><code>printf "docs/ @&lt;reviewer&gt;\n" &gt; .github/CODEOWNERS</code><button class="copy" data-cmd="printf &quot;docs/ @<reviewer>\n&quot; > .github/CODEOWNERS" aria-label="Copy command">Copy</button></div>
+        <p class="note">Whoever owns a path is requested automatically on every pull request that touches it.</p>
+
+        <h2 id="profile">Your profile is a repository</h2>
+        <p>Create a repository named exactly your username and its README becomes the top of your profile. Pin the six repositories that represent you best. And know the one rule of the contribution graph: commits count only when their author email matches an address on your GitHub account, which is why a <a href="index.html#tell-me-who-you-are">wrong git identity</a> quietly erases your work from it.</p>
+
+        <h2 id="beyond">Where GitHub ends</h2>
+        <p>Everything above is the host, not the tool. The same Git speaks to <a href="index.html#use-other-hosts">GitLab, Bitbucket, and AWS CodeCommit</a>, to <a href="index.html#use-azure-devops">Azure DevOps</a>, to <a href="index.html#mirror-migrate">any new host with full history</a>, and to <a href="index.html#git-bundle">no host at all</a>. Learn Git once; the platforms are details.</p>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img class="avatar" src="assets/amey.jpg" alt="Amey Thakur" width="44" height="44">
+      <div class="footer-text">
+        <p class="footer-name">Built and maintained by <a href="https://github.com/Amey-Thakur">Amey Thakur</a></p>
+        <p class="footer-links">
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Discussions</a> ·
+          <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="render.js"></script>
+  <script src="stepper.js"></script>
+  <script src="github.js"></script>
+</body>
+</html>

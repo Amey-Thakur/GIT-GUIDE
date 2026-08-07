@@ -9,7 +9,7 @@
 Type what you want to do. Get the exact commands, what each one does,
 how dangerous it is, and how to undo it.
 
-**[Open the guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
+**[Open Git Guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
 
 </div>
 
@@ -25,7 +25,7 @@ This guide answers that, for everyone from a student's first push to an engineer
 
 ## How to use it
 
-1. Open **[the guide](https://amey-thakur.github.io/GIT-GUIDE/)**.
+1. Open **[Git Guide](https://amey-thakur.github.io/GIT-GUIDE/)**.
 2. Type what you want in plain language: `undo the last commit`, `gitignore not working`, `permission denied publickey`.
 3. Copy the command with one click.
 

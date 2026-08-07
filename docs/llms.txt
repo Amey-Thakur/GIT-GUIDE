@@ -10,10 +10,22 @@ License: MIT
 ## Data
 
 - [intents.json](https://amey-thakur.github.io/GIT-GUIDE/data/intents.json): plain-language questions mapped to exact commands, with variants, danger levels, and undo for each.
+- [errors.json](https://amey-thakur.github.io/GIT-GUIDE/data/errors.json): Git's literal error messages with cause and copy-ready fixes.
+- [scenarios.json](https://amey-thakur.github.io/GIT-GUIDE/data/scenarios.json): the rescue triage decision tree; leaves resolve to intent ids.
+- [cheatsheet.json](https://amey-thakur.github.io/GIT-GUIDE/data/cheatsheet.json): the complete command sheet grouped by task, danger-flagged.
 
 ## Pages
 
-- [Finder](https://amey-thakur.github.io/GIT-GUIDE/): search any Git question, copy the answer.
+- [Finder](https://amey-thakur.github.io/GIT-GUIDE/): search any Git question or paste an error, copy the answer.
+- [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html): the visual model: where code lives, what each command moves, branches and HEAD.
+- [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html): guided rescue triage from panic to recipe.
+- [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html): every common Git error, decoded, statically rendered.
+- [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html): the GitHub chapter: pull requests, forks, Issues, Actions, releases, Pages, gh CLI, power moves.
+- [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html): the complete cheatsheet, one line per command, every platform and no platform.
+
+## Community
+
+- [Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions): every answer mirrored as an answered Q&A thread; ask anything missing.
 
 ## Conventions
 
