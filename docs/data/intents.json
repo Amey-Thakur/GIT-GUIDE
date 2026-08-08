@@ -3123,6 +3123,244 @@
         }
       ],
       "seealso": ["push-new-branch"]
+    },
+    {
+      "id": "what-is-head",
+      "q": "What HEAD actually is",
+      "aka": ["head meaning git", "what is head", "head vs main", "caret after head"],
+      "variants": [
+        {
+          "when": "One sentence, then proof",
+          "danger": "safe",
+          "cmds": [
+            { "c": "cat .git/HEAD", "n": "HEAD is where you stand: normally a pointer to your current branch, which points to a commit. This prints it." },
+            { "c": "git log HEAD~2..HEAD --oneline", "n": "HEAD~2 means two commits behind where you stand; HEAD^ is the first parent. Every command that takes a commit accepts these." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["detached-head", "current-branch"]
+    },
+    {
+      "id": "origin-main-vs-main",
+      "q": "main vs origin/main, the difference",
+      "aka": ["what is origin main", "local branch vs remote branch", "origin slash branch"],
+      "variants": [
+        {
+          "when": "Two branches, one name",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git log main..origin/main --oneline", "n": "main is your local branch. origin/main is your last known photograph of the remote's main, updated only when you fetch. This shows what the photo has that you lack." },
+            { "c": "git fetch", "n": "Refreshes the photograph. Nothing about your own branches changes." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["pull-vs-fetch", "ahead-behind"]
+    },
+    {
+      "id": "init-vs-clone",
+      "q": "init or clone, which starts my project",
+      "aka": ["difference init clone", "start new repo or copy", "git init vs git clone"],
+      "variants": [
+        {
+          "when": "One question: does the project already exist somewhere?",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git clone <url>", "n": "Yes: clone brings it here, history, remote connection and all. Never init inside a folder you mean to clone into." },
+            { "c": "git init -b main", "n": "No: init starts version control in this folder, empty history, no remote until you add one." }
+          ],
+          "undo": "clone: delete the folder. init: delete .git"
+        }
+      ],
+      "seealso": ["clone-repo", "upload-existing-project"]
+    },
+    {
+      "id": "git-bash",
+      "q": "Git Bash, PowerShell, or CMD on Windows",
+      "aka": ["what is git bash", "which terminal for git", "git in powershell"],
+      "variants": [
+        {
+          "when": "Any of them works",
+          "danger": "safe",
+          "cmds": [{ "c": "git --version", "n": "Git is the same in all three. Git Bash ships with Git for Windows and speaks Linux-style commands (ls, ~, ssh-agent), which makes internet tutorials copy-paste cleanly. PowerShell is fine too; only the surrounding commands differ." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["first-time-setup", "update-git"]
+    },
+    {
+      "id": "merge-main-into-feature",
+      "q": "Bring main's new commits into my feature branch",
+      "aka": ["merge main into branch", "update branch from main without rebase", "main moved ahead"],
+      "variants": [
+        {
+          "when": "By merge, when the team avoids rebase",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch origin", "n": "" },
+            { "c": "git merge origin/main", "n": "Run on your feature branch. One merge commit carries main's progress in; no history rewritten, no force push." }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "By rebase, for a straight line",
+          "danger": "history",
+          "cmds": [{ "c": "git rebase origin/main", "n": "The cleaner result on your own branches; the rebase answer covers conflicts and the force-with-lease push." }],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": ["rebase-onto-main", "merge-vs-rebase"]
+    },
+    {
+      "id": "pr-vs-mr",
+      "q": "Pull request vs merge request",
+      "aka": ["merge request gitlab", "pr and mr difference", "same thing pull merge request"],
+      "variants": [
+        {
+          "when": "Same thing, two names",
+          "danger": "safe",
+          "cmds": [{ "c": "gh pr create --fill", "n": "GitHub and Bitbucket say pull request; GitLab says merge request; Azure DevOps says pull request. The object is identical: a branch proposed into another, with review. GitLab's CLI: glab mr create" }],
+          "undo": "Close it on the host"
+        }
+      ],
+      "seealso": ["create-pr-cli", "checkout-pr"]
+    },
+    {
+      "id": "bitbucket-auth",
+      "q": "Authenticate Git with Bitbucket",
+      "aka": ["bitbucket app password", "bitbucket api token", "bitbucket push rejected auth"],
+      "variants": [
+        {
+          "when": "HTTPS",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global credential.helper manager", "n": "When prompted, the password is an API token created under Personal settings, App passwords, never your account password. Atlassian retired plain passwords years ago." }],
+          "undo": "Revoke the token in Bitbucket settings"
+        },
+        {
+          "when": "SSH, same key as everywhere",
+          "danger": "safe",
+          "cmds": [{ "c": "git remote set-url origin git@bitbucket.org:<workspace>/<repo>.git", "n": "Add your public key under Personal settings, SSH keys." }],
+          "undo": "set-url back to HTTPS"
+        }
+      ],
+      "seealso": ["use-other-hosts", "ssh-key-github"]
+    },
+    {
+      "id": "notebooks-in-git",
+      "q": "Jupyter notebooks in Git without the noise",
+      "aka": ["ipynb merge conflict", "notebook diff unreadable", "jupyter output in git"],
+      "variants": [
+        {
+          "when": "Strip outputs before committing",
+          "danger": "safe",
+          "cmds": [
+            { "c": "pip install nbstripout && nbstripout --install", "n": "A filter that removes cell outputs and counters on commit; the diffs shrink to actual code changes." }
+          ],
+          "undo": "nbstripout --uninstall"
+        },
+        {
+          "when": "Diff and merge notebooks properly",
+          "danger": "safe",
+          "cmds": [{ "c": "pip install nbdime && nbdime config-git --enable --global", "n": "git diff on .ipynb becomes cell-aware; merge conflicts resolve in a notebook view instead of raw JSON." }],
+          "undo": "nbdime config-git --disable --global"
+        }
+      ],
+      "seealso": ["line-endings", "merge-conflict"]
+    },
+    {
+      "id": "slow-git",
+      "q": "Git is slow in a big repository",
+      "aka": ["git status slow", "speed up git", "large repo performance windows"],
+      "variants": [
+        {
+          "when": "The two switches that matter",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config core.fsmonitor true", "n": "A daemon watches the filesystem so status stops crawling the whole tree. Biggest single win on Windows." },
+            { "c": "git maintenance start", "n": "Background repacking and prefetch keep every operation brisk from now on." }
+          ],
+          "undo": "git config --unset core.fsmonitor; git maintenance unregister"
+        }
+      ],
+      "seealso": ["sparse-checkout", "shrink-repo"]
+    },
+    {
+      "id": "submodule-vs-subtree",
+      "q": "Submodule or subtree for a repo inside a repo",
+      "aka": ["difference submodule subtree", "vendor another repository", "monorepo vs submodule"],
+      "variants": [
+        {
+          "when": "The trade",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git submodule add <url> <path>", "n": "A pointer: your repo records a commit of theirs. Precise, but every clone needs the extra init step and teammates trip on it." },
+            { "c": "git subtree add --prefix=<path> <url> main --squash", "n": "A copy: their code lives in your history like normal files. Clones just work; updating back and forth takes more care. When in doubt, subtree for apps, submodule for tightly pinned shared libraries." }
+          ],
+          "undo": "Submodule: the remove answer. Subtree: git rm -r <path> and commit."
+        }
+      ],
+      "seealso": ["submodule-add", "remove-submodule"]
+    },
+    {
+      "id": "first-contribution",
+      "q": "Make your first open source contribution",
+      "aka": ["contribute to open source", "good first issue", "first pull request"],
+      "variants": [
+        {
+          "when": "The whole path",
+          "danger": "safe",
+          "cmds": [
+            { "c": "gh repo fork <owner>/<repo> --clone", "n": "Pick a project you actually use; look for issues labeled good first issue. Read its CONTRIBUTING.md first; projects differ." },
+            { "c": "git switch -c fix-<issue-number>", "n": "One small change per pull request; docs and tests count and are welcomed." },
+            { "c": "git push -u origin fix-<issue-number> && gh pr create --fill", "n": "Reference the issue in the description. Then respond to review kindly and promptly; that is the whole art." }
+          ],
+          "undo": "Close the PR; delete the fork; nothing upstream changed"
+        }
+      ],
+      "seealso": ["fork-vs-branch", "sync-fork", "commit-messages"]
+    },
+    {
+      "id": "edit-on-github",
+      "q": "Edit a file directly on GitHub",
+      "aka": ["change file in browser", "edit readme on github", "web editor github"],
+      "variants": [
+        {
+          "when": "Small edits, no clone",
+          "danger": "safe",
+          "cmds": [{ "c": "<open the file, press the pencil, commit>", "n": "The web editor commits straight to the branch, or opens a pull request if you lack write access. Press . in any repository for full VS Code in the browser. Right for docs; wrong for anything you should test first." }],
+          "undo": "git revert the commit it made"
+        }
+      ],
+      "seealso": ["upload-existing-project", "create-pr-cli"]
+    },
+    {
+      "id": "profile-readme",
+      "q": "Create a GitHub profile README",
+      "aka": ["profile page github", "readme on my profile", "personal github page"],
+      "variants": [
+        {
+          "when": "The secret repository name",
+          "danger": "safe",
+          "cmds": [{ "c": "gh repo create <your-username> --public --clone", "n": "A repository named exactly your username: its README.md renders at the top of your profile. GitHub even shows a hint when you create it." }],
+          "undo": "Delete or privatize that repository"
+        }
+      ],
+      "seealso": ["edit-on-github", "private-email"]
+    },
+    {
+      "id": "lines-changed",
+      "q": "Count the lines you have written",
+      "aka": ["how many lines of code", "my contribution stats", "lines added removed"],
+      "variants": [
+        {
+          "when": "Per author, whole history",
+          "danger": "safe",
+          "cmds": [{ "c": "git log --author=\"<name>\" --pretty=tformat: --numstat | awk '{a+=$1; d+=$2} END {print a, \"added,\", d, \"removed\"}'", "n": "Honest numbers, not a measure of worth: deleting code well counts double in practice." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["count-commits", "log-search"]
     }
   ]
 }
