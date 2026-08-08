@@ -21,7 +21,8 @@
         "remove last commit",
         "cancel commit",
         "revert most recent commit",
-        "delete last commit"
+        "delete last commit",
+        "uncommit but keep changes"
       ],
       "variants": [
         {
@@ -1225,7 +1226,8 @@
         "save changes without commit",
         "stash changes",
         "switch branch with uncommitted work",
-        "stash pop conflict"
+        "stash pop conflict",
+        "stash but keep staged"
       ],
       "variants": [
         {
@@ -1509,7 +1511,8 @@
         "create tag",
         "version tag",
         "annotated tag",
-        "push tags"
+        "push tags",
+        "tags not pushed"
       ],
       "variants": [
         {
@@ -3477,7 +3480,8 @@
       "aka": [
         "current commit",
         "which release am i on",
-        "git describe"
+        "git describe",
+        "latest tag"
       ],
       "variants": [
         {
@@ -3856,7 +3860,8 @@
       "aka": [
         "monorepo partial clone",
         "sparse checkout",
-        "clone one folder"
+        "clone one folder",
+        "clone only a folder"
       ],
       "variants": [
         {
@@ -4189,7 +4194,8 @@
       "aka": [
         "origin meaning",
         "upstream vs origin",
-        "rename remote"
+        "rename remote",
+        "what is upstream"
       ],
       "variants": [
         {
@@ -9525,6 +9531,650 @@
       "seealso": [
         "profile-readme",
         "first-contribution"
+      ]
+    },
+    {
+      "id": "what-is-staging",
+      "q": "What the staging area actually is",
+      "aka": [
+        "staging area explained",
+        "git index",
+        "why stage before commit"
+      ],
+      "variants": [
+        {
+          "when": "The idea",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add -p",
+              "n": "The staging area is the draft of your next commit. add -p shows why it exists: you pick changes hunk by hunk, so one messy working tree can become several clean commits."
+            }
+          ],
+          "undo": "git restore --staged <file>"
+        },
+        {
+          "when": "See the three states",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Staged, modified, untracked: the file's three possible places."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "add-a-vs-dot",
+        "undo-git-add"
+      ]
+    },
+    {
+      "id": "what-is-dot-git",
+      "q": "What lives inside the .git folder",
+      "aka": [
+        ".git folder explained",
+        "where git stores everything",
+        "can i delete .git"
+      ],
+      "variants": [
+        {
+          "when": "The short tour",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "ls .git",
+              "n": "objects holds every version of everything, refs holds branches and tags, HEAD says where you stand, config is repo-local settings. The folder is the repository; the files around it are just a checkout."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Deleting it",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "rm -rf .git",
+              "n": "Erases all history and every branch, keeping only the files currently on disk. Do this only to detach a copy from its history."
+            }
+          ],
+          "undo": "None, unless a remote or backup has the history"
+        }
+      ],
+      "seealso": [
+        "undo-git-init",
+        "fresh-history"
+      ]
+    },
+    {
+      "id": "cherry-pick-merge",
+      "q": "Cherry-pick a merge commit",
+      "aka": [
+        "cherry-pick -m",
+        "mainline parent",
+        "cherry pick merge fails"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cherry-pick -m 1 <merge-hash>",
+              "n": "A merge has two parents, so you must name the side to measure against. -m 1 means the branch it was merged into, which is almost always what you want."
+            }
+          ],
+          "undo": "git cherry-pick --abort mid-way, git reset --hard HEAD~1 after"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "undo-merge"
+      ]
+    },
+    {
+      "id": "interactive-rebase",
+      "q": "Rewrite my last few commits (interactive rebase)",
+      "aka": [
+        "git rebase -i",
+        "edit commit history",
+        "reorder commits",
+        "drop a commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i HEAD~5",
+              "n": "An editor lists the five commits. Change pick to reword, squash, fixup, edit, or drop, reorder lines to reorder commits, save to execute. Only rewrite commits you have not pushed."
+            }
+          ],
+          "undo": "git rebase --abort mid-way, git reset --hard ORIG_HEAD after"
+        }
+      ],
+      "seealso": [
+        "squash-commits",
+        "fixup-autosquash",
+        "split-commit"
+      ]
+    },
+    {
+      "id": "gitignore-not-working",
+      "q": "My .gitignore is being ignored",
+      "aka": [
+        "gitignore not working",
+        "ignored file still tracked",
+        "gitignore has no effect"
+      ],
+      "variants": [
+        {
+          "when": "The usual cause: the file is already tracked",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rm -r --cached <path>",
+              "n": ".gitignore only stops files from becoming tracked. Anything committed before the rule keeps being tracked until you remove it from the index. The file stays on disk."
+            }
+          ],
+          "undo": "git add <path> re-tracks it"
+        },
+        {
+          "when": "Find which rule matches, or does not",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git check-ignore -v <path>",
+              "n": "Prints the file, line, and pattern that decides this path. Silence means no rule matches at all."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "untrack-file",
+        "check-ignore",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "change-username",
+      "q": "Change my GitHub username safely",
+      "aka": [
+        "rename github account",
+        "new username what breaks",
+        "username change consequences"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "Settings -> Account -> Change username",
+              "n": "Repository URLs redirect until someone claims the old name. Pages sites, gist links, and @mentions in old conversations do not redirect. Update your remotes and CI afterward."
+            }
+          ],
+          "undo": "The old name can be reclaimed only if nobody takes it first"
+        }
+      ],
+      "seealso": [
+        "change-remote-url",
+        "rename-repo"
+      ]
+    },
+    {
+      "id": "fork-vs-clone",
+      "q": "Fork or clone, which one do I need",
+      "aka": [
+        "difference between fork and clone",
+        "copy repo to contribute",
+        "fork explained"
+      ],
+      "variants": [
+        {
+          "when": "Contributing to a repo you cannot push to",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo fork <owner>/<repo> --clone",
+              "n": "A fork is your server-side copy, and the only place you can push. Pull requests flow from it back to the original."
+            }
+          ],
+          "undo": "Delete the fork on GitHub"
+        },
+        {
+          "when": "Just working with it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url>",
+              "n": "A clone is only a local copy. If you have push access, or only want to read, no fork is needed."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "fork-vs-branch",
+        "sync-fork",
+        "first-contribution"
+      ]
+    },
+    {
+      "id": "repo-topics",
+      "q": "Make a repository discoverable with topics",
+      "aka": [
+        "add topics",
+        "repo tags on github",
+        "improve repo discovery"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "About -> gear icon -> Topics",
+              "n": "Up to twenty lowercase keywords. Topics power GitHub search and the Explore feed; a repo without them is invisible to browsing."
+            }
+          ],
+          "undo": "Remove them in the same dialog"
+        }
+      ],
+      "seealso": [
+        "code-search",
+        "social-preview"
+      ]
+    },
+    {
+      "id": "social-preview",
+      "q": "Control how repository links look when shared",
+      "aka": [
+        "social preview image",
+        "link preview card",
+        "og image for repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Social preview -> Upload an image",
+              "n": "1280 by 640 pixels. Without one, shared links render a generic card; with one, every paste into Slack, X, or LinkedIn shows your design."
+            }
+          ],
+          "undo": "Remove the image in the same place"
+        }
+      ],
+      "seealso": [
+        "repo-topics",
+        "readme-badges"
+      ]
+    },
+    {
+      "id": "readme-badges",
+      "q": "Add live badges to the README",
+      "aka": [
+        "shields.io",
+        "build status badge",
+        "version badge"
+      ],
+      "variants": [
+        {
+          "when": "From any public data",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "![answers](https://img.shields.io/badge/dynamic/json?url=<json-url>&query=$.count&label=answers)",
+              "n": "The dynamic badge reads a JSON file you host, so the number is never hardcoded."
+            }
+          ],
+          "undo": "Delete the line"
+        },
+        {
+          "when": "Workflow status",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "![checks](https://github.com/<user>/<repo>/actions/workflows/ci.yml/badge.svg)",
+              "n": "GitHub serves this one itself: green when the workflow passes."
+            }
+          ],
+          "undo": "Delete the line"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "social-preview"
+      ]
+    },
+    {
+      "id": "template-repo",
+      "q": "Let people start new projects from my repository",
+      "aka": [
+        "template repository",
+        "use this template",
+        "boilerplate repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Template repository",
+              "n": "A green Use this template button appears. Copies start with clean history and no fork relationship, which is exactly what boilerplate wants."
+            }
+          ],
+          "undo": "Untick the same box"
+        },
+        {
+          "when": "Use one",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create my-app --template <owner>/<template> --clone",
+              "n": "New repo, fresh history, files from the template."
+            }
+          ],
+          "undo": "Delete the new repository"
+        }
+      ],
+      "seealso": [
+        "fork-vs-clone",
+        "fresh-history"
+      ]
+    },
+    {
+      "id": "clone-vs-zip",
+      "q": "Download ZIP or clone, what is the difference",
+      "aka": [
+        "download zip no history",
+        "code button zip",
+        "zip vs git clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url>",
+              "n": "The ZIP is a snapshot with no history, no branches, and no way to pull updates or contribute. Clone unless you truly want files once and never again."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "clone-repo",
+        "archive-export"
+      ]
+    },
+    {
+      "id": "contributions-graph",
+      "q": "My commits are missing from the contributions graph",
+      "aka": [
+        "contributions not showing",
+        "green squares missing",
+        "profile graph empty"
+      ],
+      "variants": [
+        {
+          "when": "The usual cause: email mismatch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config user.email",
+              "n": "The graph counts a commit only when this email is verified on your GitHub account. Add the address under Settings -> Emails, or set the one GitHub gave you."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The other rules",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --format=\"%an %ae\" -5",
+              "n": "Commits count on the default branch or gh-pages, in repos you own or contribute to. Forks do not count. Private contributions show only if enabled in profile settings."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "tell-me-who-you-are",
+        "private-email",
+        "multiple-identities"
+      ]
+    },
+    {
+      "id": "merge-methods",
+      "q": "Merge commit, squash, or rebase for pull requests",
+      "aka": [
+        "squash and merge vs merge",
+        "pr merge options",
+        "which merge method"
+      ],
+      "variants": [
+        {
+          "when": "Choose what the repo allows",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Pull Requests",
+              "n": "Merge commit keeps every commit and the join. Squash lands one clean commit per pull request, the common team default. Rebase replays commits with no join at all."
+            }
+          ],
+          "undo": "Re-tick the methods you disabled"
+        },
+        {
+          "when": "Squash from the terminal",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr merge <number> --squash",
+              "n": "One commit on main, titled after the pull request."
+            }
+          ],
+          "undo": "git revert <squash-hash> on main"
+        }
+      ],
+      "seealso": [
+        "merge-squash",
+        "no-ff-merge",
+        "merge-vs-rebase"
+      ]
+    },
+    {
+      "id": "auto-merge",
+      "q": "Merge automatically once checks pass",
+      "aka": [
+        "enable auto-merge",
+        "merge when green",
+        "auto merge pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr merge <number> --auto --squash",
+              "n": "The pull request merges itself the moment required reviews and checks are green. No more watching CI."
+            }
+          ],
+          "undo": "gh pr merge <number> --disable-auto"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "merge-methods"
+      ]
+    },
+    {
+      "id": "revert-pr",
+      "q": "Revert a merged pull request",
+      "aka": [
+        "undo merged pr",
+        "revert button github",
+        "back out a pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Revert button on the merged pull request",
+              "n": "GitHub opens a new pull request that undoes the change. Review and merge it like any other; history stays honest."
+            }
+          ],
+          "undo": "Revert the revert pull request"
+        },
+        {
+          "when": "From the terminal",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert -m 1 <merge-hash>",
+              "n": "Same result by hand. For a squash merge, plain git revert <hash> does it."
+            }
+          ],
+          "undo": "git revert the revert commit"
+        }
+      ],
+      "seealso": [
+        "undo-merge",
+        "merge-methods"
+      ]
+    },
+    {
+      "id": "github-api",
+      "q": "Read GitHub data from the command line",
+      "aka": [
+        "gh api",
+        "github rest api",
+        "script against github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo> --jq .stargazers_count",
+              "n": "gh api signs the request with your login and --jq filters the JSON. Nearly everything on github.com is readable this way."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/commits/main --jq .commit.verification.verified",
+              "n": "Example: confirm the latest commit is signed."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "readme-badges"
+      ]
+    },
+    {
+      "id": "webhooks",
+      "q": "Call my server when something happens in the repository",
+      "aka": [
+        "github webhook",
+        "push event notification",
+        "integrate external service"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Webhooks -> Add webhook",
+              "n": "GitHub POSTs JSON to your URL on the events you pick. Verify the X-Hub-Signature-256 header with your secret before trusting a payload. For running code on events, Actions is usually simpler."
+            }
+          ],
+          "undo": "Delete the webhook"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "github-api"
+      ]
+    },
+    {
+      "id": "dependabot",
+      "q": "Get automatic dependency updates and security alerts",
+      "aka": [
+        "dependabot setup",
+        "vulnerable dependency alert",
+        "automatic dependency prs"
+      ],
+      "variants": [
+        {
+          "when": "Security only",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Advanced Security -> Dependabot alerts and security updates",
+              "n": "GitHub scans the dependency graph and opens pull requests that patch known vulnerabilities."
+            }
+          ],
+          "undo": "Disable in the same place"
+        },
+        {
+          "when": "Version updates too",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".github/dependabot.yml",
+              "n": "Declare each ecosystem and an interval; Dependabot opens upgrade pull requests on schedule, one dependency each."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "codespaces",
+      "q": "Open a repository in a cloud dev environment",
+      "aka": [
+        "github codespaces",
+        "develop in browser",
+        "no local setup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Code -> Codespaces -> Create codespace on main",
+              "n": "VS Code in the browser on a cloud VM, dependencies installing while you watch. Personal accounts get free hours monthly."
+            },
+            {
+              "c": "gh codespace create -r <owner>/<repo>",
+              "n": "Same thing from the terminal; gh codespace ssh connects."
+            }
+          ],
+          "undo": "Delete the codespace under Code -> Codespaces"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "edit-on-github"
       ]
     }
   ]
