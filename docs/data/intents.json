@@ -19425,6 +19425,360 @@
         "github-education",
         "first-day-on-team"
       ]
+    },
+    {
+      "id": "reset-modes",
+      "q": "soft, mixed, and hard reset compared",
+      "aka": [
+        "reset soft vs mixed vs hard",
+        "which reset mode",
+        "difference between reset flags"
+      ],
+      "variants": [
+        {
+          "when": "The three levels",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --soft <commit>",
+              "n": "Moves the branch only. Staging area and files untouched, so the changes sit staged and ready to recommit."
+            },
+            {
+              "c": "git reset --mixed <commit>",
+              "n": "The default. Moves the branch and clears the staging area; your files keep every change, unstaged."
+            },
+            {
+              "c": "git reset --hard <commit>",
+              "n": "Moves the branch and overwrites your files. The only one that destroys work, and the only one worth hesitating over."
+            }
+          ],
+          "undo": "git reset --hard HEAD@{1} restores the position; uncommitted work lost to --hard is gone"
+        }
+      ],
+      "seealso": [
+        "revert-vs-reset",
+        "undo-decision-tree",
+        "undo-last-commit"
+      ]
+    },
+    {
+      "id": "checkout-three-jobs",
+      "q": "Why checkout does three unrelated things",
+      "aka": [
+        "checkout confusing",
+        "checkout branch vs file",
+        "switch and restore instead"
+      ],
+      "variants": [
+        {
+          "when": "The history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git checkout",
+              "n": "One command grew to switch branches, restore files, and detach HEAD, which is why its behavior seemed to depend on mood. Git 2.23 split it deliberately."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Use the modern pair",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch <branch>",
+              "n": "Branches only, and it refuses ambiguous arguments."
+            },
+            {
+              "c": "git restore <file>",
+              "n": "Files only. Same power, no chance of restoring a file when you meant to change branch."
+            }
+          ],
+          "undo": "Each has its own undo; checkout still works for old habits"
+        }
+      ],
+      "seealso": [
+        "checkout-vs-switch",
+        "restore-file",
+        "detached-head"
+      ]
+    },
+    {
+      "id": "merge-strategies",
+      "q": "Merge strategies and when they matter",
+      "aka": [
+        "merge strategy ort",
+        "strategy-option theirs",
+        "recursive vs ort"
+      ],
+      "variants": [
+        {
+          "when": "The default is right",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge <branch>",
+              "n": "Modern Git uses ort, which replaced recursive: faster, better at renames, same behavior you already expect. You rarely need to name a strategy."
+            }
+          ],
+          "undo": "git merge --abort or git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Bias the whole merge",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge -X theirs <branch>",
+              "n": "Resolves only conflicting hunks in their favor, keeping everything non-conflicting from both. Different from -s ours, which discards the other side's changes entirely while still recording the merge."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "merge-take-side",
+        "what-is-merging",
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "three-dot-in-ci",
+      "q": "Diff a pull request the way GitHub does",
+      "aka": [
+        "diff pr locally",
+        "three dot diff in ci",
+        "changed files in pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff origin/main...HEAD",
+              "n": "Three dots measures from the common ancestor, so changes that landed on main meanwhile do not pollute the diff. This is exactly what the Files changed tab shows."
+            },
+            {
+              "c": "git diff --name-only origin/main...HEAD",
+              "n": "The changed-file list for linting only what the branch touched. Requires full history: set fetch-depth 0 on checkout."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dot-dot-notation",
+        "shallow-in-ci",
+        "turbo-affected"
+      ]
+    },
+    {
+      "id": "autostash-rebase",
+      "q": "Rebase or pull without stashing first",
+      "aka": [
+        "rebase.autostash",
+        "pull with dirty tree",
+        "stash automatically"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global rebase.autoStash true",
+              "n": "Git shelves your uncommitted work, rebases, and puts it back. Removes the most common reason a pull stops with an error."
+            }
+          ],
+          "undo": "git config --global --unset rebase.autoStash"
+        },
+        {
+          "when": "Know the edge",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash list",
+              "n": "If reapplying conflicts, the work stays safely in the stash rather than vanishing. Check here whenever an autostashed rebase ends noisily."
+            }
+          ],
+          "undo": "git stash pop when the tree is ready"
+        }
+      ],
+      "seealso": [
+        "autostash",
+        "pull-rebase",
+        "switch-with-changes"
+      ]
+    },
+    {
+      "id": "worktree-workflow",
+      "q": "Review a pull request without disturbing your work",
+      "aka": [
+        "worktree for reviews",
+        "two branches at once",
+        "stop stashing to review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git worktree add ../review <branch>",
+              "n": "A second folder on another branch, sharing one repository and object store. Your main folder keeps its dirty tree, running server, and build cache untouched."
+            },
+            {
+              "c": "git worktree remove ../review",
+              "n": "Clean up when done. worktree list shows what exists."
+            }
+          ],
+          "undo": "git worktree remove, or prune if the folder was deleted by hand"
+        }
+      ],
+      "seealso": [
+        "worktrees",
+        "commit-to-other-branch",
+        "review-pr"
+      ]
+    },
+    {
+      "id": "bisect-workflow",
+      "q": "Find the commit that broke it, fast",
+      "aka": [
+        "git bisect walkthrough",
+        "binary search history",
+        "which commit introduced the bug"
+      ],
+      "variants": [
+        {
+          "when": "By hand",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git bisect start && git bisect bad && git bisect good <old-hash>",
+              "n": "Git checks out the midpoint; mark each as good or bad and it halves the range. Ten steps cover a thousand commits."
+            },
+            {
+              "c": "git bisect reset",
+              "n": "Returns to where you started, whatever happened."
+            }
+          ],
+          "undo": "git bisect reset"
+        },
+        {
+          "when": "Automated",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git bisect run ./test.sh",
+              "n": "Any script exiting zero for good and non-zero for bad. Walk away; Git names the culprit commit itself."
+            }
+          ],
+          "undo": "git bisect reset"
+        }
+      ],
+      "seealso": [
+        "bisect",
+        "log-search",
+        "blame-line"
+      ]
+    },
+    {
+      "id": "rerere-explained",
+      "q": "Make Git remember conflict resolutions",
+      "aka": [
+        "rerere explained",
+        "same conflict every rebase",
+        "reuse recorded resolution"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global rerere.enabled true",
+              "n": "Git records how you resolved each conflict and replays it automatically the next time the identical conflict appears. On a long-lived branch rebased repeatedly, this is the difference between painful and routine."
+            },
+            {
+              "c": "git rerere status",
+              "n": "What it is currently tracking. Resolutions live in .git/rr-cache, local to your machine."
+            }
+          ],
+          "undo": "git rerere forget <path> discards a bad recorded resolution"
+        }
+      ],
+      "seealso": [
+        "rerere",
+        "long-lived-branch",
+        "avoid-conflicts"
+      ]
+    },
+    {
+      "id": "maintenance-checklist",
+      "q": "A quarterly checkup for a repository",
+      "aka": [
+        "repository health check",
+        "git housekeeping",
+        "periodic repo maintenance"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune && git branch -vv | grep \": gone]\"",
+              "n": "Clear branches whose remotes are gone."
+            },
+            {
+              "c": "git count-objects -vH",
+              "n": "Watch the size trend; investigate before it becomes a rewrite."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/dependabot/alerts --jq length",
+              "n": "Open security alerts, plus a glance at stale pull requests and untriaged issues. Twenty minutes a quarter keeps a repository from decaying into an archaeology project."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-maintenance",
+        "delete-gone-branches",
+        "professional-repo"
+      ]
+    },
+    {
+      "id": "config-scopes",
+      "q": "Set a different identity per folder",
+      "aka": [
+        "conditional includes gitconfig",
+        "includeIf",
+        "work and personal directories"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "[includeIf \"gitdir:~/work/\"] path = ~/.gitconfig-work",
+              "n": "In ~/.gitconfig. Every repository under ~/work automatically uses the work identity, signing key, and remotes. No more commits authored by the wrong person."
+            },
+            {
+              "c": "git config user.email",
+              "n": "Run inside a repository to confirm which identity actually applies."
+            }
+          ],
+          "undo": "Remove the includeIf block"
+        }
+      ],
+      "seealso": [
+        "multiple-identities",
+        "config-precedence",
+        "two-github-accounts"
+      ]
     }
   ]
 }
