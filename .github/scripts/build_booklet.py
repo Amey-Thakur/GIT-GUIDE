@@ -178,7 +178,7 @@ body {{ font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: {PAP
 .phead span {{ font-weight: 700; font-size: 13pt; }}
 .phead em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 10pt; }}
 i {{ color: {ACCENT}; font-style: normal; }}
-h2 {{ font-size: 19pt; margin-bottom: 5mm; }}
+h2 {{ font-size: 19pt; margin-bottom: 5mm; border-left: 1.4mm solid {ACCENT}; padding-left: 4mm; }}
 .cover {{ display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }}
 .cover h1 {{ font-size: 44pt; margin-top: 8mm; }}
 .cover .sub {{ color: {ACCENT}; font-size: 15pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2mm; }}

@@ -150,7 +150,10 @@ def sheet_card(sheet):
     y = 208
     body = ""
     for sec in sections:
-        body += f'<text x="80" y="{y}" font-size="27" font-weight="700" fill="{ACCENT}">{escape(sec["title"])}</text>'
+        body += (
+            f'<rect x="80" y="{y - 20}" width="5" height="27" fill="{ACCENT}"/>'
+            f'<text x="97" y="{y}" font-size="27" font-weight="700" fill="{ACCENT}">{escape(sec["title"])}</text>'
+        )
         y += 22
         for item in sec["items"]:
             color = DANGER if item.get("danger") else INK

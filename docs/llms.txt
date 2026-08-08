@@ -25,6 +25,12 @@ License: MIT
 - [Start](https://amey-thakur.github.io/GIT-GUIDE/setup.html): zero to first push in six ordered steps.
 - [Workflows](https://amey-thakur.github.io/GIT-GUIDE/workflows.html): solo, feature branch, fork, trunk-based, and release workflows with the team-safety rules.
 
+## Downloads
+
+- [git-guide-companion.pdf](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide-companion.pdf): the twelve-page printable companion: model, commands, rescues.
+- [cheatsheet-card.png](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png): the daily commands on one printable card.
+- [poster.png](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png): the eight doors and the danger levels, one sheet.
+
 ## Community
 
 - [Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions): every answer mirrored as an answered Q&A thread; ask anything missing.

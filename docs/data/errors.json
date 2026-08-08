@@ -426,6 +426,25 @@
       "seealso": ["ssh-key-github", "permission-denied-publickey"]
     },
     {
+      "id": "not-possible-fast-forward",
+      "msg": "fatal: Not possible to fast-forward, aborting.",
+      "why": "Your pull is set to fast-forward only, and the branches have diverged, so a decision is needed.",
+      "fix": [
+        { "c": "git pull --rebase", "n": "The usual answer: remote commits land, yours replay on top." },
+        { "c": "git pull --no-ff", "n": "Or take a merge commit this once. The strict setting did its job: it made the divergence visible instead of merging silently." }
+      ],
+      "intent": null,
+      "seealso": ["diverged-branches", "update-branch"]
+    },
+    {
+      "id": "not-on-branch-pull",
+      "msg": "You are not currently on a branch.",
+      "why": "Pull needs a branch to update, and you stand on a detached commit.",
+      "fix": [],
+      "intent": "detached-head",
+      "seealso": []
+    },
+    {
       "id": "gha-permission",
       "msg": "remote: Permission to <repo> denied to github-actions[bot].",
       "why": "A workflow tried to push, but Actions runs with read-only permissions unless the workflow asks for more.",
