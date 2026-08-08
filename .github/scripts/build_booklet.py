@@ -240,7 +240,7 @@ def github_page():
 
 def error_pages(errs):
     pages_out = []
-    chunk = 12
+    chunk = 10
     for n in range(0, len(errs), chunk):
         part = errs[n:n + chunk]
         half = (len(part) + 1) // 2
