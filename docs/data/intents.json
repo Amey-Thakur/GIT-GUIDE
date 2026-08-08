@@ -1242,7 +1242,8 @@
         "stash apply vs pop",
         "undo stash pop",
         "stash including ignored files",
-        "name a stash"
+        "name a stash",
+        "backup before a risky command"
       ],
       "variants": [
         {
@@ -12237,7 +12238,8 @@
       "aka": [
         "resolve conflicts button",
         "conflict editor github",
-        "fix conflicts without terminal"
+        "fix conflicts without terminal",
+        "this branch has conflicts that must be resolved"
       ],
       "variants": [
         {
@@ -12300,7 +12302,8 @@
       "aka": [
         "github flavored markdown",
         "mermaid diagrams readme",
-        "collapsible section markdown"
+        "collapsible section markdown",
+        "link to a heading anchor"
       ],
       "variants": [
         {
@@ -14450,6 +14453,239 @@
       "seealso": [
         "profile-readme",
         "watch-unwatch"
+      ]
+    },
+    {
+      "id": "phantom-modifications",
+      "q": "Status says modified but the diff shows nothing",
+      "aka": [
+        "file modified but no changes",
+        "every file modified after clone",
+        "diff empty but dirty"
+      ],
+      "variants": [
+        {
+          "when": "Line endings",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.autocrlf",
+              "n": "When every file flips to modified on Windows, CRLF conversion is fighting the repository. Align core.autocrlf with a .gitattributes text rule and renormalize once."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Permissions or case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.fileMode false",
+              "n": "Mode-bit noise from WSL, Docker mounts, or copied drives. Case-only renames confuse case-insensitive systems the same way."
+            }
+          ],
+          "undo": "git config --unset core.fileMode"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "filemode",
+        "case-rename"
+      ]
+    },
+    {
+      "id": "commit-to-other-branch",
+      "q": "Commit these changes to a branch I am not on",
+      "aka": [
+        "commit without switching branch",
+        "commit to another branch directly",
+        "wrong branch checked out"
+      ],
+      "variants": [
+        {
+          "when": "The honest answer",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash && git switch <branch> && git stash pop",
+              "n": "Commits are born on the branch you stand on; there is no committing at a distance. Shelve, step over, commit, step back."
+            }
+          ],
+          "undo": "git switch - returns"
+        },
+        {
+          "when": "You do this often",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git worktree add ../fix <branch>",
+              "n": "A second folder permanently checked out on that branch. Commit there without ever disturbing this one."
+            }
+          ],
+          "undo": "git worktree remove ../fix"
+        }
+      ],
+      "seealso": [
+        "worktrees",
+        "move-changes-to-branch",
+        "switch-with-changes"
+      ]
+    },
+    {
+      "id": "solo-workflow",
+      "q": "Do I need branches when I work alone",
+      "aka": [
+        "git for solo projects",
+        "branching alone",
+        "simplest workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "Committing straight to main is honest solo practice. Branch when an experiment might fail, tag when something ships, push for backup. Ceremony beyond that serves an audience you do not have."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The experiment branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c try/new-parser",
+              "n": "If it works, merge. If not, git branch -D and main never knew."
+            }
+          ],
+          "undo": "git branch -D try/new-parser"
+        }
+      ],
+      "seealso": [
+        "branching-strategy",
+        "commit-frequency",
+        "two-machines"
+      ]
+    },
+    {
+      "id": "repo-visibility-who-sees",
+      "q": "Who can actually see my repository",
+      "aka": [
+        "private repo who has access",
+        "is my code visible",
+        "visibility levels"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators",
+              "n": "Private: you, listed collaborators, and org owners where applicable. Public: everyone, including the full history and every deleted-but-committed file. There is no half-public; issues and stars follow the repository's visibility."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "make-repo-private",
+        "add-collaborator",
+        "remove-secret-from-history"
+      ]
+    },
+    {
+      "id": "restore-deleted-repo",
+      "q": "Restore a repository I deleted",
+      "aka": [
+        "undelete github repo",
+        "deleted repo recovery",
+        "repo gone bring it back"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Repositories -> Deleted repositories",
+              "n": "Restorable for about 90 days, with issues and stars, unless it was part of a fork network. After the window, only your local clones remain: push one to a fresh repo."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "delete-repo",
+        "backup-repo",
+        "upload-existing-project"
+      ]
+    },
+    {
+      "id": "pr-vs-push-triggers",
+      "q": "on: push or on: pull_request for CI",
+      "aka": [
+        "pull_request vs push trigger",
+        "workflow runs twice",
+        "fork pr secrets missing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: pull_request",
+              "n": "Tests the merge result of the PR against its base, which is what you actually ship. Add push: branches: [main] for post-merge runs; both unfiltered runs everything twice."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Why fork PRs behave differently",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "pull_request_target",
+              "n": "Ordinary pull_request runs from forks get no secrets and a read-only token, by design. pull_request_target restores them but runs your workflow against untrusted code: use it only with care."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "workflow-permissions",
+        "workflow-not-triggering"
+      ]
+    },
+    {
+      "id": "docs-home",
+      "q": "README, docs folder, wiki, or Pages: where documentation lives",
+      "aka": [
+        "where to put documentation",
+        "wiki vs docs folder",
+        "documentation strategy"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "docs/",
+              "n": "README is the front door: what and why, one screen. docs/ versions with the code and travels through pull requests. The wiki suits fast-moving notes outside review. Pages renders a real site from any of them."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-structure",
+        "repo-wiki",
+        "github-pages"
       ]
     }
   ]
