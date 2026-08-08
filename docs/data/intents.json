@@ -333,7 +333,6 @@
       "id": "untrack-file",
       "q": "Make Git forget a tracked file that is now in .gitignore",
       "aka": [
-        "gitignore not working",
         "stop tracking file",
         "remove from repo keep on disk",
         "untrack",
@@ -921,7 +920,6 @@
       "id": "undo-merge",
       "q": "Undo a merge",
       "aka": [
-        "abort merge",
         "cancel merge",
         "revert merge commit",
         "revert merge after push",
@@ -1488,7 +1486,6 @@
         "who changed this file",
         "file log",
         "blame",
-        "who wrote this line",
         "search history for code"
       ],
       "variants": [
@@ -2792,7 +2789,6 @@
       "q": "Delete every branch that is already merged",
       "aka": [
         "clean up old branches",
-        "bulk delete branches",
         "remove stale branches",
         "delete all branches except main"
       ],
@@ -5097,8 +5093,7 @@
       "aka": [
         "clone specific branch",
         "clone single branch",
-        "checkout repo at commit",
-        "clone old version"
+        "checkout repo at commit"
       ],
       "variants": [
         {
@@ -6242,7 +6237,6 @@
       "q": "Make your first open source contribution",
       "aka": [
         "contribute to open source",
-        "good first issue",
         "first pull request"
       ],
       "variants": [
