@@ -204,6 +204,7 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
 .stats {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 0.4rem 1.5rem;
   color: var(--muted);
   font-size: 0.95rem;
