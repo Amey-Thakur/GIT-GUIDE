@@ -25374,6 +25374,468 @@
         "solo-workflow",
         "squash-vs-fixup"
       ]
+    },
+    {
+      "id": "revert-a-file-deletion",
+      "q": "Someone deleted a file and it was merged",
+      "aka": [
+        "file deleted in merge",
+        "bring back file deleted by teammate",
+        "undo a deletion that shipped"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --diff-filter=D --oneline -1 -- <path>",
+              "n": "Finds the commit that removed it."
+            },
+            {
+              "c": "git restore --source <hash>^ -- <path>",
+              "n": "Brings the file back from the commit before, then commit it as a normal change. Reverting the whole merge would undo everything else in it too."
+            }
+          ],
+          "undo": "git rm <path> and commit"
+        }
+      ],
+      "seealso": [
+        "restore-deleted-file",
+        "revert-pr",
+        "partial-revert"
+      ]
+    },
+    {
+      "id": "track-todo-in-code",
+      "q": "Turn TODO comments into tracked work",
+      "aka": [
+        "todo comments to issues",
+        "find all todos",
+        "fixme tracking"
+      ],
+      "variants": [
+        {
+          "when": "Find them",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git grep -n \"TODO\\|FIXME\"",
+              "n": "Searches tracked files only, so build output never floods the list. Add --heading for readable grouping."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Keep them honest",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue create --title \"<the todo>\"",
+              "n": "A TODO with no issue behind it is a note to nobody. Reference the issue number in the comment so the two stay linked."
+            }
+          ],
+          "undo": "Close the issue"
+        }
+      ],
+      "seealso": [
+        "log-search",
+        "open-issue",
+        "link-commit-to-issue"
+      ]
+    },
+    {
+      "id": "grep-across-branches",
+      "q": "Search code across all branches and history",
+      "aka": [
+        "grep every branch",
+        "find text in any commit",
+        "search whole repository history"
+      ],
+      "variants": [
+        {
+          "when": "Current state of every branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git grep \"<text>\" $(git rev-list --all --branches)",
+              "n": "Slow on large repositories but exhaustive. Narrow with a path argument."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "When it entered or left",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -S \"<text>\" --oneline --all",
+              "n": "Finds the commits that added or removed the string, which is usually the real question."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "log-search",
+        "code-search",
+        "detect-secrets-in-history"
+      ]
+    },
+    {
+      "id": "apply-changes-without-history",
+      "q": "Copy someone's changes without their commits",
+      "aka": [
+        "take changes not commits",
+        "import work without history",
+        "squash someone else branch in"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge --squash <branch>",
+              "n": "Stages the combined result with no merge commit and no incoming history, ready for you to commit as one change."
+            },
+            {
+              "c": "git commit -m \"<what it does>\"",
+              "n": "Credit the original author in the message or with a Co-authored-by trailer, since the commits themselves are gone."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "merge-squash",
+        "co-authors",
+        "cherry-pick-no-commit"
+      ]
+    },
+    {
+      "id": "limit-who-can-push-paths",
+      "q": "Restrict who can change certain files",
+      "aka": [
+        "path based permissions",
+        "protect a folder",
+        "only some people edit this file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"/infra/ @org/platform\" >> .github/CODEOWNERS",
+              "n": "Git itself has no per-path permissions, so this is enforced by review: owners must approve changes under that path."
+            },
+            {
+              "c": "Ruleset -> Require review from Code Owners",
+              "n": "Without this rule the ownership is advisory only."
+            }
+          ],
+          "undo": "Remove the rule or the CODEOWNERS line"
+        }
+      ],
+      "seealso": [
+        "codeowners",
+        "branch-protection",
+        "who-can-merge"
+      ]
+    },
+    {
+      "id": "trigger-workflow-from-another",
+      "q": "Start one workflow from another",
+      "aka": [
+        "chain workflows",
+        "workflow_run trigger",
+        "run after another workflow"
+      ],
+      "variants": [
+        {
+          "when": "After another finishes",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: workflow_run: workflows: [\"CI\"], types: [completed]",
+              "n": "Runs on the default branch with the earlier run's outcome available, which suits deploy-after-test."
+            }
+          ],
+          "undo": "Remove the trigger"
+        },
+        {
+          "when": "Call it directly",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh workflow run deploy.yml -f environment=staging",
+              "n": "With workflow_dispatch, any job or person can start it with inputs. Simpler to reason about than chaining."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "manual-workflow",
+        "reusable-workflows",
+        "deploy-environments"
+      ]
+    },
+    {
+      "id": "protect-release-branch",
+      "q": "Lock a release branch after it ships",
+      "aka": [
+        "freeze a branch",
+        "read only branch",
+        "stop changes to released code"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Target: release/* -> Restrict updates",
+              "n": "Blocks pushes while leaving the branch readable and cloneable, which is what a freeze actually means."
+            },
+            {
+              "c": "git tag -a v2.1.0",
+              "n": "For a permanent record, tag the tip; tags are immutable in practice and protectable by rule."
+            }
+          ],
+          "undo": "Remove the ruleset"
+        }
+      ],
+      "seealso": [
+        "protect-tags",
+        "branch-protection",
+        "hotfix-from-tag"
+      ]
+    },
+    {
+      "id": "ci-only-for-tags",
+      "q": "Run a workflow only for version tags",
+      "aka": [
+        "workflow on tag only",
+        "skip ci on branches",
+        "release-only pipeline"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: push: tags: [\"v[0-9]+.[0-9]+.[0-9]+\"]",
+              "n": "Matches release tags and ignores branches entirely, so nightly or scratch tags do not trigger a release."
+            },
+            {
+              "c": "if: startsWith(github.ref, 'refs/tags/')",
+              "n": "Or gate a single job inside a shared workflow when you would rather keep one file."
+            }
+          ],
+          "undo": "Remove the filter"
+        }
+      ],
+      "seealso": [
+        "release-workflow",
+        "scheduled-workflow",
+        "branch-in-ci"
+      ]
+    },
+    {
+      "id": "squashed-pr-attribution",
+      "q": "Keep everyone credited after a squash merge",
+      "aka": [
+        "squash loses authors",
+        "credit co-authors on squash",
+        "who wrote the squashed commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Co-authored-by: Name <email>",
+              "n": "GitHub collects trailers from the squashed commits into the merge commit body, so every contributor keeps credit. Check the message before confirming the merge."
+            },
+            {
+              "c": "gh pr view <number> --json commits",
+              "n": "Lists the original authors when you need to add trailers by hand."
+            }
+          ],
+          "undo": "Nothing to undo once merged"
+        }
+      ],
+      "seealso": [
+        "co-authors",
+        "merge-methods",
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "large-diff-review-tools",
+      "q": "Review a diff too large for the browser",
+      "aka": [
+        "github wont render diff",
+        "load diff too big",
+        "review huge changeset"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number> > review.diff",
+              "n": "The full patch locally, where your editor handles what the browser refuses."
+            },
+            {
+              "c": "gh pr diff <number> --name-only",
+              "n": "Or split the review by path, and ask for the pull request to be broken up: a diff the browser cannot render is usually one a human cannot review either."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-large-pr",
+        "exclude-from-diff",
+        "count-changed-files"
+      ]
+    },
+    {
+      "id": "local-branch-out-of-sync",
+      "q": "My branch list disagrees with GitHub",
+      "aka": [
+        "branches show that do not exist",
+        "deleted branch still listed",
+        "branch list stale"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune",
+              "n": "Remote-tracking branches are a cache from your last fetch. Prune drops the ones deleted upstream."
+            },
+            {
+              "c": "git remote prune origin --dry-run",
+              "n": "Shows what would go before it goes, when you would rather look first."
+            }
+          ],
+          "undo": "Another fetch restores anything still on the server"
+        }
+      ],
+      "seealso": [
+        "prune-remote-branches",
+        "see-all-remote-branches",
+        "delete-gone-branches"
+      ]
+    },
+    {
+      "id": "two-factor-recovery",
+      "q": "I lost access to my two-factor device",
+      "aka": [
+        "locked out of github",
+        "2fa device lost",
+        "recovery codes github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Use a recovery code at sign-in",
+              "n": "The codes issued when you enabled two-factor are the primary route back in. A second registered passkey or device also works."
+            },
+            {
+              "c": "Settings -> Password and authentication",
+              "n": "Once back in, regenerate the codes and register a second factor. Without codes or a second device, account recovery is slow and may fail."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "enable-2fa",
+        "access-tokens",
+        "gh-cli-setup"
+      ]
+    },
+    {
+      "id": "repo-transfer-broke-remotes",
+      "q": "Fix remotes after a repository was renamed or moved",
+      "aka": [
+        "remote url after transfer",
+        "repo moved update remote",
+        "redirect but fix it properly"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote -v",
+              "n": "Old URLs keep working through a redirect, which hides the problem until the old name is reused by someone else."
+            },
+            {
+              "c": "git remote set-url origin <new-url>",
+              "n": "Update every clone, plus CI configuration, submodule URLs, and badge links."
+            }
+          ],
+          "undo": "Point the remote back"
+        }
+      ],
+      "seealso": [
+        "change-remote-url",
+        "transfer-repo",
+        "rename-repo"
+      ]
+    },
+    {
+      "id": "remove-committed-dependency-folder",
+      "q": "Undo committing node_modules or vendor",
+      "aka": [
+        "remove node_modules from history",
+        "committed dependencies by mistake",
+        "vendor folder bloating repo"
+      ],
+      "variants": [
+        {
+          "when": "Going forward",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"node_modules/\" >> .gitignore",
+              "n": "Then git rm -r --cached node_modules and commit. New clones are clean; the old copies remain in history."
+            }
+          ],
+          "undo": "git revert the commit"
+        },
+        {
+          "when": "Purge it from history",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git filter-repo --path node_modules --invert-paths",
+              "n": "Only worth it when the repository is painfully large. Everyone must reclone afterwards."
+            }
+          ],
+          "undo": "Only from a clone with the old history"
+        }
+      ],
+      "seealso": [
+        "stop-tracking-folder",
+        "filter-repo-paths",
+        "repo-size-limit-hit"
+      ]
     }
   ]
 }
