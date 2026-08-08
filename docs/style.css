@@ -434,6 +434,15 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .footer-name a { color: var(--ink); }
 .footer-name a:hover { color: var(--accent); }
 
+.footer-tag {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--muted);
+}
+
+
 /* Error decoder */
 
 .errmsg {
@@ -673,7 +682,7 @@ kbd {
 
 @media (min-width: 1100px) {
   .wrap { max-width: 68rem; }
-  .chapter .wrap { max-width: 56rem; }
+  .chapter .cmd { max-width: 56rem; }
   .qlist { columns: 3; }
   .results {
     grid-template-columns: repeat(auto-fill, minmax(29rem, 1fr));
