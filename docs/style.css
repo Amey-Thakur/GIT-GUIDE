@@ -661,6 +661,13 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
 
 .cs-row span { color: var(--muted); font-size: 0.92rem; }
 
+/* Cheatsheet page rows: command line, description beneath */
+
+.cheatsheet .cs-row { grid-template-columns: minmax(0, 1fr) auto; }
+.cheatsheet .cs-row code { grid-column: 1; grid-row: 1; }
+.cheatsheet .cs-row .copy { grid-column: 2; grid-row: 1; }
+.cheatsheet .cs-row span { grid-column: 1 / -1; grid-row: 2; margin-top: 0.35rem; }
+
 .cs-row.cs-danger { border-left: 3px solid var(--destructive); }
 .cs-row.cs-danger code { color: var(--destructive); }
 
