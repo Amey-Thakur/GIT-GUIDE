@@ -1383,7 +1383,7 @@
     {
       "id": "compare-branches",
       "q": "Compare two branches",
-      "aka": ["diff branches", "what is different between branches", "commits in branch not in main"],
+      "aka": ["diff branches", "what is different between branches", "commits in branch not in main", "compare file between branches"],
       "variants": [
         {
           "when": "Commits one branch has that the other lacks",
@@ -2127,7 +2127,7 @@
     {
       "id": "patches-email",
       "q": "Share commits as patch files, no host needed",
-      "aka": ["format-patch", "apply patch", "email a commit", "patch file", "patch for a specific commit"],
+      "aka": ["format-patch", "apply patch", "email a commit", "patch file", "patch for a specific commit", "patch from diff between branches"],
       "variants": [
         {
           "when": "Export",
@@ -3033,7 +3033,7 @@
     {
       "id": "add-a-vs-dot",
       "q": "git add -A vs git add . vs git add -u",
-      "aka": ["difference add all", "add dot or add A", "stage everything"],
+      "aka": ["difference add all", "add dot or add A", "stage everything", "stage deleted files"],
       "variants": [
         {
           "when": "The three scopes",
@@ -3475,6 +3475,159 @@
         }
       ],
       "seealso": ["add-a-vs-dot", "undo-last-commit"]
+    },
+    {
+      "id": "list-tags",
+      "q": "List tags, newest version first",
+      "aka": ["show all tags", "tags sorted", "fetch tags from remote"],
+      "variants": [
+        {
+          "when": "Local",
+          "danger": "safe",
+          "cmds": [{ "c": "git tag -l --sort=-v:refname", "n": "Version-aware order: v2.10.0 above v2.9.0, where plain sorting fails." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Tags missing after a fetch",
+          "danger": "safe",
+          "cmds": [{ "c": "git fetch --tags", "n": "Plain fetch brings only tags on fetched branches; this brings them all." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["tag-release", "checkout-tag"]
+    },
+    {
+      "id": "show-config",
+      "q": "See every Git setting and where it comes from",
+      "aka": ["show config", "which file sets this", "git config list", "effective configuration"],
+      "variants": [
+        {
+          "when": "The full picture",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config --list --show-origin", "n": "Every active setting with the exact file that sets it: system, global, then repository, later wins." },
+            { "c": "git config --get user.email", "n": "One value, as Git will actually use it." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["first-time-setup", "multiple-identities"]
+    },
+    {
+      "id": "undo-git-rm",
+      "q": "Undo git rm",
+      "aka": ["removed file by accident", "restore after git rm", "undelete staged file"],
+      "variants": [
+        {
+          "when": "Before committing",
+          "danger": "safe",
+          "cmds": [{ "c": "git restore --staged --worktree <file>", "n": "Unstages the deletion and puts the file back on disk in one step." }],
+          "undo": "git rm <file> again"
+        },
+        {
+          "when": "Already committed",
+          "danger": "safe",
+          "cmds": [{ "c": "git restore --source=HEAD~1 <file>", "n": "Brings the file back from the commit before the deletion; commit the restoration." }],
+          "undo": "git rm <file>"
+        }
+      ],
+      "seealso": ["restore-deleted-file", "undo-git-add"]
+    },
+    {
+      "id": "copy-branch",
+      "q": "Duplicate a branch",
+      "aka": ["copy branch", "backup branch before rebase", "branch from branch"],
+      "variants": [
+        {
+          "when": "A safety copy, or a fork of your own work",
+          "danger": "safe",
+          "cmds": [{ "c": "git branch <copy> <original>", "n": "Two labels on the same commit; they diverge only as you commit. The cheap insurance before a risky rebase." }],
+          "undo": "git branch -D <copy>"
+        }
+      ],
+      "seealso": ["create-branch", "undo-rebase"]
+    },
+    {
+      "id": "push-all",
+      "q": "Push all branches at once",
+      "aka": ["push every branch", "push --all", "publish all branches"],
+      "variants": [
+        {
+          "when": "Moving or backing up a repository",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git push origin --all", "n": "Every local branch. Tags go separately:" },
+            { "c": "git push origin --tags", "n": "For a complete move with every ref, the mirror answer is the cleaner tool." }
+          ],
+          "undo": "Delete pushed branches on the remote if unwanted"
+        }
+      ],
+      "seealso": ["mirror-migrate", "push-new-branch"]
+    },
+    {
+      "id": "clone-into-existing",
+      "q": "Clone into a folder that already has files",
+      "aka": ["clone non empty directory", "existing folder connect repo", "destination not empty workaround"],
+      "variants": [
+        {
+          "when": "Marry the folder and the repository",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git init -b main && git remote add origin <url>", "n": "" },
+            { "c": "git fetch && git switch main", "n": "switch refuses to overwrite any local file that collides with a tracked one; move those aside first, or run git restore . afterwards for a clean tree. This is clone, assembled by hand." }
+          ],
+          "undo": "rm -rf .git returns the folder to plain files"
+        }
+      ],
+      "seealso": ["clone-repo", "unrelated-histories"]
+    },
+    {
+      "id": "check-ignore",
+      "q": "Why is this file being ignored",
+      "aka": ["which gitignore rule", "file not added ignored", "debug gitignore"],
+      "variants": [
+        {
+          "when": "Name the exact rule",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git check-ignore -v <path>", "n": "Prints the file, the line, and the pattern responsible: global, repository, or .git/info/exclude." },
+            { "c": "git status --ignored", "n": "Every ignored path at once." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["ignore-files", "global-gitignore"]
+    },
+    {
+      "id": "preview-merge",
+      "q": "Preview a merge before committing to it",
+      "aka": ["dry run merge", "check conflicts before merging", "will this merge conflict"],
+      "variants": [
+        {
+          "when": "Rehearse, then decide",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git merge --no-commit --no-ff <branch>", "n": "The merge happens in your tree but no commit seals it. Inspect with git status and git diff --staged." },
+            { "c": "git merge --abort", "n": "Walk away as if nothing happened, or git commit to accept it." }
+          ],
+          "undo": "git merge --abort is the undo, built in"
+        }
+      ],
+      "seealso": ["merge-conflict", "compare-branches"]
+    },
+    {
+      "id": "download-release",
+      "q": "Download a release asset from the terminal",
+      "aka": ["gh release download", "get release file cli", "latest release asset"],
+      "variants": [
+        {
+          "when": "With GitHub CLI",
+          "danger": "safe",
+          "cmds": [{ "c": "gh release download <tag> --pattern \"*.zip\"", "n": "Omit the tag for the latest release. --pattern picks assets; omit it for all of them." }],
+          "undo": "Delete the files"
+        }
+      ],
+      "seealso": ["archive-export", "checkout-tag"]
     }
   ]
 }

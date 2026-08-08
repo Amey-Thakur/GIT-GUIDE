@@ -77,8 +77,9 @@ def social_card(intents, errors):
   <text x="196" y="138" font-size="76" font-weight="700" fill="{INK}">Git Guide<tspan fill="{ACCENT}">.</tspan></text>
   <text x="82" y="268" font-size="42" font-weight="600" fill="{INK}">Every Git and GitHub</text>
   <text x="82" y="324" font-size="42" font-weight="600" fill="{INK}">answer in one place.</text>
-  <text x="82" y="392" font-size="25" fill="{MUTED}">Ask, or paste the error Git printed.</text>
-  <text x="82" y="446" font-size="23" fill="{INK}">an undo for everything<tspan fill="{MUTED}">  ·  </tspan>works offline<tspan fill="{MUTED}">  ·  </tspan>no trackers<tspan fill="{MUTED}">  ·  </tspan><tspan fill="{ACCENT}" font-weight="700">MIT</tspan></text>
+  <text x="82" y="390" font-size="25" fill="{MUTED}">Type what you want to do,</text>
+  <text x="82" y="426" font-size="25" fill="{MUTED}">or paste the error Git printed.</text>
+  <text x="82" y="486" font-size="22" fill="{INK}">an undo for everything<tspan fill="{MUTED}">  ·  </tspan>works offline<tspan fill="{MUTED}">  ·  </tspan>no trackers<tspan fill="{MUTED}">  ·  </tspan><tspan fill="{ACCENT}" font-weight="700">MIT</tspan></text>
   <rect x="690" y="182" width="510" height="66" rx="14" fill="{CARD}" stroke="{ACCENT}" stroke-width="2"/>
   <text x="716" y="224" font-size="25" fill="{INK}">undo the last commit</text>
   <rect x="1140" y="200" width="36" height="32" rx="6" fill="none" stroke="{LINE}" stroke-width="1.5"/>
@@ -110,11 +111,12 @@ def poster(intents, errors):
     boxes = ""
     for i, (name, desc) in enumerate(doors):
         x = 80 + (i % 4) * 320
-        y = 306 + (i // 4) * 172
+        y = 316 + (i // 4) * 158
         boxes += (
-            f'<rect x="{x}" y="{y}" width="300" height="150" rx="12" fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>'
-            f'<text x="{x + 24}" y="{y + 52}" font-size="27" font-weight="700" fill="{ACCENT}">{escape(name)}</text>'
-            f'<text x="{x + 24}" y="{y + 92}" font-size="18.5" fill="{MUTED}">{escape(desc)}</text>'
+            f'<rect x="{x}" y="{y}" width="300" height="130" rx="12" fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>'
+            f'<rect x="{x}" y="{y + 22}" width="5" height="86" fill="{ACCENT}"/>'
+            f'<text x="{x + 26}" y="{y + 54}" font-size="26" font-weight="700" fill="{ACCENT}">{escape(name)}</text>'
+            f'<text x="{x + 26}" y="{y + 92}" font-size="18" fill="{MUTED}">{escape(desc)}</text>'
         )
     legend = ""
     x = 80

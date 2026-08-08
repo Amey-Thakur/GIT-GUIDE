@@ -4,8 +4,9 @@
   <text x="196" y="138" font-size="76" font-weight="700" fill="#e9e6df">Git Guide<tspan fill="#f05133">.</tspan></text>
   <text x="82" y="268" font-size="42" font-weight="600" fill="#e9e6df">Every Git and GitHub</text>
   <text x="82" y="324" font-size="42" font-weight="600" fill="#e9e6df">answer in one place.</text>
-  <text x="82" y="392" font-size="25" fill="#9b968b">Ask, or paste the error Git printed.</text>
-  <text x="82" y="446" font-size="23" fill="#e9e6df">an undo for everything<tspan fill="#9b968b">  ·  </tspan>works offline<tspan fill="#9b968b">  ·  </tspan>no trackers<tspan fill="#9b968b">  ·  </tspan><tspan fill="#f05133" font-weight="700">MIT</tspan></text>
+  <text x="82" y="390" font-size="25" fill="#9b968b">Type what you want to do,</text>
+  <text x="82" y="426" font-size="25" fill="#9b968b">or paste the error Git printed.</text>
+  <text x="82" y="486" font-size="22" fill="#e9e6df">an undo for everything<tspan fill="#9b968b">  ·  </tspan>works offline<tspan fill="#9b968b">  ·  </tspan>no trackers<tspan fill="#9b968b">  ·  </tspan><tspan fill="#f05133" font-weight="700">MIT</tspan></text>
   <rect x="690" y="182" width="510" height="66" rx="14" fill="#1c1a18" stroke="#f05133" stroke-width="2"/>
   <text x="716" y="224" font-size="25" fill="#e9e6df">undo the last commit</text>
   <rect x="1140" y="200" width="36" height="32" rx="6" fill="none" stroke="#2e2c28" stroke-width="1.5"/>
