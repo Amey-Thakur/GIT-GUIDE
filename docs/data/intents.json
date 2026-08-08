@@ -115,7 +115,8 @@
         "remove branch",
         "delete local branch",
         "delete remote branch",
-        "drop branch"
+        "drop branch",
+        "delete branch locally and remotely"
       ],
       "variants": [
         {
@@ -2598,7 +2599,8 @@
         "stage hunks",
         "partial commit",
         "add -p",
-        "split changes into commits"
+        "split changes into commits",
+        "edit a hunk manually"
       ],
       "variants": [
         {
@@ -4344,7 +4346,8 @@
         "good commit message",
         "conventional commits",
         "commit style",
-        "gitmoji"
+        "gitmoji",
+        "see diff while writing the message"
       ],
       "variants": [
         {
@@ -8538,7 +8541,8 @@
       "aka": [
         "gh auth login",
         "install gh",
-        "github cli setup"
+        "github cli setup",
+        "gh aliases"
       ],
       "variants": [
         {
@@ -9328,7 +9332,8 @@
       "aka": [
         "github 2fa",
         "two factor setup",
-        "secure github account"
+        "secure github account",
+        "lost 2fa device"
       ],
       "variants": [
         {
@@ -10119,7 +10124,8 @@
       "aka": [
         "gh api",
         "github rest api",
-        "script against github"
+        "script against github",
+        "graphql api"
       ],
       "variants": [
         {
@@ -12713,6 +12719,375 @@
       "seealso": [
         "gh-cli-setup",
         "github-education"
+      ]
+    },
+    {
+      "id": "rebase-onto",
+      "q": "Move commits from one base to another (rebase --onto)",
+      "aka": [
+        "rebase onto explained",
+        "transplant commits",
+        "branch started from wrong branch"
+      ],
+      "variants": [
+        {
+          "when": "Branched off the wrong branch",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase --onto main old-base feature",
+              "n": "Reads as: take the commits of feature after old-base and replant them on main. The three arguments are destination, cut point, what moves."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Drop the first commits of a branch",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase --onto HEAD~5 HEAD~2",
+              "n": "Replants the last two commits directly on the older base, deleting the three between."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "rebase-onto-main",
+        "interactive-rebase"
+      ]
+    },
+    {
+      "id": "migrate-from-svn",
+      "q": "Move a project from Subversion to Git",
+      "aka": [
+        "svn to git",
+        "git svn clone",
+        "convert svn repository"
+      ],
+      "variants": [
+        {
+          "when": "One-way, once",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git svn clone <svn-url> --stdlayout --authors-file=authors.txt",
+              "n": "Converts trunk, branches, and tags with history. The authors file maps SVN usernames to Git identities; without it every commit says only the username."
+            }
+          ],
+          "undo": "Delete the folder; the SVN repository is untouched"
+        },
+        {
+          "when": "Afterward",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add origin <github-url> && git push --all origin",
+              "n": "Push branches and tags, archive the SVN server read-only, and stop straddling two systems."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "mirror-migrate",
+        "upload-existing-project"
+      ]
+    },
+    {
+      "id": "long-lived-branch",
+      "q": "Keep a long-running branch from rotting",
+      "aka": [
+        "long feature branch drift",
+        "branch behind main for weeks",
+        "big rewrite branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge main",
+              "n": "On the branch, on a schedule, not just at the end. Ten small conflicts across weeks beat one impossible conflict at merge time."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD after a bad sync"
+        },
+        {
+          "when": "Better: avoid the long branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr create",
+              "n": "Ship the change in slices behind a flag or an interface, each merged within days. The branch that cannot rot is the one that does not live long."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "merge-main-into-feature",
+        "branching-strategy",
+        "update-branch"
+      ]
+    },
+    {
+      "id": "hotfix-from-tag",
+      "q": "Fix a bug in an already-released version",
+      "aka": [
+        "hotfix release",
+        "patch old version",
+        "fix production without shipping main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c hotfix/2.1.1 v2.1.0",
+              "n": "Branch from the released tag, not from main, so the fix carries none of the unreleased work."
+            },
+            {
+              "c": "git tag -a v2.1.1 -m \"Release v2.1.1\" && git push origin hotfix/2.1.1 v2.1.1",
+              "n": "Tag and ship the patch."
+            },
+            {
+              "c": "git switch main && git cherry-pick <fix-hash>",
+              "n": "Bring the fix home so the next release has it too."
+            }
+          ],
+          "undo": "git tag -d v2.1.1 before pushing; revert the cherry-pick on main"
+        }
+      ],
+      "seealso": [
+        "branch-from-commit",
+        "semantic-versioning",
+        "cherry-pick"
+      ]
+    },
+    {
+      "id": "pr-for-commit",
+      "q": "Find the pull request that introduced a commit",
+      "aka": [
+        "which pr merged this commit",
+        "commit to pull request",
+        "why was this merged"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/commits/<hash>/pulls --jq \".[].html_url\"",
+              "n": "The pull requests containing that commit, with all their discussion and review context. On the site, pasting the hash into the pull request search box works too."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "blame-line",
+        "log-search",
+        "what-is-a-pr"
+      ]
+    },
+    {
+      "id": "pages-not-updating",
+      "q": "Pages site not showing my latest push",
+      "aka": [
+        "github pages stale",
+        "site not updating",
+        "pages cache old version"
+      ],
+      "variants": [
+        {
+          "when": "Check the deploy actually ran",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run list --workflow pages.yml --limit 1",
+              "n": "No run, or a red one, means the site never rebuilt: the usual real cause. Check the Pages source setting matches how you deploy."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The deploy is green and it still looks old",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ctrl+Shift+R",
+              "n": "Pages sits behind a CDN that caches for about ten minutes, and your browser caches on top. Hard refresh, wait, or version asset URLs like style.css?v=2."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "nojekyll"
+      ]
+    },
+    {
+      "id": "workflow-not-triggering",
+      "q": "My workflow did not run",
+      "aka": [
+        "github action not triggering",
+        "workflow skipped",
+        "on push not working"
+      ],
+      "variants": [
+        {
+          "when": "The checklist",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh workflow list",
+              "n": "The workflow must exist on the default branch to react to most events. Check branches: and paths: filters, and whether the workflow shows as disabled: schedules pause after 60 days of repository inactivity."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "A workflow pushed, and nothing followed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Use a fine-grained token instead of GITHUB_TOKEN",
+              "n": "Pushes made with the built-in token deliberately trigger no further workflows, to stop infinite loops. A personal token as the push credential opts back in."
+            }
+          ],
+          "undo": "Revoke the token"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "scheduled-workflow",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "api-rate-limits",
+      "q": "GitHub API says rate limit exceeded",
+      "aka": [
+        "api rate limit",
+        "403 rate limit",
+        "x-ratelimit headers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api rate_limit --jq .rate",
+              "n": "Anonymous calls get 60 an hour per address; authenticated get 5000. If you are scripting without gh or a token, that is the whole problem."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Waiting it out",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api rate_limit --jq .rate.reset",
+              "n": "The reset moment as a Unix timestamp. Back off until then instead of hammering."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "repo-limits",
+      "q": "GitHub's size limits, in one place",
+      "aka": [
+        "max file size github",
+        "repository size limit",
+        "release asset limit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git count-objects -vH",
+              "n": "Files over 100 MB are rejected at push; over 50 MB warns. Repositories get slow warnings past a few GB. Release assets carry up to 2 GB each, free LFS starts at 1 GB of storage, Pages sites cap at 1 GB."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "file-too-large",
+        "git-lfs",
+        "shrink-repo"
+      ]
+    },
+    {
+      "id": "stars-and-lists",
+      "q": "Use stars as a research library",
+      "aka": [
+        "organize starred repos",
+        "star lists",
+        "find repo i starred"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Star dropdown -> Add to list",
+              "n": "Named lists like reference or job-hunt turn stars from applause into a library. Your stars page filters by language and searches full text."
+            },
+            {
+              "c": "gh api user/starred --jq \".[].full_name\"",
+              "n": "The raw list, scriptable."
+            }
+          ],
+          "undo": "Unstar or remove from the list"
+        }
+      ],
+      "seealso": [
+        "code-search",
+        "pin-repositories"
+      ]
+    },
+    {
+      "id": "submodule-foreach",
+      "q": "Run a command in every submodule",
+      "aka": [
+        "git submodule foreach",
+        "update all submodules",
+        "loop over submodules"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule foreach git status -s",
+              "n": "Any command, run in each submodule in turn. --recursive reaches submodules of submodules."
+            }
+          ],
+          "undo": "Depends on the command you ran"
+        }
+      ],
+      "seealso": [
+        "submodule-update",
+        "update-many-repos"
       ]
     }
   ]
