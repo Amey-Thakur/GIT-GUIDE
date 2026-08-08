@@ -474,7 +474,8 @@
         "restore old version",
         "rollback",
         "return to earlier commit",
-        "time travel"
+        "time travel",
+        "roll back to the previous release"
       ],
       "variants": [
         {
@@ -2488,7 +2489,8 @@
       "aka": [
         "unable to create file filename too long",
         "longpaths",
-        "path length windows"
+        "path length windows",
+        "reserved file names on windows"
       ],
       "variants": [
         {
@@ -3574,7 +3576,8 @@
       "aka": [
         "commit with no changes",
         "trigger ci without changes",
-        "rerun pipeline"
+        "rerun pipeline",
+        "trigger ci with an empty commit"
       ],
       "variants": [
         {
@@ -4164,7 +4167,8 @@
       "aka": [
         "multiple push urls",
         "github and gitlab both",
-        "mirror push automatically"
+        "mirror push automatically",
+        "mirror to gitlab"
       ],
       "variants": [
         {
@@ -13833,6 +13837,197 @@
       "seealso": [
         "diff-word",
         "difftool-vscode"
+      ]
+    },
+    {
+      "id": "git-defaults-modern",
+      "q": "Config settings worth turning on everywhere",
+      "aka": [
+        "recommended git config",
+        "best git settings",
+        "modern git defaults"
+      ],
+      "variants": [
+        {
+          "when": "The short list",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global init.defaultBranch main",
+              "n": "New repos start on main."
+            },
+            {
+              "c": "git config --global push.autoSetupRemote true",
+              "n": "First push of a new branch just works, no --set-upstream."
+            },
+            {
+              "c": "git config --global rerere.enabled true",
+              "n": "Git remembers how you resolved a conflict and replays it next time."
+            },
+            {
+              "c": "git config --global fetch.prune true",
+              "n": "Remote-tracking branches vanish when their remote branches do."
+            }
+          ],
+          "undo": "git config --global --unset <key> for any of them"
+        }
+      ],
+      "seealso": [
+        "first-time-setup",
+        "rerere",
+        "auto-setup-remote"
+      ]
+    },
+    {
+      "id": "gitignore-patterns",
+      "q": "The .gitignore pattern rules",
+      "aka": [
+        "gitignore wildcards",
+        "gitignore syntax",
+        "double asterisk pattern"
+      ],
+      "variants": [
+        {
+          "when": "The five rules",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "build/",
+              "n": "A trailing slash matches only directories."
+            },
+            {
+              "c": "*.log",
+              "n": "* matches within one path level; **/*.log reaches every depth."
+            },
+            {
+              "c": "/TODO",
+              "n": "A leading slash anchors to the .gitignore's own folder; without it the name matches anywhere below."
+            },
+            {
+              "c": "!keep.log",
+              "n": "! re-includes something a broader rule excluded, unless its parent folder is excluded."
+            }
+          ],
+          "undo": "Delete the line; git check-ignore -v shows which rule wins"
+        }
+      ],
+      "seealso": [
+        "ignore-files",
+        "gitignore-except",
+        "check-ignore"
+      ]
+    },
+    {
+      "id": "practice-sandbox",
+      "q": "Practice Git where nothing can go wrong",
+      "aka": [
+        "safe place to learn git",
+        "try commands without risk",
+        "git playground"
+      ],
+      "variants": [
+        {
+          "when": "A throwaway repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init ~/sandbox && cd ~/sandbox",
+              "n": "Make files, commit, branch, merge, break things, delete the folder. Every dangerous command becomes safe when the repo is disposable."
+            }
+          ],
+          "undo": "Delete the folder"
+        },
+        {
+          "when": "Practice push and pull too",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --bare ~/sandbox-remote.git && git remote add origin ~/sandbox-remote.git",
+              "n": "A local folder acts as the remote: the full push, pull, and clone loop with no server and no audience."
+            }
+          ],
+          "undo": "Delete both folders"
+        }
+      ],
+      "seealso": [
+        "why-version-control",
+        "bare-repo",
+        "first-time-setup"
+      ]
+    },
+    {
+      "id": "diff-two-repos",
+      "q": "Compare two repositories",
+      "aka": [
+        "diff between repos",
+        "compare fork with original",
+        "two project trees differ"
+      ],
+      "variants": [
+        {
+          "when": "They share history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add other <url> && git fetch other",
+              "n": "Then git diff main other/main: an ordinary diff across repository lines."
+            }
+          ],
+          "undo": "git remote remove other"
+        },
+        {
+          "when": "They share nothing",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --no-index ../repo-a ../repo-b",
+              "n": "Compares the two folders as plain trees, ignoring history entirely."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "diff-no-index",
+        "compare-on-github",
+        "cherry-pick-other-repo"
+      ]
+    },
+    {
+      "id": "discussion-categories",
+      "q": "Run Discussions so answers stay findable",
+      "aka": [
+        "discussion categories",
+        "mark answer",
+        "q&a category"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Discussions -> pencil icon next to Categories",
+              "n": "Q&A categories have accepted answers; Announcements lock replies to maintainers; Ideas collect votes. The format decides how the content ages."
+            }
+          ],
+          "undo": "Edit or remove the category; threads move, not vanish"
+        },
+        {
+          "when": "Close the loop",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Mark as answer",
+              "n": "On the reply that solved it. Answered threads become the knowledge base future visitors search."
+            }
+          ],
+          "undo": "Unmark in the same place"
+        }
+      ],
+      "seealso": [
+        "discussions-vs-issues",
+        "open-issue"
       ]
     }
   ]
