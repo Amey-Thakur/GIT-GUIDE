@@ -395,6 +395,216 @@
   <p class="note">Pull needs a branch to update, and you stand on a detached commit.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#detached-head">Fix a detached HEAD</a></p>
 </article>
+<article class="result errcard" id="failed-to-push-some-refs">
+  <h2><code class="errmsg">error: failed to push some refs to &#x27;&lt;url&gt;&#x27;</code><a class="anchor" href="#failed-to-push-some-refs" aria-label="Link to this error">#</a></h2>
+  <p class="note">The wrapper line under most push rejections; the real reason is the line above it, usually non-fast-forward.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#non-fast-forward">Fix: push rejected, non-fast-forward</a></p>
+</article>
+<article class="result errcard" id="worktree-dir-permission">
+  <h2><code class="errmsg">fatal: could not create work tree dir &#x27;&lt;name&gt;&#x27;: Permission denied</code><a class="anchor" href="#worktree-dir-permission" aria-label="Link to this error">#</a></h2>
+  <p class="note">You are cloning into a folder your user cannot write to.</p>
+  <div class="cmd"><code>cd ~ &amp;&amp; git clone &lt;url&gt;</code><button class="copy" data-cmd="cd ~ &amp;&amp; git clone &lt;url&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Clone somewhere you own. System folders and other users&#x27; paths need rights you should rarely grant to Git.</p>
+  <p class="seealso">See also: <a href="index.html#clone-repo">Clone a repository</a></p>
+</article>
+<article class="result errcard" id="insufficient-object-permission">
+  <h2><code class="errmsg">error: insufficient permission for adding an object to repository database .git/objects</code><a class="anchor" href="#insufficient-object-permission" aria-label="Link to this error">#</a></h2>
+  <p class="note">Files inside .git belong to another user, typically after running Git with sudo once or sharing a repo folder.</p>
+  <div class="cmd"><code>sudo chown -R $(whoami) .git</code><button class="copy" data-cmd="sudo chown -R $(whoami) .git" aria-label="Copy command">Copy</button></div>
+  <p class="note">Return the repository to your user, then never run Git with sudo again.</p>
+  <p class="seealso">See also: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+</article>
+<article class="result errcard" id="cannot-lock-ref-stale">
+  <h2><code class="errmsg">error: cannot lock ref &#x27;refs/remotes/origin/&lt;branch&gt;&#x27;: unable to resolve reference</code><a class="anchor" href="#cannot-lock-ref-stale" aria-label="Link to this error">#</a></h2>
+  <p class="note">A stale or corrupted remote-tracking reference, often after an interrupted fetch.</p>
+  <div class="cmd"><code>git update-ref -d refs/remotes/origin/&lt;branch&gt;</code><button class="copy" data-cmd="git update-ref -d refs/remotes/origin/&lt;branch&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Delete the broken reference.</p>
+  <div class="cmd"><code>git fetch --prune</code><button class="copy" data-cmd="git fetch --prune" aria-label="Copy command">Copy</button></div>
+  <p class="note">Rebuilds it cleanly from the remote.</p>
+  <p class="seealso">See also: <a href="index.html#prune-remote-branches">Remove local references to deleted remote branches</a></p>
+</article>
+<article class="result errcard" id="cannot-lock-ref-hierarchy">
+  <h2><code class="errmsg">error: cannot lock ref &#x27;refs/heads/&lt;x&gt;/&lt;y&gt;&#x27;: &#x27;refs/heads/&lt;x&gt;&#x27; exists</code><a class="anchor" href="#cannot-lock-ref-hierarchy" aria-label="Link to this error">#</a></h2>
+  <p class="note">Branch names are paths: a branch named x blocks any branch named x/y, and the reverse.</p>
+  <div class="cmd"><code>git branch -m &lt;x&gt; &lt;x&gt;-old</code><button class="copy" data-cmd="git branch -m &lt;x&gt; &lt;x&gt;-old" aria-label="Copy command">Copy</button></div>
+  <p class="note">Rename or delete the conflicting branch; then create the nested name. Agree on a naming scheme (feature/..., fix/...) before the team collides again.</p>
+  <p class="seealso">See also: <a href="index.html#rename-branch">Rename a branch</a></p>
+  <p class="seealso">See also: <a href="index.html#delete-branch">Delete a branch, locally and on the remote</a></p>
+</article>
+<article class="result errcard" id="bad-revision-head">
+  <h2><code class="errmsg">fatal: bad revision &#x27;HEAD&#x27;</code><a class="anchor" href="#bad-revision-head" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository has no commits yet, so HEAD points at nothing.</p>
+  <div class="cmd"><code>git add . &amp;&amp; git commit -m &quot;Initial commit&quot;</code><button class="copy" data-cmd="git add . &amp;&amp; git commit -m &quot;Initial commit&quot;" aria-label="Copy command">Copy</button></div>
+  <p class="note">The first commit brings HEAD to life; every log and diff command works after it.</p>
+  <p class="seealso">See also: <a href="index.html#upload-existing-project">Put an existing project on GitHub</a></p>
+</article>
+<article class="result errcard" id="ambiguous-argument-head">
+  <h2><code class="errmsg">fatal: ambiguous argument &#x27;HEAD&#x27;: unknown revision or path not in the working tree.</code><a class="anchor" href="#ambiguous-argument-head" aria-label="Link to this error">#</a></h2>
+  <p class="note">Same family: an empty repository, or a name Git cannot tell apart from a file.</p>
+  <div class="cmd"><code>git log --oneline</code><button class="copy" data-cmd="git log --oneline" aria-label="Copy command">Copy</button></div>
+  <p class="note">Empty repo? Commit first. Otherwise separate revisions from paths with a double dash:</p>
+  <div class="cmd"><code>git log -- &lt;file&gt;</code><button class="copy" data-cmd="git log -- &lt;file&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Everything after -- is a path, never a revision.</p>
+  <p class="seealso">See also: <a href="index.html#see-history">See the commit history</a></p>
+</article>
+<article class="result errcard" id="untracked-would-be-overwritten">
+  <h2><code class="errmsg">error: The following untracked working tree files would be overwritten by checkout</code><a class="anchor" href="#untracked-would-be-overwritten" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch you are switching to tracks files that exist here untracked; Git refuses to destroy them silently.</p>
+  <div class="cmd"><code>mkdir -p ../backup &amp;&amp; mv &lt;file&gt; ../backup/</code><button class="copy" data-cmd="mkdir -p ../backup &amp;&amp; mv &lt;file&gt; ../backup/" aria-label="Copy command">Copy</button></div>
+  <p class="note">Move them aside if they matter, then switch.</p>
+  <div class="cmd"><code>git clean -nd</code><button class="copy" data-cmd="git clean -nd" aria-label="Copy command">Copy</button></div>
+  <p class="note">Or preview and delete them if disposable: -fd deletes what -nd lists.</p>
+  <p class="seealso">See also: <a href="index.html#remove-untracked">Delete untracked files from the working tree</a></p>
+  <p class="seealso">See also: <a href="index.html#stash">Set work aside temporarily (stash)</a></p>
+</article>
+<article class="result errcard" id="unable-to-unlink">
+  <h2><code class="errmsg">error: unable to unlink old &#x27;&lt;file&gt;&#x27;: Permission denied</code><a class="anchor" href="#unable-to-unlink" aria-label="Link to this error">#</a></h2>
+  <p class="note">Something holds the file open: an editor, a running process, or an antivirus scan, most often on Windows.</p>
+  <div class="cmd"><code>&lt;close the app using the file, then retry&gt;</code><button class="copy" data-cmd="&lt;close the app using the file, then retry&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">IDEs and dev servers are the usual holders. Persistent cases are the antivirus; exclude the repository folder from real-time scanning.</p>
+  <p class="seealso">See also: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+</article>
+<article class="result errcard" id="already-checked-out">
+  <h2><code class="errmsg">fatal: &#x27;&lt;branch&gt;&#x27; is already checked out at &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#already-checked-out" aria-label="Link to this error">#</a></h2>
+  <p class="note">Worktrees guarantee one checkout per branch, and that branch lives in another folder.</p>
+  <div class="cmd"><code>git worktree list</code><button class="copy" data-cmd="git worktree list" aria-label="Copy command">Copy</button></div>
+  <p class="note">See where. Work there, or check out a different branch here.</p>
+  <div class="cmd"><code>git worktree remove &lt;path&gt;</code><button class="copy" data-cmd="git worktree remove &lt;path&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Or retire that worktree if it is finished.</p>
+  <p class="seealso">See also: <a href="index.html#worktrees">Work on two branches at once (worktrees)</a></p>
+</article>
+<article class="result errcard" id="resolve-index-first">
+  <h2><code class="errmsg">error: You need to resolve your current index first</code><a class="anchor" href="#resolve-index-first" aria-label="Link to this error">#</a></h2>
+  <p class="note">A merge stopped at conflicts, and Git will not move on until you finish or abandon it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="revert-merge-mainline">
+  <h2><code class="errmsg">error: commit &lt;hash&gt; is a merge but no -m option was given.</code><a class="anchor" href="#revert-merge-mainline" aria-label="Link to this error">#</a></h2>
+  <p class="note">Reverting a merge needs to know which parent line survives.</p>
+  <div class="cmd"><code>git revert -m 1 &lt;hash&gt;</code><button class="copy" data-cmd="git revert -m 1 &lt;hash&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">-m 1 keeps the branch the merge landed on, which is almost always what you mean.</p>
+  <p class="seealso">See also: <a href="index.html#undo-merge">Undo a merge</a></p>
+</article>
+<article class="result errcard" id="bad-config-line">
+  <h2><code class="errmsg">fatal: bad config line &lt;n&gt; in file &lt;path&gt;</code><a class="anchor" href="#bad-config-line" aria-label="Link to this error">#</a></h2>
+  <p class="note">A typo in a config file: an unclosed quote, a stray character, or a section header gone wrong.</p>
+  <div class="cmd"><code>git config --global --edit</code><button class="copy" data-cmd="git config --global --edit" aria-label="Copy command">Copy</button></div>
+  <p class="note">Opens the file at fault in your editor; the message names the exact line to repair.</p>
+  <p class="seealso">See also: <a href="index.html#show-config">See every Git setting and where it comes from</a></p>
+</article>
+<article class="result errcard" id="no-tracking-information">
+  <h2><code class="errmsg">There is no tracking information for the current branch.</code><a class="anchor" href="#no-tracking-information" aria-label="Link to this error">#</a></h2>
+  <p class="note">Pull does not know which remote branch feeds this one.</p>
+  <div class="cmd"><code>git branch -u origin/&lt;branch&gt;</code><button class="copy" data-cmd="git branch -u origin/&lt;branch&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Link them once; plain git pull works from then on.</p>
+  <p class="seealso">See also: <a href="index.html#push-new-branch">Push a new local branch and track it</a></p>
+  <p class="seealso">See also: <a href="index.html#auto-setup-remote">Stop typing -u on every first push</a></p>
+</article>
+<article class="result errcard" id="couldnt-find-remote-ref">
+  <h2><code class="errmsg">fatal: couldn&#x27;t find remote ref &lt;branch&gt;</code><a class="anchor" href="#couldnt-find-remote-ref" aria-label="Link to this error">#</a></h2>
+  <p class="note">No branch by that name exists on the remote: a typo, a deleted branch, or main versus master.</p>
+  <div class="cmd"><code>git ls-remote --heads origin</code><button class="copy" data-cmd="git ls-remote --heads origin" aria-label="Copy command">Copy</button></div>
+  <p class="note">The authoritative list of what the remote actually has.</p>
+  <p class="seealso">See also: <a href="index.html#ls-remote">List a remote&#x27;s branches without cloning</a></p>
+  <p class="seealso">See also: <a href="index.html#default-branch">See or change the default branch of a remote</a></p>
+</article>
+<article class="result errcard" id="host-key-verification">
+  <h2><code class="errmsg">Host key verification failed.</code><a class="anchor" href="#host-key-verification" aria-label="Link to this error">#</a></h2>
+  <p class="note">SSH does not yet trust this server&#x27;s fingerprint, or the stored one no longer matches.</p>
+  <div class="cmd"><code>ssh -T git@github.com</code><button class="copy" data-cmd="ssh -T git@github.com" aria-label="Copy command">Copy</button></div>
+  <p class="note">Run interactively once and answer yes to store the fingerprint. In CI, pre-seed known_hosts instead of disabling checking.</p>
+  <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
+</article>
+<article class="result errcard" id="ssh-port-22-timeout">
+  <h2><code class="errmsg">ssh: connect to host github.com port 22: Connection timed out</code><a class="anchor" href="#ssh-port-22-timeout" aria-label="Link to this error">#</a></h2>
+  <p class="note">The network blocks port 22, the classic corporate and campus firewall move.</p>
+  <div class="cmd"><code>printf &quot;Host github.com\n  HostName ssh.github.com\n  Port 443\n&quot; &gt;&gt; ~/.ssh/config</code><button class="copy" data-cmd="printf &quot;Host github.com\n  HostName ssh.github.com\n  Port 443\n&quot; &gt;&gt; ~/.ssh/config" aria-label="Copy command">Copy</button></div>
+  <p class="note">GitHub speaks SSH on port 443 too; this tunnels past most firewalls. Or use HTTPS remotes on that network.</p>
+  <p class="seealso">See also: <a href="index.html#https-vs-ssh">HTTPS or SSH for remotes, which and why</a></p>
+  <p class="seealso">See also: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="http2-stream-error">
+  <h2><code class="errmsg">error: RPC failed; curl 92 HTTP/2 stream 0 was not closed cleanly</code><a class="anchor" href="#http2-stream-error" aria-label="Link to this error">#</a></h2>
+  <p class="note">A proxy or middlebox mishandling HTTP/2 during a large transfer.</p>
+  <div class="cmd"><code>git config --global http.version HTTP/1.1</code><button class="copy" data-cmd="git config --global http.version HTTP/1.1" aria-label="Copy command">Copy</button></div>
+  <p class="note">Falls back to HTTP/1.1, which the middlebox understands. Retry the push or clone after.</p>
+  <p class="seealso">See also: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="remote-hung-up">
+  <h2><code class="errmsg">fatal: the remote end hung up unexpectedly</code><a class="anchor" href="#remote-hung-up" aria-label="Link to this error">#</a></h2>
+  <p class="note">The connection died mid-transfer, usually a large push meeting a server or proxy limit.</p>
+  <div class="cmd"><code>git config http.postBuffer 157286400</code><button class="copy" data-cmd="git config http.postBuffer 157286400" aria-label="Copy command">Copy</button></div>
+  <p class="note">Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely.</p>
+  <p class="seealso">See also: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+</article>
+<article class="result errcard" id="embedded-repository">
+  <h2><code class="errmsg">warning: adding embedded git repository: &lt;folder&gt;</code><a class="anchor" href="#embedded-repository" aria-label="Link to this error">#</a></h2>
+  <p class="note">You added a folder that is itself a Git repository; it would be recorded as an empty pointer, confusing every clone.</p>
+  <div class="cmd"><code>git rm --cached &lt;folder&gt;</code><button class="copy" data-cmd="git rm --cached &lt;folder&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Undo the add. Then either delete that folder&#x27;s inner .git to absorb the files, or make it a real submodule on purpose.</p>
+  <p class="seealso">See also: <a href="index.html#submodule-add">Add a submodule and clone a repo that has them</a></p>
+  <p class="seealso">See also: <a href="index.html#untrack-file">Make Git forget a tracked file that is now in .gitignore</a></p>
+</article>
+<article class="result errcard" id="unpopulated-submodule">
+  <h2><code class="errmsg">fatal: in unpopulated submodule &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#unpopulated-submodule" aria-label="Link to this error">#</a></h2>
+  <p class="note">You are standing inside a submodule folder that was never initialized, an empty shell.</p>
+  <div class="cmd"><code>cd .. &amp;&amp; git submodule update --init --recursive</code><button class="copy" data-cmd="cd .. &amp;&amp; git submodule update --init --recursive" aria-label="Copy command">Copy</button></div>
+  <p class="note">Fill the shell from the repository root, then return.</p>
+  <p class="seealso">See also: <a href="index.html#submodule-add">Add a submodule and clone a repo that has them</a></p>
+</article>
+<article class="result errcard" id="no-submodule-mapping">
+  <h2><code class="errmsg">fatal: no submodule mapping found in .gitmodules for path &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#no-submodule-mapping" aria-label="Link to this error">#</a></h2>
+  <p class="note">A submodule folder is recorded in the index but missing from .gitmodules, a half-removed submodule.</p>
+  <div class="cmd"><code>git rm --cached &lt;path&gt;</code><button class="copy" data-cmd="git rm --cached &lt;path&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Finish the removal and commit; or restore the entry in .gitmodules if it should live.</p>
+  <p class="seealso">See also: <a href="index.html#remove-submodule">Remove a submodule</a></p>
+</article>
+<article class="result errcard" id="could-not-apply">
+  <h2><code class="errmsg">error: could not apply &lt;hash&gt;... &lt;message&gt;</code><a class="anchor" href="#could-not-apply" aria-label="Link to this error">#</a></h2>
+  <p class="note">A rebase or cherry-pick hit a conflict on this commit and paused for you.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Fix the conflicted files, git add them, then:</p>
+  <div class="cmd"><code>git rebase --continue</code><button class="copy" data-cmd="git rebase --continue" aria-label="Copy command">Copy</button></div>
+  <p class="note">Or --skip to drop this commit, or --abort to unwind everything. Cherry-pick uses the same three.</p>
+  <p class="seealso">See also: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+  <p class="seealso">See also: <a href="index.html#abort-operation">Cancel whatever Git is in the middle of</a></p>
+</article>
+<article class="result errcard" id="conflict-modify-delete">
+  <h2><code class="errmsg">CONFLICT (modify/delete): &lt;file&gt; deleted in &lt;ref&gt; and modified in &lt;ref&gt;</code><a class="anchor" href="#conflict-modify-delete" aria-label="Link to this error">#</a></h2>
+  <p class="note">One side deleted the file, the other edited it; Git cannot choose.</p>
+  <div class="cmd"><code>git add &lt;file&gt;</code><button class="copy" data-cmd="git add &lt;file&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Keep the modified version, or:</p>
+  <div class="cmd"><code>git rm &lt;file&gt;</code><button class="copy" data-cmd="git rm &lt;file&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Honor the deletion. Either way, continue the merge or rebase after.</p>
+  <p class="seealso">See also: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="password-auth-removed">
+  <h2><code class="errmsg">remote: Support for password authentication was removed on August 13, 2021.</code><a class="anchor" href="#password-auth-removed" aria-label="Link to this error">#</a></h2>
+  <p class="note">GitHub no longer accepts account passwords over HTTPS; a token or SSH key is required.</p>
+  <div class="cmd"><code>gh auth login</code><button class="copy" data-cmd="gh auth login" aria-label="Copy command">Copy</button></div>
+  <p class="note">The painless route: browser sign-in wires Git correctly.</p>
+  <div class="cmd"><code>git config --global credential.helper manager</code><button class="copy" data-cmd="git config --global credential.helper manager" aria-label="Copy command">Copy</button></div>
+  <p class="note">Or let the credential manager prompt and store a token on the next push.</p>
+  <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
+  <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+</article>
+<article class="result errcard" id="write-access-not-granted">
+  <h2><code class="errmsg">remote: Write access to repository not granted.</code><a class="anchor" href="#write-access-not-granted" aria-label="Link to this error">#</a></h2>
+  <p class="note">Your account can read this repository but not push to it.</p>
+  <div class="cmd"><code>gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone</code><button class="copy" data-cmd="gh repo fork &lt;owner&gt;/&lt;repo&gt; --clone" aria-label="Copy command">Copy</button></div>
+  <p class="note">The open source path: push to your fork and open a pull request. On team repos, ask for write access instead.</p>
+  <p class="seealso">See also: <a href="index.html#fork-vs-branch">Fork or branch, which and when</a></p>
+  <p class="seealso">See also: <a href="index.html#sync-fork">Sync a fork with the original repository</a></p>
+</article>
+<article class="result errcard" id="not-valid-object-name">
+  <h2><code class="errmsg">fatal: Not a valid object name: &#x27;main&#x27;.</code><a class="anchor" href="#not-valid-object-name" aria-label="Link to this error">#</a></h2>
+  <p class="note">Branching from main before any commit exists; a branch cannot point at nothing.</p>
+  <div class="cmd"><code>git commit -m &quot;Initial commit&quot; --allow-empty</code><button class="copy" data-cmd="git commit -m &quot;Initial commit&quot; --allow-empty" aria-label="Copy command">Copy</button></div>
+  <p class="note">Give the repository its first commit; branches work from then on.</p>
+  <p class="seealso">See also: <a href="index.html#upload-existing-project">Put an existing project on GitHub</a></p>
+  <p class="seealso">See also: <a href="index.html#empty-commit">Create an empty commit</a></p>
+</article>
 <article class="result errcard" id="gha-permission">
   <h2><code class="errmsg">remote: Permission to &lt;repo&gt; denied to github-actions[bot].</code><a class="anchor" href="#gha-permission" aria-label="Link to this error">#</a></h2>
   <p class="note">A workflow tried to push, but Actions runs with read-only permissions unless the workflow asks for more.</p>
@@ -403,6 +613,205 @@
   contents: write" aria-label="Copy command">Copy</button></div>
   <p class="note">In the workflow file, at the top level or per job. Grant only what the job needs; read-only stays the right default everywhere else.</p>
   <p class="seealso">See also: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
+<article class="result errcard" id="no-commits-yet-branch">
+  <h2><code class="errmsg">fatal: your current branch &#x27;main&#x27; does not have any commits yet</code><a class="anchor" href="#no-commits-yet-branch" aria-label="Link to this error">#</a></h2>
+  <p class="note">Log, branch, and friends need at least one commit to talk about.</p>
+  <div class="cmd"><code>git add . &amp;&amp; git commit -m &quot;Initial commit&quot;</code><button class="copy" data-cmd="git add . &amp;&amp; git commit -m &quot;Initial commit&quot;" aria-label="Copy command">Copy</button></div>
+  <p class="seealso">See also: <a href="index.html#upload-existing-project">Put an existing project on GitHub</a></p>
+</article>
+<article class="result errcard" id="shallow-update-not-allowed">
+  <h2><code class="errmsg">fatal: shallow update not allowed</code><a class="anchor" href="#shallow-update-not-allowed" aria-label="Link to this error">#</a></h2>
+  <p class="note">You are pushing from a shallow clone, common in CI checkouts.</p>
+  <div class="cmd"><code>git fetch --unshallow</code><button class="copy" data-cmd="git fetch --unshallow" aria-label="Copy command">Copy</button></div>
+  <p class="note">Complete the history, then push. In GitHub Actions, set fetch-depth: 0 on the checkout step instead.</p>
+  <p class="seealso">See also: <a href="index.html#shallow-in-ci">Shallow clones in CI, and getting full history back</a></p>
+</article>
+<article class="result errcard" id="refusing-fetch-current">
+  <h2><code class="errmsg">fatal: Refusing to fetch into current branch refs/heads/&lt;branch&gt; of non-bare repository</code><a class="anchor" href="#refusing-fetch-current" aria-label="Link to this error">#</a></h2>
+  <p class="note">Fetching directly into the branch you are standing on would pull the floor from under you.</p>
+  <div class="cmd"><code>git pull</code><button class="copy" data-cmd="git pull" aria-label="Copy command">Copy</button></div>
+  <p class="note">For the current branch, pull is the tool.</p>
+  <div class="cmd"><code>git fetch origin &lt;branch&gt;:&lt;branch&gt;</code><button class="copy" data-cmd="git fetch origin &lt;branch&gt;:&lt;branch&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">The into-a-branch form works only for branches you are not on.</p>
+  <p class="seealso">See also: <a href="index.html#pull-specific-branch">Pull a specific branch</a></p>
+</article>
+<article class="result errcard" id="unadvertised-object">
+  <h2><code class="errmsg">error: Server does not allow request for unadvertised object &lt;hash&gt;</code><a class="anchor" href="#unadvertised-object" aria-label="Link to this error">#</a></h2>
+  <p class="note">A submodule is pinned to a commit the server will not hand out directly, or a shallow clone wants what it cannot see.</p>
+  <div class="cmd"><code>git fetch --unshallow</code><button class="copy" data-cmd="git fetch --unshallow" aria-label="Copy command">Copy</button></div>
+  <p class="note">For shallow clones. For submodules, the pin usually points at a commit never pushed: push the submodule&#x27;s repo first, then update the pin.</p>
+  <p class="seealso">See also: <a href="index.html#submodule-add">Add a submodule and clone a repo that has them</a></p>
+  <p class="seealso">See also: <a href="index.html#shallow-in-ci">Shallow clones in CI, and getting full history back</a></p>
+</article>
+<article class="result errcard" id="not-a-commit">
+  <h2><code class="errmsg">fatal: &#x27;origin/&lt;branch&gt;&#x27; is not a commit and a branch &#x27;&lt;name&gt;&#x27; cannot be created from it</code><a class="anchor" href="#not-a-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Your clone has never heard of that remote branch; the start point does not exist locally.</p>
+  <div class="cmd"><code>git fetch</code><button class="copy" data-cmd="git fetch" aria-label="Copy command">Copy</button></div>
+  <p class="note">Learn what the remote has, then create the branch again.</p>
+  <p class="seealso">See also: <a href="index.html#checkout-remote-branch">Check out a branch that exists on the remote</a></p>
+</article>
+<article class="result errcard" id="branch-not-found-delete">
+  <h2><code class="errmsg">error: branch &#x27;&lt;name&gt;&#x27; not found.</code><a class="anchor" href="#branch-not-found-delete" aria-label="Link to this error">#</a></h2>
+  <p class="note">No local branch by that exact name; a typo, or it lives only on the remote.</p>
+  <div class="cmd"><code>git branch -a</code><button class="copy" data-cmd="git branch -a" aria-label="Copy command">Copy</button></div>
+  <p class="note">The full roster. Remote-only branches are deleted with git push origin --delete &lt;name&gt;.</p>
+  <p class="seealso">See also: <a href="index.html#delete-branch">Delete a branch, locally and on the remote</a></p>
+</article>
+<article class="result errcard" id="no-merge-to-abort">
+  <h2><code class="errmsg">fatal: There is no merge to abort (MERGE_HEAD missing).</code><a class="anchor" href="#no-merge-to-abort" aria-label="Link to this error">#</a></h2>
+  <p class="note">Nothing is mid-merge; whatever state you are in, it is not that.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Names the actual state and its exit: a rebase wants rebase --abort, a cherry-pick its own.</p>
+  <p class="seealso">See also: <a href="index.html#abort-operation">Cancel whatever Git is in the middle of</a></p>
+</article>
+<article class="result errcard" id="no-rebase-in-progress">
+  <h2><code class="errmsg">fatal: No rebase in progress?</code><a class="anchor" href="#no-rebase-in-progress" aria-label="Link to this error">#</a></h2>
+  <p class="note">The rebase you are trying to continue or abort already ended, or never started.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirm the real state; git log --oneline shows whether the rebase finished.</p>
+  <p class="seealso">See also: <a href="index.html#abort-operation">Cancel whatever Git is in the middle of</a></p>
+  <p class="seealso">See also: <a href="index.html#undo-rebase">Undo a rebase</a></p>
+</article>
+<article class="result errcard" id="terminal-prompts-disabled">
+  <h2><code class="errmsg">fatal: could not read Username for &#x27;https://github.com&#x27;: terminal prompts disabled</code><a class="anchor" href="#terminal-prompts-disabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">GIT_TERMINAL_PROMPT=0 is set, as in most CI, and Git wanted to ask for credentials.</p>
+  <div class="cmd"><code>git remote set-url origin https://x-access-token:${TOKEN}@github.com/&lt;owner&gt;/&lt;repo&gt;.git</code><button class="copy" data-cmd="git remote set-url origin https://x-access-token:${TOKEN}@github.com/&lt;owner&gt;/&lt;repo&gt;.git" aria-label="Copy command">Copy</button></div>
+  <p class="note">Inject a token in CI; actions/checkout does this for you inside GitHub Actions.</p>
+  <p class="seealso">See also: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
+<article class="result errcard" id="http-basic-access-denied">
+  <h2><code class="errmsg">remote: HTTP Basic: Access denied</code><a class="anchor" href="#http-basic-access-denied" aria-label="Link to this error">#</a></h2>
+  <p class="note">GitLab&#x27;s phrasing of bad HTTPS credentials: an expired or wrong token, or a password where a token belongs.</p>
+  <div class="cmd"><code>git config --global credential.helper manager</code><button class="copy" data-cmd="git config --global credential.helper manager" aria-label="Copy command">Copy</button></div>
+  <p class="note">Clear the bad entry when prompted and sign in fresh with a personal access token from GitLab&#x27;s settings.</p>
+  <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
+  <p class="seealso">See also: <a href="index.html#use-other-hosts">Use Git with GitLab, Bitbucket, or AWS CodeCommit</a></p>
+</article>
+<article class="result errcard" id="gpg-no-secret-key">
+  <h2><code class="errmsg">gpg: signing failed: No secret key</code><a class="anchor" href="#gpg-no-secret-key" aria-label="Link to this error">#</a></h2>
+  <p class="note">Signing is on, but the configured key is not on this machine, typical after a laptop change.</p>
+  <div class="cmd"><code>git config --global gpg.format ssh &amp;&amp; git config --global user.signingkey ~/.ssh/id_ed25519.pub</code><button class="copy" data-cmd="git config --global gpg.format ssh &amp;&amp; git config --global user.signingkey ~/.ssh/id_ed25519.pub" aria-label="Copy command">Copy</button></div>
+  <p class="note">Switch to SSH signing with the key you already have; or import the old GPG key, or set commit.gpgsign false.</p>
+  <p class="seealso">See also: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+</article>
+<article class="result errcard" id="gpg-ioctl">
+  <h2><code class="errmsg">gpg: signing failed: Inappropriate ioctl for device</code><a class="anchor" href="#gpg-ioctl" aria-label="Link to this error">#</a></h2>
+  <p class="note">GPG wants to ask for your passphrase but has no terminal to ask in.</p>
+  <div class="cmd"><code>export GPG_TTY=$(tty)</code><button class="copy" data-cmd="export GPG_TTY=$(tty)" aria-label="Copy command">Copy</button></div>
+  <p class="note">Add it to your shell profile; GPG then prompts correctly.</p>
+  <p class="seealso">See also: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+</article>
+<article class="result errcard" id="could-not-read-remote">
+  <h2><code class="errmsg">fatal: Could not read from remote repository.</code><a class="anchor" href="#could-not-read-remote" aria-label="Link to this error">#</a></h2>
+  <p class="note">The generic tail of every SSH failure; the true cause sits in the lines above it.</p>
+  <div class="cmd"><code>ssh -T git@github.com</code><button class="copy" data-cmd="ssh -T git@github.com" aria-label="Copy command">Copy</button></div>
+  <p class="note">Reproduce the real error alone: publickey, host key, or timeout, each has its own entry here.</p>
+  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
+  <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+</article>
+<article class="result errcard" id="openssl-connection-reset">
+  <h2><code class="errmsg">fatal: unable to access &#x27;&lt;url&gt;&#x27;: OpenSSL SSL_read: Connection was reset, errno 10054</code><a class="anchor" href="#openssl-connection-reset" aria-label="Link to this error">#</a></h2>
+  <p class="note">Something on the network path, a proxy, VPN, or security software, cut the TLS connection, most often on Windows.</p>
+  <div class="cmd"><code>git config --global http.sslBackend schannel</code><button class="copy" data-cmd="git config --global http.sslBackend schannel" aria-label="Copy command">Copy</button></div>
+  <p class="note">Uses Windows&#x27; own TLS stack, which corporate middleboxes expect. Retry; if it persists, the proxy settings entry is next.</p>
+  <p class="seealso">See also: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="certificate-verify-locations">
+  <h2><code class="errmsg">fatal: unable to access &#x27;&lt;url&gt;&#x27;: error setting certificate verify locations</code><a class="anchor" href="#certificate-verify-locations" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git&#x27;s CA bundle path is broken, usually after a partial install or an overzealous cleanup.</p>
+  <div class="cmd"><code>git config --global --unset http.sslCAInfo</code><button class="copy" data-cmd="git config --global --unset http.sslCAInfo" aria-label="Copy command">Copy</button></div>
+  <p class="note">Drop the broken override so Git falls back to its bundled certificates; reinstalling Git also heals it.</p>
+  <p class="seealso">See also: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="index-bad-signature">
+  <h2><code class="errmsg">error: bad signature 0x00000000 (fatal: index file corrupt)</code><a class="anchor" href="#index-bad-signature" aria-label="Link to this error">#</a></h2>
+  <p class="note">The index file was damaged, a crash, a full disk, or a sync service writing into .git.</p>
+  <div class="cmd"><code>rm .git/index &amp;&amp; git reset</code><button class="copy" data-cmd="rm .git/index &amp;&amp; git reset" aria-label="Copy command">Copy</button></div>
+  <p class="note">The index rebuilds from HEAD; your files are untouched. Keep .git out of OneDrive and Dropbox sync.</p>
+  <p class="seealso">See also: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+</article>
+<article class="result errcard" id="lf-would-be-replaced">
+  <h2><code class="errmsg">fatal: LF would be replaced by CRLF in &lt;file&gt;</code><a class="anchor" href="#lf-would-be-replaced" aria-label="Link to this error">#</a></h2>
+  <p class="note">The strict form of the line-ending check: safecrlf is set to refuse converting changes instead of warning.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#line-endings">Fix line ending warnings (LF, CRLF)</a></p>
+</article>
+<article class="result errcard" id="stale-rebase-dir">
+  <h2><code class="errmsg">fatal: It seems that there is already a rebase-merge directory</code><a class="anchor" href="#stale-rebase-dir" aria-label="Link to this error">#</a></h2>
+  <p class="note">A previous rebase never finished; its state directory still sits in .git.</p>
+  <div class="cmd"><code>git rebase --abort</code><button class="copy" data-cmd="git rebase --abort" aria-label="Copy command">Copy</button></div>
+  <p class="note">The clean exit. If Git insists nothing is in progress:</p>
+  <div class="cmd"><code>rm -rf .git/rebase-merge .git/rebase-apply</code><button class="copy" data-cmd="rm -rf .git/rebase-merge .git/rebase-apply" aria-label="Copy command">Copy</button></div>
+  <p class="note">Remove the stale state by hand, then start fresh.</p>
+  <p class="seealso">See also: <a href="index.html#abort-operation">Cancel whatever Git is in the middle of</a></p>
+  <p class="seealso">See also: <a href="index.html#undo-rebase">Undo a rebase</a></p>
+</article>
+<article class="result errcard" id="unsafe-repository">
+  <h2><code class="errmsg">fatal: unsafe repository (&#x27;&lt;path&gt;&#x27; is owned by someone else)</code><a class="anchor" href="#unsafe-repository" aria-label="Link to this error">#</a></h2>
+  <p class="note">The older phrasing of the ownership guard, same cause as dubious ownership.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+</article>
+<article class="result errcard" id="pre-receive-hook-declined">
+  <h2><code class="errmsg">! [remote rejected] &lt;branch&gt; -&gt; &lt;branch&gt; (pre-receive hook declined)</code><a class="anchor" href="#pre-receive-hook-declined" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server ran a policy check and said no: a protected branch, an oversized file, or a failed lint, and it printed its reason just above this line.</p>
+  <div class="cmd"><code>&lt;read the remote: lines above the rejection&gt;</code><button class="copy" data-cmd="&lt;read the remote: lines above the rejection&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">The server states its rule there. Protected branch? Open a pull request instead of pushing directly.</p>
+  <p class="seealso">See also: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">See also: <a href="index.html#checkout-pr">Check out a pull request locally</a></p>
+</article>
+<article class="result errcard" id="repository-rule-violations">
+  <h2><code class="errmsg">error: GH013: Repository rule violations found for refs/heads/&lt;branch&gt;.</code><a class="anchor" href="#repository-rule-violations" aria-label="Link to this error">#</a></h2>
+  <p class="note">GitHub rulesets blocked the push; the lines above name the exact rule, commonly a required pull request or signed commits.</p>
+  <div class="cmd"><code>git switch -c &lt;change&gt; &amp;&amp; git push -u origin &lt;change&gt;</code><button class="copy" data-cmd="git switch -c &lt;change&gt; &amp;&amp; git push -u origin &lt;change&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Land it through a pull request, which is almost always what the rule wants.</p>
+  <p class="seealso">See also: <a href="index.html#create-pr-cli">Create a pull request from the terminal</a></p>
+  <p class="seealso">See also: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+</article>
+<article class="result errcard" id="gh006-protected">
+  <h2><code class="errmsg">error: GH006: Protected branch update failed for refs/heads/&lt;branch&gt;.</code><a class="anchor" href="#gh006-protected" aria-label="Link to this error">#</a></h2>
+  <p class="note">That branch only accepts changes through reviewed pull requests.</p>
+  <div class="cmd"><code>git switch -c &lt;change&gt; &amp;&amp; git push -u origin &lt;change&gt; &amp;&amp; gh pr create --fill</code><button class="copy" data-cmd="git switch -c &lt;change&gt; &amp;&amp; git push -u origin &lt;change&gt; &amp;&amp; gh pr create --fill" aria-label="Copy command">Copy</button></div>
+  <p class="note">The intended road: branch, push, pull request.</p>
+  <p class="seealso">See also: <a href="index.html#create-pr-cli">Create a pull request from the terminal</a></p>
+  <p class="seealso">See also: <a href="index.html#merge-branch">Merge my branch into main</a></p>
+</article>
+<article class="result errcard" id="file-size-limit-exact">
+  <h2><code class="errmsg">remote: error: File &lt;name&gt; is &lt;size&gt; MB; this exceeds GitHub&#x27;s file size limit of 100.00 MB</code><a class="anchor" href="#file-size-limit-exact" aria-label="Link to this error">#</a></h2>
+  <p class="note">One specific file crossed the hard limit; the push cannot land while any commit carries it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+</article>
+<article class="result errcard" id="husky-hook-exit">
+  <h2><code class="errmsg">husky - pre-commit hook exited with code 1 (error)</code><a class="anchor" href="#husky-hook-exit" aria-label="Link to this error">#</a></h2>
+  <p class="note">The project&#x27;s own pre-commit checks failed: lint, tests, or formatting, and the real output sits just above.</p>
+  <div class="cmd"><code>&lt;fix what the output above names&gt;</code><button class="copy" data-cmd="&lt;fix what the output above names&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">That is the hook doing its job.</p>
+  <div class="cmd"><code>git commit --no-verify -m &quot;&lt;message&gt;&quot;</code><button class="copy" data-cmd="git commit --no-verify -m &quot;&lt;message&gt;&quot;" aria-label="Copy command">Copy</button></div>
+  <p class="note">The documented escape hatch for a genuine emergency; use it knowingly, not habitually.</p>
+  <p class="seealso">See also: <a href="index.html#hooks">Run checks automatically before each commit (hooks)</a></p>
+  <p class="seealso">See also: <a href="index.html#protect-main-locally">Stop yourself committing to main by accident</a></p>
+</article>
+<article class="result errcard" id="everything-up-to-date-msg">
+  <h2><code class="errmsg">Everything up-to-date</code><a class="anchor" href="#everything-up-to-date-msg" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error: push found nothing to send. The surprise usually means the work is uncommitted or on another branch.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#everything-up-to-date">Push says Everything up-to-date but my changes are missing</a></p>
+</article>
+<article class="result errcard" id="nothing-to-commit">
+  <h2><code class="errmsg">nothing to commit, working tree clean</code><a class="anchor" href="#nothing-to-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Commit found no staged changes. Either everything is already committed, or the edits live elsewhere.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Untracked files listed? They need git add first. Nothing at all? Check you are in the right folder and branch.</p>
+  <p class="seealso">See also: <a href="index.html#add-a-vs-dot">git add -A vs git add . vs git add -u</a></p>
+  <p class="seealso">See also: <a href="index.html#what-changed">See what I changed and what is staged</a></p>
+</article>
+<article class="result errcard" id="requested-url-403">
+  <h2><code class="errmsg">The requested URL returned error: 403</code><a class="anchor" href="#requested-url-403" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server recognized you and still said no: wrong account&#x27;s cached credentials, or no write permission here.</p>
+  <div class="cmd"><code>gh auth status</code><button class="copy" data-cmd="gh auth status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirm which account is talking.</p>
+  <div class="cmd"><code>printf &quot;protocol=https\nhost=github.com\n&quot; | git credential reject</code><button class="copy" data-cmd="printf &quot;protocol=https\nhost=github.com\n&quot; | git credential reject" aria-label="Copy command">Copy</button></div>
+  <p class="note">Evict the cached credential so the next push asks fresh; or fork and pull-request if you lack write access.</p>
+  <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
+  <p class="seealso">See also: <a href="index.html#fork-vs-branch">Fork or branch, which and when</a></p>
 </article>
 <!-- errors:end -->
       </div>
