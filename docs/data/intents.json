@@ -32354,37 +32354,6 @@
       ]
     },
     {
-      "id": "read-git-help-output",
-      "q": "Decode a command's help page",
-      "aka": [
-        "understand git man page",
-        "what do the brackets mean",
-        "read command synopsis"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git help switch",
-              "n": "In the synopsis, square brackets mean optional, angle brackets mean you supply a value, and a pipe means choose one."
-            },
-            {
-              "c": "git switch -h",
-              "n": "The short form lists flags without the prose, which is usually what you actually wanted."
-            }
-          ],
-          "undo": "Nothing to undo"
-        }
-      ],
-      "seealso": [
-        "git-help",
-        "autocorrect",
-        "learn-git-effectively"
-      ]
-    },
-    {
       "id": "choose-clone-protocol",
       "q": "Which clone URL to copy from GitHub",
       "aka": [
@@ -32506,37 +32475,6 @@
         "stop-pushing-to-wrong-remote",
         "why-two-remotes-fork",
         "which-remote-am-i-pushing-to"
-      ]
-    },
-    {
-      "id": "decide-what-to-review-yourself",
-      "q": "Review my own change before asking anyone",
-      "aka": [
-        "self review pull request",
-        "check my own diff",
-        "before requesting review"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git diff main...HEAD",
-              "n": "Read your own diff as a stranger would. Half of review comments are things the author would have caught here."
-            },
-            {
-              "c": "gh pr diff",
-              "n": "After opening it, walk the pull request view once: leftover debugging, stray files, and unclear names all surface there."
-            }
-          ],
-          "undo": "Nothing to undo"
-        }
-      ],
-      "seealso": [
-        "pr-checklist",
-        "choose-what-to-review-in-a-diff",
-        "pull-request-size"
       ]
     },
     {
@@ -32812,37 +32750,6 @@
         "access-tokens",
         "stop-asking-for-username",
         "stop-committing-passwords"
-      ]
-    },
-    {
-      "id": "pick-a-license-quickly",
-      "q": "Choose a license without reading all of them",
-      "aka": [
-        "which license should i pick",
-        "mit or apache",
-        "license decision"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "gh repo create <name> --license mit",
-              "n": "MIT for maximum adoption and minimum friction; Apache-2.0 when you want an explicit patent grant."
-            },
-            {
-              "c": "gh repo edit --add-topic <topic>",
-              "n": "GPL when derivatives must stay open. Anything more nuanced is a question for counsel, not a coin toss."
-            }
-          ],
-          "undo": "Licenses can change going forward, never retroactively"
-        }
-      ],
-      "seealso": [
-        "add-license",
-        "change-license-later",
-        "how-open-source-works"
       ]
     }
   ]
