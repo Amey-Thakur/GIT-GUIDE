@@ -1051,9 +1051,13 @@
       "aka": ["cache credentials", "remember password", "credential manager", "authentication failed token"],
       "variants": [
         {
-          "when": "On Windows and macOS",
+          "when": "Per operating system",
           "danger": "safe",
-          "cmds": [{ "c": "git config --global credential.helper manager", "n": "Git Credential Manager ships with Git for Windows and signs you in through the browser once. On macOS the keychain form is: git config --global credential.helper osxkeychain" }],
+          "cmds": [
+            { "c": "git config --global credential.helper manager", "n": "Windows: Git Credential Manager ships with Git for Windows and signs you in through the browser once." },
+            { "c": "git config --global credential.helper osxkeychain", "n": "macOS: stores the token in your keychain." },
+            { "c": "git config --global credential.helper \"cache --timeout=86400\"", "n": "Linux: holds it in memory for a day. Git Credential Manager installs on Linux too if you want browser sign-in." }
+          ],
           "undo": "git config --global --unset credential.helper"
         },
         {
@@ -1335,11 +1339,13 @@
       "aka": ["git version", "upgrade git", "install latest git"],
       "variants": [
         {
-          "when": "Check, then update per platform",
+          "when": "Check, then update on your system",
           "danger": "safe",
           "cmds": [
             { "c": "git --version", "n": "Anything below 2.23 lacks switch and restore; below 2.35 lacks SSH signing." },
-            { "c": "winget upgrade Git.Git", "n": "Windows. macOS with Homebrew: brew upgrade git. Debian and Ubuntu: sudo apt update && sudo apt install git" }
+            { "c": "winget upgrade Git.Git", "n": "Windows." },
+            { "c": "brew upgrade git", "n": "macOS with Homebrew." },
+            { "c": "sudo apt update && sudo apt install git", "n": "Debian and Ubuntu. Fedora: sudo dnf upgrade git" }
           ],
           "undo": "Package managers can roll back, but there is no reason to run an old Git"
         }
