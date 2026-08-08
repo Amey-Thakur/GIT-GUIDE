@@ -28697,6 +28697,492 @@
         "what-is-origin",
         "remote-branch-vs-tracking"
       ]
+    },
+    {
+      "id": "rebase-many-commits-conflicts",
+      "q": "A rebase hits the same conflict on every commit",
+      "aka": [
+        "repeated conflicts during rebase",
+        "rebase conflict over and over",
+        "same conflict each commit"
+      ],
+      "variants": [
+        {
+          "when": "Let Git remember",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config rerere.enabled true",
+              "n": "Records each resolution and replays it when the same conflict reappears, which is exactly this situation."
+            }
+          ],
+          "undo": "git config --unset rerere.enabled"
+        },
+        {
+          "when": "Avoid it entirely",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge main",
+              "n": "A merge resolves the conflict once instead of once per commit. When a rebase turns into a slog, merging is the pragmatic answer."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "rerere",
+        "merge-vs-rebase",
+        "avoid-conflicts"
+      ]
+    },
+    {
+      "id": "squash-then-conflict",
+      "q": "Conflicts appear after squashing",
+      "aka": [
+        "squash created conflicts",
+        "conflict after combining commits",
+        "squashed branch conflicts with main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rebase --abort",
+              "n": "Squashing collapses intermediate steps, so a conflict Git previously resolved in stages now lands all at once. Backing out costs nothing."
+            },
+            {
+              "c": "git merge main && git rebase -i main",
+              "n": "Update first, resolve against current main, then squash. Order matters more than technique here."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "squash-before-merge",
+        "rebase-many-commits-conflicts",
+        "interactive-rebase"
+      ]
+    },
+    {
+      "id": "add-tests-to-old-project",
+      "q": "Add CI to a project that never had it",
+      "aka": [
+        "retrofit ci",
+        "add tests to legacy repo",
+        "first workflow on old project"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".github/workflows/ci.yml",
+              "n": "Start with the smallest honest check, even just that the project builds. A green pipeline you trust beats a comprehensive one everyone ignores."
+            },
+            {
+              "c": "Ruleset -> Require status checks",
+              "n": "Make it required only once it is reliable, or the first flake teaches the team to bypass rules."
+            }
+          ],
+          "undo": "Delete the workflow"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "github-status-checks-required",
+        "works-locally-fails-ci"
+      ]
+    },
+    {
+      "id": "repo-inherits-bad-history",
+      "q": "I inherited a repository with terrible history",
+      "aka": [
+        "messy history i did not create",
+        "inherited legacy repo",
+        "history is a disaster"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline | head -50",
+              "n": "Leave it alone. Rewriting inherited history breaks every clone and fork for a cosmetic gain, and the old commits still tell you why the code is the way it is."
+            },
+            {
+              "c": "echo \"<reformat-sha>\" >> .git-blame-ignore-revs",
+              "n": "Improve what you can non-destructively: ignore-revs for noise, better messages going forward, and a CONTRIBUTING file that sets the new standard."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "reduce-repo-noise",
+        "clean-history-before-public",
+        "understand-someone-else-repo"
+      ]
+    },
+    {
+      "id": "cherry-pick-shows-no-changes",
+      "q": "Cherry-pick applied but produced nothing",
+      "aka": [
+        "cherry pick did nothing",
+        "commit already applied",
+        "empty cherry pick result"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline --cherry-mark --left-right main...<branch>",
+              "n": "An equals sign marks commits already present by content, which is why the pick had nothing to do."
+            },
+            {
+              "c": "git cherry-pick --skip",
+              "n": "Skip it and move on. Use --allow-empty only when you want the empty commit recorded deliberately."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "tell-if-commit-is-merged",
+        "empty-commit"
+      ]
+    },
+    {
+      "id": "stop-file-being-normalized",
+      "q": "Git keeps changing my line endings",
+      "aka": [
+        "git converting line endings",
+        "stop autocrlf on a file",
+        "binary file being mangled"
+      ],
+      "variants": [
+        {
+          "when": "One path",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"<path> -text\" >> .gitattributes",
+              "n": "Marks the file as never converted, whatever anyone's autocrlf setting is. Correct for binaries and for scripts that must keep exact bytes."
+            }
+          ],
+          "undo": "Remove the line"
+        },
+        {
+          "when": "Set the policy properly",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '* text=auto\\n*.sh text eol=lf\\n*.bat text eol=crlf\\n' >> .gitattributes",
+              "n": "Committed rules beat per-developer config, and end the argument permanently."
+            }
+          ],
+          "undo": "Remove the file"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "gitattributes",
+        "phantom-modifications"
+      ]
+    },
+    {
+      "id": "pull-request-to-wrong-repo",
+      "q": "I opened a pull request against the wrong repository",
+      "aka": [
+        "pr to wrong project",
+        "targeted the wrong repo",
+        "wrong upstream pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr close <number>",
+              "n": "The base repository cannot be changed after opening, only the base branch. Close it and apologise briefly; it happens constantly with forks."
+            },
+            {
+              "c": "gh pr create --repo <right-owner>/<repo> --head <you>:<branch>",
+              "n": "The same branch works for the new pull request, so nothing is lost."
+            }
+          ],
+          "undo": "Reopen the closed pull request if it was right after all"
+        }
+      ],
+      "seealso": [
+        "change-pr-base",
+        "pr-from-fork-branch",
+        "cannot-push-after-clone"
+      ]
+    },
+    {
+      "id": "understand-fetch-refspec",
+      "q": "What the plus and colon in a refspec mean",
+      "aka": [
+        "refspec syntax",
+        "fetch refspec explained",
+        "what does +refs mean"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --get remote.origin.fetch",
+              "n": "Reads as source:destination. The leading plus allows non-fast-forward updates of the local copy, which is why a force-pushed remote branch still fetches cleanly."
+            },
+            {
+              "c": "git fetch origin main:refs/remotes/origin/main",
+              "n": "Writing it out explicitly is occasionally useful for fetching one branch into a specific local ref."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-origin",
+        "push-to-different-name",
+        "clone-only-latest-branch"
+      ]
+    },
+    {
+      "id": "see-config-of-a-clone",
+      "q": "Inspect what a clone was set up with",
+      "aka": [
+        "how was this repo cloned",
+        "clone settings",
+        "check repository configuration"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --local --list",
+              "n": "Remotes, fetch refspecs, filters, and any tool-written settings. Shows at a glance whether the clone is shallow, single-branch, or partial."
+            },
+            {
+              "c": "git rev-parse --is-shallow-repository",
+              "n": "The one thing config does not spell out plainly."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "see-config-for-repo",
+        "what-happens-on-clone",
+        "partial-clone-vs-shallow"
+      ]
+    },
+    {
+      "id": "delete-a-tag-everywhere",
+      "q": "Remove a tag from every clone",
+      "aka": [
+        "delete tag locally and remotely",
+        "tag keeps coming back",
+        "remove bad tag"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git tag -d <tag> && git push origin --delete <tag>",
+              "n": "Both halves are needed, or a later fetch restores the local tag from the remote."
+            },
+            {
+              "c": "git fetch --prune --prune-tags",
+              "n": "Other people must run this, since normal fetches never delete tags. That is why deleting a published tag is disruptive."
+            }
+          ],
+          "undo": "git tag <tag> <hash> and push it again"
+        }
+      ],
+      "seealso": [
+        "delete-tag",
+        "clean-up-old-tags",
+        "undo-published-tag"
+      ]
+    },
+    {
+      "id": "why-pull-created-a-merge",
+      "q": "Why my pull created a merge commit",
+      "aka": [
+        "pull made a merge",
+        "unexpected merge from pull",
+        "pull merge commit explanation"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --graph --oneline -5",
+              "n": "You had local commits and the remote had others, so pull merged the two lines. With no local commits it would have fast-forwarded silently."
+            },
+            {
+              "c": "git config --global pull.rebase true",
+              "n": "Rebasing on pull replays your commits on top instead, which keeps the line straight."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD if not pushed"
+        }
+      ],
+      "seealso": [
+        "stop-merge-commits-on-pull",
+        "pull-rebase",
+        "fast-forward"
+      ]
+    },
+    {
+      "id": "keep-branch-list-short",
+      "q": "Keep my local branch list manageable",
+      "aka": [
+        "too many local branches",
+        "tidy local branches",
+        "branch list is huge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune && git branch -vv | grep \": gone]\"",
+              "n": "Branches whose remote is gone are almost always finished work; delete them with -d, which refuses anything unmerged."
+            },
+            {
+              "c": "git branch --sort=-committerdate | head -20",
+              "n": "Then judge the rest by recency. A branch you cannot remember the purpose of is a candidate for an archive tag."
+            }
+          ],
+          "undo": "Recreate from the reflog or archive tag"
+        }
+      ],
+      "seealso": [
+        "delete-gone-branches",
+        "what-to-do-with-old-branches",
+        "archive-branch"
+      ]
+    },
+    {
+      "id": "github-search-my-code",
+      "q": "Search only my own repositories",
+      "aka": [
+        "search my code",
+        "find my snippet",
+        "where did i write that"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search code \"<text>\" --owner <your-user>",
+              "n": "Scopes the search to your account, including private repositories you can read."
+            },
+            {
+              "c": "git grep -n \"<text>\"",
+              "n": "When you know which clone it is in, local grep is faster and works offline."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "code-search",
+        "github-search-syntax",
+        "organize-many-repos"
+      ]
+    },
+    {
+      "id": "restore-after-bad-rebase",
+      "q": "A rebase went wrong and I want out",
+      "aka": [
+        "rebase ruined my branch",
+        "undo a finished rebase",
+        "rebase disaster recovery"
+      ],
+      "variants": [
+        {
+          "when": "Still rebasing",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rebase --abort",
+              "n": "Returns the branch exactly to where it started, whatever state the rebase reached."
+            }
+          ],
+          "undo": "Start the rebase again"
+        },
+        {
+          "when": "It finished",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --hard ORIG_HEAD",
+              "n": "ORIG_HEAD holds the pre-rebase tip. If it has since moved, git reflog names the same commit."
+            }
+          ],
+          "undo": "git reset --hard HEAD@{1}"
+        }
+      ],
+      "seealso": [
+        "undo-rebase",
+        "what-is-fetch-head",
+        "fix-mistake-quickly"
+      ]
+    },
+    {
+      "id": "commit-large-text-file",
+      "q": "Commit a large text file sensibly",
+      "aka": [
+        "big csv in git",
+        "large sql dump commit",
+        "huge text file repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add data.csv",
+              "n": "Text compresses and diffs well, so a few megabytes is fine and worth versioning. The problem is churn: a file rewritten wholesale every commit grows history fast."
+            },
+            {
+              "c": "git lfs track \"*.csv\"",
+              "n": "Past tens of megabytes, or when it changes constantly, route it to LFS or out of the repository entirely."
+            }
+          ],
+          "undo": "git rm --cached data.csv"
+        }
+      ],
+      "seealso": [
+        "big-files-where",
+        "git-lfs",
+        "why-is-clone-so-big"
+      ]
     }
   ]
 }
