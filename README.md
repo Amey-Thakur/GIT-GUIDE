@@ -84,6 +84,12 @@ The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms
 
 <br>
 
+## How it is built
+
+Plain HTML, CSS, and vanilla JavaScript; no framework, no build step for the site itself. Every answer lives in JSON under [docs/data](docs/data), a [small script](.github/scripts/build_pages.py) renders the static pages from it, and [CI](.github/workflows/checks.yml) fails any commit where a page disagrees with its data, an id collides, a cross-reference dangles, or house style slips.
+
+<br>
+
 ## Author
 
 <img src="docs/assets/amey.jpg" alt="Amey Thakur" width="56" align="left" style="border-radius:8px">

@@ -12,6 +12,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
   <title>The complete Git cheatsheet | Git Guide</title>
   <meta name="description" content="Every Git command worth knowing on one page: setup, daily loop, branches, merge and rebase, undo, stash, tags, history surgery, and the same Git on GitHub, GitLab, Bitbucket, Azure DevOps, AWS, or no host at all.">
   <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html">
@@ -20,15 +22,17 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
+
+  <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
     <div class="wrap head-row">
       <a class="brand" href="./"><img class="icon git" src="assets/git-logo.svg" alt="" width="26" height="26"> Git Guide<span class="dot">.</span></a>
       <div class="head-tools">
-        <a href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub"><img class="icon gh" src="assets/github-mark.svg" alt="GitHub" width="18" height="18"></a>
+        <a class="gh-link" href="https://github.com/Amey-Thakur/GIT-GUIDE" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
         <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
           <svg viewBox="0 0 20 16" width="18" height="15" aria-hidden="true"><path class="tt-line" d="M5.3 8h3.7M9 8c2.5 0 2.5-4 5-4M9 8c2.5 0 2.5 4 5 4" fill="none"/><circle class="tt-base" cx="3.5" cy="8" r="1.8"/><circle class="tt-light" cx="15.8" cy="4" r="2"/><circle class="tt-dark" cx="15.8" cy="12" r="2"/></svg>
         </button>
@@ -48,7 +52,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="wrap">
         <h1>The complete Git cheatsheet.</h1>
@@ -59,8 +63,9 @@
     <section aria-label="Cheatsheet">
       <div class="wrap cheatsheet">
 <!-- cheatsheet:start -->
+<nav class="cs-toc" aria-label="Sections"><a href="#setup-and-identity">Setup and identity</a><a href="#start-a-project">Start a project</a><a href="#the-daily-loop">The daily loop</a><a href="#branches">Branches</a><a href="#merge-and-rebase">Merge and rebase</a><a href="#undo-and-rescue">Undo and rescue</a><a href="#stash">Stash</a><a href="#inspect-and-search">Inspect and search</a><a href="#tags-and-releases">Tags and releases</a><a href="#every-platform-same-git">Every platform, same Git</a><a href="#no-host-at-all">No host at all</a><a href="#files-and-ignoring">Files and ignoring</a><a href="#history-surgery">History surgery</a><a href="#scale-and-speed">Scale and speed</a><a href="#quality-of-life">Quality of life</a></nav>
 <section class="cs-section">
-  <h2>Setup and identity</h2>
+  <h2 id="setup-and-identity">Setup and identity</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git config --global user.name &quot;&lt;name&gt;&quot;</code>
@@ -105,7 +110,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Start a project</h2>
+  <h2 id="start-a-project">Start a project</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git init -b main</code>
@@ -135,7 +140,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>The daily loop</h2>
+  <h2 id="the-daily-loop">The daily loop</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git status -sb</code>
@@ -180,7 +185,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Branches</h2>
+  <h2 id="branches">Branches</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git switch -c &lt;branch&gt;</code>
@@ -225,7 +230,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Merge and rebase</h2>
+  <h2 id="merge-and-rebase">Merge and rebase</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git merge &lt;branch&gt;</code>
@@ -265,7 +270,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Undo and rescue</h2>
+  <h2 id="undo-and-rescue">Undo and rescue</h2>
   <div class="cs-rows">
     <div class="cs-row cs-danger">
       <code>git restore &lt;file&gt;</code>
@@ -310,7 +315,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Stash</h2>
+  <h2 id="stash">Stash</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git stash push -u -m &quot;&lt;label&gt;&quot;</code>
@@ -340,7 +345,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Inspect and search</h2>
+  <h2 id="inspect-and-search">Inspect and search</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git log --oneline --graph --all</code>
@@ -385,7 +390,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Tags and releases</h2>
+  <h2 id="tags-and-releases">Tags and releases</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git tag -a v1.0.0 -m &quot;&lt;note&gt;&quot;</code>
@@ -415,7 +420,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Every platform, same Git</h2>
+  <h2 id="every-platform-same-git">Every platform, same Git</h2>
   <p class="note">Git is identical everywhere; only the remote URL and sign-in differ. The same SSH public key works on every host.</p>
   <div class="cs-rows">
     <div class="cs-row">
@@ -461,7 +466,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>No host at all</h2>
+  <h2 id="no-host-at-all">No host at all</h2>
   <p class="note">Git predates the hosts and needs none of them.</p>
   <div class="cs-rows">
     <div class="cs-row">
@@ -497,7 +502,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Files and ignoring</h2>
+  <h2 id="files-and-ignoring">Files and ignoring</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>printf &quot;node_modules/\n&quot; &gt;&gt; .gitignore</code>
@@ -527,7 +532,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>History surgery</h2>
+  <h2 id="history-surgery">History surgery</h2>
   <p class="note">Everything here rewrites history. Fresh clone first, backup kept, force-with-lease after, teammates re-clone.</p>
   <div class="cs-rows">
     <div class="cs-row cs-danger">
@@ -558,7 +563,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Scale and speed</h2>
+  <h2 id="scale-and-speed">Scale and speed</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git clone --filter=blob:none --sparse &lt;url&gt;</code>
@@ -593,7 +598,7 @@
   </div>
 </section>
 <section class="cs-section">
-  <h2>Quality of life</h2>
+  <h2 id="quality-of-life">Quality of life</h2>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git config --global alias.st &quot;status -sb&quot;</code>

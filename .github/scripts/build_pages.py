@@ -55,9 +55,18 @@ def error_card(err, intents):
     return "\n".join(out)
 
 
+def slug(title):
+    return "".join(c if c.isalnum() else "-" for c in title.lower()).strip("-").replace("--", "-")
+
+
+def cheatsheet_toc(sections):
+    links = "".join(f'<a href="#{slug(s["title"])}">{escape(s["title"])}</a>' for s in sections)
+    return f'<nav class="cs-toc" aria-label="Sections">{links}</nav>'
+
+
 def cheatsheet_section(sec):
     out = ['<section class="cs-section">']
-    out.append(f"  <h2>{escape(sec['title'])}</h2>")
+    out.append(f'  <h2 id="{slug(sec["title"])}">{escape(sec["title"])}</h2>')
     if sec.get("note"):
         out.append(f'  <p class="note">{escape(sec["note"])}</p>')
     out.append('  <div class="cs-rows">')
@@ -85,7 +94,8 @@ def main():
     print(f"errors.html: {len(errors)} errors rendered")
 
     sheet = json.loads((DOCS / "data" / "cheatsheet.json").read_text(encoding="utf-8"))["sections"]
-    replace_block(DOCS / "cheatsheet.html", CS_START, CS_END, "\n".join(cheatsheet_section(s) for s in sheet))
+    cs_body = cheatsheet_toc(sheet) + "\n" + "\n".join(cheatsheet_section(s) for s in sheet)
+    replace_block(DOCS / "cheatsheet.html", CS_START, CS_END, cs_body)
     total = sum(len(s["items"]) for s in sheet)
     print(f"cheatsheet.html: {len(sheet)} sections, {total} commands rendered")
 

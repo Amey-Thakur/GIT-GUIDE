@@ -16,6 +16,9 @@
 
   var cards = Array.prototype.slice.call(document.querySelectorAll("#error-list .errcard"));
 
+  var count = document.getElementById("ecount");
+  if (count) count.textContent = String(cards.length);
+
   input.addEventListener("input", function () {
     var q = input.value.toLowerCase().trim();
     cards.forEach(function (card) {
