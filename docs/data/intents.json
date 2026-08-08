@@ -74,7 +74,8 @@
         "remove file from index",
         "unstage a file",
         "git restore --staged",
-        "two ways to unstage"
+        "two ways to unstage",
+        "remove files from staging area"
       ],
       "variants": [
         {
@@ -248,7 +249,8 @@
         "overwrite local files",
         "discard everything local",
         "reset to remote",
-        "local changes would be overwritten"
+        "local changes would be overwritten",
+        "commit your changes or stash them before you can merge"
       ],
       "variants": [
         {
@@ -331,7 +333,8 @@
         "remove from repo keep on disk",
         "untrack",
         "remove file from repo but keep it locally",
-        "ignore files already committed"
+        "ignore files already committed",
+        "remove file from repository without deleting it from disk"
       ],
       "variants": [
         {
@@ -412,7 +415,8 @@
         "fix commit message",
         "reword commit",
         "modify unpushed commit message",
-        "change commit message after push"
+        "change commit message after push",
+        "change message of pushed commit"
       ],
       "variants": [
         {
@@ -583,7 +587,8 @@
         "restore file to last commit",
         "discard unstaged",
         "revert all local changes",
-        "undo all uncommitted changes including new files"
+        "undo all uncommitted changes including new files",
+        "revert project to previous state"
       ],
       "variants": [
         {
@@ -623,7 +628,8 @@
         "match origin",
         "sync with remote discard local",
         "reset local branch to remote head",
-        "make local identical to origin"
+        "make local identical to origin",
+        "reset local branch to be just like remote head"
       ],
       "variants": [
         {
@@ -775,7 +781,8 @@
         "remote address",
         "list remotes",
         "what url was this cloned from",
-        "show origin url"
+        "show origin url",
+        "determine the url the repository was cloned from"
       ],
       "variants": [
         {
@@ -907,7 +914,8 @@
         "abort merge",
         "cancel merge",
         "revert merge commit",
-        "revert merge after push"
+        "revert merge after push",
+        "undo a merge that has not been pushed"
       ],
       "variants": [
         {
@@ -1112,7 +1120,8 @@
       "aka": [
         "rebase went wrong",
         "revert rebase",
-        "recover after rebase"
+        "recover after rebase",
+        "undoing a rebase"
       ],
       "variants": [
         {
@@ -1215,7 +1224,8 @@
       "aka": [
         "save changes without commit",
         "stash changes",
-        "switch branch with uncommitted work"
+        "switch branch with uncommitted work",
+        "stash pop conflict"
       ],
       "variants": [
         {
@@ -1406,7 +1416,8 @@
         "show my changes",
         "staged vs unstaged",
         "git diff --cached",
-        "see staged changes"
+        "see staged changes",
+        "diff of file in staging area"
       ],
       "variants": [
         {
@@ -1755,7 +1766,9 @@
         "ignore node_modules",
         "ignore env file",
         "gitignore a folder",
-        "ignore directory on windows"
+        "ignore directory on windows",
+        ".gitignore for visual studio",
+        "ignoring directories"
       ],
       "variants": [
         {
@@ -1964,7 +1977,8 @@
         "authentication failed token",
         "save username and password",
         "cache https credentials",
-        "git push asks for username and password"
+        "git push asks for username and password",
+        "clone with username and password"
       ],
       "variants": [
         {
@@ -2116,7 +2130,8 @@
         "work and personal email",
         "per folder git config",
         "includeIf",
-        "conditional config"
+        "conditional config",
+        "multiple users in gitconfig"
       ],
       "variants": [
         {
@@ -2223,7 +2238,8 @@
         "ignore ds_store everywhere",
         "thumbs.db",
         "global excludes",
-        "editor files ignore"
+        "editor files ignore",
+        "user profile scope gitignore"
       ],
       "variants": [
         {
@@ -2474,7 +2490,8 @@
       "aka": [
         "case only rename",
         "rename file case insensitive",
-        "File to file"
+        "File to file",
+        "commit case-sensitive filename change"
       ],
       "variants": [
         {
@@ -2630,7 +2647,8 @@
         "difference between two commits",
         "what changed between versions",
         "list file names changed between two commits",
-        "git diff --name-only"
+        "git diff --name-only",
+        "show which files changed between two revisions"
       ],
       "variants": [
         {
@@ -2687,7 +2705,8 @@
         "which branches are merged",
         "unmerged branches",
         "stale branches",
-        "check if branch is merged into main"
+        "check if branch is merged into main",
+        "know if branch is already merged into master"
       ],
       "variants": [
         {
@@ -2744,7 +2763,8 @@
       "aka": [
         "fetch prune",
         "origin branch deleted but still shows",
-        "stale remote branches"
+        "stale remote branches",
+        "prune local tracking branches deleted on remote"
       ],
       "variants": [
         {
@@ -3023,7 +3043,8 @@
       "aka": [
         "no-ff",
         "merge commit always",
-        "fast forward only"
+        "fast forward only",
+        "what does --no-ff do"
       ],
       "variants": [
         {
@@ -3087,7 +3108,8 @@
       "aka": [
         "started work on wrong branch",
         "carry changes to new branch",
-        "wrong branch uncommitted"
+        "wrong branch uncommitted",
+        "create branch from uncommitted changes"
       ],
       "variants": [
         {
@@ -3322,7 +3344,8 @@
         "branches diverged",
         "different commits each",
         "divergent branches pull",
-        "pulling without specifying how to reconcile divergent branches"
+        "pulling without specifying how to reconcile divergent branches",
+        "master and origin/master have diverged"
       ],
       "variants": [
         {
@@ -4063,7 +4086,8 @@
       "aka": [
         "extract folder to new repo",
         "subtree split",
-        "monorepo breakout"
+        "monorepo breakout",
+        "move subdirectory into separate repository"
       ],
       "variants": [
         {
@@ -4226,7 +4250,8 @@
       "aka": [
         "pull went wrong",
         "revert pull",
-        "undo merge from pull"
+        "undo merge from pull",
+        "bring repository back to before the pull"
       ],
       "variants": [
         {
@@ -4827,7 +4852,9 @@
         "remove pushed commit",
         "undo git push",
         "delete commit from remote",
-        "pushed by mistake"
+        "pushed by mistake",
+        "remove commits from remote branch",
+        "reset remote to a commit"
       ],
       "variants": [
         {
@@ -5038,7 +5065,8 @@
       "aka": [
         "partial stash",
         "stash single file",
-        "stash some changes"
+        "stash some changes",
+        "stash only one file out of many changed"
       ],
       "variants": [
         {
@@ -5765,7 +5793,8 @@
         "auto setup remote",
         "no upstream branch every time",
         "avoid set-upstream every time",
-        "push new branch without --set-upstream"
+        "push new branch without --set-upstream",
+        "automatically set up remote tracking"
       ],
       "variants": [
         {
@@ -6195,7 +6224,8 @@
       "aka": [
         "how many lines of code",
         "my contribution stats",
-        "lines added removed"
+        "lines added removed",
+        "lines changed between two commits"
       ],
       "variants": [
         {
@@ -6221,7 +6251,8 @@
       "aka": [
         "pretty git log",
         "branch graph terminal",
-        "log with colors and branches"
+        "log with colors and branches",
+        "visualize branch topology"
       ],
       "variants": [
         {
@@ -7342,7 +7373,8 @@
       "aka": [
         "standup summary",
         "my commits today",
-        "yesterday's work"
+        "yesterday's work",
+        "filter log by author"
       ],
       "variants": [
         {
@@ -8472,6 +8504,1027 @@
       "seealso": [
         "create-pr-cli",
         "stop-password-prompts"
+      ]
+    },
+    {
+      "id": "install-from-git",
+      "q": "Install a package straight from a repository",
+      "aka": [
+        "pip install from git branch",
+        "npm install from github",
+        "install unreleased version"
+      ],
+      "variants": [
+        {
+          "when": "Python",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "pip install git+https://github.com/<user>/<repo>@<branch>",
+              "n": "Installs from any branch, tag, or commit. Drop the @ part for the default branch."
+            }
+          ],
+          "undo": "pip uninstall <package>"
+        },
+        {
+          "when": "Node",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npm install github:<user>/<repo>#<branch>",
+              "n": "The #ref works the same way: branch, tag, or commit hash."
+            }
+          ],
+          "undo": "npm uninstall <package>"
+        }
+      ],
+      "seealso": [
+        "clone-at-commit",
+        "download-release"
+      ]
+    },
+    {
+      "id": "submodule-branch",
+      "q": "Pin a submodule to a branch or tag",
+      "aka": [
+        "submodule specify branch",
+        "submodule follow branch",
+        "submodule at tag"
+      ],
+      "variants": [
+        {
+          "when": "When adding it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule add -b <branch> <url> <path>",
+              "n": "Records the branch so update --remote knows what to follow."
+            }
+          ],
+          "undo": "git rm <path> and delete the .gitmodules entry"
+        },
+        {
+          "when": "Change it later",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule set-branch --branch <branch> -- <path>",
+              "n": "Rewrites .gitmodules. Commit the change."
+            },
+            {
+              "c": "git submodule update --remote <path>",
+              "n": "Moves the submodule to that branch's tip. Commit the new pointer."
+            }
+          ],
+          "undo": "git checkout -- .gitmodules before committing"
+        }
+      ],
+      "seealso": [
+        "submodule-add",
+        "submodule-update"
+      ]
+    },
+    {
+      "id": "git-in-synced-folder",
+      "q": "Use Git inside Dropbox, OneDrive, or Drive",
+      "aka": [
+        "git and dropbox together",
+        "repo in onedrive",
+        "sync service corrupts git"
+      ],
+      "variants": [
+        {
+          "when": "The safe pattern",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --bare ~/Dropbox/project.git",
+              "n": "Share a bare repository through the sync service. The working repo, with its .git, lives outside the synced folder."
+            },
+            {
+              "c": "git remote add dropbox ~/Dropbox/project.git",
+              "n": "Push and pull against it like any remote."
+            }
+          ],
+          "undo": "git remote remove dropbox and delete the bare folder"
+        },
+        {
+          "when": "Why not the working repo",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck",
+              "n": "Sync services race Git on the files inside .git and eventually corrupt it. If a repo already lives there, fsck tells you how bad it is."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "bare-repo",
+        "dubious-ownership"
+      ]
+    },
+    {
+      "id": "count-lines-repo",
+      "q": "Count lines of code in the repository",
+      "aka": [
+        "how many lines in repo",
+        "count sloc",
+        "repo size in lines"
+      ],
+      "variants": [
+        {
+          "when": "Everything tracked",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git ls-files | xargs wc -l",
+              "n": "Only tracked files count, so build output and dependencies stay out."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "One language",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git ls-files \"*.py\" | xargs wc -l",
+              "n": "The pattern filters before counting."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "lines-changed",
+        "list-tracked-files"
+      ]
+    },
+    {
+      "id": "stage-deletions",
+      "q": "Stage files I deleted from disk",
+      "aka": [
+        "removed files still listed",
+        "record deletions",
+        "git add deleted files"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add -u",
+              "n": "Stages every modification and deletion of tracked files. Untracked files stay untouched."
+            }
+          ],
+          "undo": "git restore --staged ."
+        },
+        {
+          "when": "Deletions plus new files",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add -A",
+              "n": "Everything: modified, deleted, and new."
+            }
+          ],
+          "undo": "git restore --staged ."
+        }
+      ],
+      "seealso": [
+        "add-a-vs-dot",
+        "undo-git-rm"
+      ]
+    },
+    {
+      "id": "move-branch-pointer",
+      "q": "Move a branch to another commit without switching to it",
+      "aka": [
+        "git branch -f",
+        "move branch pointer",
+        "point branch at commit"
+      ],
+      "variants": [
+        {
+          "when": "Any branch you are not on",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git branch -f <branch> <hash>",
+              "n": "Moves the label, touches nothing else. Git refuses to move the branch you are standing on."
+            }
+          ],
+          "undo": "git branch -f <branch> <old-hash>, from the reflog if unknown"
+        },
+        {
+          "when": "The branch you are on",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git reset --soft <hash>",
+              "n": "Moves the current branch and keeps your files and staging area exactly as they are."
+            }
+          ],
+          "undo": "git reset --soft HEAD@{1}"
+        }
+      ],
+      "seealso": [
+        "overwrite-branch",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "git-maintenance",
+      "q": "Keep a big repository fast",
+      "aka": [
+        "git gc",
+        "repository maintenance",
+        "optimize repo"
+      ],
+      "variants": [
+        {
+          "when": "Set and forget",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git maintenance start",
+              "n": "Registers scheduled background upkeep: commit-graph, prefetch, incremental repack. Large repos feel noticeably quicker."
+            }
+          ],
+          "undo": "git maintenance unregister"
+        },
+        {
+          "when": "One-shot cleanup",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git gc",
+              "n": "Packs loose objects and prunes what expired. Git runs this by itself now and then; running it manually is rarely needed."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "slow-git",
+        "shrink-repo"
+      ]
+    },
+    {
+      "id": "commit-template",
+      "q": "Start every commit message from a template",
+      "aka": [
+        "commit.template",
+        "commit message template",
+        "team commit format"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global commit.template ~/.gitmessage",
+              "n": "git commit now opens the editor with that file's contents. Lines starting with # stay out of the message."
+            }
+          ],
+          "undo": "git config --global --unset commit.template"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "set-editor"
+      ]
+    },
+    {
+      "id": "config-precedence",
+      "q": "Which config file a setting comes from",
+      "aka": [
+        "git config levels",
+        "local vs global config",
+        "--show-origin"
+      ],
+      "variants": [
+        {
+          "when": "Everything, with sources",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --list --show-origin",
+              "n": "Every active setting with the file that set it. Local beats global, global beats system."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "One setting",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --show-origin user.email",
+              "n": "The winning value and exactly where it was written."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "show-config",
+        "multiple-identities"
+      ]
+    },
+    {
+      "id": "difftool-vscode",
+      "q": "View diffs in VS Code instead of the terminal",
+      "aka": [
+        "git difftool",
+        "visual diff",
+        "vscode as diff viewer"
+      ],
+      "variants": [
+        {
+          "when": "Set it up once",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global diff.tool vscode",
+              "n": "Names the tool."
+            },
+            {
+              "c": "git config --global difftool.vscode.cmd \"code --wait --diff $LOCAL $REMOTE\"",
+              "n": "Tells Git how to launch it."
+            }
+          ],
+          "undo": "git config --global --unset diff.tool"
+        },
+        {
+          "when": "Use it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git difftool",
+              "n": "Anything git diff accepts works here too: branches, commits, paths."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "mergetool-vscode",
+        "what-changed"
+      ]
+    },
+    {
+      "id": "log-by-author",
+      "q": "See one person's commits",
+      "aka": [
+        "git log author filter",
+        "commits by user",
+        "who contributed most"
+      ],
+      "variants": [
+        {
+          "when": "Their history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --author=\"<name or email>\" --oneline",
+              "n": "Substring match, so a first name is usually enough. Combine with --since freely."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The leaderboard",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git shortlog -sn",
+              "n": "Commit counts per author, ranked."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "standup-log",
+        "count-commits"
+      ]
+    },
+    {
+      "id": "detach-fork",
+      "q": "Turn my fork into a standalone repository",
+      "aka": [
+        "remove fork badge",
+        "unfork repository",
+        "fork to own repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --bare https://github.com/<you>/<fork>.git",
+              "n": "A complete copy of history, branches, and tags."
+            },
+            {
+              "c": "git push --mirror https://github.com/<you>/<new-repo>.git",
+              "n": "Push it into a fresh repo you created empty. No fork banner, visibility is yours to choose."
+            }
+          ],
+          "undo": "Delete the new repository"
+        }
+      ],
+      "seealso": [
+        "mirror-migrate",
+        "make-repo-private"
+      ]
+    },
+    {
+      "id": "transfer-repo",
+      "q": "Transfer a repository to another account or organization",
+      "aka": [
+        "move repo to org",
+        "change repo owner",
+        "transfer ownership"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Danger Zone -> Transfer ownership",
+              "n": "Issues, pull requests, stars, and watchers travel with it. The old URL redirects until someone reuses the name, but update your remotes anyway."
+            }
+          ],
+          "undo": "The new owner can transfer it back"
+        }
+      ],
+      "seealso": [
+        "rename-repo",
+        "change-remote-url"
+      ]
+    },
+    {
+      "id": "archive-repo",
+      "q": "Archive a repository instead of deleting it",
+      "aka": [
+        "make repo read-only",
+        "retire project",
+        "archive on github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Danger Zone -> Archive this repository",
+              "n": "Everything becomes read-only behind a banner. History, issues, and clones keep working."
+            }
+          ],
+          "undo": "Unarchive in the same place"
+        }
+      ],
+      "seealso": [
+        "delete-repo",
+        "transfer-repo"
+      ]
+    },
+    {
+      "id": "make-repo-private",
+      "q": "Switch a repository between public and private",
+      "aka": [
+        "change repo visibility",
+        "make repository private",
+        "open source later"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Danger Zone -> Change visibility",
+              "n": "Going private permanently removes stars and watchers, detaches public forks, and unpublishes the Pages site. Going public exposes the full history, so scan it for secrets first."
+            }
+          ],
+          "undo": "Visibility can be switched back, but lost stars and forks do not return"
+        }
+      ],
+      "seealso": [
+        "remove-secret-from-history",
+        "detach-fork"
+      ]
+    },
+    {
+      "id": "add-collaborator",
+      "q": "Give someone access to my repository",
+      "aka": [
+        "add collaborator",
+        "invite to repo",
+        "grant push access"
+      ],
+      "variants": [
+        {
+          "when": "Personal repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators -> Add people",
+              "n": "Invite by username. They accept, then they can push."
+            }
+          ],
+          "undo": "Remove them in the same list"
+        },
+        {
+          "when": "Organization",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators and teams",
+              "n": "Grant a team a role instead of naming individuals. Roles range from read to admin."
+            }
+          ],
+          "undo": "Remove the team or lower the role"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "first-contribution"
+      ]
+    },
+    {
+      "id": "watch-unwatch",
+      "q": "Control notifications from a repository",
+      "aka": [
+        "stop github notification flood",
+        "watch releases only",
+        "unsubscribe repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Watch -> Custom -> Releases",
+              "n": "The Watch button at the top of any repo. Custom lets you hear about releases without every issue and pull request."
+            }
+          ],
+          "undo": "Set it back to Participating and mentions"
+        },
+        {
+          "when": "Total silence",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Watch -> Ignore",
+              "n": "Nothing from this repository, even direct mentions."
+            }
+          ],
+          "undo": "Set it back to Participating and mentions"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "open-issue"
+      ]
+    },
+    {
+      "id": "gists",
+      "q": "Share a snippet without creating a repository",
+      "aka": [
+        "github gist",
+        "share code snippet",
+        "paste code publicly"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh gist create notes.md",
+              "n": "Secret by default: reachable by link, not listed. Add --public to list it on your profile."
+            }
+          ],
+          "undo": "gh gist delete <id>"
+        },
+        {
+          "when": "A gist is a repo",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://gist.github.com/<id>.git",
+              "n": "Full history, commits, even forks. Everything Git works on it."
+            }
+          ],
+          "undo": "Delete the local folder"
+        }
+      ],
+      "seealso": [
+        "download-single-file",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "repo-wiki",
+      "q": "Add a wiki to a repository",
+      "aka": [
+        "github wiki",
+        "enable wiki",
+        "project documentation pages"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Features -> Wikis",
+              "n": "Tick it and a Wiki tab appears. Markdown pages, editable in the browser."
+            }
+          ],
+          "undo": "Untick the same box; content survives disabled"
+        },
+        {
+          "when": "Edit it locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://github.com/<user>/<repo>.wiki.git",
+              "n": "The wiki is its own Git repository. Edit, commit, push."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "issue-labels",
+      "q": "Organize issues with labels",
+      "aka": [
+        "github labels",
+        "create label",
+        "triage issues"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh label create needs-repro --color E99695 --description \"Waiting on reproduction steps\"",
+              "n": "Labels filter everything: issue lists, searches, automation."
+            },
+            {
+              "c": "gh label list",
+              "n": "What exists already. Every repo starts with bug, enhancement, and friends."
+            }
+          ],
+          "undo": "gh label delete needs-repro"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "issue-templates"
+      ]
+    },
+    {
+      "id": "code-search",
+      "q": "Search code across GitHub",
+      "aka": [
+        "github code search",
+        "find code examples",
+        "search inside repositories"
+      ],
+      "variants": [
+        {
+          "when": "On the site",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "repo:torvalds/linux path:*.c kmalloc",
+              "n": "Qualifiers do the work: repo:, org:, path:, language:, symbol:. Regular expressions go /between slashes/."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "From the terminal",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search code \"parse_config\" --language c",
+              "n": "Same engine, results as a list with file links."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "log-search",
+        "download-single-file"
+      ]
+    },
+    {
+      "id": "deploy-keys",
+      "q": "Give a server access to one repository",
+      "aka": [
+        "deploy key",
+        "read-only ssh key",
+        "ci access to single repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Deploy keys -> Add deploy key",
+              "n": "Paste a public SSH key. It unlocks this one repository, read-only unless you tick write. Right for servers and CI, unlike your personal key which opens everything."
+            }
+          ],
+          "undo": "Remove the key in the same list"
+        }
+      ],
+      "seealso": [
+        "ssh-key-github",
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "enable-2fa",
+      "q": "Protect my account with two-factor authentication",
+      "aka": [
+        "github 2fa",
+        "two factor setup",
+        "secure github account"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Password and authentication -> Enable two-factor",
+              "n": "Passkey or authenticator app beats SMS. Download the recovery codes and store them somewhere that is not this account."
+            }
+          ],
+          "undo": "It can be disabled in the same place; better not"
+        }
+      ],
+      "seealso": [
+        "ssh-key-github",
+        "gh-cli-setup"
+      ]
+    },
+    {
+      "id": "bare-repo",
+      "q": "What a bare repository is",
+      "aka": [
+        "git init --bare",
+        "repo without working tree",
+        "what servers host"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --bare project.git",
+              "n": "History without a working tree: no editable files, just the .git contents. This is what servers host and what you push to."
+            }
+          ],
+          "undo": "Delete the folder"
+        },
+        {
+          "when": "Copy an existing repo bare",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --bare <url>",
+              "n": "The building block for mirrors and migrations."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "git-in-synced-folder",
+        "mirror-migrate"
+      ]
+    },
+    {
+      "id": "commit-dates",
+      "q": "Author date and commit date are different things",
+      "aka": [
+        "git two dates",
+        "author vs committer date",
+        "why did the date change"
+      ],
+      "variants": [
+        {
+          "when": "See both",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --pretty=fuller",
+              "n": "Author date: when the change was written. Commit date: when this exact commit object was made. Rebase, amend, and cherry-pick refresh the second, never the first."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "change-commit-date",
+        "change-commit-author"
+      ]
+    },
+    {
+      "id": "tilde-vs-caret",
+      "q": "What HEAD~, HEAD^, and HEAD@{n} mean",
+      "aka": [
+        "tilde vs caret",
+        "head~1 vs head^1",
+        "relative commit references"
+      ],
+      "variants": [
+        {
+          "when": "Walking parents",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show HEAD~3",
+              "n": "~n steps back n first parents: three commits ago on this line of history."
+            },
+            {
+              "c": "git show HEAD^2",
+              "n": "^2 is the second parent of a merge: the branch that was merged in."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Walking your own footsteps",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show HEAD@{2}",
+              "n": "@{n} reads the reflog: where HEAD stood two moves ago, whatever those moves were."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-head",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "dot-dot-notation",
+      "q": "What A..B and A...B select",
+      "aka": [
+        "two dots vs three dots",
+        "double dot range",
+        "triple dot diff"
+      ],
+      "variants": [
+        {
+          "when": "In log",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log main..feature",
+              "n": "Commits reachable from feature but not from main: what the branch adds."
+            },
+            {
+              "c": "git log main...feature",
+              "n": "Commits unique to either side, both directions."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "In diff, the meaning flips",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff main...feature",
+              "n": "Changes since the common ancestor: exactly what a pull request shows. Two dots in diff compares the raw tips."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "compare-branches",
+        "merge-base"
+      ]
+    },
+    {
+      "id": "open-issue",
+      "q": "Report a bug that actually gets fixed",
+      "aka": [
+        "open github issue",
+        "write bug report",
+        "file an issue"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue create --title \"Login times out after 30s\" --body-file bug.md",
+              "n": "Smallest reproduction, expected versus actual, versions. One bug per issue."
+            },
+            {
+              "c": "gh issue list --assignee @me",
+              "n": "What is on your plate."
+            }
+          ],
+          "undo": "gh issue close <number>"
+        }
+      ],
+      "seealso": [
+        "issue-templates",
+        "close-issue-with-pr"
+      ]
+    },
+    {
+      "id": "discussions-vs-issues",
+      "q": "When to use Discussions instead of Issues",
+      "aka": [
+        "enable discussions",
+        "github discussions",
+        "q&a for repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Features -> Discussions",
+              "n": "Questions, ideas, and announcements belong in Discussions; actionable work belongs in Issues. Answered questions become searchable knowledge."
+            }
+          ],
+          "undo": "Untick the same box"
+        },
+        {
+          "when": "An issue that is really a question",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Convert to discussion",
+              "n": "In the sidebar of any issue. The thread moves, a redirect stays."
+            }
+          ],
+          "undo": "Discussions can be converted back"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "first-contribution"
+      ]
+    },
+    {
+      "id": "pin-repositories",
+      "q": "Choose what shows on my profile",
+      "aka": [
+        "pin repos",
+        "customize profile pins",
+        "feature best work"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Profile -> Customize your pins",
+              "n": "Six slots, your order, gists count too. Without pins the profile shows whatever is most active, which is rarely your best work."
+            }
+          ],
+          "undo": "Unpin in the same dialog"
+        }
+      ],
+      "seealso": [
+        "profile-readme",
+        "first-contribution"
       ]
     }
   ]
