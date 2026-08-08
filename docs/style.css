@@ -281,7 +281,7 @@ a.chip { text-decoration: none; }
 
 /* Results */
 
-.results { padding: 0.5rem 0 3rem; display: grid; gap: 1rem; }
+.results { padding: 0.5rem 1.25rem 3rem; display: grid; gap: 1rem; }
 
 .result {
   border: 1px solid var(--line);
@@ -442,6 +442,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: var(--muted);
 }
 
+a.footer-tag:hover { color: var(--accent); text-decoration: none; }
+
 
 /* Error decoder */
 
@@ -581,6 +583,35 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
 }
 .stepdot.active { background: var(--accent); }
 
+/* Downloads */
+
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+  gap: 0.75rem;
+  padding: 1.25rem 0 0.25rem;
+}
+
+.dl {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 0.8rem 1rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.dl:hover { border-color: var(--accent); text-decoration: none; }
+
+.dl svg { color: var(--muted); flex-shrink: 0; }
+.dl:hover svg { color: var(--accent); }
+
+.dl-name { display: block; font-weight: 600; }
+.dl-meta { display: block; color: var(--muted); font-size: 0.85rem; }
+
 /* Cheatsheet */
 
 .cheatsheet { padding-bottom: 3rem; }
@@ -682,13 +713,15 @@ kbd {
 
 @media (min-width: 1100px) {
   .wrap { max-width: 68rem; }
-  .chapter .cmd { max-width: 56rem; }
+  .chapter > .wrap > * { max-width: 56rem; }
   .qlist { columns: 3; }
   .results {
     grid-template-columns: repeat(auto-fill, minmax(29rem, 1fr));
     align-items: start;
   }
   .cs-rows { grid-template-columns: 1fr 1fr; align-items: start; }
+  #error-list { display: block; columns: 2; column-gap: 1rem; }
+  #error-list .errcard { break-inside: avoid; margin-bottom: 1rem; }
   .wizard-opts { max-width: 40rem; grid-template-columns: 1fr 1fr; }
 }
 

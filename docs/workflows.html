@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 
@@ -97,33 +97,54 @@
         <p>A release is a tag; a hotfix is a branch from that tag.</p>
         <div class="diagram">
           <svg viewBox="0 0 920 210" role="img" aria-label="Release lines: version tags on main, a hotfix branch leaving the release tag and merging back">
-            <circle cx="100" cy="70" r="12" class="commit"></circle>
-            <circle cx="220" cy="70" r="12" class="commit"></circle>
-            <circle cx="340" cy="70" r="12" class="commit"></circle>
-            <circle cx="560" cy="70" r="12" class="commit"></circle>
-            <circle cx="720" cy="70" r="12" class="commit"></circle>
-            <line x1="112" y1="70" x2="208" y2="70" class="edge"></line>
-            <line x1="232" y1="70" x2="328" y2="70" class="edge"></line>
-            <line x1="352" y1="70" x2="548" y2="70" class="edge"></line>
-            <line x1="572" y1="70" x2="708" y2="70" class="edge"></line>
-            <rect x="750" y="58" width="64" height="24" rx="6" class="tag"></rect>
-            <text x="782" y="74" class="tagtext" text-anchor="middle">main</text>
-            <line x1="750" y1="70" x2="734" y2="70" class="tick"></line>
-            <rect x="188" y="14" width="64" height="22" rx="6" class="tag"></rect>
-            <text x="220" y="29" class="tagtext" text-anchor="middle">v2.1.0</text>
-            <line x1="220" y1="36" x2="220" y2="56" class="tick"></line>
-            <path d="M231,81 C260,110 280,140 306,140" class="edge" fill="none"></path>
-            <circle cx="320" cy="140" r="12" class="commit"></circle>
-            <circle cx="420" cy="140" r="12" class="commit"></circle>
-            <line x1="332" y1="140" x2="408" y2="140" class="edge"></line>
-            <rect x="256" y="170" width="128" height="24" rx="6" class="tag"></rect>
-            <text x="320" y="186" class="tagtext" text-anchor="middle">hotfix-2.1.1</text>
-            <line x1="320" y1="170" x2="320" y2="154" class="tick"></line>
-            <rect x="440" y="164" width="64" height="22" rx="6" class="tag"></rect>
-            <text x="472" y="179" class="tagtext" text-anchor="middle">v2.1.1</text>
-            <line x1="472" y1="164" x2="448" y2="150" class="tick"></line>
-            <path d="M431,131 C480,110 520,84 547,74" class="edge" fill="none"></path>
+            <g id="w-1" class="reveal">
+              <circle cx="100" cy="70" r="12" class="commit"></circle>
+              <circle cx="220" cy="70" r="12" class="commit"></circle>
+              <line x1="112" y1="70" x2="208" y2="70" class="edge"></line>
+            </g>
+            <g id="w-2" class="reveal">
+              <rect x="188" y="14" width="64" height="22" rx="6" class="tag"></rect>
+              <text x="220" y="29" class="tagtext" text-anchor="middle">v2.1.0</text>
+              <line x1="220" y1="36" x2="220" y2="56" class="tick"></line>
+            </g>
+            <g id="w-3" class="reveal">
+              <circle cx="340" cy="70" r="12" class="commit"></circle>
+              <line x1="232" y1="70" x2="328" y2="70" class="edge"></line>
+              <circle cx="560" cy="70" r="12" class="commit"></circle>
+              <line x1="352" y1="70" x2="548" y2="70" class="edge"></line>
+            </g>
+            <g id="w-4" class="reveal">
+              <path d="M231,81 C260,110 280,140 306,140" class="edge" fill="none"></path>
+              <circle cx="320" cy="140" r="12" class="commit"></circle>
+              <circle cx="420" cy="140" r="12" class="commit"></circle>
+              <line x1="332" y1="140" x2="408" y2="140" class="edge"></line>
+              <rect x="256" y="170" width="128" height="24" rx="6" class="tag"></rect>
+              <text x="320" y="186" class="tagtext" text-anchor="middle">hotfix-2.1.1</text>
+              <line x1="320" y1="170" x2="320" y2="154" class="tick"></line>
+            </g>
+            <g id="w-5" class="reveal">
+              <rect x="440" y="164" width="64" height="22" rx="6" class="tag"></rect>
+              <text x="472" y="179" class="tagtext" text-anchor="middle">v2.1.1</text>
+              <line x1="472" y1="164" x2="448" y2="150" class="tick"></line>
+            </g>
+            <g id="w-6" class="reveal">
+              <path d="M431,131 C480,110 520,84 547,74" class="edge" fill="none"></path>
+              <circle cx="720" cy="70" r="12" class="commit"></circle>
+              <line x1="572" y1="70" x2="708" y2="70" class="edge"></line>
+              <rect x="750" y="58" width="64" height="24" rx="6" class="tag"></rect>
+              <text x="782" y="74" class="tagtext" text-anchor="middle">main</text>
+              <line x1="750" y1="70" x2="734" y2="70" class="tick"></line>
+            </g>
           </svg>
+        </div>
+        <div class="stepcap" aria-live="polite">
+          <code id="d4-cmd"></code>
+          <p id="d4-text"></p>
+        </div>
+        <div class="stepper-controls" data-stepper="d4">
+          <button class="wizard-opt" id="d4-prev" type="button">Previous</button>
+          <span class="stepdots" id="d4-dots" aria-hidden="true"></span>
+          <button class="wizard-opt" id="d4-next" type="button">Next</button>
         </div>
         <p class="note">Releases are tags on main's line. A fix branches from the tag, ships as its own tag, and merges back so main keeps the cure.</p>
         <div class="cmd"><code>git tag -a v2.1.0 -m "&lt;release note&gt;" && git push origin v2.1.0</code><button class="copy" data-cmd="git tag -a v2.1.0 -m &quot;<release note>&quot; && git push origin v2.1.0" aria-label="Copy command">Copy</button></div>
@@ -147,12 +168,14 @@
           <a href="https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/LICENSE">MIT License</a>
         </p>
       </div>
-      <div class="footer-tag"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg><span>Every Git and GitHub answer in one place.</span></div>
+      <a class="footer-tag" href="https://github.com/Amey-Thakur/GIT-GUIDE"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg><span>Every Git and GitHub answer in one place.</span></a>
     </div>
   </footer>
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
   <script src="render.js"></script>
+  <script src="stepper.js"></script>
+  <script src="workflows.js"></script>
 </body>
 </html>
