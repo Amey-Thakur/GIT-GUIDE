@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/workflows.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -89,6 +89,37 @@
 
         <h2 id="releases">Releases and hotfixes</h2>
         <p>A release is a tag; a hotfix is a branch from that tag.</p>
+        <div class="diagram">
+          <svg viewBox="0 0 920 210" role="img" aria-label="Release lines: version tags on main, a hotfix branch leaving the release tag and merging back">
+            <circle cx="100" cy="70" r="12" class="commit"></circle>
+            <circle cx="220" cy="70" r="12" class="commit"></circle>
+            <circle cx="340" cy="70" r="12" class="commit"></circle>
+            <circle cx="560" cy="70" r="12" class="commit"></circle>
+            <circle cx="720" cy="70" r="12" class="commit"></circle>
+            <line x1="112" y1="70" x2="208" y2="70" class="edge"></line>
+            <line x1="232" y1="70" x2="328" y2="70" class="edge"></line>
+            <line x1="352" y1="70" x2="548" y2="70" class="edge"></line>
+            <line x1="572" y1="70" x2="708" y2="70" class="edge"></line>
+            <rect x="750" y="58" width="64" height="24" rx="6" class="tag"></rect>
+            <text x="782" y="74" class="tagtext" text-anchor="middle">main</text>
+            <line x1="750" y1="70" x2="734" y2="70" class="tick"></line>
+            <rect x="188" y="14" width="64" height="22" rx="6" class="tag"></rect>
+            <text x="220" y="29" class="tagtext" text-anchor="middle">v2.1.0</text>
+            <line x1="220" y1="36" x2="220" y2="56" class="tick"></line>
+            <path d="M231,81 C260,110 280,140 306,140" class="edge" fill="none"></path>
+            <circle cx="320" cy="140" r="12" class="commit"></circle>
+            <circle cx="420" cy="140" r="12" class="commit"></circle>
+            <line x1="332" y1="140" x2="408" y2="140" class="edge"></line>
+            <rect x="256" y="170" width="128" height="24" rx="6" class="tag"></rect>
+            <text x="320" y="186" class="tagtext" text-anchor="middle">hotfix-2.1.1</text>
+            <line x1="320" y1="170" x2="320" y2="154" class="tick"></line>
+            <rect x="440" y="164" width="64" height="22" rx="6" class="tag"></rect>
+            <text x="472" y="179" class="tagtext" text-anchor="middle">v2.1.1</text>
+            <line x1="472" y1="164" x2="448" y2="150" class="tick"></line>
+            <path d="M431,131 C480,110 520,84 547,74" class="edge" fill="none"></path>
+          </svg>
+        </div>
+        <p class="note">Releases are tags on main's line. A fix branches from the tag, ships as its own tag, and merges back so main keeps the cure.</p>
         <div class="cmd"><code>git tag -a v2.1.0 -m "&lt;release note&gt;" && git push origin v2.1.0</code><button class="copy" data-cmd="git tag -a v2.1.0 -m &quot;<release note>&quot; && git push origin v2.1.0" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git switch -c hotfix-2.1.1 v2.1.0</code><button class="copy" data-cmd="git switch -c hotfix-2.1.1 v2.1.0" aria-label="Copy command">Copy</button></div>
         <p class="note">Fix, tag v2.1.1, ship, then merge the hotfix back to main so the bug stays dead. <a href="index.html#cherry-pick">Cherry-pick</a> carries a main fix onto a release line when work happened in the other order.</p>

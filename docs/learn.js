@@ -13,7 +13,7 @@
 
   var D1 = {
     prefix: "d1",
-    reveals: ["g-reset"],
+    reveals: ["g-reset", "g-stash"],
     steps: [
       { on: ["z-wt"], cmd: "(edit files)", text: "Everything begins in the working tree: the ordinary files and folders you edit. Git watches, but nothing is recorded yet." },
       { on: ["a-add", "z-stage"], cmd: "git add <file>", text: "add copies a change into the staging area, the draft of your next commit. You choose exactly what goes in; the rest waits." },
@@ -22,6 +22,7 @@
       { on: ["a-fetch", "z-local"], cmd: "git fetch", text: "fetch downloads their commits into your local repository and stops there. Your branches and files have not moved; you can look before touching anything." },
       { on: ["a-merge", "z-wt"], cmd: "git merge  (git pull = fetch + merge)", text: "merge brings the fetched commits into your branch and updates your files. pull does fetch and merge in one step." },
       { on: ["a-restore", "z-wt"], cmd: "git restore <file>", text: "restore copies the recorded version back over your file: the everyday undo for edits you regret." },
+      { on: ["z-wt"], show: ["g-stash"], cmd: "git stash", text: "stash slides your uncommitted work onto a local shelf and hands you a clean tree. git stash pop brings it back. The shelf never leaves your machine." },
       { on: ["z-local"], show: ["g-reset"], cmd: "git reset", text: "reset moves the branch pointer itself to an older commit. Nothing is deleted at first; commits simply stop being part of the branch. This is where history is un-happened, so it gets danger badges." }
     ]
   };

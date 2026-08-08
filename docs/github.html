@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/github.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -62,6 +62,34 @@
 
     <section class="chapter" aria-label="GitHub guide">
       <div class="wrap">
+
+        <h2 id="first-repo">Your first repository, on the website</h2>
+        <p>The plus button at the top right, then New repository. Four choices matter, and the site makes three of them for you:</p>
+        <div class="cs-rows">
+          <div class="cs-row"><code>Name</code><span>Short, lowercase, hyphens: weather-app, not WeatherAppFinal2</span></div>
+          <div class="cs-row"><code>Add a README</code><span>Yes. It becomes the repository's front page and your first commit</span></div>
+          <div class="cs-row"><code>Add .gitignore</code><span>Pick your language; build output and dependencies stay out of history from day one</span></div>
+          <div class="cs-row"><code>Choose a license</code><span>MIT if unsure. No license means others may read but not legally reuse</span></div>
+        </div>
+        <p class="note">Then bring it to your machine with <code>git clone &lt;url&gt;</code> and you are working. Starting from a folder already on your machine instead? <a href="setup.html#first-repo">The Start page covers that direction</a>.</p>
+
+        <h2 id="the-words">The words nobody explains</h2>
+        <p>GitHub assumes you know these. Two minutes settles them forever:</p>
+        <div class="cs-rows">
+          <div class="cs-row"><code>repository</code><span>A project and its entire history, as one unit. Everyone says repo</span></div>
+          <div class="cs-row"><code>README.md</code><span>The front page. GitHub renders it automatically on the repository home</span></div>
+          <div class="cs-row"><code>.md, Markdown</code><span>Plain text with light marks: # makes a heading, **bold**, - makes a list, [text](url) makes a link. GitHub renders it everywhere</span></div>
+          <div class="cs-row"><code>.gitignore</code><span>The list of things Git must never track: build output, dependencies, secrets</span></div>
+          <div class="cs-row"><code>LICENSE</code><span>The legal terms of reuse. MIT is the everyday permissive choice</span></div>
+          <div class="cs-row"><code>public, private</code><span>Public: everyone reads, only you write. Private: invitation only</span></div>
+          <div class="cs-row"><code>star</code><span>A bookmark and a thank-you in one; stars rank repositories</span></div>
+          <div class="cs-row"><code>watch</code><span>Subscribe: issues, pull requests, and releases reach your notifications</span></div>
+          <div class="cs-row"><code>clone vs fork</code><span>Clone copies a repo to your machine; fork copies it to your GitHub account</span></div>
+          <div class="cs-row"><code>issue</code><span>A tracked conversation about one bug or one request</span></div>
+          <div class="cs-row"><code>default branch</code><span>Usually main: what visitors see and what pull requests target</span></div>
+          <div class="cs-row"><code>gist</code><span>A single shareable file with its own URL and history, at gist.github.com</span></div>
+          <div class="cs-row"><code>organization</code><span>A shared account for a team; repositories live under it, members hold roles</span></div>
+        </div>
 
         <h2 id="pull-requests">Pull requests, done properly</h2>
         <p>A pull request is a conversation about a branch. The mechanics are three commands and a link:</p>

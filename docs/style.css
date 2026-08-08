@@ -495,6 +495,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .zedge { stroke: var(--muted); opacity: 0.55; stroke-width: 1.5; }
 .ztag { fill: var(--card); stroke: var(--accent); }
 .ztagtext { font-size: 10px; fill: var(--accent); }
+.zshelf { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.zshelfarrow { fill: var(--muted); }
 
 .arrow line, .arrow path { stroke: var(--muted); stroke-width: 2.5; opacity: 0.25; transition: opacity 0.25s; }
 .arrow polygon { fill: var(--muted); opacity: 0.25; transition: opacity 0.25s; }

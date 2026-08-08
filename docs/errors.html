@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/errors.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -314,6 +314,21 @@
   <h2><code class="errmsg">error: gpg failed to sign the data</code><a class="anchor" href="#gpg-failed-to-sign" aria-label="Link to this error">#</a></h2>
   <p class="note">Signing is switched on but the signing setup is incomplete or the key is unavailable.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+</article>
+<article class="result errcard" id="unmerged-files">
+  <h2><code class="errmsg">error: Pulling is not possible because you have unmerged files.</code><a class="anchor" href="#unmerged-files" aria-label="Link to this error">#</a></h2>
+  <p class="note">An earlier merge stopped at conflicts and is still waiting for you to finish it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="divergent-branches-hint">
+  <h2><code class="errmsg">hint: You have divergent branches and need to specify how to reconcile them.</code><a class="anchor" href="#divergent-branches-hint" aria-label="Link to this error">#</a></h2>
+  <p class="note">Newer Git asks you to choose a pull strategy once instead of silently merging.</p>
+  <div class="cmd"><code>git config --global pull.rebase true</code><button class="copy" data-cmd="git config --global pull.rebase true" aria-label="Copy command">Copy</button></div>
+  <p class="note">The usual right answer: remote commits land, yours replay on top, history stays straight.</p>
+  <div class="cmd"><code>git config --global pull.ff only</code><button class="copy" data-cmd="git config --global pull.ff only" aria-label="Copy command">Copy</button></div>
+  <p class="note">The strict alternative: pull succeeds only when nothing diverged, and asks you to decide otherwise.</p>
+  <p class="seealso">See also: <a href="index.html#diverged-branches">Fix: Your branch and origin have diverged</a></p>
+  <p class="seealso">See also: <a href="index.html#update-branch">Get the latest changes from the remote</a></p>
 </article>
 <article class="result errcard" id="could-not-read-username">
   <h2><code class="errmsg">fatal: could not read Username for &#x27;https://github.com&#x27;: No such device or address</code><a class="anchor" href="#could-not-read-username" aria-label="Link to this error">#</a></h2>

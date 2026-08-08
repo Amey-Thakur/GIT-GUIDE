@@ -18,6 +18,7 @@
         { "c": "git config --global pull.ff only", "d": "Pull never creates surprise merge commits" },
         { "c": "git config --global fetch.prune true", "d": "Deleted remote branches disappear locally too" },
         { "c": "git config --global rebase.autoStash true", "d": "Pull with rebase works even with edits in progress" },
+        { "c": "git config --global core.autocrlf true", "d": "Windows line endings handled once; macOS and Linux use input" },
         { "c": "git config --list --show-origin", "d": "Every setting and the file it comes from" }
       ]
     },
@@ -40,6 +41,7 @@
         { "c": "git add <file>", "d": "Stage a change; git add -p picks piece by piece" },
         { "c": "git commit -m \"<message>\"", "d": "Seal the staged snapshot" },
         { "c": "git commit --amend --no-edit", "d": "Add staged changes to the last commit", "danger": true },
+        { "c": "git fetch", "d": "See what the remote has before touching anything" },
         { "c": "git pull --rebase", "d": "Get remote commits, replay yours on top" },
         { "c": "git push", "d": "Publish your commits" }
       ]
@@ -48,8 +50,10 @@
       "title": "Branches",
       "items": [
         { "c": "git switch -c <branch>", "d": "Create and move in one step" },
-        { "c": "git switch <branch>", "d": "Move to an existing branch; - returns to the previous one" },
+        { "c": "git switch <branch>", "d": "Move to an existing branch" },
+        { "c": "git switch -", "d": "Back to the branch you just left" },
         { "c": "git branch --show-current", "d": "Where am I" },
+        { "c": "git branch -vv", "d": "Every local branch with its remote and ahead-behind state" },
         { "c": "git branch -a", "d": "Every branch, local and remote" },
         { "c": "git push -u origin <branch>", "d": "Publish a new branch" },
         { "c": "git branch -d <branch>", "d": "Delete a merged branch; -D forces", "danger": true },
@@ -74,6 +78,7 @@
       "items": [
         { "c": "git restore <file>", "d": "Discard edits, back to last commit", "danger": true },
         { "c": "git restore --staged <file>", "d": "Unstage, keep the edits" },
+        { "c": "git commit --amend -m \"<new message>\"", "d": "Rewrite the last commit message", "danger": true },
         { "c": "git reset --soft HEAD~1", "d": "Uncommit, keep everything staged" },
         { "c": "git reset --hard HEAD~1", "d": "Erase the last commit and its work", "danger": true },
         { "c": "git revert <hash>", "d": "Undo by adding an opposite commit; safe when pushed" },
@@ -99,6 +104,8 @@
         { "c": "git log -p -- <file>", "d": "Every change to one file; --follow crosses renames" },
         { "c": "git log --grep=\"<text>\"", "d": "Find commits by message" },
         { "c": "git log -S \"<text>\"", "d": "Find commits that added or removed this text" },
+        { "c": "git diff main...<branch>", "d": "What the branch changed since it split; the pull request view" },
+        { "c": "git shortlog -sn --all", "d": "Commits per author, ranked" },
         { "c": "git blame -w <file>", "d": "Who last touched each line, ignoring whitespace" },
         { "c": "git show <hash>", "d": "One commit in full; --stat for files only" },
         { "c": "git bisect start", "d": "Binary-search history for the commit that broke it" },
@@ -148,6 +155,7 @@
         { "c": "git rm --cached <file>", "d": "Stop tracking, keep on disk" },
         { "c": "git mv <old> <new>", "d": "Rename and stage in one step" },
         { "c": "git update-index --skip-worktree <file>", "d": "Ignore your local edits to a tracked file" },
+        { "c": "printf \"* text=auto\\n\" >> .gitattributes", "d": "Line endings settled for the whole team, committed once" },
         { "c": "touch <folder>/.gitkeep", "d": "Keep an empty folder" }
       ]
     },
@@ -174,8 +182,18 @@
       ]
     },
     {
+      "title": "Submodules",
+      "items": [
+        { "c": "git submodule add <url> <path>", "d": "Pin another repository at an exact commit inside yours" },
+        { "c": "git clone --recurse-submodules <url>", "d": "Clone a repo and its submodules in one step" },
+        { "c": "git submodule update --init --recursive", "d": "Fill the empty folders after a plain clone" },
+        { "c": "git submodule update --remote", "d": "Move pins to each submodule's latest commit" }
+      ]
+    },
+    {
       "title": "Quality of life",
       "items": [
+        { "c": "git config --global help.autocorrect prompt", "d": "git statsu asks: run git status instead?" },
         { "c": "git config --global alias.st \"status -sb\"", "d": "git st forever" },
         { "c": "git config --global alias.lg \"log --oneline --graph --all\"", "d": "git lg: the graph" },
         { "c": "git config --global rerere.enabled true", "d": "Never resolve the same conflict twice" },

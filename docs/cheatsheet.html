@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -60,10 +60,21 @@
       </div>
     </section>
 
+    <section class="finder" aria-label="Filter commands">
+      <div class="wrap">
+        <div class="searchbox">
+          <input id="cf" type="text" enterkeyhint="search" placeholder="rebase, stash, submodule, force..."
+                 autocomplete="off" autocapitalize="off" spellcheck="false"
+                 aria-label="Filter commands">
+          <span class="hint" aria-hidden="true">/</span>
+        </div>
+      </div>
+    </section>
+
     <section aria-label="Cheatsheet">
       <div class="wrap cheatsheet">
 <!-- cheatsheet:start -->
-<nav class="cs-toc" aria-label="Sections"><a href="#setup-and-identity">Setup and identity</a><a href="#start-a-project">Start a project</a><a href="#the-daily-loop">The daily loop</a><a href="#branches">Branches</a><a href="#merge-and-rebase">Merge and rebase</a><a href="#undo-and-rescue">Undo and rescue</a><a href="#stash">Stash</a><a href="#inspect-and-search">Inspect and search</a><a href="#tags-and-releases">Tags and releases</a><a href="#every-platform-same-git">Every platform, same Git</a><a href="#no-host-at-all">No host at all</a><a href="#files-and-ignoring">Files and ignoring</a><a href="#history-surgery">History surgery</a><a href="#scale-and-speed">Scale and speed</a><a href="#quality-of-life">Quality of life</a></nav>
+<nav class="cs-toc" aria-label="Sections"><a href="#setup-and-identity">Setup and identity</a><a href="#start-a-project">Start a project</a><a href="#the-daily-loop">The daily loop</a><a href="#branches">Branches</a><a href="#merge-and-rebase">Merge and rebase</a><a href="#undo-and-rescue">Undo and rescue</a><a href="#stash">Stash</a><a href="#inspect-and-search">Inspect and search</a><a href="#tags-and-releases">Tags and releases</a><a href="#every-platform-same-git">Every platform, same Git</a><a href="#no-host-at-all">No host at all</a><a href="#files-and-ignoring">Files and ignoring</a><a href="#history-surgery">History surgery</a><a href="#scale-and-speed">Scale and speed</a><a href="#submodules">Submodules</a><a href="#quality-of-life">Quality of life</a></nav>
 <section class="cs-section">
   <h2 id="setup-and-identity">Setup and identity</h2>
   <div class="cs-rows">
@@ -101,6 +112,11 @@
       <code>git config --global rebase.autoStash true</code>
       <span>Pull with rebase works even with edits in progress</span>
       <button class="copy" data-cmd="git config --global rebase.autoStash true" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git config --global core.autocrlf true</code>
+      <span>Windows line endings handled once; macOS and Linux use input</span>
+      <button class="copy" data-cmd="git config --global core.autocrlf true" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
       <code>git config --list --show-origin</code>
@@ -173,6 +189,11 @@
       <button class="copy" data-cmd="git commit --amend --no-edit" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
+      <code>git fetch</code>
+      <span>See what the remote has before touching anything</span>
+      <button class="copy" data-cmd="git fetch" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
       <code>git pull --rebase</code>
       <span>Get remote commits, replay yours on top</span>
       <button class="copy" data-cmd="git pull --rebase" aria-label="Copy command">Copy</button>
@@ -194,13 +215,23 @@
     </div>
     <div class="cs-row">
       <code>git switch &lt;branch&gt;</code>
-      <span>Move to an existing branch; - returns to the previous one</span>
+      <span>Move to an existing branch</span>
       <button class="copy" data-cmd="git switch &lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git switch -</code>
+      <span>Back to the branch you just left</span>
+      <button class="copy" data-cmd="git switch -" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
       <code>git branch --show-current</code>
       <span>Where am I</span>
       <button class="copy" data-cmd="git branch --show-current" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git branch -vv</code>
+      <span>Every local branch with its remote and ahead-behind state</span>
+      <button class="copy" data-cmd="git branch -vv" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
       <code>git branch -a</code>
@@ -281,6 +312,11 @@
       <code>git restore --staged &lt;file&gt;</code>
       <span>Unstage, keep the edits</span>
       <button class="copy" data-cmd="git restore --staged &lt;file&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row cs-danger">
+      <code>git commit --amend -m &quot;&lt;new message&gt;&quot;</code>
+      <span>Rewrite the last commit message</span>
+      <button class="copy" data-cmd="git commit --amend -m &quot;&lt;new message&gt;&quot;" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
       <code>git reset --soft HEAD~1</code>
@@ -366,6 +402,16 @@
       <code>git log -S &quot;&lt;text&gt;&quot;</code>
       <span>Find commits that added or removed this text</span>
       <button class="copy" data-cmd="git log -S &quot;&lt;text&gt;&quot;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git diff main...&lt;branch&gt;</code>
+      <span>What the branch changed since it split; the pull request view</span>
+      <button class="copy" data-cmd="git diff main...&lt;branch&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git shortlog -sn --all</code>
+      <span>Commits per author, ranked</span>
+      <button class="copy" data-cmd="git shortlog -sn --all" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
       <code>git blame -w &lt;file&gt;</code>
@@ -525,6 +571,11 @@
       <button class="copy" data-cmd="git update-index --skip-worktree &lt;file&gt;" aria-label="Copy command">Copy</button>
     </div>
     <div class="cs-row">
+      <code>printf &quot;* text=auto\n&quot; &gt;&gt; .gitattributes</code>
+      <span>Line endings settled for the whole team, committed once</span>
+      <button class="copy" data-cmd="printf &quot;* text=auto\n&quot; &gt;&gt; .gitattributes" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
       <code>touch &lt;folder&gt;/.gitkeep</code>
       <span>Keep an empty folder</span>
       <button class="copy" data-cmd="touch &lt;folder&gt;/.gitkeep" aria-label="Copy command">Copy</button>
@@ -598,8 +649,38 @@
   </div>
 </section>
 <section class="cs-section">
+  <h2 id="submodules">Submodules</h2>
+  <div class="cs-rows">
+    <div class="cs-row">
+      <code>git submodule add &lt;url&gt; &lt;path&gt;</code>
+      <span>Pin another repository at an exact commit inside yours</span>
+      <button class="copy" data-cmd="git submodule add &lt;url&gt; &lt;path&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git clone --recurse-submodules &lt;url&gt;</code>
+      <span>Clone a repo and its submodules in one step</span>
+      <button class="copy" data-cmd="git clone --recurse-submodules &lt;url&gt;" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git submodule update --init --recursive</code>
+      <span>Fill the empty folders after a plain clone</span>
+      <button class="copy" data-cmd="git submodule update --init --recursive" aria-label="Copy command">Copy</button>
+    </div>
+    <div class="cs-row">
+      <code>git submodule update --remote</code>
+      <span>Move pins to each submodule&#x27;s latest commit</span>
+      <button class="copy" data-cmd="git submodule update --remote" aria-label="Copy command">Copy</button>
+    </div>
+  </div>
+</section>
+<section class="cs-section">
   <h2 id="quality-of-life">Quality of life</h2>
   <div class="cs-rows">
+    <div class="cs-row">
+      <code>git config --global help.autocorrect prompt</code>
+      <span>git statsu asks: run git status instead?</span>
+      <button class="copy" data-cmd="git config --global help.autocorrect prompt" aria-label="Copy command">Copy</button>
+    </div>
     <div class="cs-row">
       <code>git config --global alias.st &quot;status -sb&quot;</code>
       <span>git st forever</span>
@@ -653,5 +734,6 @@
   <script src="theme.js"></script>
   <script src="hello.js"></script>
   <script src="render.js"></script>
+  <script src="cheatsheet.js"></script>
 </body>
 </html>

@@ -364,6 +364,25 @@
       "seealso": []
     },
     {
+      "id": "unmerged-files",
+      "msg": "error: Pulling is not possible because you have unmerged files.",
+      "why": "An earlier merge stopped at conflicts and is still waiting for you to finish it.",
+      "fix": [],
+      "intent": "merge-conflict",
+      "seealso": []
+    },
+    {
+      "id": "divergent-branches-hint",
+      "msg": "hint: You have divergent branches and need to specify how to reconcile them.",
+      "why": "Newer Git asks you to choose a pull strategy once instead of silently merging.",
+      "fix": [
+        { "c": "git config --global pull.rebase true", "n": "The usual right answer: remote commits land, yours replay on top, history stays straight." },
+        { "c": "git config --global pull.ff only", "n": "The strict alternative: pull succeeds only when nothing diverged, and asks you to decide otherwise." }
+      ],
+      "intent": null,
+      "seealso": ["diverged-branches", "update-branch"]
+    },
+    {
       "id": "could-not-read-username",
       "msg": "fatal: could not read Username for 'https://github.com': No such device or address",
       "why": "Git wanted to ask for credentials but no terminal was attached, the classic CI and script failure.",
