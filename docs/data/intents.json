@@ -21304,6 +21304,560 @@
         "npm-publish-ci",
         "create-release"
       ]
+    },
+    {
+      "id": "squash-merge-branch-behind",
+      "q": "After a squash merge my branch looks unmerged",
+      "aka": [
+        "squash merge branch still shows commits",
+        "branch not marked merged after squash",
+        "reuse branch after squash merge"
+      ],
+      "variants": [
+        {
+          "when": "Why it happens",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log main..<branch> --oneline",
+              "n": "A squash merge creates one new commit with different hashes, so Git cannot see your originals in main even though the content is there."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The fix",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch -D <branch> && git switch -c <branch> main",
+              "n": "Delete and recreate from main rather than continuing on the old branch, which would re-propose the same changes."
+            }
+          ],
+          "undo": "git branch <branch> <old-hash> from the reflog"
+        }
+      ],
+      "seealso": [
+        "merge-methods",
+        "merge-squash",
+        "auto-delete-branches"
+      ]
+    },
+    {
+      "id": "restore-from-another-clone",
+      "q": "Recover work from another clone of the same project",
+      "aka": [
+        "copy commits between clones",
+        "get commits from a colleague machine",
+        "transfer branch without server"
+      ],
+      "variants": [
+        {
+          "when": "Both machines reachable",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add other /path/or/user@host:/path",
+              "n": "Any clone can act as a remote, including one over SSH."
+            },
+            {
+              "c": "git fetch other && git switch -c rescue other/<branch>",
+              "n": "Their work lands as an ordinary branch."
+            }
+          ],
+          "undo": "git remote remove other"
+        },
+        {
+          "when": "Only a copied folder",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git bundle create work.bundle --all",
+              "n": "One file holding everything, which you can email or copy on a drive; git clone work.bundle opens it."
+            }
+          ],
+          "undo": "Delete the bundle"
+        }
+      ],
+      "seealso": [
+        "git-bundle",
+        "two-machines",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "stop-large-files-early",
+      "q": "Block big files from being committed at all",
+      "aka": [
+        "prevent large file commit",
+        "pre-commit size check",
+        "stop binaries entering repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '#!/bin/sh\\ngit diff --cached --name-only | while read f; do [ -f \"$f\" ] && [ $(wc -c < \"$f\") -gt 10000000 ] && echo \"Too large: $f\" && exit 1; done\\nexit 0\\n' > .git/hooks/pre-commit",
+              "n": "Refuses commits containing files over ten megabytes. Make it executable with chmod +x."
+            },
+            {
+              "c": "git lfs track \"*.psd\"",
+              "n": "For files that genuinely belong, route them to LFS instead of blocking them."
+            }
+          ],
+          "undo": "Delete the hook"
+        }
+      ],
+      "seealso": [
+        "hooks",
+        "git-lfs",
+        "file-too-large"
+      ]
+    },
+    {
+      "id": "see-config-for-repo",
+      "q": "See which settings apply to this repository only",
+      "aka": [
+        "repo specific settings",
+        "local git config list",
+        "what did this repo change"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --local --list",
+              "n": "Only what this repository sets, which is where surprises usually hide after a clone or a tool wrote something."
+            },
+            {
+              "c": "git config --local --edit",
+              "n": "Opens .git/config directly when you want to see it whole."
+            }
+          ],
+          "undo": "Undo edits in the editor"
+        }
+      ],
+      "seealso": [
+        "config-precedence",
+        "show-config",
+        "multiple-identities"
+      ]
+    },
+    {
+      "id": "prevent-force-push-main",
+      "q": "Make force pushes to main impossible",
+      "aka": [
+        "block force push",
+        "stop history rewrite on main",
+        "protect against force push"
+      ],
+      "variants": [
+        {
+          "when": "On the server",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Rules -> Rulesets -> Block force pushes",
+              "n": "The only protection that actually holds, because it applies to everyone including you."
+            }
+          ],
+          "undo": "Remove the rule"
+        },
+        {
+          "when": "On your machine",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global receive.denyNonFastForwards true",
+              "n": "Applies when others push to your repositories. Local habit protection belongs in a pre-push hook, not config."
+            }
+          ],
+          "undo": "git config --global --unset receive.denyNonFastForwards"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "force-push-safely",
+        "rulesets-vs-classic"
+      ]
+    },
+    {
+      "id": "list-files-in-branch",
+      "q": "List the files a branch contains without checking it out",
+      "aka": [
+        "files in another branch",
+        "browse branch contents",
+        "tree of a branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git ls-tree -r --name-only <branch>",
+              "n": "Every tracked path in that branch, with nothing on disk touched."
+            },
+            {
+              "c": "git ls-tree --name-only <branch> <folder>/",
+              "n": "One level of a folder when the full list is too long."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "list-tracked-files",
+        "show-old-version",
+        "copy-file-from-branch"
+      ]
+    },
+    {
+      "id": "one-commit-many-branches",
+      "q": "Apply the same fix to several release branches",
+      "aka": [
+        "backport to multiple branches",
+        "same fix on all versions",
+        "patch every supported release"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch release/2.0 && git cherry-pick <hash>",
+              "n": "Repeat per branch. Cherry-pick keeps each line of history independent, which is what release branches need."
+            },
+            {
+              "c": "git tag --contains <hash>",
+              "n": "Afterwards, confirm every branch that should carry the fix actually does."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD on each branch"
+        }
+      ],
+      "seealso": [
+        "hotfix-from-tag",
+        "cherry-pick",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "github-search-syntax",
+      "q": "Search GitHub like an expert",
+      "aka": [
+        "github search operators",
+        "find repos by stars",
+        "search qualifiers"
+      ],
+      "variants": [
+        {
+          "when": "Finding projects",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "language:rust stars:>1000 pushed:>2026-01-01",
+              "n": "Qualifiers stack. pushed: filters out abandoned work, which raw star counts never do."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Finding people's work",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search repos --owner <user> --language python",
+              "n": "Same engine from the terminal, with --json for scripting."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "code-search",
+        "issue-search",
+        "stars-and-lists"
+      ]
+    },
+    {
+      "id": "partial-revert",
+      "q": "Undo just one file from an old commit",
+      "aka": [
+        "undo some changes from a commit",
+        "revert one file from commit",
+        "selective revert"
+      ],
+      "variants": [
+        {
+          "when": "One file",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --source <hash>^ -- <path>",
+              "n": "Takes that file back to the version before the commit and leaves the rest of the commit intact."
+            }
+          ],
+          "undo": "git restore --source HEAD -- <path>"
+        },
+        {
+          "when": "Some hunks",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert -n <hash>",
+              "n": "Stages the whole revert without committing."
+            },
+            {
+              "c": "git restore --staged --worktree <path-to-keep>",
+              "n": "Drop the parts you want to keep, then commit what remains."
+            }
+          ],
+          "undo": "git restore --staged . before committing"
+        }
+      ],
+      "seealso": [
+        "revert-multiple",
+        "cherry-pick-no-commit",
+        "commit-only-part-of-file"
+      ]
+    },
+    {
+      "id": "github-mobile",
+      "q": "Review and merge from a phone",
+      "aka": [
+        "github mobile app",
+        "approve pr on phone",
+        "merge from mobile"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GitHub Mobile",
+              "n": "Read diffs, comment, approve, and merge; notifications triage well on a phone. Editing code is deliberately limited."
+            },
+            {
+              "c": "github.dev",
+              "n": "For an actual edit from a tablet, the browser editor works better than the app."
+            }
+          ],
+          "undo": "Every action is a normal commit or review, revertible on any device"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "no-terminal-github",
+        "github-notifications-triage"
+      ]
+    },
+    {
+      "id": "undo-published-tag",
+      "q": "A release tag points at the wrong commit",
+      "aka": [
+        "tag on wrong commit",
+        "fix published tag",
+        "retag a release"
+      ],
+      "variants": [
+        {
+          "when": "Nobody has it yet",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -f v2.1.0 <correct-hash> && git push --force origin v2.1.0",
+              "n": "Fast, and acceptable within minutes of publishing."
+            }
+          ],
+          "undo": "Retag to the previous hash"
+        },
+        {
+          "when": "It is out in the world",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v2.1.1 <correct-hash>",
+              "n": "Publish a new version instead. Moving a tag people already fetched leaves them silently on different code, which is worse than an extra version number."
+            }
+          ],
+          "undo": "git tag -d v2.1.1 before pushing"
+        }
+      ],
+      "seealso": [
+        "move-tag",
+        "semantic-versioning",
+        "tags-vs-releases"
+      ]
+    },
+    {
+      "id": "reduce-ci-minutes",
+      "q": "Cut what CI costs me",
+      "aka": [
+        "reduce actions minutes",
+        "ci too expensive",
+        "save workflow minutes"
+      ],
+      "variants": [
+        {
+          "when": "The four biggest wins",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "concurrency: cancel-in-progress: true",
+              "n": "Stop paying for runs a newer push already obsoleted."
+            },
+            {
+              "c": "paths: [\"src/**\"]",
+              "n": "Do not run the full suite for README edits."
+            },
+            {
+              "c": "timeout-minutes: 15",
+              "n": "Cap the damage when something hangs."
+            },
+            {
+              "c": "runs-on: ubuntu-latest",
+              "n": "Linux bills at the base rate; macOS multiplies it several times over."
+            }
+          ],
+          "undo": "Remove each setting"
+        }
+      ],
+      "seealso": [
+        "actions-billing",
+        "cancel-in-progress",
+        "job-timeouts"
+      ]
+    },
+    {
+      "id": "commit-signing-in-ci",
+      "q": "Sign commits made by automation",
+      "aka": [
+        "signed commits from actions",
+        "bot commits verified",
+        "automation signing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api --method PUT repos/<owner>/<repo>/contents/<path>",
+              "n": "Commits created through the API are signed by GitHub automatically and show as Verified, with no key in the workflow."
+            },
+            {
+              "c": "uses: stefanzweifel/git-auto-commit-action",
+              "n": "When you must use plain git, import a passphrase-free signing key from a secret; never a personal key."
+            }
+          ],
+          "undo": "Revert the commit"
+        }
+      ],
+      "seealso": [
+        "require-signed-commits",
+        "actions-secrets",
+        "gh-in-workflows"
+      ]
+    },
+    {
+      "id": "which-files-conflict-often",
+      "q": "Find the files that conflict most",
+      "aka": [
+        "conflict hotspots",
+        "files that always conflict",
+        "reduce recurring conflicts"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --diff-filter=M --format= --name-only | sort | uniq -c | sort -rn | head -20",
+              "n": "The most-changed files, which are almost exactly the ones that conflict. Splitting or reformatting them fixes the cause."
+            },
+            {
+              "c": "git config rerere.enabled true",
+              "n": "Meanwhile, let Git replay resolutions it has seen before."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "avoid-conflicts",
+        "rerere",
+        "merge-union"
+      ]
+    },
+    {
+      "id": "private-repo-in-actions",
+      "q": "Check out a second private repository in a workflow",
+      "aka": [
+        "actions checkout another repo",
+        "private submodule in ci",
+        "access second repository from workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/checkout@v5 with token: ${{ secrets.REPO_PAT }}",
+              "n": "The built-in token only reaches the current repository, so a second one needs a fine-grained token scoped to it."
+            },
+            {
+              "c": "with: submodules: recursive",
+              "n": "Private submodules need the same token, supplied the same way."
+            }
+          ],
+          "undo": "Revoke the token"
+        }
+      ],
+      "seealso": [
+        "clone-private-ci",
+        "access-tokens",
+        "submodule-update"
+      ]
+    },
+    {
+      "id": "tidy-github-profile",
+      "q": "Make my GitHub profile worth landing on",
+      "aka": [
+        "improve github profile",
+        "profile for recruiters",
+        "what recruiters see"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Create a repository named after your username",
+              "n": "Its README renders at the top of your profile: what you build, what you are learning, how to reach you."
+            },
+            {
+              "c": "Profile -> Customize your pins",
+              "n": "Six repositories you would defend in an interview, each with a real README. A tidy profile of five good projects beats fifty abandoned ones."
+            }
+          ],
+          "undo": "Unpin or delete the profile repository"
+        }
+      ],
+      "seealso": [
+        "profile-readme",
+        "pin-repositories",
+        "professional-repo"
+      ]
     }
   ]
 }
