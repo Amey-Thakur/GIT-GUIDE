@@ -23745,6 +23745,546 @@
         "large-monorepo-ci",
         "gitignore-per-folder"
       ]
+    },
+    {
+      "id": "change-license-later",
+      "q": "Change the license of an existing project",
+      "aka": [
+        "relicense a repository",
+        "switch from mit to apache",
+        "change license after contributions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --format=\"%an %ae\" | sort -u",
+              "n": "Contributors hold copyright on their commits, so a relicense usually needs their agreement. This is the list of people to ask."
+            },
+            {
+              "c": "git add LICENSE && git commit -m \"Relicense under Apache-2.0\"",
+              "n": "The new license applies from that commit forward. Versions already published under the old terms stay available under them permanently."
+            }
+          ],
+          "undo": "Commit the old license back, for future versions only"
+        }
+      ],
+      "seealso": [
+        "add-license",
+        "cla-vs-dco",
+        "how-open-source-works"
+      ]
+    },
+    {
+      "id": "cla-vs-dco",
+      "q": "Require a CLA or a DCO from contributors",
+      "aka": [
+        "contributor license agreement",
+        "dco bot",
+        "do i need a cla"
+      ],
+      "variants": [
+        {
+          "when": "Lightweight: DCO",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -s",
+              "n": "Contributors attest with a Signed-off-by line. A bot can enforce it on pull requests. Enough for most projects."
+            }
+          ],
+          "undo": "Remove the check"
+        },
+        {
+          "when": "Heavier: CLA",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Install a CLA assistant app",
+              "n": "A signed agreement, sometimes assigning rights to a foundation or company. It raises the barrier for casual contributors, so require it only when legal counsel does."
+            }
+          ],
+          "undo": "Uninstall the app"
+        }
+      ],
+      "seealso": [
+        "signoff",
+        "contributing-file",
+        "change-license-later"
+      ]
+    },
+    {
+      "id": "copyright-headers",
+      "q": "Keep copyright headers current",
+      "aka": [
+        "file header year",
+        "copyright notice in source",
+        "update license headers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -1 --format=%ad --date=format:%Y -- <file>",
+              "n": "Per-file years drift and create noisy diffs. A single year of first publication, or none at all, is the modern practice; the LICENSE file carries the real terms."
+            },
+            {
+              "c": "git config --global alias.years \"log --format=%ad --date=format:%Y\"",
+              "n": "Where a header is mandated, generate it from history rather than editing by hand."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "add-license",
+        "cla-vs-dco",
+        "mailmap"
+      ]
+    },
+    {
+      "id": "security-advisories",
+      "q": "Publish a security advisory for my project",
+      "aka": [
+        "github security advisory",
+        "cve for my project",
+        "disclose a vulnerability"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Security -> Advisories -> New draft advisory",
+              "n": "Draft privately, collaborate in a temporary private fork, and request a CVE from GitHub at no cost."
+            },
+            {
+              "c": "Publish",
+              "n": "On release, Dependabot alerts every downstream project automatically. Publishing before the fix ships helps attackers, not users."
+            }
+          ],
+          "undo": "Advisories can be withdrawn, but assume the disclosure is permanent"
+        }
+      ],
+      "seealso": [
+        "security-policy",
+        "dependabot",
+        "code-scanning"
+      ]
+    },
+    {
+      "id": "copilot-code-review",
+      "q": "Get an automated first-pass review",
+      "aka": [
+        "copilot review pull request",
+        "ai review my pr",
+        "automated code review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Reviewers -> Copilot, on the pull request",
+              "n": "It comments on obvious defects and style before a human looks, which raises the floor of what reaches your reviewers."
+            },
+            {
+              "c": "gh pr review --approve",
+              "n": "Machine review does not count toward required approvals, and should not: judgement about whether a change is right remains human work."
+            }
+          ],
+          "undo": "Dismiss the review"
+        }
+      ],
+      "seealso": [
+        "review-ai-generated-code",
+        "review-pr",
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "org-base-permissions",
+      "q": "Set what everyone in the organization can see",
+      "aka": [
+        "organization base permissions",
+        "default member access",
+        "org wide read access"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Organization -> Settings -> Member privileges -> Base permissions",
+              "n": "Read gives every member visibility into all repositories, which suits open internal cultures. None forces explicit grants, which suits regulated ones."
+            },
+            {
+              "c": "Organization -> Settings -> Repository creation",
+              "n": "Pair it with who may create repositories and who may make them public."
+            }
+          ],
+          "undo": "Change the setting back; explicit grants survive"
+        }
+      ],
+      "seealso": [
+        "org-teams",
+        "add-collaborator",
+        "repo-visibility-who-sees"
+      ]
+    },
+    {
+      "id": "inner-source",
+      "q": "Run open source practices inside a company",
+      "aka": [
+        "inner source",
+        "internal repositories visibility",
+        "company wide contributions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Change visibility -> Internal",
+              "n": "On an enterprise account, internal repositories are visible to every member but nobody outside. The default home for shared internal libraries."
+            },
+            {
+              "c": "git switch -c fix/<topic> && gh pr create",
+              "n": "Then treat other teams as contributors: CODEOWNERS, a CONTRIBUTING file, and pull requests instead of tickets."
+            }
+          ],
+          "undo": "Change visibility back to private"
+        }
+      ],
+      "seealso": [
+        "org-base-permissions",
+        "codeowners",
+        "contributing-file"
+      ]
+    },
+    {
+      "id": "committed-to-wrong-repo",
+      "q": "I committed and pushed to the wrong repository",
+      "aka": [
+        "pushed to wrong repo",
+        "work in the wrong project",
+        "move commits to another repository"
+      ],
+      "variants": [
+        {
+          "when": "Rescue the work",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git format-patch -<n> --stdout > work.patch",
+              "n": "Export your commits from the wrong repository."
+            },
+            {
+              "c": "git am work.patch",
+              "n": "Apply them in the right one, keeping author and message."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD in the correct repository"
+        },
+        {
+          "when": "Clean up the mistake",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash>",
+              "n": "On a shared repository, revert rather than rewrite. If the push was private and seconds old, git reset --hard and a force push are acceptable."
+            }
+          ],
+          "undo": "Revert the revert"
+        }
+      ],
+      "seealso": [
+        "patches-email",
+        "apply-patch",
+        "undo-push"
+      ]
+    },
+    {
+      "id": "prove-authorship",
+      "q": "Prove when I wrote something",
+      "aka": [
+        "timestamp proof of code",
+        "evidence of authorship",
+        "when did i write this"
+      ],
+      "variants": [
+        {
+          "when": "Within the project",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --show-signature -- <path>",
+              "n": "Commit dates are self-reported and editable, so an unsigned date proves little. A signed commit ties content to your key."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Independently verifiable",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push origin <branch>",
+              "n": "A push to a hosted repository creates a third-party record with its own timestamp, which is far stronger evidence than local history alone."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "sign-commits",
+        "commit-dates",
+        "audit-log"
+      ]
+    },
+    {
+      "id": "works-locally-fails-ci",
+      "q": "It passes locally but fails in CI",
+      "aka": [
+        "works on my machine",
+        "ci fails but local passes",
+        "different result in workflow"
+      ],
+      "variants": [
+        {
+          "when": "The usual four causes",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status --ignored",
+              "n": "An uncommitted or ignored file that CI never sees is the most common cause by far."
+            },
+            {
+              "c": "git log -1 --format=%H",
+              "n": "Confirm CI ran the commit you think it did, not a merge preview of an older base."
+            },
+            {
+              "c": "run: env | sort",
+              "n": "Then compare versions, environment variables, timezone, and case sensitivity: Linux runners are case-sensitive where Windows and macOS are not."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "debug-workflows",
+        "case-rename",
+        "pr-vs-push-triggers"
+      ]
+    },
+    {
+      "id": "colleague-overwrote-my-work",
+      "q": "A teammate's push overwrote my commits",
+      "aka": [
+        "someone force pushed over my work",
+        "my commits vanished from the branch",
+        "teammate erased my changes"
+      ],
+      "variants": [
+        {
+          "when": "Recover first",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog",
+              "n": "Your clone still holds them. Find the hash from before their push and branch it: git branch rescue <hash>."
+            },
+            {
+              "c": "git push origin rescue",
+              "n": "Publish the rescue branch before anything else touches the repository."
+            }
+          ],
+          "undo": "git branch -D rescue"
+        },
+        {
+          "when": "Prevent the repeat",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Block force pushes",
+              "n": "The technical fix. The social fix is agreeing that shared branches are never rewritten."
+            }
+          ],
+          "undo": "Remove the rule"
+        }
+      ],
+      "seealso": [
+        "recover-force-push",
+        "prevent-force-push-main",
+        "shared-branch-etiquette"
+      ]
+    },
+    {
+      "id": "leaving-a-team",
+      "q": "Leave a team or company cleanly",
+      "aka": [
+        "offboarding git",
+        "revoke my access",
+        "leaving job repositories"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh auth logout",
+              "n": "Push everything unfinished first, then remove your tokens, SSH keys, and any deploy keys you created."
+            },
+            {
+              "c": "Settings -> Emails",
+              "n": "If work commits used a company address, keep that address on your account or add a mailmap entry, or your contribution history goes blank."
+            }
+          ],
+          "undo": "Access can be regranted; contribution history cannot be rebuilt after the account link breaks"
+        }
+      ],
+      "seealso": [
+        "handover-project",
+        "mailmap",
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "repo-naming",
+      "q": "Name a repository well",
+      "aka": [
+        "repository naming conventions",
+        "good repo name",
+        "rename or new repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create acme-invoice-api",
+              "n": "Lowercase, hyphens, and descriptive rather than clever. The name appears in URLs, clone commands, and search results, so searchable beats witty."
+            },
+            {
+              "c": "gh repo rename <new-name>",
+              "n": "Renaming later works and redirects, but every clone, badge, and bookmark carries the old name until updated."
+            }
+          ],
+          "undo": "Rename back while the old name is unclaimed"
+        }
+      ],
+      "seealso": [
+        "rename-repo",
+        "repo-topics",
+        "professional-repo"
+      ]
+    },
+    {
+      "id": "issue-vs-discussion-vs-pr",
+      "q": "Issue, discussion, or pull request",
+      "aka": [
+        "where should this go",
+        "which github surface",
+        "report or discuss"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue create",
+              "n": "Something is broken or must be built: a unit of work with a resolution."
+            },
+            {
+              "c": "gh pr create",
+              "n": "You already have the change: propose it directly, which maintainers usually prefer to a proposal issue."
+            },
+            {
+              "c": "Discussions -> New discussion",
+              "n": "A question, an idea, or anything without an obvious owner."
+            }
+          ],
+          "undo": "Issues convert to discussions and back"
+        }
+      ],
+      "seealso": [
+        "discussions-vs-issues",
+        "open-issue",
+        "what-is-a-pr"
+      ]
+    },
+    {
+      "id": "stale-issues",
+      "q": "Handle issues nobody will ever fix",
+      "aka": [
+        "stale bot",
+        "close old issues",
+        "issue backlog cleanup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue close <number> --reason \"not planned\"",
+              "n": "Closing honestly is kinder than leaving a request open for years. Not planned records the decision without implying it was fixed."
+            },
+            {
+              "c": "gh issue list --search \"updated:<2025-01-01\"",
+              "n": "Review by date, and prefer a human sweep to an automatic stale bot, which mostly annoys the people who reported real bugs."
+            }
+          ],
+          "undo": "Reopen the issue"
+        }
+      ],
+      "seealso": [
+        "issue-search",
+        "issue-labels",
+        "open-issue"
+      ]
+    },
+    {
+      "id": "multiple-maintainers",
+      "q": "Share maintenance so the project survives me",
+      "aka": [
+        "add a maintainer",
+        "bus factor open source",
+        "hand off maintainership"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators -> Add people",
+              "n": "Grant merge rights to whoever already reviews well. A project with one person holding every permission dies with their interest."
+            },
+            {
+              "c": "gh repo edit --add-topic help-wanted",
+              "n": "Document decisions in CONTRIBUTING and MAINTAINERS files so authority does not live only in your head."
+            }
+          ],
+          "undo": "Remove the collaborator"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "contributing-file",
+        "handover-project"
+      ]
     }
   ]
 }
