@@ -784,3 +784,31 @@ kbd {
   .cs-row.cs-danger { border-left-color: #b3261e; }
   .cs-row.cs-danger code { color: #b3261e; }
 }
+
+/* Command checker: the safety verdict, straight from the data */
+.checker { padding: 0 0 1rem; }
+.checker h2 { border-left: 4px solid var(--accent); padding-left: 0.8rem; }
+.checker .muted { margin: 0.5rem 0 1rem; }
+.cv-box { margin-bottom: 0.75rem; }
+.cv-out { margin-top: 1rem; }
+.cv { border: 1px solid var(--line); border-left: 4px solid var(--muted); border-radius: 10px;
+      padding: 1.1rem 1.25rem; background: var(--card); }
+.cv-safe { border-left-color: #3fb950; }
+.cv-history { border-left-color: #d29922; }
+.cv-destructive { border-left-color: var(--accent); }
+.cv-head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.cv-badge { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+            border: 1px solid; border-radius: 999px; padding: 0.15rem 0.7rem; }
+.cv-safe .cv-badge { color: #3fb950; border-color: #3fb950; }
+.cv-history .cv-badge { color: #d29922; border-color: #d29922; }
+.cv-destructive .cv-badge { color: var(--accent); border-color: var(--accent); }
+.cv-cmd { font-family: var(--mono); font-size: 0.98rem; color: var(--ink); overflow-wrap: anywhere; }
+.cv-what { margin: 0 0 0.4rem; }
+.cv-mean { margin: 0 0 0.8rem; color: var(--muted); font-size: 0.94rem; }
+.cv-undo { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+           border-top: 1px solid var(--line); padding-top: 0.7rem; }
+.cv-undo-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
+                 text-transform: uppercase; color: var(--muted); }
+.cv-undo code { font-family: var(--mono); font-size: 0.92rem; color: var(--accent); overflow-wrap: anywhere; }
+.cv-more { display: inline-block; margin-top: 0.8rem; font-size: 0.92rem; }
+.cv-none { color: var(--muted); }

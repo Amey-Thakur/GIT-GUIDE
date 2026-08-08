@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=28">
+  <link rel="stylesheet" href="style.css?v=29">
 </head>
 <body>
 
@@ -178,12 +178,59 @@
         <p>Press <kbd>.</kbd> in any repository and it opens in a browser VS Code. Press <kbd>t</kbd> to fuzzy-find any file, <kbd>/</kbd> to search code. Append <code>.patch</code> to any commit URL for the raw patch, or <code>#L10-L20</code> to link exact lines. Blame view has a "view blame prior to this change" button that digs through reformats. Your profile README is a repository named after your username. And drag any image into an issue or PR comment to host it instantly.</p>
 
         <h2 id="protection">Protect the branch</h2>
-        <p>On a team, nobody writes to main directly, not even you. Settings, Branches, one ruleset: require a pull request, require the checks to pass. From that moment main cannot break by accident, only by review. Assign reviewers by path with a CODEOWNERS file:</p>
+        <p>On a team, nobody writes to main directly, not even you. Settings, Rules, one ruleset: require a pull request, require the checks to pass. Rulesets replaced classic branch protection and can target several branches at once. From that moment main cannot break by accident, only by review. Assign reviewers by path with a CODEOWNERS file:</p>
         <div class="cmd"><code>printf "docs/ @&lt;reviewer&gt;\n" &gt; .github/CODEOWNERS</code><button class="copy" data-cmd="printf &quot;docs/ @<reviewer>\n&quot; > .github/CODEOWNERS" aria-label="Copy command">Copy</button></div>
         <p class="note">Whoever owns a path is requested automatically on every pull request that touches it.</p>
 
         <h2 id="profile">Your profile is a repository</h2>
-        <p>Create a repository named exactly your username and its README becomes the top of your profile. Pin the six repositories that represent you best. And know the one rule of the contribution graph: commits count only when their author email matches an address on your GitHub account, which is why a <a href="index.html#tell-me-who-you-are">wrong git identity</a> quietly erases your work from it.</p>
+        <p>Create a repository named exactly your username and its README becomes the top of your profile. Pin the six repositories that represent you best. And know the one rule of the contribution graph: commits count only when their author email matches an address on your GitHub account, which is why a <a href="index.html#first-time-setup">wrong git identity</a> quietly erases your work from it.</p>
+
+
+        <h2 id="security">The security you get for free</h2>
+        <p>Four features cost nothing on a public repository and catch the mistakes that cost the most. Turn them on the day you create it, not the day after something leaks.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Push protection</code><span>Refuses a push containing a recognised token, before it ever reaches the server</span></div><div class="cs-row"><code>Secret scanning</code><span>Watches what already landed and alerts you and the provider</span></div><div class="cs-row"><code>Dependabot alerts</code><span>Tells you when a dependency you use has a known vulnerability, and opens the patch</span></div><div class="cs-row"><code>Code scanning</code><span>CodeQL reads every pull request for injection, unsafe handling, and similar defects</span></div></div>
+        <p class="note">Settings, Advanced Security. If a credential does reach a public repository, rotating it is the fix; deleting the commit is only housekeeping, because it was public the moment it landed. The full recovery order is on the <a href="errors.html#secret-scanning-push-blocked">errors page</a>.</p>
+
+        <h2 id="planning">Planning: issues, labels, milestones, projects</h2>
+        <p>Issues are the atom. Everything else exists to group them, and each layer earns its place only when the one below stops coping.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Labels</code><span>Cheap and searchable. bug, good first issue, needs-repro carry you a long way</span></div><div class="cs-row"><code>Milestones</code><span>One release or sprint, with a progress bar. Right when work has a deadline</span></div><div class="cs-row"><code>Projects</code><span>A board or table across repositories, with custom fields like priority and size</span></div><div class="cs-row"><code>Templates</code><span>Forms that make new issues arrive with the information you always end up asking for</span></div></div>
+        <div class="cmd"><code>gh issue create --title &quot;Upload times out over 50 MB&quot; --label bug</code><button class="copy" data-cmd="gh issue create --title &quot;Upload times out over 50 MB&quot; --label bug" aria-label="Copy command">Copy</button></div>
+        <p class="note">A board helps when work spans repositories or several people need one view. For a solo project, labels and a saved search do the same job with none of the upkeep.</p>
+
+        <h2 id="merge-control">Controlling how work lands</h2>
+        <p>Three settings decide the shape of your history, and choosing once beats arguing per pull request.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Squash merge</code><span>One clean commit per pull request. Right when branches are working drafts</span></div><div class="cs-row"><code>Merge commit</code><span>Keeps every commit and records that the work happened in parallel</span></div><div class="cs-row"><code>Rebase merge</code><span>Replays commits with no merge commit at all, for a strictly linear history</span></div><div class="cs-row"><code>Auto-merge</code><span>Lands the change the moment reviews and checks go green, with nobody watching</span></div><div class="cs-row"><code>Merge queue</code><span>Re-tests each pull request against the ones ahead, so two green branches cannot break main together</span></div></div>
+        <div class="cmd"><code>gh pr merge --auto --squash --delete-branch</code><button class="copy" data-cmd="gh pr merge --auto --squash --delete-branch" aria-label="Copy command">Copy</button></div>
+        <p class="note">Enable the one method you want and disable the rest in Settings, General. Uniform history is worth more than per-change flexibility.</p>
+
+        <h2 id="deploying">Deploying from GitHub</h2>
+        <p>Environments turn a workflow into a release process: approvals before production, and credentials that exist only for the job that needs them.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Environment</code><span>Named target such as staging or production, with its own secrets</span></div><div class="cs-row"><code>Required reviewers</code><span>The job pauses until a human approves the deployment</span></div><div class="cs-row"><code>Environment secrets</code><span>Override repository secrets, so the same variable name means different things per target</span></div><div class="cs-row"><code>OIDC</code><span>The workflow proves its identity to AWS, Azure, or GCP and receives temporary credentials, so no long-lived key exists to leak</span></div></div>
+        <div class="cmd"><code>gh api repos/{owner}/{repo}/deployments --jq &#x27;.[0] | {{ref, sha, environment}}&#x27;</code><button class="copy" data-cmd="gh api repos/{owner}/{repo}/deployments --jq &#x27;.[0] | {{ref, sha, environment}}&#x27;" aria-label="Copy command">Copy</button></div>
+        <p class="note">Build once and promote the same artifact between environments. Rebuilding per environment means what you tested is not what you shipped.</p>
+
+        <h2 id="codespaces">Codespaces and devcontainers</h2>
+        <p>A devcontainer file describes the machine your project needs. Codespaces then builds exactly that in the cloud, so onboarding becomes: open the repository.</p>
+        <div class="cmd"><code>gh codespace create -r &lt;owner&gt;/&lt;repo&gt;</code><button class="copy" data-cmd="gh codespace create -r &lt;owner&gt;/&lt;repo&gt;" aria-label="Copy command">Copy</button></div>
+        <p class="note">The same <code>.devcontainer/devcontainer.json</code> works locally with Docker, so the definition is not lock-in. Personal accounts include free hours each month; storage bills even while a codespace is stopped, so delete the ones you have finished with.</p>
+
+        <h2 id="packages">Publishing packages and images</h2>
+        <p>GitHub hosts your releases, your container images, and your packages beside the code that produced them.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Releases</code><span>Tagged versions with notes and downloadable assets, up to 2 GB per file</span></div><div class="cs-row"><code>Container registry</code><span>ghcr.io, with the image linked to the repository that built it</span></div><div class="cs-row"><code>Package registries</code><span>npm, PyPI, Maven, NuGet, RubyGems, all authenticated with the same token</span></div><div class="cs-row"><code>Provenance</code><span>An attestation proving an artifact came from your workflow, not someone&#x27;s laptop</span></div></div>
+        <div class="cmd"><code>gh release create v1.0.0 --generate-notes dist/*</code><button class="copy" data-cmd="gh release create v1.0.0 --generate-notes dist/*" aria-label="Copy command">Copy</button></div>
+        <p class="note">Publish from a workflow triggered by a tag, so a release is something you tag rather than something you remember to do.</p>
+
+        <h2 id="organizations">Organizations, teams, and access</h2>
+        <p>Grant repositories to teams, never to individuals: joining the team grants everything at once, and leaving it revokes everything at once.</p>
+        <div class="cs-rows"><div class="cs-row"><code>Base permissions</code><span>What every member can reach without an explicit grant. Read suits open internal cultures, None suits regulated ones</span></div><div class="cs-row"><code>Teams</code><span>Nested groups that own repositories, receive review requests, and can be mentioned</span></div><div class="cs-row"><code>CODEOWNERS</code><span>Routes review of a path to its owners automatically</span></div><div class="cs-row"><code>SAML and SCIM</code><span>Membership managed by your identity provider; tokens need authorising per organization</span></div></div>
+        <div class="cmd"><code>printf &quot;/infra/ @&lt;org&gt;/platform\n&quot; &gt;&gt; .github/CODEOWNERS</code><button class="copy" data-cmd="printf &quot;/infra/ @&lt;org&gt;/platform\n&quot; &gt;&gt; .github/CODEOWNERS" aria-label="Copy command">Copy</button></div>
+        <p class="note">Ownership is only advice until a ruleset requires code owner review. Without that rule, the file routes requests and nothing more.</p>
+
+        <h2 id="searching">Searching GitHub properly</h2>
+        <p>The search box is a query language, and a handful of qualifiers replace most browsing.</p>
+        <div class="cs-rows"><div class="cs-row"><code>repo: org: path:</code><span>Scope a code search to a repository, an organization, or a folder</span></div><div class="cs-row"><code>language: stars: pushed:</code><span>Find live projects; pushed: filters out the abandoned ones that stars alone will not</span></div><div class="cs-row"><code>is:issue is:open no:assignee</code><span>Unclaimed work, which is where a first contribution belongs</span></div><div class="cs-row"><code>review-requested:@me</code><span>Everything waiting on you, across every repository</span></div></div>
+        <div class="cmd"><code>gh search prs --review-requested=@me --state open</code><button class="copy" data-cmd="gh search prs --review-requested=@me --state open" aria-label="Copy command">Copy</button></div>
+        <p class="note">Press <code>t</code> on any repository page for the fuzzy file finder, and <code>.</code> to open the whole repository in a browser editor.</p>
 
         <h2 id="beyond">Where GitHub ends</h2>
         <p>Everything above is the host, not the tool. The same Git speaks to <a href="index.html#use-other-hosts">GitLab, Bitbucket, and AWS CodeCommit</a>, to <a href="index.html#use-azure-devops">Azure DevOps</a>, to <a href="index.html#mirror-migrate">any new host with full history</a>, and to <a href="index.html#git-bundle">no host at all</a>. Learn Git once; the platforms are details.</p>
