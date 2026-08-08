@@ -353,16 +353,6 @@
   <p class="note">On your own machine, store credentials once so Git never needs to ask.</p>
   <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
 </article>
-<article class="result errcard" id="early-eof">
-  <h2><code class="errmsg">fatal: early EOF (the remote end hung up unexpectedly)</code><a class="anchor" href="#early-eof" aria-label="Link to this error">#</a></h2>
-  <p class="note">A large clone or fetch died mid-transfer: unstable connection, proxy timeout, or a server cutting long downloads.</p>
-  <div class="cmd"><code>git clone --depth 1 &lt;url&gt;</code><button class="copy" data-cmd="git clone --depth 1 &lt;url&gt;" aria-label="Copy command">Copy</button></div>
-  <p class="note">A shallow clone transfers a fraction of the data and almost always survives.</p>
-  <div class="cmd"><code>git fetch --unshallow</code><button class="copy" data-cmd="git fetch --unshallow" aria-label="Copy command">Copy</button></div>
-  <p class="note">Then deepen to full history in resumable steps once inside.</p>
-  <p class="seealso">See also: <a href="index.html#clone-repo">Clone a repository</a></p>
-  <p class="seealso">See also: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
-</article>
 <article class="result errcard" id="xcrun-macos">
   <h2><code class="errmsg">xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools)</code><a class="anchor" href="#xcrun-macos" aria-label="Link to this error">#</a></h2>
   <p class="note">A macOS update removed the command line tools, and git on a Mac lives inside them.</p>
@@ -531,10 +521,16 @@
 </article>
 <article class="result errcard" id="remote-hung-up">
   <h2><code class="errmsg">fatal: the remote end hung up unexpectedly</code><a class="anchor" href="#remote-hung-up" aria-label="Link to this error">#</a></h2>
-  <p class="note">The connection died mid-transfer, usually a large push meeting a server or proxy limit.</p>
+  <p class="note">The connection died mid-transfer, and Git may report it as early EOF. Usually a large clone or push meeting a proxy, server, or network limit.</p>
   <div class="cmd"><code>git config http.postBuffer 157286400</code><button class="copy" data-cmd="git config http.postBuffer 157286400" aria-label="Copy command">Copy</button></div>
   <p class="note">Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely.</p>
+  <div class="cmd"><code>git clone --depth 1 &lt;url&gt;</code><button class="copy" data-cmd="git clone --depth 1 &lt;url&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">A shallow clone transfers a fraction of the data and almost always survives.</p>
+  <div class="cmd"><code>git fetch --unshallow</code><button class="copy" data-cmd="git fetch --unshallow" aria-label="Copy command">Copy</button></div>
+  <p class="note">Then deepen to full history in resumable steps once inside.</p>
   <p class="seealso">See also: <a href="index.html#big-files-where">Where large files belong</a></p>
+  <p class="seealso">See also: <a href="index.html#clone-repo">Clone a repository</a></p>
+  <p class="seealso">See also: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
 </article>
 <article class="result errcard" id="embedded-repository">
   <h2><code class="errmsg">warning: adding embedded git repository: &lt;folder&gt;</code><a class="anchor" href="#embedded-repository" aria-label="Link to this error">#</a></h2>

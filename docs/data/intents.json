@@ -6932,7 +6932,10 @@
       "aka": [
         "rebase ours theirs reversed",
         "wrong side kept in rebase conflict",
-        "checkout theirs rebase"
+        "checkout theirs rebase",
+        "rebase ours theirs confusing",
+        "which side is mine in rebase",
+        "rebase conflict direction"
       ],
       "variants": [
         {
@@ -6946,6 +6949,10 @@
             {
               "c": "git checkout --ours <file>",
               "n": "Keeps the branch you rebased onto. In a plain merge the words mean what you expect; only rebase inverts them."
+            },
+            {
+              "c": "git status",
+              "n": "When in doubt, read the header: it names the commit currently being applied."
             }
           ],
           "undo": "Re-resolve before git add; git rebase --abort unwinds everything"
@@ -6953,7 +6960,8 @@
       ],
       "seealso": [
         "merge-conflict",
-        "rebase-onto-main"
+        "rebase-onto-main",
+        "merge-take-side"
       ]
     },
     {
@@ -17798,37 +17806,6 @@
         "merge-conflict",
         "vscode-conflict-editor",
         "merge-take-side"
-      ]
-    },
-    {
-      "id": "rebase-conflict-sides",
-      "q": "During a rebase, ours and theirs are swapped",
-      "aka": [
-        "rebase ours theirs confusing",
-        "which side is mine in rebase",
-        "rebase conflict direction"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git checkout --ours <file>",
-              "n": "In a rebase, ours is the branch you are replaying onto, and theirs is your own commit being replayed. Backwards from a merge, because Git is applying your work as a patch onto their base."
-            },
-            {
-              "c": "git status",
-              "n": "When in doubt, read the header: it names the commit currently being applied."
-            }
-          ],
-          "undo": "git rebase --abort"
-        }
-      ],
-      "seealso": [
-        "ours-theirs-rebase",
-        "merge-take-side",
-        "interactive-rebase"
       ]
     },
     {

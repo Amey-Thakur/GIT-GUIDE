@@ -660,26 +660,6 @@
       ]
     },
     {
-      "id": "early-eof",
-      "msg": "fatal: early EOF (the remote end hung up unexpectedly)",
-      "why": "A large clone or fetch died mid-transfer: unstable connection, proxy timeout, or a server cutting long downloads.",
-      "fix": [
-        {
-          "c": "git clone --depth 1 <url>",
-          "n": "A shallow clone transfers a fraction of the data and almost always survives."
-        },
-        {
-          "c": "git fetch --unshallow",
-          "n": "Then deepen to full history in resumable steps once inside."
-        }
-      ],
-      "intent": null,
-      "seealso": [
-        "clone-repo",
-        "sparse-checkout"
-      ]
-    },
-    {
       "id": "xcrun-macos",
       "msg": "xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools)",
       "why": "A macOS update removed the command line tools, and git on a Mac lives inside them.",
@@ -1021,16 +1001,26 @@
     {
       "id": "remote-hung-up",
       "msg": "fatal: the remote end hung up unexpectedly",
-      "why": "The connection died mid-transfer, usually a large push meeting a server or proxy limit.",
+      "why": "The connection died mid-transfer, and Git may report it as early EOF. Usually a large clone or push meeting a proxy, server, or network limit.",
       "fix": [
         {
           "c": "git config http.postBuffer 157286400",
           "n": "Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely."
+        },
+        {
+          "c": "git clone --depth 1 <url>",
+          "n": "A shallow clone transfers a fraction of the data and almost always survives."
+        },
+        {
+          "c": "git fetch --unshallow",
+          "n": "Then deepen to full history in resumable steps once inside."
         }
       ],
       "intent": null,
       "seealso": [
-        "big-files-where"
+        "big-files-where",
+        "clone-repo",
+        "sparse-checkout"
       ]
     },
     {
