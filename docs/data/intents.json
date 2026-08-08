@@ -18476,6 +18476,291 @@
         "annotated-tags",
         "hotfix-from-tag"
       ]
+    },
+    {
+      "id": "jira-integration",
+      "q": "Link GitHub work to Jira",
+      "aka": [
+        "jira github integration",
+        "smart commits",
+        "connect issue tracker"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"PROJ-482 Fix timeout on retry\"",
+              "n": "With the GitHub for Jira app installed, the issue key anywhere in a commit message, branch name, or pull request title links the work automatically and shows the development panel in Jira."
+            }
+          ],
+          "undo": "Remove the app from the organization"
+        }
+      ],
+      "seealso": [
+        "close-issue-with-pr",
+        "commit-messages",
+        "webhooks"
+      ]
+    },
+    {
+      "id": "slack-notifications",
+      "q": "Get repository activity in Slack",
+      "aka": [
+        "github slack integration",
+        "notify channel on pr",
+        "subscribe repo in slack"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "/github subscribe <owner>/<repo> pulls reviews",
+              "n": "After /github signin. Pick the event types deliberately: subscribing to everything trains the channel to ignore it."
+            }
+          ],
+          "undo": "/github unsubscribe <owner>/<repo>"
+        }
+      ],
+      "seealso": [
+        "webhooks",
+        "watch-unwatch",
+        "mentions"
+      ]
+    },
+    {
+      "id": "renovate",
+      "q": "Dependency updates beyond Dependabot",
+      "aka": [
+        "renovate bot",
+        "group dependency prs",
+        "auto merge minor updates"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "renovate.json",
+              "n": "Renovate groups related upgrades into one pull request, schedules them, and can auto-merge low-risk ones. More configuration than Dependabot, correspondingly more control on repositories with many dependencies."
+            }
+          ],
+          "undo": "Remove the app and the config file"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "auto-merge",
+        "commit-lockfile"
+      ]
+    },
+    {
+      "id": "pre-commit-framework",
+      "q": "Manage hooks with the pre-commit framework",
+      "aka": [
+        "pre-commit tool",
+        "hook manager",
+        "shared hooks across repos"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".pre-commit-config.yaml",
+              "n": "Declares hooks by repository and version, so the whole team runs identical checks. Hooks themselves are not versioned by Git, which is the gap this fills."
+            },
+            {
+              "c": "pre-commit install",
+              "n": "Writes the actual Git hook. pre-commit run --all-files checks the existing codebase once."
+            }
+          ],
+          "undo": "pre-commit uninstall"
+        }
+      ],
+      "seealso": [
+        "hooks",
+        "hooks-catalog",
+        "secret-scan-local"
+      ]
+    },
+    {
+      "id": "commitlint",
+      "q": "Enforce a commit message convention",
+      "aka": [
+        "commitlint",
+        "conventional commits enforcement",
+        "reject bad commit messages"
+      ],
+      "variants": [
+        {
+          "when": "Locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npx commitlint --edit \"$1\"",
+              "n": "From a commit-msg hook: messages that break the convention are refused before the commit exists."
+            }
+          ],
+          "undo": "Remove the hook"
+        },
+        {
+          "when": "On the server side",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require merge queue or a status check",
+              "n": "Local hooks can be skipped, so enforce in CI too: a check that lints the pull request title is enough when you squash-merge."
+            }
+          ],
+          "undo": "Remove the check requirement"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "hooks",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "semantic-release",
+      "q": "Version and publish automatically from commit messages",
+      "aka": [
+        "semantic-release",
+        "automated versioning",
+        "release-please"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npx semantic-release",
+              "n": "Reads Conventional Commits since the last tag, decides major, minor, or patch, writes the changelog, tags, and publishes. release-please does the same through a release pull request you approve."
+            }
+          ],
+          "undo": "Delete the tag and release; unpublish per registry rules"
+        }
+      ],
+      "seealso": [
+        "semantic-versioning",
+        "generate-changelog",
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "changesets",
+      "q": "Version a monorepo's packages independently",
+      "aka": [
+        "changesets",
+        "monorepo versioning",
+        "per package release notes"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npx changeset",
+              "n": "Each pull request adds a small markdown file describing its change and impact. The release job consumes them all, bumps only the packages affected, and writes per-package changelogs."
+            }
+          ],
+          "undo": "Delete the changeset files before release"
+        }
+      ],
+      "seealso": [
+        "monorepo",
+        "semantic-release",
+        "generate-changelog"
+      ]
+    },
+    {
+      "id": "turbo-affected",
+      "q": "Build only what changed in a monorepo",
+      "aka": [
+        "affected packages ci",
+        "turborepo nx affected",
+        "skip unchanged builds"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "turbo run build --filter=...[origin/main]",
+              "n": "Compares against the base to build only touched packages and their dependents. Nx calls it nx affected. Both need full history, so set fetch-depth: 0 on checkout."
+            }
+          ],
+          "undo": "Drop the filter to build everything"
+        }
+      ],
+      "seealso": [
+        "monorepo",
+        "shallow-in-ci",
+        "actions-cache"
+      ]
+    },
+    {
+      "id": "git-lfs-migrate-existing",
+      "q": "Move files already in history into LFS",
+      "aka": [
+        "lfs migrate import",
+        "convert existing files to lfs",
+        "repo huge because of old binaries"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git lfs migrate import --include=\"*.psd\" --everything",
+              "n": "Rewrites history so those files become LFS pointers, which is the only way to shrink a repository that is already large. Every hash changes: coordinate with the team, then force-push, and have everyone reclone."
+            }
+          ],
+          "undo": "git lfs migrate export --include=\"*.psd\" reverses it, with another rewrite"
+        }
+      ],
+      "seealso": [
+        "lfs-migrate",
+        "git-lfs",
+        "shrink-repo"
+      ]
+    },
+    {
+      "id": "vscode-github-extension",
+      "q": "Review pull requests inside VS Code",
+      "aka": [
+        "github pull requests extension",
+        "review pr in editor",
+        "vscode pr checkout"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GitHub Pull Requests extension",
+              "n": "Lists pull requests and issues in the sidebar, checks one out with a click, and shows review comments inline against the code. Approving and commenting happen without leaving the editor."
+            }
+          ],
+          "undo": "Uninstall the extension"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "clone-in-vscode",
+        "git-guis"
+      ]
     }
   ]
 }
