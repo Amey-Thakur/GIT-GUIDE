@@ -31324,6 +31324,385 @@
         "check-a-pr-is-safe",
         "approve-fork-runs"
       ]
+    },
+    {
+      "id": "repo-onboarding-doc",
+      "q": "Write setup instructions that actually work",
+      "aka": [
+        "getting started section",
+        "onboarding instructions",
+        "setup steps for new developers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url> ../test-setup",
+              "n": "Test them on a clean clone, ideally on a machine that is not yours. Instructions written from memory always assume something already installed."
+            },
+            {
+              "c": "gh repo create --template",
+              "n": "Better still, make setup a single command: a script, a devcontainer, or a Makefile target that leaves nothing to interpretation."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-structure",
+        "devcontainer",
+        "first-day-on-team"
+      ]
+    },
+    {
+      "id": "stop-losing-track-of-branches",
+      "q": "Remember what each of my branches was for",
+      "aka": [
+        "forgot what this branch does",
+        "branch purpose",
+        "label my branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch --edit-description",
+              "n": "Attaches a note to a branch, readable with git config branch.<name>.description. Local only, which suits scratch work."
+            },
+            {
+              "c": "git switch -c fix/482-timeout-on-upload",
+              "n": "A name carrying the issue number and the symptom explains itself six weeks later, which no description can match."
+            }
+          ],
+          "undo": "Rename or delete the branch"
+        }
+      ],
+      "seealso": [
+        "branch-naming",
+        "keep-branch-list-short",
+        "list-branch-authors"
+      ]
+    },
+    {
+      "id": "commit-when-tests-fail",
+      "q": "Commit work that does not pass tests yet",
+      "aka": [
+        "commit broken code",
+        "wip commit failing tests",
+        "save unfinished work"
+      ],
+      "variants": [
+        {
+          "when": "On your own branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"wip: <what remains>\"",
+              "n": "Entirely fine, and better than losing the work. Squash before review so the merged history stays bisectable."
+            }
+          ],
+          "undo": "git reset --soft HEAD~1"
+        },
+        {
+          "when": "On a shared branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c wip/<topic>",
+              "n": "Never on main. A broken commit on a shared branch blocks everyone and poisons bisect."
+            }
+          ],
+          "undo": "git branch -D wip/<topic>"
+        }
+      ],
+      "seealso": [
+        "commit-frequency",
+        "what-good-history-looks-like",
+        "commit-that-breaks-build"
+      ]
+    },
+    {
+      "id": "see-what-a-tag-points-at",
+      "q": "Find out what a tag actually points to",
+      "aka": [
+        "what commit is this tag",
+        "inspect a tag",
+        "tag details"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse <tag>^{commit}",
+              "n": "The commit itself, resolving through an annotated tag object."
+            },
+            {
+              "c": "git show <tag>",
+              "n": "Everything: the tagger, the message, and the commit it names. git tag -n prints just the messages for a list of tags."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "annotated-tags",
+        "list-tags",
+        "see-if-branch-is-safe-to-delete"
+      ]
+    },
+    {
+      "id": "stop-pull-request-notifications",
+      "q": "Stop notifications from a pull request I commented on",
+      "aka": [
+        "unsubscribe from a pr",
+        "too many updates on one thread",
+        "stop following a thread"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Unsubscribe, in the pull request sidebar",
+              "n": "Commenting subscribes you automatically. Unsubscribing stops the thread without leaving the conversation or deleting anything."
+            },
+            {
+              "c": "gh api -X DELETE notifications/threads/<id>/subscription",
+              "n": "The scriptable form when you are clearing a backlog."
+            }
+          ],
+          "undo": "Subscribe again in the sidebar"
+        }
+      ],
+      "seealso": [
+        "github-notifications-triage",
+        "watch-unwatch",
+        "stop-notifications-for-repo"
+      ]
+    },
+    {
+      "id": "repo-with-binary-only-content",
+      "q": "Version a repository of mostly binary files",
+      "aka": [
+        "binary repository",
+        "assets only repo",
+        "non code repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git lfs track \"*.png\" \"*.mp4\"",
+              "n": "Binaries never delta-compress or merge, so LFS keeps clones sane. Set it up before the first commit, not after."
+            },
+            {
+              "c": "echo \"* -text\" >> .gitattributes",
+              "n": "And disable text conversion wholesale so nothing is corrupted by line-ending translation."
+            }
+          ],
+          "undo": "git lfs untrack the patterns"
+        }
+      ],
+      "seealso": [
+        "git-lfs",
+        "design-files-git",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "understand-index-vs-worktree",
+      "q": "The three trees Git juggles",
+      "aka": [
+        "head index working tree",
+        "three trees explained",
+        "what is the index"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "HEAD is the last commit, the index is the staged draft, the working tree is your files. Every Git command moves content between those three."
+            },
+            {
+              "c": "git diff && git diff --staged",
+              "n": "The first compares working tree to index, the second index to HEAD. Between them you see both gaps."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-staging",
+        "reset-modes",
+        "status-codes"
+      ]
+    },
+    {
+      "id": "handle-dependabot-noise",
+      "q": "Dependabot opens too many pull requests",
+      "aka": [
+        "dependabot spam",
+        "too many dependency prs",
+        "reduce dependency pr volume"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "groups: all-minor: patterns: [\"*\"] update-types: [\"minor\", \"patch\"]",
+              "n": "In dependabot.yml, grouping turns twenty pull requests into one, which is the single biggest reduction."
+            },
+            {
+              "c": "open-pull-requests-limit: 5",
+              "n": "Cap the queue and drop the interval to weekly. Security updates ignore the limit, which is the behaviour you want."
+            }
+          ],
+          "undo": "Remove the settings"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "branch-naming-for-bots",
+        "reduce-ci-minutes"
+      ]
+    },
+    {
+      "id": "fix-a-typo-in-someone-repo",
+      "q": "Fix a typo in a project I do not own",
+      "aka": [
+        "small fix to another project",
+        "correct a typo upstream",
+        "tiny contribution"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Pencil icon on the file, on GitHub",
+              "n": "Editing a file you cannot push to forks the repository and opens a pull request automatically. The whole flow takes under a minute."
+            },
+            {
+              "c": "gh pr create --title \"Fix typo in <file>\"",
+              "n": "Keep it to the typo alone: a one-line pull request merges in minutes, a mixed one waits for review."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "edit-on-github",
+        "contribute-docs-only",
+        "first-pull-request-nerves"
+      ]
+    },
+    {
+      "id": "repo-audit-for-handover",
+      "q": "Audit a repository before taking it over",
+      "aka": [
+        "inherit a repository checklist",
+        "taking over a project",
+        "due diligence on a repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo> --jq \"{pushed: .pushed_at, issues: .open_issues_count, license: .license.spdx_id}\"",
+              "n": "Activity, backlog, and license in one call."
+            },
+            {
+              "c": "gh secret list && gh api repos/<owner>/<repo>/hooks",
+              "n": "Then the invisible parts: secrets, webhooks, deploy keys, and who still has admin. Those are what surprise a new owner."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "handover-project",
+        "repo-insights",
+        "who-can-delete-my-repo"
+      ]
+    },
+    {
+      "id": "keep-forks-of-my-repo-updated",
+      "q": "Help people keep their forks of my project current",
+      "aka": [
+        "forks fall behind",
+        "help contributors sync",
+        "stale forks of my repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo sync <fork>",
+              "n": "Point contributors at the Sync fork button, which handles the common case without any Git knowledge."
+            },
+            {
+              "c": "git rebase upstream/main",
+              "n": "Document the manual path in CONTRIBUTING for anyone with local commits, and keep your default branch fast-forwardable so syncing stays trivial."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "why-my-fork-shows-behind",
+        "contributing-file"
+      ]
+    },
+    {
+      "id": "see-what-changed-in-a-dependency",
+      "q": "Review what a dependency update actually changes",
+      "aka": [
+        "read dependency diff",
+        "what changed in this upgrade",
+        "review dependabot pr properly"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr view <number>",
+              "n": "Dependabot's description links the upstream release notes and commit range, which is the real review material."
+            },
+            {
+              "c": "git diff <old-tag>..<new-tag>",
+              "n": "For anything sensitive, clone the dependency and read the diff between tags rather than trusting the version bump."
+            }
+          ],
+          "undo": "Close the pull request"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "check-a-pr-is-safe",
+        "handle-dependabot-noise"
+      ]
     }
   ]
 }
