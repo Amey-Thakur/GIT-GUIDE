@@ -8503,6 +8503,688 @@
       ],
       "intent": "minimal-git-for-scripts",
       "seealso": []
+    },
+    {
+      "id": "git-version-too-old",
+      "msg": "error: unknown option `--recurse-submodules'",
+      "why": "The installed Git predates the flag you used.",
+      "fix": [
+        {
+          "c": "git --version",
+          "n": "Compare against the version the documentation assumes."
+        },
+        {
+          "c": "winget upgrade Git.Git",
+          "n": "Update Git; distributions often ship years-old builds."
+        }
+      ],
+      "intent": "update-git",
+      "seealso": []
+    },
+    {
+      "id": "smart-http-not-enabled",
+      "msg": "fatal: repository '<url>/info/refs' not found",
+      "why": "The server is not exposing the Git HTTP endpoints at that path.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Confirms whether the endpoint responds at all."
+        },
+        {
+          "c": "git remote set-url origin <correct-url>",
+          "n": "A missing .git suffix or wrong path is the usual cause."
+        }
+      ],
+      "intent": "change-remote-url",
+      "seealso": []
+    },
+    {
+      "id": "push-options-unsupported",
+      "msg": "fatal: the receiving end does not support push options",
+      "why": "The server does not accept the -o push options you sent.",
+      "fix": [
+        {
+          "c": "git push",
+          "n": "Retry without the option."
+        },
+        {
+          "c": "git config --global push.pushOption \"\"",
+          "n": "Clear a stored option that is being sent automatically."
+        }
+      ],
+      "intent": "use-other-hosts",
+      "seealso": []
+    },
+    {
+      "id": "gh-auth-token-env-conflict",
+      "msg": "The value of the GH_TOKEN environment variable is being used for authentication.",
+      "why": "A token in the environment overrides the account you logged in as.",
+      "fix": [
+        {
+          "c": "unset GH_TOKEN",
+          "n": "Removes the override so the stored login applies."
+        },
+        {
+          "c": "gh auth status",
+          "n": "Shows which credential is actually in force."
+        }
+      ],
+      "intent": "gh-auth-switch",
+      "seealso": []
+    },
+    {
+      "id": "composite-action-shell",
+      "msg": "Error: Required property is missing: shell",
+      "why": "Every run step in a composite action must declare its shell.",
+      "fix": [
+        {
+          "c": "shell: bash",
+          "n": "Add it to each run step."
+        },
+        {
+          "c": "uses: ./.github/actions/<name>",
+          "n": "Then the action can be called as normal."
+        }
+      ],
+      "intent": "create-github-action",
+      "seealso": []
+    },
+    {
+      "id": "docker-action-entrypoint",
+      "msg": "Error: Cannot find entrypoint <path> in the container",
+      "why": "The Docker action's entrypoint is missing or not executable.",
+      "fix": [
+        {
+          "c": "chmod +x entrypoint.sh",
+          "n": "Commit the executable bit, which Git tracks."
+        },
+        {
+          "c": "ENTRYPOINT [\"/entrypoint.sh\"]",
+          "n": "Confirm the Dockerfile points at the path that exists."
+        }
+      ],
+      "intent": "create-github-action",
+      "seealso": []
+    },
+    {
+      "id": "workflow-yaml-tabs",
+      "msg": "Invalid workflow file: while scanning for the next token found character '\\t' that cannot start any token",
+      "why": "YAML forbids tabs for indentation.",
+      "fix": [
+        {
+          "c": "Replace tabs with spaces",
+          "n": "Two spaces per level is the convention."
+        },
+        {
+          "c": "gh workflow view <file>",
+          "n": "The error names the exact line."
+        }
+      ],
+      "intent": "read-a-workflow-file",
+      "seealso": []
+    },
+    {
+      "id": "job-output-empty",
+      "msg": "The job output is empty in the dependent job",
+      "why": "Outputs must be declared on the job, not only written by the step.",
+      "fix": [
+        {
+          "c": "outputs: version: ${{ steps.v.outputs.version }}",
+          "n": "Declare it at job level."
+        },
+        {
+          "c": "needs.build.outputs.version",
+          "n": "Then the downstream job can read it."
+        }
+      ],
+      "intent": "actions-env",
+      "seealso": [
+        "github-actions-artifacts-between-jobs"
+      ]
+    },
+    {
+      "id": "matrix-empty-include",
+      "msg": "Error: Matrix must define at least one vector",
+      "why": "The matrix resolved to nothing, usually from an expression returning an empty list.",
+      "fix": [
+        {
+          "c": "strategy: matrix: os: [ubuntu-latest]",
+          "n": "Give it at least one concrete value."
+        },
+        {
+          "c": "fromJSON(needs.setup.outputs.list)",
+          "n": "When generating a matrix, guard against an empty list upstream."
+        }
+      ],
+      "intent": "actions-matrix",
+      "seealso": []
+    },
+    {
+      "id": "reusable-secrets-not-inherited",
+      "msg": "Error: Secret <name> is not available in the called workflow",
+      "why": "Reusable workflows receive no secrets unless they are passed.",
+      "fix": [
+        {
+          "c": "secrets: inherit",
+          "n": "Passes the caller's secrets wholesale."
+        },
+        {
+          "c": "secrets: TOKEN: ${{ secrets.TOKEN }}",
+          "n": "Or pass them one by one, which is tighter."
+        }
+      ],
+      "intent": "reusable-workflows",
+      "seealso": []
+    },
+    {
+      "id": "dependabot-token-missing",
+      "msg": "Dependabot could not create a pull request: resource not accessible",
+      "why": "Dependabot runs with its own restricted permissions, separate from Actions.",
+      "fix": [
+        {
+          "c": "Settings -> Actions -> Allow Dependabot to create pull requests",
+          "n": "Check the permission is granted."
+        },
+        {
+          "c": "permissions: pull-requests: write",
+          "n": "Workflows triggered by Dependabot need this stated explicitly."
+        }
+      ],
+      "intent": "dependabot",
+      "seealso": []
+    },
+    {
+      "id": "codeql-out-of-memory",
+      "msg": "CodeQL analysis failed: out of memory",
+      "why": "The analysis exceeded the runner's memory on a large codebase.",
+      "fix": [
+        {
+          "c": "runs-on: ubuntu-latest-4-core",
+          "n": "A larger runner is the usual fix."
+        },
+        {
+          "c": "paths-ignore:",
+          "n": "Or exclude vendored and generated directories from analysis."
+        }
+      ],
+      "intent": "code-scanning",
+      "seealso": []
+    },
+    {
+      "id": "secret-scanning-push-blocked",
+      "msg": "remote: error: Push cannot contain secrets  remote: GITHUB PUSH PROTECTION",
+      "why": "Push protection detected a credential in the commits and refused the push.",
+      "fix": [
+        {
+          "c": "Rotate the credential",
+          "n": "Assume it is compromised the moment it left your machine."
+        },
+        {
+          "c": "git rebase -i <base>",
+          "n": "Remove it from the commits, then push the cleaned history."
+        }
+      ],
+      "intent": "gitignore-for-secrets",
+      "seealso": [
+        "commit-secrets-by-mistake-public"
+      ]
+    },
+    {
+      "id": "gitleaks-pre-commit-block",
+      "msg": "gitleaks: leaks found: 1",
+      "why": "The local scanner matched something credential-shaped in the staged content.",
+      "fix": [
+        {
+          "c": "git diff --staged",
+          "n": "Read the match: false positives happen with test fixtures."
+        },
+        {
+          "c": "gitleaks:allow",
+          "n": "An inline comment marks a genuine false positive; never disable the scanner wholesale."
+        }
+      ],
+      "intent": "secret-scan-local",
+      "seealso": [
+        "stop-committing-passwords"
+      ]
+    },
+    {
+      "id": "pages-jekyll-liquid",
+      "msg": "Liquid Exception: Liquid syntax error in <file>",
+      "why": "Jekyll tried to parse template syntax in a file that is not a template.",
+      "fix": [
+        {
+          "c": "touch .nojekyll",
+          "n": "Turns Jekyll off entirely for a plain static site."
+        },
+        {
+          "c": "{% raw %}",
+          "n": "Or wrap literal braces so Liquid leaves them alone."
+        }
+      ],
+      "intent": "nojekyll",
+      "seealso": []
+    },
+    {
+      "id": "pages-relative-links-broken",
+      "msg": "404 on every asset when the site is served under a subpath",
+      "why": "Absolute paths break when a project site lives at /<repo>/ rather than the domain root.",
+      "fix": [
+        {
+          "c": "href=\"style.css\"",
+          "n": "Use relative paths, or set the base URL to the repository name."
+        },
+        {
+          "c": "<base href=\"/<repo>/\">",
+          "n": "One base tag fixes an entire page's links."
+        }
+      ],
+      "intent": "github-pages",
+      "seealso": [
+        "spa-on-pages"
+      ]
+    },
+    {
+      "id": "release-notes-empty",
+      "msg": "No release notes were generated",
+      "why": "Automatic notes come from merged pull requests, and none were found in the range.",
+      "fix": [
+        {
+          "c": "gh release create <tag> --notes-file NOTES.md",
+          "n": "Supply notes when the history has no pull requests."
+        },
+        {
+          "c": "git log <previous-tag>..<tag> --oneline",
+          "n": "Shows what the range actually contains."
+        }
+      ],
+      "intent": "generate-changelog",
+      "seealso": []
+    },
+    {
+      "id": "asset-upload-timeout",
+      "msg": "failed to upload release asset: context deadline exceeded",
+      "why": "The upload exceeded the time limit, usually a large file on a slow link.",
+      "fix": [
+        {
+          "c": "gh release upload <tag> <file> --clobber",
+          "n": "Retry; partial uploads are replaced rather than duplicated."
+        },
+        {
+          "c": "split -b 1G <file>",
+          "n": "Or split very large assets into parts."
+        }
+      ],
+      "intent": "create-release",
+      "seealso": []
+    },
+    {
+      "id": "issue-lock-conversation",
+      "msg": "You have locked conversation on this issue",
+      "why": "Locking blocks new comments, including your own until unlocked.",
+      "fix": [
+        {
+          "c": "Unlock conversation",
+          "n": "Reopens it to comments."
+        },
+        {
+          "c": "gh issue unlock <number>",
+          "n": "The same action from the terminal."
+        }
+      ],
+      "intent": "handle-a-rude-issue",
+      "seealso": [
+        "stale-issues"
+      ]
+    },
+    {
+      "id": "discussion-category-answerable",
+      "msg": "This category does not support marking answers",
+      "why": "Only Q&A categories have accepted answers.",
+      "fix": [
+        {
+          "c": "Discussions -> Categories -> Edit",
+          "n": "Change the category format to Q&A."
+        },
+        {
+          "c": "Move the discussion",
+          "n": "Or move it into an existing Q&A category."
+        }
+      ],
+      "intent": "discussion-categories",
+      "seealso": [
+        "discussions-vs-issues"
+      ]
+    },
+    {
+      "id": "wiki-clone-denied",
+      "msg": "fatal: repository '<url>.wiki.git' not found",
+      "why": "The wiki has never been created, so its repository does not exist yet.",
+      "fix": [
+        {
+          "c": "Create the first wiki page in the browser",
+          "n": "That initialises the wiki repository."
+        },
+        {
+          "c": "git clone https://github.com/<owner>/<repo>.wiki.git",
+          "n": "Then it clones like any other repository."
+        }
+      ],
+      "intent": "repo-wiki",
+      "seealso": []
+    },
+    {
+      "id": "profile-readme-not-showing",
+      "msg": "The README does not appear on my profile",
+      "why": "The special repository must be named exactly like your username and be public.",
+      "fix": [
+        {
+          "c": "gh repo view <username>/<username>",
+          "n": "Name, visibility, and a README.md at the root are all required."
+        },
+        {
+          "c": "git push origin main",
+          "n": "It must be on the default branch to render."
+        }
+      ],
+      "intent": "profile-readme",
+      "seealso": [
+        "readme-not-rendering"
+      ]
+    },
+    {
+      "id": "contribution-graph-private",
+      "msg": "My contributions are not visible on my profile",
+      "why": "Private contributions are hidden unless you opt in.",
+      "fix": [
+        {
+          "c": "Settings -> Profile -> Include private contributions",
+          "n": "Shows the count without revealing repository names."
+        },
+        {
+          "c": "git config user.email",
+          "n": "The commit email must also be verified on the account."
+        }
+      ],
+      "intent": "contributions-graph",
+      "seealso": [
+        "name-vs-username"
+      ]
+    },
+    {
+      "id": "achievement-not-awarded",
+      "msg": "The achievement did not appear after merging a pull request",
+      "why": "Achievements are computed on a delay and only count qualifying activity.",
+      "fix": [
+        {
+          "c": "Profile -> Achievements",
+          "n": "Wait; they can take a day to appear."
+        },
+        {
+          "c": "Merged pull requests to public repositories",
+          "n": "Private and self-owned activity often does not qualify."
+        }
+      ],
+      "intent": "achievements",
+      "seealso": [
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "org-invitation-expired",
+      "msg": "This invitation is no longer valid",
+      "why": "Organization invitations expire, typically after a week.",
+      "fix": [
+        {
+          "c": "Ask an owner to reinvite",
+          "n": "The link is single-use and time-limited."
+        },
+        {
+          "c": "gh api orgs/<org>/invitations",
+          "n": "Owners can list pending invitations and resend."
+        }
+      ],
+      "intent": "add-collaborator",
+      "seealso": [
+        "org-teams"
+      ]
+    },
+    {
+      "id": "team-sync-conflict",
+      "msg": "Cannot add member: user is managed by an external identity provider",
+      "why": "Team membership is controlled upstream by the identity provider.",
+      "fix": [
+        {
+          "c": "Ask the identity administrator",
+          "n": "Membership changes happen there, not on GitHub."
+        },
+        {
+          "c": "gh api orgs/<org>/teams/<team>/members",
+          "n": "Confirms current membership."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "org-teams"
+      ]
+    },
+    {
+      "id": "enterprise-ip-allowlist",
+      "msg": "Access denied: your IP address is not permitted",
+      "why": "An enterprise IP allowlist blocks the address you are connecting from.",
+      "fix": [
+        {
+          "c": "Connect through the approved network or VPN",
+          "n": "The allowlist applies to API and Git traffic alike."
+        },
+        {
+          "c": "Ask an owner to add the runner's address",
+          "n": "Self-hosted runners and CI often need explicit entries."
+        }
+      ],
+      "intent": "org-base-permissions",
+      "seealso": [
+        "saml-sso-tokens"
+      ]
+    },
+    {
+      "id": "sbom-empty",
+      "msg": "The dependency graph is empty for this repository",
+      "why": "No supported manifest was detected, so there is nothing to inventory.",
+      "fix": [
+        {
+          "c": "Commit a lockfile",
+          "n": "The graph reads manifests and lockfiles it recognises."
+        },
+        {
+          "c": "Settings -> Dependency graph",
+          "n": "Confirm the feature is enabled for the repository."
+        }
+      ],
+      "intent": "sbom-export",
+      "seealso": [
+        "dependabot"
+      ]
+    },
+    {
+      "id": "attestation-verify-failed",
+      "msg": "verification failed: no matching attestations found",
+      "why": "The artifact has no attestation from that repository, or it was built elsewhere.",
+      "fix": [
+        {
+          "c": "gh attestation verify <file> --repo <owner>/<repo>",
+          "n": "Confirm you are naming the repository that built it."
+        },
+        {
+          "c": "attestations: write",
+          "n": "The building workflow must have permission to create one."
+        }
+      ],
+      "intent": "verify-download-integrity",
+      "seealso": [
+        "oidc-deploys"
+      ]
+    },
+    {
+      "id": "mirror-sync-diverged",
+      "msg": "Updates were rejected because a pushed branch tip is behind its remote  (mirror)",
+      "why": "The mirror target has commits the source lacks, so mirroring would lose them.",
+      "fix": [
+        {
+          "c": "git push --mirror --force <url>",
+          "n": "Only when the target is genuinely disposable."
+        },
+        {
+          "c": "git fetch <target> && git log --oneline HEAD..<target>/main",
+          "n": "Inspect what would be destroyed first."
+        }
+      ],
+      "intent": "repo-mirroring-schedule",
+      "seealso": []
+    },
+    {
+      "id": "archive-repo-push",
+      "msg": "This repository has been archived and is read-only  (push rejected)",
+      "why": "Archived repositories accept no pushes until unarchived.",
+      "fix": [
+        {
+          "c": "Settings -> General -> Unarchive",
+          "n": "Reopen it if the work must continue here."
+        },
+        {
+          "c": "gh repo fork <owner>/<repo>",
+          "n": "Or continue in a fork."
+        }
+      ],
+      "intent": "archive-repo",
+      "seealso": []
+    },
+    {
+      "id": "template-repo-history",
+      "msg": "The new repository has no commit history from the template",
+      "why": "Templates deliberately start with a single fresh commit.",
+      "fix": [
+        {
+          "c": "gh repo create <name> --template <owner>/<repo>",
+          "n": "This is expected behaviour, not a fault."
+        },
+        {
+          "c": "gh repo fork <owner>/<repo>",
+          "n": "Fork instead when the history matters."
+        }
+      ],
+      "intent": "template-repo",
+      "seealso": [
+        "repo-templates-vs-forks"
+      ]
+    },
+    {
+      "id": "codespace-port-not-public",
+      "msg": "The forwarded port is private and cannot be shared",
+      "why": "Forwarded ports default to private visibility.",
+      "fix": [
+        {
+          "c": "gh codespace ports visibility 3000:public",
+          "n": "Make the port public deliberately."
+        },
+        {
+          "c": "Ports panel -> Port Visibility",
+          "n": "The same control in the editor."
+        }
+      ],
+      "intent": "codespaces",
+      "seealso": []
+    },
+    {
+      "id": "devcontainer-post-create-failed",
+      "msg": "postCreateCommand failed with exit code 1",
+      "why": "The setup command failed, so the environment started incomplete.",
+      "fix": [
+        {
+          "c": "gh codespace logs",
+          "n": "The log shows exactly which command failed."
+        },
+        {
+          "c": "Run the command manually in the terminal",
+          "n": "Fix it, then rebuild the container."
+        }
+      ],
+      "intent": "devcontainer",
+      "seealso": []
+    },
+    {
+      "id": "remote-branch-deleted-upstream",
+      "msg": "your branch is based on 'origin/<name>', but the upstream is gone.",
+      "why": "The remote branch was deleted, usually after its pull request merged.",
+      "fix": [
+        {
+          "c": "git branch --unset-upstream",
+          "n": "Stops the message if you are keeping the local branch."
+        },
+        {
+          "c": "git branch -d <name>",
+          "n": "Or delete the local branch; the work is already merged."
+        }
+      ],
+      "intent": "delete-gone-branches",
+      "seealso": [
+        "why-did-my-branch-disappear"
+      ]
+    },
+    {
+      "id": "push-during-rebase",
+      "msg": "fatal: You are in the middle of a rebase -- cannot push",
+      "why": "Git refuses to publish a branch that is mid-rewrite.",
+      "fix": [
+        {
+          "c": "git rebase --continue",
+          "n": "Finish the rebase first."
+        },
+        {
+          "c": "git rebase --abort",
+          "n": "Or back out, then push the original branch."
+        }
+      ],
+      "intent": "resume-interrupted-rebase",
+      "seealso": [
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "commit-during-bisect",
+      "msg": "You are currently bisecting.  (committing mid-session)",
+      "why": "Committing during a bisect confuses the search and leaves stray commits.",
+      "fix": [
+        {
+          "c": "git bisect reset",
+          "n": "End the session first, then commit normally."
+        },
+        {
+          "c": "git bisect log > bisect.log",
+          "n": "Save the session if you want to resume it later."
+        }
+      ],
+      "intent": "bisect",
+      "seealso": []
+    },
+    {
+      "id": "stash-during-merge",
+      "msg": "fatal: cannot stash during a merge  (unmerged paths present)",
+      "why": "Stashing cannot represent a half-resolved merge.",
+      "fix": [
+        {
+          "c": "git merge --abort",
+          "n": "Back out, stash freely, then merge again."
+        },
+        {
+          "c": "git add <file> && git commit",
+          "n": "Or finish the merge before stashing anything."
+        }
+      ],
+      "intent": "merge-conflict",
+      "seealso": [
+        "abort-operation"
+      ]
     }
   ]
 }

@@ -2665,6 +2665,200 @@
   <p class="note">A stale GIT_DIR or GIT_WORK_TREE variable is pointing Git somewhere else.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#minimal-git-for-scripts">Use Git safely inside a script</a></p>
 </article>
+<article class="result errcard" id="git-version-too-old">
+  <h2><code class="errmsg">error: unknown option `--recurse-submodules&#x27;</code><a class="anchor" href="#git-version-too-old" aria-label="Link to this error">#</a></h2>
+  <p class="note">The installed Git predates the flag you used.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="smart-http-not-enabled">
+  <h2><code class="errmsg">fatal: repository &#x27;&lt;url&gt;/info/refs&#x27; not found</code><a class="anchor" href="#smart-http-not-enabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server is not exposing the Git HTTP endpoints at that path.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#change-remote-url">Change the remote URL</a></p>
+</article>
+<article class="result errcard" id="push-options-unsupported">
+  <h2><code class="errmsg">fatal: the receiving end does not support push options</code><a class="anchor" href="#push-options-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server does not accept the -o push options you sent.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#use-other-hosts">Use Git with GitLab, Bitbucket, or AWS CodeCommit</a></p>
+</article>
+<article class="result errcard" id="gh-auth-token-env-conflict">
+  <h2><code class="errmsg">The value of the GH_TOKEN environment variable is being used for authentication.</code><a class="anchor" href="#gh-auth-token-env-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">A token in the environment overrides the account you logged in as.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-auth-switch">Switch GitHub CLI between two accounts</a></p>
+</article>
+<article class="result errcard" id="composite-action-shell">
+  <h2><code class="errmsg">Error: Required property is missing: shell</code><a class="anchor" href="#composite-action-shell" aria-label="Link to this error">#</a></h2>
+  <p class="note">Every run step in a composite action must declare its shell.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-github-action">Write my own GitHub Action</a></p>
+</article>
+<article class="result errcard" id="docker-action-entrypoint">
+  <h2><code class="errmsg">Error: Cannot find entrypoint &lt;path&gt; in the container</code><a class="anchor" href="#docker-action-entrypoint" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Docker action&#x27;s entrypoint is missing or not executable.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-github-action">Write my own GitHub Action</a></p>
+</article>
+<article class="result errcard" id="workflow-yaml-tabs">
+  <h2><code class="errmsg">Invalid workflow file: while scanning for the next token found character &#x27;\t&#x27; that cannot start any token</code><a class="anchor" href="#workflow-yaml-tabs" aria-label="Link to this error">#</a></h2>
+  <p class="note">YAML forbids tabs for indentation.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#read-a-workflow-file">Read someone else&#x27;s workflow file</a></p>
+</article>
+<article class="result errcard" id="job-output-empty">
+  <h2><code class="errmsg">The job output is empty in the dependent job</code><a class="anchor" href="#job-output-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">Outputs must be declared on the job, not only written by the step.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-env">Pass values between workflow steps</a></p>
+</article>
+<article class="result errcard" id="matrix-empty-include">
+  <h2><code class="errmsg">Error: Matrix must define at least one vector</code><a class="anchor" href="#matrix-empty-include" aria-label="Link to this error">#</a></h2>
+  <p class="note">The matrix resolved to nothing, usually from an expression returning an empty list.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-matrix">Test across several versions and systems at once</a></p>
+</article>
+<article class="result errcard" id="reusable-secrets-not-inherited">
+  <h2><code class="errmsg">Error: Secret &lt;name&gt; is not available in the called workflow</code><a class="anchor" href="#reusable-secrets-not-inherited" aria-label="Link to this error">#</a></h2>
+  <p class="note">Reusable workflows receive no secrets unless they are passed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#reusable-workflows">Share one workflow across many repositories</a></p>
+</article>
+<article class="result errcard" id="dependabot-token-missing">
+  <h2><code class="errmsg">Dependabot could not create a pull request: resource not accessible</code><a class="anchor" href="#dependabot-token-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">Dependabot runs with its own restricted permissions, separate from Actions.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dependabot">Get automatic dependency updates and security alerts</a></p>
+</article>
+<article class="result errcard" id="codeql-out-of-memory">
+  <h2><code class="errmsg">CodeQL analysis failed: out of memory</code><a class="anchor" href="#codeql-out-of-memory" aria-label="Link to this error">#</a></h2>
+  <p class="note">The analysis exceeded the runner&#x27;s memory on a large codebase.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#code-scanning">Scan the repository for vulnerabilities automatically</a></p>
+</article>
+<article class="result errcard" id="secret-scanning-push-blocked">
+  <h2><code class="errmsg">remote: error: Push cannot contain secrets  remote: GITHUB PUSH PROTECTION</code><a class="anchor" href="#secret-scanning-push-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">Push protection detected a credential in the commits and refused the push.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitignore-for-secrets">Make sure a secret file can never be committed</a></p>
+</article>
+<article class="result errcard" id="gitleaks-pre-commit-block">
+  <h2><code class="errmsg">gitleaks: leaks found: 1</code><a class="anchor" href="#gitleaks-pre-commit-block" aria-label="Link to this error">#</a></h2>
+  <p class="note">The local scanner matched something credential-shaped in the staged content.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#secret-scan-local">Catch secrets before they ever reach a commit</a></p>
+</article>
+<article class="result errcard" id="pages-jekyll-liquid">
+  <h2><code class="errmsg">Liquid Exception: Liquid syntax error in &lt;file&gt;</code><a class="anchor" href="#pages-jekyll-liquid" aria-label="Link to this error">#</a></h2>
+  <p class="note">Jekyll tried to parse template syntax in a file that is not a template.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#nojekyll">Pages site missing files that start with an underscore</a></p>
+</article>
+<article class="result errcard" id="pages-relative-links-broken">
+  <h2><code class="errmsg">404 on every asset when the site is served under a subpath</code><a class="anchor" href="#pages-relative-links-broken" aria-label="Link to this error">#</a></h2>
+  <p class="note">Absolute paths break when a project site lives at /&lt;repo&gt;/ rather than the domain root.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-pages">Publish a website from a repository</a></p>
+</article>
+<article class="result errcard" id="release-notes-empty">
+  <h2><code class="errmsg">No release notes were generated</code><a class="anchor" href="#release-notes-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">Automatic notes come from merged pull requests, and none were found in the range.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#generate-changelog">Write a changelog from the history</a></p>
+</article>
+<article class="result errcard" id="asset-upload-timeout">
+  <h2><code class="errmsg">failed to upload release asset: context deadline exceeded</code><a class="anchor" href="#asset-upload-timeout" aria-label="Link to this error">#</a></h2>
+  <p class="note">The upload exceeded the time limit, usually a large file on a slow link.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-release">Publish a release with notes and downloads</a></p>
+</article>
+<article class="result errcard" id="issue-lock-conversation">
+  <h2><code class="errmsg">You have locked conversation on this issue</code><a class="anchor" href="#issue-lock-conversation" aria-label="Link to this error">#</a></h2>
+  <p class="note">Locking blocks new comments, including your own until unlocked.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#handle-a-rude-issue">Handle a hostile issue or comment</a></p>
+</article>
+<article class="result errcard" id="discussion-category-answerable">
+  <h2><code class="errmsg">This category does not support marking answers</code><a class="anchor" href="#discussion-category-answerable" aria-label="Link to this error">#</a></h2>
+  <p class="note">Only Q&amp;A categories have accepted answers.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#discussion-categories">Run Discussions so answers stay findable</a></p>
+</article>
+<article class="result errcard" id="wiki-clone-denied">
+  <h2><code class="errmsg">fatal: repository &#x27;&lt;url&gt;.wiki.git&#x27; not found</code><a class="anchor" href="#wiki-clone-denied" aria-label="Link to this error">#</a></h2>
+  <p class="note">The wiki has never been created, so its repository does not exist yet.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-wiki">Add a wiki to a repository</a></p>
+</article>
+<article class="result errcard" id="profile-readme-not-showing">
+  <h2><code class="errmsg">The README does not appear on my profile</code><a class="anchor" href="#profile-readme-not-showing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The special repository must be named exactly like your username and be public.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#profile-readme">Create a GitHub profile README</a></p>
+</article>
+<article class="result errcard" id="contribution-graph-private">
+  <h2><code class="errmsg">My contributions are not visible on my profile</code><a class="anchor" href="#contribution-graph-private" aria-label="Link to this error">#</a></h2>
+  <p class="note">Private contributions are hidden unless you opt in.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#contributions-graph">My commits are missing from the contributions graph</a></p>
+</article>
+<article class="result errcard" id="achievement-not-awarded">
+  <h2><code class="errmsg">The achievement did not appear after merging a pull request</code><a class="anchor" href="#achievement-not-awarded" aria-label="Link to this error">#</a></h2>
+  <p class="note">Achievements are computed on a delay and only count qualifying activity.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#achievements">What GitHub achievements are</a></p>
+</article>
+<article class="result errcard" id="org-invitation-expired">
+  <h2><code class="errmsg">This invitation is no longer valid</code><a class="anchor" href="#org-invitation-expired" aria-label="Link to this error">#</a></h2>
+  <p class="note">Organization invitations expire, typically after a week.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#add-collaborator">Give someone access to my repository</a></p>
+</article>
+<article class="result errcard" id="team-sync-conflict">
+  <h2><code class="errmsg">Cannot add member: user is managed by an external identity provider</code><a class="anchor" href="#team-sync-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">Team membership is controlled upstream by the identity provider.</p>
+  <div class="cmd"><code>Ask the identity administrator</code><button class="copy" data-cmd="Ask the identity administrator" aria-label="Copy command">Copy</button></div>
+  <p class="note">Membership changes happen there, not on GitHub.</p>
+  <div class="cmd"><code>gh api orgs/&lt;org&gt;/teams/&lt;team&gt;/members</code><button class="copy" data-cmd="gh api orgs/&lt;org&gt;/teams/&lt;team&gt;/members" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirms current membership.</p>
+  <p class="seealso">See also: <a href="index.html#org-teams">Structure an organization with teams</a></p>
+</article>
+<article class="result errcard" id="enterprise-ip-allowlist">
+  <h2><code class="errmsg">Access denied: your IP address is not permitted</code><a class="anchor" href="#enterprise-ip-allowlist" aria-label="Link to this error">#</a></h2>
+  <p class="note">An enterprise IP allowlist blocks the address you are connecting from.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#org-base-permissions">Set what everyone in the organization can see</a></p>
+</article>
+<article class="result errcard" id="sbom-empty">
+  <h2><code class="errmsg">The dependency graph is empty for this repository</code><a class="anchor" href="#sbom-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">No supported manifest was detected, so there is nothing to inventory.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sbom-export">Export a software bill of materials</a></p>
+</article>
+<article class="result errcard" id="attestation-verify-failed">
+  <h2><code class="errmsg">verification failed: no matching attestations found</code><a class="anchor" href="#attestation-verify-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The artifact has no attestation from that repository, or it was built elsewhere.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#verify-download-integrity">Check a downloaded release is genuine</a></p>
+</article>
+<article class="result errcard" id="mirror-sync-diverged">
+  <h2><code class="errmsg">Updates were rejected because a pushed branch tip is behind its remote  (mirror)</code><a class="anchor" href="#mirror-sync-diverged" aria-label="Link to this error">#</a></h2>
+  <p class="note">The mirror target has commits the source lacks, so mirroring would lose them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-mirroring-schedule">Keep a mirror repository automatically in sync</a></p>
+</article>
+<article class="result errcard" id="archive-repo-push">
+  <h2><code class="errmsg">This repository has been archived and is read-only  (push rejected)</code><a class="anchor" href="#archive-repo-push" aria-label="Link to this error">#</a></h2>
+  <p class="note">Archived repositories accept no pushes until unarchived.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#archive-repo">Archive a repository instead of deleting it</a></p>
+</article>
+<article class="result errcard" id="template-repo-history">
+  <h2><code class="errmsg">The new repository has no commit history from the template</code><a class="anchor" href="#template-repo-history" aria-label="Link to this error">#</a></h2>
+  <p class="note">Templates deliberately start with a single fresh commit.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#template-repo">Let people start new projects from my repository</a></p>
+</article>
+<article class="result errcard" id="codespace-port-not-public">
+  <h2><code class="errmsg">The forwarded port is private and cannot be shared</code><a class="anchor" href="#codespace-port-not-public" aria-label="Link to this error">#</a></h2>
+  <p class="note">Forwarded ports default to private visibility.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#codespaces">Open a repository in a cloud dev environment</a></p>
+</article>
+<article class="result errcard" id="devcontainer-post-create-failed">
+  <h2><code class="errmsg">postCreateCommand failed with exit code 1</code><a class="anchor" href="#devcontainer-post-create-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The setup command failed, so the environment started incomplete.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#devcontainer">Define the dev environment inside the repository</a></p>
+</article>
+<article class="result errcard" id="remote-branch-deleted-upstream">
+  <h2><code class="errmsg">your branch is based on &#x27;origin/&lt;name&gt;&#x27;, but the upstream is gone.</code><a class="anchor" href="#remote-branch-deleted-upstream" aria-label="Link to this error">#</a></h2>
+  <p class="note">The remote branch was deleted, usually after its pull request merged.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#delete-gone-branches">Delete local branches whose remote is gone</a></p>
+</article>
+<article class="result errcard" id="push-during-rebase">
+  <h2><code class="errmsg">fatal: You are in the middle of a rebase -- cannot push</code><a class="anchor" href="#push-during-rebase" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git refuses to publish a branch that is mid-rewrite.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#resume-interrupted-rebase">I closed the terminal during a rebase</a></p>
+</article>
+<article class="result errcard" id="commit-during-bisect">
+  <h2><code class="errmsg">You are currently bisecting.  (committing mid-session)</code><a class="anchor" href="#commit-during-bisect" aria-label="Link to this error">#</a></h2>
+  <p class="note">Committing during a bisect confuses the search and leaves stray commits.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#bisect">Find the commit that introduced a bug (bisect)</a></p>
+</article>
+<article class="result errcard" id="stash-during-merge">
+  <h2><code class="errmsg">fatal: cannot stash during a merge  (unmerged paths present)</code><a class="anchor" href="#stash-during-merge" aria-label="Link to this error">#</a></h2>
+  <p class="note">Stashing cannot represent a half-resolved merge.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
