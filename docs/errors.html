@@ -1873,6 +1873,180 @@
   <p class="note">The message contains bytes that are not valid UTF-8, usually from a terminal in another codepage.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-messages">Write commit messages people thank you for</a></p>
 </article>
+<article class="result errcard" id="rebase-would-lose-changes">
+  <h2><code class="errmsg">error: cannot rebase: Your index contains uncommitted changes.</code><a class="anchor" href="#rebase-would-lose-changes" aria-label="Link to this error">#</a></h2>
+  <p class="note">Rebase rewrites commits and refuses to run with staged work in the way.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#interactive-rebase">Rewrite my last few commits (interactive rebase)</a></p>
+</article>
+<article class="result errcard" id="apply-whitespace-errors">
+  <h2><code class="errmsg">warning: 3 lines add whitespace errors.</code><a class="anchor" href="#apply-whitespace-errors" aria-label="Link to this error">#</a></h2>
+  <p class="note">The patch introduces trailing whitespace or space-before-tab.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#detect-whitespace-damage">Catch trailing whitespace before it lands</a></p>
+</article>
+<article class="result errcard" id="promisor-remote-missing">
+  <h2><code class="errmsg">error: promisor remote not found</code><a class="anchor" href="#promisor-remote-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">A partial clone lost the remote it fetches missing objects from.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#partial-clone">Clone a huge repository faster</a></p>
+</article>
+<article class="result errcard" id="protocol-v2-unsupported">
+  <h2><code class="errmsg">fatal: unknown value for config &#x27;protocol.version&#x27;: 2</code><a class="anchor" href="#protocol-v2-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server or an intermediary does not speak protocol v2.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="worktree-add-detached">
+  <h2><code class="errmsg">fatal: &lt;branch&gt; is already used by worktree at &lt;path&gt;</code><a class="anchor" href="#worktree-add-detached" aria-label="Link to this error">#</a></h2>
+  <p class="note">One branch cannot be checked out in two worktrees at once.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#same-branch-two-worktrees">Work on two branches at the same time</a></p>
+</article>
+<article class="result errcard" id="stash-apply-conflict-untracked">
+  <h2><code class="errmsg">error: Untracked working tree file &#x27;&lt;file&gt;&#x27; would be overwritten by merge.  (applying a stash)</code><a class="anchor" href="#stash-apply-conflict-untracked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The stash carries an untracked file you have since recreated.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stash">Set work aside temporarily (stash)</a></p>
+</article>
+<article class="result errcard" id="submodule-detached-commit">
+  <h2><code class="errmsg">HEAD detached at &lt;hash&gt;  (inside a submodule)</code><a class="anchor" href="#submodule-detached-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Submodules are pinned to a commit, so they always check out detached.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-update">Update submodules to their latest commits</a></p>
+</article>
+<article class="result errcard" id="lfs-smudge-skipped">
+  <h2><code class="errmsg">Skipping object checkout, Git LFS is not installed.</code><a class="anchor" href="#lfs-smudge-skipped" aria-label="Link to this error">#</a></h2>
+  <p class="note">Pointer files were checked out literally because the filters are missing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="gh-pr-not-found">
+  <h2><code class="errmsg">no pull requests found for branch &quot;&lt;branch&gt;&quot;</code><a class="anchor" href="#gh-pr-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">gh looked for a pull request from the current branch and found none.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-pr-cli">Create a pull request from the terminal</a></p>
+</article>
+<article class="result errcard" id="gh-repo-not-found">
+  <h2><code class="errmsg">GraphQL: Could not resolve to a Repository with the name &#x27;&lt;owner&gt;/&lt;repo&gt;&#x27;</code><a class="anchor" href="#gh-repo-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository does not exist, was renamed, or is invisible to this account.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cannot-see-private-repo">A colleague cannot see the repository I shared</a></p>
+</article>
+<article class="result errcard" id="gh-alias-exists">
+  <h2><code class="errmsg">X could not create alias: &quot;&lt;name&gt;&quot; is already an alias</code><a class="anchor" href="#gh-alias-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">That alias name is taken.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-cli-setup">Install and sign in to GitHub CLI</a></p>
+</article>
+<article class="result errcard" id="git-alias-loop">
+  <h2><code class="errmsg">fatal: alias loop detected: expansion of &#x27;&lt;name&gt;&#x27; does not terminate</code><a class="anchor" href="#git-alias-loop" aria-label="Link to this error">#</a></h2>
+  <p class="note">An alias expands to itself, directly or through a chain.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-aliases">Create Git aliases for commands you type daily</a></p>
+</article>
+<article class="result errcard" id="git-alias-shell-needed">
+  <h2><code class="errmsg">fatal: cannot handle &lt;text&gt; as a builtin</code><a class="anchor" href="#git-alias-shell-needed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The alias runs shell syntax without being marked as a shell alias.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-aliases">Create Git aliases for commands you type daily</a></p>
+</article>
+<article class="result errcard" id="editor-exited-nonzero">
+  <h2><code class="errmsg">error: There was a problem with the editor &#x27;&lt;editor&gt;&#x27;.</code><a class="anchor" href="#editor-exited-nonzero" aria-label="Link to this error">#</a></h2>
+  <p class="note">The editor exited with a failure status, so Git discarded the message.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#set-editor">Change the editor Git opens</a></p>
+</article>
+<article class="result errcard" id="terminal-not-fully-functional">
+  <h2><code class="errmsg">WARNING: terminal is not fully functional</code><a class="anchor" href="#terminal-not-fully-functional" aria-label="Link to this error">#</a></h2>
+  <p class="note">The TERM value is unknown, so the pager cannot draw properly.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#exit-pager">Trapped in git log (the pager)</a></p>
+</article>
+<article class="result errcard" id="diff-so-fancy-missing">
+  <h2><code class="errmsg">error: cannot run &lt;pager&gt;: No such file or directory  (custom diff pager)</code><a class="anchor" href="#diff-so-fancy-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">A diff pager such as delta is configured but not installed here.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#better-diffs">Make diffs dramatically easier to read</a></p>
+</article>
+<article class="result errcard" id="mergetool-not-configured">
+  <h2><code class="errmsg">This message is displayed because &#x27;merge.tool&#x27; is not configured.</code><a class="anchor" href="#mergetool-not-configured" aria-label="Link to this error">#</a></h2>
+  <p class="note">No merge tool is set, so Git cannot launch one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#mergetool-vscode">Use VS Code for diffs and merge conflicts</a></p>
+</article>
+<article class="result errcard" id="difftool-prompt-loop">
+  <h2><code class="errmsg">Launch &#x27;&lt;tool&gt;&#x27; [Y/n]?</code><a class="anchor" href="#difftool-prompt-loop" aria-label="Link to this error">#</a></h2>
+  <p class="note">difftool asks before each file, which is tedious across a large diff.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#difftool-vscode">View diffs in VS Code instead of the terminal</a></p>
+</article>
+<article class="result errcard" id="blame-file-not-in-head">
+  <h2><code class="errmsg">fatal: no such path &#x27;&lt;path&gt;&#x27; in HEAD</code><a class="anchor" href="#blame-file-not-in-head" aria-label="Link to this error">#</a></h2>
+  <p class="note">The path does not exist in the commit you are blaming, usually after a rename or delete.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#restore-deleted-file">Restore a file that was deleted in some past commit</a></p>
+</article>
+<article class="result errcard" id="log-follow-single-path">
+  <h2><code class="errmsg">fatal: --follow requires exactly one pathspec</code><a class="anchor" href="#log-follow-single-path" aria-label="Link to this error">#</a></h2>
+  <p class="note">Rename following works for one path at a time.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#file-history">See the history of one file</a></p>
+</article>
+<article class="result errcard" id="bisect-run-nonzero">
+  <h2><code class="errmsg">bisect run failed: exit code 128 from &#x27;&lt;command&gt;&#x27; is &lt; 0 or &gt;= 128</code><a class="anchor" href="#bisect-run-nonzero" aria-label="Link to this error">#</a></h2>
+  <p class="note">The test script returned a status bisect reserves for its own signalling.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#bisect">Find the commit that introduced a bug (bisect)</a></p>
+</article>
+<article class="result errcard" id="grep-no-matches-exit">
+  <h2><code class="errmsg">git grep found no matches (exit status 1)</code><a class="anchor" href="#grep-no-matches-exit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error: grep signals absence with a non-zero status, which stops strict scripts.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#log-search">Search the history by message, author, or date</a></p>
+</article>
+<article class="result errcard" id="archive-prefix-slash">
+  <h2><code class="errmsg">fatal: prefix must end with /</code><a class="anchor" href="#archive-prefix-slash" aria-label="Link to this error">#</a></h2>
+  <p class="note">git archive requires the prefix to be a directory path.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#archive-export">Export the project as a zip without the .git folder</a></p>
+</article>
+<article class="result errcard" id="http-redirect-blocked">
+  <h2><code class="errmsg">fatal: unable to update url base from redirection</code><a class="anchor" href="#http-redirect-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server redirected to a different repository path than the one requested.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-transfer-broke-remotes">Fix remotes after a repository was renamed or moved</a></p>
+</article>
+<article class="result errcard" id="clone-recurse-failed">
+  <h2><code class="errmsg">fatal: clone of &#x27;&lt;url&gt;&#x27; into submodule path &#x27;&lt;path&gt;&#x27; failed</code><a class="anchor" href="#clone-recurse-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">A submodule clone failed, usually authentication or a moved URL.</p>
+  <div class="cmd"><code>git submodule sync --recursive</code><button class="copy" data-cmd="git submodule sync --recursive" aria-label="Copy command">Copy</button></div>
+  <p class="note">Refreshes URLs from .gitmodules into the live config.</p>
+  <div class="cmd"><code>git submodule update --init --recursive</code><button class="copy" data-cmd="git submodule update --init --recursive" aria-label="Copy command">Copy</button></div>
+  <p class="note">Retry after fixing access to that submodule.</p>
+  <p class="seealso">See also: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
+<article class="result errcard" id="push-atomic-failed">
+  <h2><code class="errmsg">error: atomic push failed, no refs updated</code><a class="anchor" href="#push-atomic-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">One ref in an atomic push was rejected, so all of them were refused together.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#push-all">Push all branches at once</a></p>
+</article>
+<article class="result errcard" id="gc-too-many-loose">
+  <h2><code class="errmsg">warning: There are too many unreachable loose objects; run &#x27;git prune&#x27; to remove them.</code><a class="anchor" href="#gc-too-many-loose" aria-label="Link to this error">#</a></h2>
+  <p class="note">Rewrites and resets left many orphaned objects behind.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dangling-objects">What dangling commits and blobs are</a></p>
+</article>
+<article class="result errcard" id="filemode-only-diff">
+  <h2><code class="errmsg">old mode 100644  new mode 100755</code><a class="anchor" href="#filemode-only-diff" aria-label="Link to this error">#</a></h2>
+  <p class="note">Only the executable bit changed, which is real to Git but usually accidental.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#filemode">Stop Git seeing every file as changed (mode changes)</a></p>
+</article>
+<article class="result errcard" id="gitignore-negation-parent">
+  <h2><code class="errmsg">The following paths are ignored  (a negation cannot re-include inside an excluded directory)</code><a class="anchor" href="#gitignore-negation-parent" aria-label="Link to this error">#</a></h2>
+  <p class="note">Once a directory is excluded, Git never descends into it, so a negation inside cannot match.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitignore-except">Ignore everything except a few files</a></p>
+</article>
+<article class="result errcard" id="global-excludes-not-applied">
+  <h2><code class="errmsg">warning: core.excludesFile points to a file that does not exist</code><a class="anchor" href="#global-excludes-not-applied" aria-label="Link to this error">#</a></h2>
+  <p class="note">The global ignore file is configured but missing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#global-gitignore">Ignore files in every repository (global gitignore)</a></p>
+</article>
+<article class="result errcard" id="attributes-unknown-filter">
+  <h2><code class="errmsg">error: external filter &#x27;&lt;name&gt;&#x27; is not available</code><a class="anchor" href="#attributes-unknown-filter" aria-label="Link to this error">#</a></h2>
+  <p class="note">A .gitattributes filter names a program this machine does not have.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitattributes">What .gitattributes controls</a></p>
+</article>
+<article class="result errcard" id="clock-skew-future-commit">
+  <h2><code class="errmsg">warning: commit &lt;hash&gt; has a future date</code><a class="anchor" href="#clock-skew-future-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">A commit timestamp is ahead of the current clock, so ordering looks wrong.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-dates">Author date and commit date are different things</a></p>
+</article>
+<article class="result errcard" id="antivirus-locking-file">
+  <h2><code class="errmsg">error: unable to write file &lt;path&gt;: Permission denied  (Windows, file in use)</code><a class="anchor" href="#antivirus-locking-file" aria-label="Link to this error">#</a></h2>
+  <p class="note">Another process holds the file open, commonly an antivirus scanner or an editor.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#why-status-is-slow">git status takes seconds to run</a></p>
+</article>
+<article class="result errcard" id="onedrive-sync-conflict">
+  <h2><code class="errmsg">error: unable to unlink old &#x27;&lt;file&gt;&#x27;: Invalid argument  (inside a synced folder)</code><a class="anchor" href="#onedrive-sync-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">A cloud sync client is holding or rewriting files while Git works on them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-in-synced-folder">Use Git inside Dropbox, OneDrive, or Drive</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

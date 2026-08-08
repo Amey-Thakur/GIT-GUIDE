@@ -5730,6 +5730,632 @@
       "seealso": [
         "unicode-filenames"
       ]
+    },
+    {
+      "id": "rebase-would-lose-changes",
+      "msg": "error: cannot rebase: Your index contains uncommitted changes.",
+      "why": "Rebase rewrites commits and refuses to run with staged work in the way.",
+      "fix": [
+        {
+          "c": "git stash push -u",
+          "n": "Shelve everything, rebase, then pop."
+        },
+        {
+          "c": "git commit -m \"wip\"",
+          "n": "Or commit it; you can fold the commit in during the rebase."
+        }
+      ],
+      "intent": "interactive-rebase",
+      "seealso": [
+        "restore-after-bad-rebase"
+      ]
+    },
+    {
+      "id": "apply-whitespace-errors",
+      "msg": "warning: 3 lines add whitespace errors.",
+      "why": "The patch introduces trailing whitespace or space-before-tab.",
+      "fix": [
+        {
+          "c": "git apply --whitespace=fix <patch>",
+          "n": "Cleans the damage while applying."
+        },
+        {
+          "c": "git diff --check",
+          "n": "Catches the same problem in your own work before committing."
+        }
+      ],
+      "intent": "detect-whitespace-damage",
+      "seealso": [
+        "apply-patch"
+      ]
+    },
+    {
+      "id": "promisor-remote-missing",
+      "msg": "error: promisor remote not found",
+      "why": "A partial clone lost the remote it fetches missing objects from.",
+      "fix": [
+        {
+          "c": "git config remote.origin.promisor true",
+          "n": "Restores the marker on the remote."
+        },
+        {
+          "c": "git clone --filter=blob:none <url>",
+          "n": "Or reclone; partial clones depend on that remote staying configured."
+        }
+      ],
+      "intent": "partial-clone",
+      "seealso": [
+        "scalar"
+      ]
+    },
+    {
+      "id": "protocol-v2-unsupported",
+      "msg": "fatal: unknown value for config 'protocol.version': 2",
+      "why": "The server or an intermediary does not speak protocol v2.",
+      "fix": [
+        {
+          "c": "git -c protocol.version=1 fetch",
+          "n": "Falls back for one command."
+        },
+        {
+          "c": "git config --global protocol.version 1",
+          "n": "Set it permanently only if the server genuinely cannot upgrade."
+        }
+      ],
+      "intent": "proxy-setup",
+      "seealso": [
+        "update-git"
+      ]
+    },
+    {
+      "id": "worktree-add-detached",
+      "msg": "fatal: <branch> is already used by worktree at <path>",
+      "why": "One branch cannot be checked out in two worktrees at once.",
+      "fix": [
+        {
+          "c": "git worktree list",
+          "n": "Names the worktree holding it."
+        },
+        {
+          "c": "git worktree add ../review --detach <branch>",
+          "n": "Detached checkouts of the same commit are allowed."
+        }
+      ],
+      "intent": "same-branch-two-worktrees",
+      "seealso": [
+        "worktrees"
+      ]
+    },
+    {
+      "id": "stash-apply-conflict-untracked",
+      "msg": "error: Untracked working tree file '<file>' would be overwritten by merge.  (applying a stash)",
+      "why": "The stash carries an untracked file you have since recreated.",
+      "fix": [
+        {
+          "c": "mv <file> <file>.local",
+          "n": "Move yours aside, apply the stash, then reconcile."
+        },
+        {
+          "c": "git stash show -p --include-untracked",
+          "n": "Shows what the stash will write before you apply it."
+        }
+      ],
+      "intent": "stash",
+      "seealso": []
+    },
+    {
+      "id": "submodule-detached-commit",
+      "msg": "HEAD detached at <hash>  (inside a submodule)",
+      "why": "Submodules are pinned to a commit, so they always check out detached.",
+      "fix": [
+        {
+          "c": "git -C <path> switch -c fix/<topic>",
+          "n": "Branch inside the submodule before committing there."
+        },
+        {
+          "c": "git add <path>",
+          "n": "Then record the new pointer in the parent repository."
+        }
+      ],
+      "intent": "submodule-update",
+      "seealso": [
+        "understand-detached-head-danger"
+      ]
+    },
+    {
+      "id": "lfs-smudge-skipped",
+      "msg": "Skipping object checkout, Git LFS is not installed.",
+      "why": "Pointer files were checked out literally because the filters are missing.",
+      "fix": [
+        {
+          "c": "git lfs install && git lfs pull",
+          "n": "Install the filters, then fetch real content."
+        },
+        {
+          "c": "cat <file>",
+          "n": "A short text file starting with version https://git-lfs is a pointer, not your data."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": []
+    },
+    {
+      "id": "gh-pr-not-found",
+      "msg": "no pull requests found for branch \"<branch>\"",
+      "why": "gh looked for a pull request from the current branch and found none.",
+      "fix": [
+        {
+          "c": "gh pr create",
+          "n": "Open one, or pass a number to act on an existing pull request."
+        },
+        {
+          "c": "gh pr list --head <branch> --state all",
+          "n": "Finds it if the pull request exists but is closed."
+        }
+      ],
+      "intent": "create-pr-cli",
+      "seealso": [
+        "why-is-my-pr-empty"
+      ]
+    },
+    {
+      "id": "gh-repo-not-found",
+      "msg": "GraphQL: Could not resolve to a Repository with the name '<owner>/<repo>'",
+      "why": "The repository does not exist, was renamed, or is invisible to this account.",
+      "fix": [
+        {
+          "c": "gh auth status",
+          "n": "Confirms which account you are acting as."
+        },
+        {
+          "c": "gh repo view <owner>/<repo>",
+          "n": "A 404 for a private repository looks identical to one that never existed."
+        }
+      ],
+      "intent": "cannot-see-private-repo",
+      "seealso": [
+        "github-page-not-found"
+      ]
+    },
+    {
+      "id": "gh-alias-exists",
+      "msg": "X could not create alias: \"<name>\" is already an alias",
+      "why": "That alias name is taken.",
+      "fix": [
+        {
+          "c": "gh alias list",
+          "n": "Shows the current set."
+        },
+        {
+          "c": "gh alias delete <name>",
+          "n": "Remove it first, or choose another name."
+        }
+      ],
+      "intent": "gh-cli-setup",
+      "seealso": [
+        "git-aliases"
+      ]
+    },
+    {
+      "id": "git-alias-loop",
+      "msg": "fatal: alias loop detected: expansion of '<name>' does not terminate",
+      "why": "An alias expands to itself, directly or through a chain.",
+      "fix": [
+        {
+          "c": "git config --global --get-regexp alias",
+          "n": "Lists every alias so you can see the cycle."
+        },
+        {
+          "c": "git config --global --unset alias.<name>",
+          "n": "Remove or rewrite the offending one."
+        }
+      ],
+      "intent": "git-aliases",
+      "seealso": []
+    },
+    {
+      "id": "git-alias-shell-needed",
+      "msg": "fatal: cannot handle <text> as a builtin",
+      "why": "The alias runs shell syntax without being marked as a shell alias.",
+      "fix": [
+        {
+          "c": "git config --global alias.<name> '!sh -c \"<command>\"'",
+          "n": "The leading exclamation mark makes it a shell alias."
+        },
+        {
+          "c": "git config --global --get alias.<name>",
+          "n": "Check what is stored; quoting is usually the problem."
+        }
+      ],
+      "intent": "git-aliases",
+      "seealso": [
+        "minimal-git-for-scripts"
+      ]
+    },
+    {
+      "id": "editor-exited-nonzero",
+      "msg": "error: There was a problem with the editor '<editor>'.",
+      "why": "The editor exited with a failure status, so Git discarded the message.",
+      "fix": [
+        {
+          "c": "git config --global core.editor \"code --wait\"",
+          "n": " Without --wait the editor returns immediately and looks like a failure."
+        },
+        {
+          "c": "git commit -m \"<message>\"",
+          "n": "Bypass the editor while you sort the configuration out."
+        }
+      ],
+      "intent": "set-editor",
+      "seealso": []
+    },
+    {
+      "id": "terminal-not-fully-functional",
+      "msg": "WARNING: terminal is not fully functional",
+      "why": "The TERM value is unknown, so the pager cannot draw properly.",
+      "fix": [
+        {
+          "c": "export TERM=xterm-256color",
+          "n": "Set a value the environment understands."
+        },
+        {
+          "c": "git --no-pager <command>",
+          "n": "Or skip the pager entirely in that environment."
+        }
+      ],
+      "intent": "exit-pager",
+      "seealso": [
+        "minimal-git-for-scripts"
+      ]
+    },
+    {
+      "id": "diff-so-fancy-missing",
+      "msg": "error: cannot run <pager>: No such file or directory  (custom diff pager)",
+      "why": "A diff pager such as delta is configured but not installed here.",
+      "fix": [
+        {
+          "c": "git config --global --unset core.pager",
+          "n": "Falls back to the built-in pager."
+        },
+        {
+          "c": "winget install dandavison.delta",
+          "n": "Or install the tool the configuration expects."
+        }
+      ],
+      "intent": "better-diffs",
+      "seealso": []
+    },
+    {
+      "id": "mergetool-not-configured",
+      "msg": "This message is displayed because 'merge.tool' is not configured.",
+      "why": "No merge tool is set, so Git cannot launch one.",
+      "fix": [
+        {
+          "c": "git config --global merge.tool vscode",
+          "n": "Name the tool, then define its cmd."
+        },
+        {
+          "c": "git status",
+          "n": "Resolving conflicts by hand in an editor is always available."
+        }
+      ],
+      "intent": "mergetool-vscode",
+      "seealso": [
+        "merge-conflict"
+      ]
+    },
+    {
+      "id": "difftool-prompt-loop",
+      "msg": "Launch '<tool>' [Y/n]?",
+      "why": "difftool asks before each file, which is tedious across a large diff.",
+      "fix": [
+        {
+          "c": "git config --global difftool.prompt false",
+          "n": "Stops the prompt permanently."
+        },
+        {
+          "c": "git difftool --no-prompt",
+          "n": "Or skip it for one invocation."
+        }
+      ],
+      "intent": "difftool-vscode",
+      "seealso": [
+        "better-diffs"
+      ]
+    },
+    {
+      "id": "blame-file-not-in-head",
+      "msg": "fatal: no such path '<path>' in HEAD",
+      "why": "The path does not exist in the commit you are blaming, usually after a rename or delete.",
+      "fix": [
+        {
+          "c": "git log --diff-filter=D --oneline -- <path>",
+          "n": "Finds when it disappeared."
+        },
+        {
+          "c": "git blame <hash>^ -- <path>",
+          "n": "Blame the commit before the deletion."
+        }
+      ],
+      "intent": "restore-deleted-file",
+      "seealso": [
+        "blame-line"
+      ]
+    },
+    {
+      "id": "log-follow-single-path",
+      "msg": "fatal: --follow requires exactly one pathspec",
+      "why": "Rename following works for one path at a time.",
+      "fix": [
+        {
+          "c": "git log --follow -- <one-path>",
+          "n": "Run it per file."
+        },
+        {
+          "c": "git log --oneline -- <path-a> <path-b>",
+          "n": "Drop --follow when you need several paths at once."
+        }
+      ],
+      "intent": "file-history",
+      "seealso": [
+        "rename-detection"
+      ]
+    },
+    {
+      "id": "bisect-run-nonzero",
+      "msg": "bisect run failed: exit code 128 from '<command>' is < 0 or >= 128",
+      "why": "The test script returned a status bisect reserves for its own signalling.",
+      "fix": [
+        {
+          "c": "exit 1",
+          "n": "Use 0 for good and 1 for bad; 125 means untestable."
+        },
+        {
+          "c": "git bisect run ./test.sh",
+          "n": "Have the script normalise its exit codes before returning."
+        }
+      ],
+      "intent": "bisect",
+      "seealso": []
+    },
+    {
+      "id": "grep-no-matches-exit",
+      "msg": "git grep found no matches (exit status 1)",
+      "why": "Not an error: grep signals absence with a non-zero status, which stops strict scripts.",
+      "fix": [
+        {
+          "c": "git grep -q \"<text>\" || true",
+          "n": "Neutralise the status when absence is acceptable."
+        },
+        {
+          "c": "git grep -c \"<text>\"",
+          "n": "Count form when a script wants a number rather than a status."
+        }
+      ],
+      "intent": "log-search",
+      "seealso": [
+        "minimal-git-for-scripts"
+      ]
+    },
+    {
+      "id": "archive-prefix-slash",
+      "msg": "fatal: prefix must end with /",
+      "why": "git archive requires the prefix to be a directory path.",
+      "fix": [
+        {
+          "c": "git archive --prefix=project/ HEAD -o out.zip",
+          "n": "Add the trailing slash."
+        },
+        {
+          "c": "git archive HEAD -o out.zip",
+          "n": "Or omit the prefix entirely."
+        }
+      ],
+      "intent": "archive-export",
+      "seealso": [
+        "clone-vs-zip"
+      ]
+    },
+    {
+      "id": "http-redirect-blocked",
+      "msg": "fatal: unable to update url base from redirection",
+      "why": "The server redirected to a different repository path than the one requested.",
+      "fix": [
+        {
+          "c": "git config --global http.followRedirects true",
+          "n": "Allows the redirect explicitly."
+        },
+        {
+          "c": "git remote set-url origin <final-url>",
+          "n": "Better, store the destination so no redirect is needed."
+        }
+      ],
+      "intent": "repo-transfer-broke-remotes",
+      "seealso": []
+    },
+    {
+      "id": "clone-recurse-failed",
+      "msg": "fatal: clone of '<url>' into submodule path '<path>' failed",
+      "why": "A submodule clone failed, usually authentication or a moved URL.",
+      "fix": [
+        {
+          "c": "git submodule sync --recursive",
+          "n": "Refreshes URLs from .gitmodules into the live config."
+        },
+        {
+          "c": "git submodule update --init --recursive",
+          "n": "Retry after fixing access to that submodule."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "push-atomic-failed",
+      "msg": "error: atomic push failed, no refs updated",
+      "why": "One ref in an atomic push was rejected, so all of them were refused together.",
+      "fix": [
+        {
+          "c": "git push origin <one-branch>",
+          "n": "Push refs individually to see which one is refused."
+        },
+        {
+          "c": "git push --no-atomic origin --all",
+          "n": "Or drop atomicity when partial success is acceptable."
+        }
+      ],
+      "intent": "push-all",
+      "seealso": []
+    },
+    {
+      "id": "gc-too-many-loose",
+      "msg": "warning: There are too many unreachable loose objects; run 'git prune' to remove them.",
+      "why": "Rewrites and resets left many orphaned objects behind.",
+      "fix": [
+        {
+          "c": "git prune --expire=now",
+          "n": "Removes them once you are sure nothing needed is unreachable."
+        },
+        {
+          "c": "git reflog expire --expire-unreachable=now --all",
+          "n": "The reflog holds them; expiring it first is what actually frees the space."
+        }
+      ],
+      "intent": "dangling-objects",
+      "seealso": [
+        "git-maintenance"
+      ]
+    },
+    {
+      "id": "filemode-only-diff",
+      "msg": "old mode 100644  new mode 100755",
+      "why": "Only the executable bit changed, which is real to Git but usually accidental.",
+      "fix": [
+        {
+          "c": "git config core.fileMode false",
+          "n": "Stops Git tracking mode changes on filesystems that fake them."
+        },
+        {
+          "c": "git update-index --chmod=-x <file>",
+          "n": "Or set the bit deliberately when it matters."
+        }
+      ],
+      "intent": "filemode",
+      "seealso": [
+        "revert-file-permissions"
+      ]
+    },
+    {
+      "id": "gitignore-negation-parent",
+      "msg": "The following paths are ignored  (a negation cannot re-include inside an excluded directory)",
+      "why": "Once a directory is excluded, Git never descends into it, so a negation inside cannot match.",
+      "fix": [
+        {
+          "c": "printf 'build/*\\n!build/keep.txt\\n' >> .gitignore",
+          "n": "Exclude the contents rather than the directory itself."
+        },
+        {
+          "c": "git check-ignore -v <path>",
+          "n": "Names the rule that actually wins."
+        }
+      ],
+      "intent": "gitignore-except",
+      "seealso": [
+        "gitignore-patterns"
+      ]
+    },
+    {
+      "id": "global-excludes-not-applied",
+      "msg": "warning: core.excludesFile points to a file that does not exist",
+      "why": "The global ignore file is configured but missing.",
+      "fix": [
+        {
+          "c": "git config --global core.excludesFile ~/.gitignore_global",
+          "n": "Point it somewhere real."
+        },
+        {
+          "c": "touch ~/.gitignore_global",
+          "n": "Create the file, then add your personal rules."
+        }
+      ],
+      "intent": "global-gitignore",
+      "seealso": [
+        "os-junk-files"
+      ]
+    },
+    {
+      "id": "attributes-unknown-filter",
+      "msg": "error: external filter '<name>' is not available",
+      "why": "A .gitattributes filter names a program this machine does not have.",
+      "fix": [
+        {
+          "c": "git config --get filter.<name>.clean",
+          "n": "Shows what the filter expects to run."
+        },
+        {
+          "c": "git config --global filter.<name>.required false",
+          "n": "Makes the filter optional so checkouts still work."
+        }
+      ],
+      "intent": "gitattributes",
+      "seealso": [
+        "textconv"
+      ]
+    },
+    {
+      "id": "clock-skew-future-commit",
+      "msg": "warning: commit <hash> has a future date",
+      "why": "A commit timestamp is ahead of the current clock, so ordering looks wrong.",
+      "fix": [
+        {
+          "c": "git log --pretty=fuller -3",
+          "n": "Shows both dates so you can see which is off."
+        },
+        {
+          "c": "w32tm /resync",
+          "n": "Fix the machine clock; timedatectl set-ntp true on Linux."
+        }
+      ],
+      "intent": "commit-dates",
+      "seealso": []
+    },
+    {
+      "id": "antivirus-locking-file",
+      "msg": "error: unable to write file <path>: Permission denied  (Windows, file in use)",
+      "why": "Another process holds the file open, commonly an antivirus scanner or an editor.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Confirms which paths cannot be written."
+        },
+        {
+          "c": "Exclude the repository from real-time scanning",
+          "n": "The usual cure on Windows, and it also fixes slowness."
+        }
+      ],
+      "intent": "why-status-is-slow",
+      "seealso": []
+    },
+    {
+      "id": "onedrive-sync-conflict",
+      "msg": "error: unable to unlink old '<file>': Invalid argument  (inside a synced folder)",
+      "why": "A cloud sync client is holding or rewriting files while Git works on them.",
+      "fix": [
+        {
+          "c": "Pause syncing",
+          "n": "Then retry the Git operation."
+        },
+        {
+          "c": "git clone <url> ~/projects/<repo>",
+          "n": "Better, keep working repositories outside synced folders."
+        }
+      ],
+      "intent": "git-in-synced-folder",
+      "seealso": [
+        "repair-corrupt-repo"
+      ]
     }
   ]
 }
