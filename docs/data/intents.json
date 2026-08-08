@@ -10634,7 +10634,7 @@
           "cmds": [
             {
               "c": "Insights -> Traffic",
-              "n": "Views, unique visitors, clones, and referrers for the last 14 days. Owners only. For longer history, record it on a schedule with gh api."
+              "n": "Views, unique visitors, clones, and referrers for the last 14 days. Requires push access. For longer history, record it on a schedule with gh api."
             }
           ],
           "undo": "Nothing to undo"
@@ -11483,7 +11483,7 @@
     },
     {
       "id": "how-git-stores",
-      "q": "How Git actually stores your project",
+      "q": "How Git stores your project",
       "aka": [
         "git objects explained",
         "blob tree commit",
@@ -11724,7 +11724,7 @@
     },
     {
       "id": "what-is-a-pr",
-      "q": "What a pull request actually is",
+      "q": "What a pull request is",
       "aka": [
         "pull request explained",
         "pr vs merge",
@@ -11861,7 +11861,7 @@
           "cmds": [
             {
               "c": "Profile -> Achievements",
-              "n": "Small badges earned by normal activity: merged pull requests, answered discussions, starred releases, co-authored commits. They cannot be bought or assigned, which is exactly what makes them mean something."
+              "n": "Small badges earned by normal activity: merged pull requests, accepted Discussions answers, co-authored commits, a repository others starred. They cannot be bought or assigned, which is exactly what makes them mean something."
             }
           ],
           "undo": "Hide them under Settings -> Profile if you prefer"
@@ -12366,7 +12366,7 @@
     },
     {
       "id": "github-markdown",
-      "q": "Use the Markdown GitHub actually renders",
+      "q": "Use the Markdown GitHub renders",
       "aka": [
         "github flavored markdown",
         "mermaid diagrams readme",
@@ -14645,7 +14645,7 @@
     },
     {
       "id": "repo-visibility-who-sees",
-      "q": "Who can actually see my repository",
+      "q": "Who can see my repository",
       "aka": [
         "private repo who has access",
         "is my code visible",
@@ -15343,7 +15343,7 @@
     },
     {
       "id": "big-files-where",
-      "q": "Where large files actually belong",
+      "q": "Where large files belong",
       "aka": [
         "datasets in git?",
         "videos in repository",
@@ -15381,7 +15381,7 @@
     },
     {
       "id": "what-is-a-repo",
-      "q": "What a repository actually is",
+      "q": "What a repository is",
       "aka": [
         "repository meaning",
         "repo explained",
@@ -15641,7 +15641,7 @@
     },
     {
       "id": "what-is-merging",
-      "q": "What merging actually does",
+      "q": "What merging does",
       "aka": [
         "merge explained",
         "what happens when i merge",
@@ -15722,7 +15722,7 @@
     },
     {
       "id": "how-open-source-works",
-      "q": "How open source actually works on GitHub",
+      "q": "How open source works on GitHub",
       "aka": [
         "open source explained",
         "how do projects accept code",
