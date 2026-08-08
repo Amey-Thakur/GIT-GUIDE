@@ -156,11 +156,18 @@ def sheet_card(sheet, wanted, title):
         y += 22
         for item in sec["items"]:
             color = DANGER if item.get("danger") else INK
-            body += (
-                f'<text x="80" y="{y + 30}" font-size="19.5" fill="{color}" font-family="{MONO}">{escape(item["c"])}</text>'
-                f'<text x="640" y="{y + 30}" font-size="17.5" fill="{MUTED}">{escape(item["d"])}</text>'
-            )
-            y += 42
+            if len(item["c"]) > 44:
+                body += (
+                    f'<text x="80" y="{y + 30}" font-size="19.5" fill="{color}" font-family="{MONO}">{escape(item["c"])}</text>'
+                    f'<text x="80" y="{y + 58}" font-size="17.5" fill="{MUTED}">{escape(item["d"])}</text>'
+                )
+                y += 70
+            else:
+                body += (
+                    f'<text x="80" y="{y + 30}" font-size="19.5" fill="{color}" font-family="{MONO}">{escape(item["c"])}</text>'
+                    f'<text x="640" y="{y + 30}" font-size="17.5" fill="{MUTED}">{escape(item["d"])}</text>'
+                )
+                y += 42
         y += 44
     height = y + 130
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="{height}" viewBox="0 0 1240 {height}" font-family="{FONT}">

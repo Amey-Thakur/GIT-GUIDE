@@ -301,7 +301,7 @@ h2 {{ font-size: 17pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; pa
 .note {{ color: {MUTED}; font-size: 10pt; margin-bottom: 4mm; }}
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
 .list div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.1mm 0; }}
-.list code {{ font-family: Consolas, monospace; font-size: 9.5pt; display: block; }}
+.list code {{ font-family: Consolas, monospace; font-size: 9.5pt; display: block; overflow-wrap: anywhere; }}
 .list code.danger {{ color: {DANGER}; }}
 .list span {{ font-size: 8.5pt; color: {MUTED}; display: block; margin-top: 0.8mm; }}
 .steps {{ display: grid; gap: 5mm; max-width: 230mm; }}
@@ -313,7 +313,7 @@ h2 {{ font-size: 17pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; pa
 .rules {{ font-size: 10.5pt; color: {MUTED}; line-height: 1.7; margin-top: 6mm; max-width: 230mm; }}
 .rules b {{ color: {INK}; }}
 .errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.9mm 0; }}
-.errs code {{ font-family: Consolas, monospace; font-size: 9pt; color: {DANGER}; }}
+.errs code {{ font-family: Consolas, monospace; font-size: 9pt; color: {DANGER}; overflow-wrap: anywhere; }}
 .errs p {{ font-size: 8.5pt; color: {MUTED}; margin-top: 0.5mm; }}
 .list.inline code {{ display: inline; }}
 .list.inline span {{ display: inline; margin-left: 2.5mm; }}
