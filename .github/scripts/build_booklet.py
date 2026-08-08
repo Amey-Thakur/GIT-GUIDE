@@ -374,6 +374,13 @@ def main():
             capture_output=True, timeout=180,
         )
         print(f"git-guide.pdf: {PDF.stat().st_size // 1024} KB")
+        cover_png = DOCS / "assets" / "pdf-cover.png"
+        subprocess.run(
+            [chrome, "--headless=new", f"--screenshot={cover_png}", "--window-size=1123,794",
+             "--hide-scrollbars", HTML.as_uri()],
+            capture_output=True, timeout=60,
+        )
+        print(f"pdf-cover.png: {cover_png.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":

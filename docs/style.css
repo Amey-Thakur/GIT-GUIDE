@@ -594,21 +594,31 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
 }
 
 .dl {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
+  display: block;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--card);
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 0.6rem 0.75rem;
   color: var(--ink);
   text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
 }
 
-.dl:hover { border-color: var(--accent); text-decoration: none; }
+.dl:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-2px); }
 
-.dl svg { color: var(--muted); flex-shrink: 0; }
-.dl:hover svg { color: var(--accent); }
+.thumb {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 0.7rem;
+  background: var(--paper);
+}
+
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+.dl-text { display: block; padding: 0 0.35rem; }
 
 .dl-name { display: block; font-weight: 600; }
 .dl-meta { display: block; color: var(--muted); font-size: 0.85rem; }
