@@ -9,7 +9,7 @@
 Type what you want to do. Get the exact commands, what each one does,
 how dangerous it is, and how to undo it.
 
-**[Open Git Guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
+**[Open Git Guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Download the PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
 
 <img alt="Answers" src="https://img.shields.io/badge/dynamic/json?label=answers&query=%24.intents.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Fintents.json&color=39FF14">
 <img alt="Errors decoded" src="https://img.shields.io/badge/dynamic/json?label=errors%20decoded&query=%24.errors.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Ferrors.json&color=F05133">
@@ -94,7 +94,12 @@ The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms
 
 ## Take it with you
 
-**[Git Guide as a PDF](docs/assets/git-guide.pdf)**: the model, every command section, every error, and the chapters, printable and complete. The two cheat cards put [the daily commands](docs/assets/cheatsheet-card.png) and [everything beyond them](docs/assets/cheatsheet-card-2.png) on printable pages. All of it is one click on the site's [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) page, and every artifact is generated from the repository's live data.
+Each of these downloads in one click and is generated from the repository's live data.
+
+- **[The PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**: the complete guide, printable. The model, every command section, every error, the chapters.
+- **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**: the commands you will use every day, on one page.
+- **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**: everything past the daily, on the next.
+- **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**: the eight doors and the three danger levels, one sheet.
 
 <br>
 
