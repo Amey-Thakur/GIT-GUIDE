@@ -344,7 +344,7 @@ def main():
     pages += error_pages(errs)
     pages += [closing()]
     HTML.write_text(
-        f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>'
+        f'<!doctype html><html><head><meta charset="utf-8"><title>Git Guide</title><style>{CSS}</style></head><body>'
         + "".join(pages) + "</body></html>",
         encoding="utf-8",
     )
