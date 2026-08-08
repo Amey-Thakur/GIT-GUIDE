@@ -4128,6 +4128,729 @@
         "case-rename",
         "rename-file"
       ]
+    },
+    {
+      "id": "worktree-locked",
+      "msg": "fatal: '<path>' is a locked working tree",
+      "why": "The worktree was locked, usually because it lives on removable media.",
+      "fix": [
+        {
+          "c": "git worktree unlock <path>",
+          "n": "Releases the lock."
+        },
+        {
+          "c": "git worktree prune",
+          "n": "Clears records for worktrees whose folders are gone."
+        }
+      ],
+      "intent": "worktrees",
+      "seealso": [
+        "same-branch-two-worktrees"
+      ]
+    },
+    {
+      "id": "worktree-missing",
+      "msg": "fatal: validation failed, cannot remove working tree: gitdir file does not exist",
+      "why": "The worktree folder was deleted without unregistering it.",
+      "fix": [
+        {
+          "c": "git worktree prune",
+          "n": "Drops the stale registration."
+        },
+        {
+          "c": "git worktree list",
+          "n": "Confirms only real worktrees remain."
+        }
+      ],
+      "intent": "worktrees",
+      "seealso": []
+    },
+    {
+      "id": "notes-ref-missing",
+      "msg": "error: no note found for object <hash>",
+      "why": "That commit carries no note in the current notes ref.",
+      "fix": [
+        {
+          "c": "git notes list",
+          "n": "Shows which objects have notes."
+        },
+        {
+          "c": "git fetch origin refs/notes/commits:refs/notes/commits",
+          "n": "Notes travel only when fetched explicitly."
+        }
+      ],
+      "intent": "git-notes",
+      "seealso": []
+    },
+    {
+      "id": "bisect-not-started",
+      "msg": "fatal: You need to start by \"git bisect start\"",
+      "why": "A bisect subcommand ran outside a bisect session.",
+      "fix": [
+        {
+          "c": "git bisect start <bad> <good>",
+          "n": "Open the session with a known-bad and known-good commit."
+        },
+        {
+          "c": "git bisect reset",
+          "n": "Ends any half-finished session cleanly."
+        }
+      ],
+      "intent": "bisect",
+      "seealso": [
+        "find-why-a-line-exists"
+      ]
+    },
+    {
+      "id": "bisect-bad-good-same",
+      "msg": "fatal: Some good revs are not ancestors of the bad rev",
+      "why": "The good commit is not on the path leading to the bad one, so bisect cannot search between them.",
+      "fix": [
+        {
+          "c": "git merge-base <good> <bad>",
+          "n": "Confirms whether one actually precedes the other."
+        },
+        {
+          "c": "git bisect start <bad> <older-good>",
+          "n": "Pick a good commit that is genuinely an ancestor."
+        }
+      ],
+      "intent": "bisect",
+      "seealso": []
+    },
+    {
+      "id": "apply-does-not-apply",
+      "msg": "error: patch failed: <file>:12  error: <file>: patch does not apply",
+      "why": "The patch expects surrounding lines that no longer match.",
+      "fix": [
+        {
+          "c": "git apply --3way <patch>",
+          "n": "Uses blob information to merge rather than match exactly."
+        },
+        {
+          "c": "git apply --reject <patch>",
+          "n": "Applies what fits and leaves .rej files for the rest."
+        }
+      ],
+      "intent": "apply-patch",
+      "seealso": [
+        "patches-email"
+      ]
+    },
+    {
+      "id": "am-already-in-progress",
+      "msg": "fatal: previous rebase directory .git/rebase-apply still exists",
+      "why": "An earlier git am or rebase stopped and was never finished.",
+      "fix": [
+        {
+          "c": "git am --abort",
+          "n": "Discards the half-applied patch series."
+        },
+        {
+          "c": "git am --continue",
+          "n": "Or finish it, once the conflict is staged."
+        }
+      ],
+      "intent": "apply-patch",
+      "seealso": [
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "describe-no-tags",
+      "msg": "fatal: No names found, cannot describe anything.",
+      "why": "The repository has no tags reachable from this commit.",
+      "fix": [
+        {
+          "c": "git tag -a v0.1.0 -m \"First tag\"",
+          "n": "Create one, or fetch tags you are missing."
+        },
+        {
+          "c": "git describe --always",
+          "n": "Falls back to the short hash instead of failing."
+        }
+      ],
+      "intent": "describe-version",
+      "seealso": [
+        "fetch-tags"
+      ]
+    },
+    {
+      "id": "gc-lock-exists",
+      "msg": "error: gc is already running on machine '<host>' pid <n>",
+      "why": "Another maintenance process holds the lock, or one crashed and left it.",
+      "fix": [
+        {
+          "c": "git gc --force",
+          "n": "Runs anyway when you are certain nothing else is active."
+        },
+        {
+          "c": "rm .git/gc.pid",
+          "n": "Clears a stale lock left by a killed process."
+        }
+      ],
+      "intent": "git-maintenance",
+      "seealso": [
+        "gc-safety"
+      ]
+    },
+    {
+      "id": "prune-refused-worktree",
+      "msg": "error: Cannot prune, other worktrees may be using objects",
+      "why": "Pruning is unsafe while another worktree may reference the objects.",
+      "fix": [
+        {
+          "c": "git worktree prune",
+          "n": "Clear stale worktrees first."
+        },
+        {
+          "c": "git gc",
+          "n": "Then let maintenance run normally."
+        }
+      ],
+      "intent": "git-maintenance",
+      "seealso": [
+        "worktrees"
+      ]
+    },
+    {
+      "id": "filter-repo-not-fresh",
+      "msg": "Aborting: Refusing to destructively overwrite repo history since this does not look like a fresh clone",
+      "why": "filter-repo insists on a fresh clone so a mistake cannot destroy your only copy.",
+      "fix": [
+        {
+          "c": "git clone --no-local <url> fresh && cd fresh",
+          "n": "Work in a throwaway clone, verify, then push."
+        },
+        {
+          "c": "git filter-repo --force",
+          "n": "Overrides the guard only when you understand the risk."
+        }
+      ],
+      "intent": "filter-repo-paths",
+      "seealso": [
+        "remove-secret-from-history"
+      ]
+    },
+    {
+      "id": "submodule-already-exists",
+      "msg": "fatal: A git directory for '<name>' is found locally with remote(s)",
+      "why": "A previous submodule of that name left its git directory behind in .git/modules.",
+      "fix": [
+        {
+          "c": "rm -rf .git/modules/<name>",
+          "n": "Clears the leftover before adding it again."
+        },
+        {
+          "c": "git submodule add --force <url> <path>",
+          "n": "Reuses the path once the old record is gone."
+        }
+      ],
+      "intent": "submodule-add",
+      "seealso": [
+        "remove-submodule"
+      ]
+    },
+    {
+      "id": "submodule-dirty-blocks",
+      "msg": "error: Submodule '<path>' contains modified content",
+      "why": "The submodule has uncommitted work, so the parent refuses to record a clean pointer.",
+      "fix": [
+        {
+          "c": "git -C <path> status",
+          "n": "Shows what changed inside."
+        },
+        {
+          "c": "git -C <path> stash",
+          "n": "Shelve or commit it there, then commit the pointer in the parent."
+        }
+      ],
+      "intent": "submodule-update",
+      "seealso": []
+    },
+    {
+      "id": "remote-head-ambiguous",
+      "msg": "warning: remote HEAD refers to nonexistent ref, unable to checkout",
+      "why": "The remote's default branch pointer names a branch that no longer exists.",
+      "fix": [
+        {
+          "c": "git remote set-head origin --auto",
+          "n": "Asks the server what its default branch is now."
+        },
+        {
+          "c": "git switch -c main origin/main",
+          "n": "Then check out the branch explicitly."
+        }
+      ],
+      "intent": "default-branch",
+      "seealso": [
+        "what-does-origin-head-mean"
+      ]
+    },
+    {
+      "id": "push-hook-declined-lfs",
+      "msg": "remote: error: GH008: Your push referenced at least <n> unknown Git LFS objects",
+      "why": "The commits reference LFS objects the server never received.",
+      "fix": [
+        {
+          "c": "git lfs push origin <branch> --all",
+          "n": "Uploads the missing objects, then push again."
+        },
+        {
+          "c": "git lfs status",
+          "n": "Shows which objects are still local only."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": [
+        "repo-limits"
+      ]
+    },
+    {
+      "id": "commit-graph-corrupt",
+      "msg": "warning: commit-graph file is corrupt, ignoring it",
+      "why": "The cached commit graph is damaged; Git falls back to reading history directly.",
+      "fix": [
+        {
+          "c": "rm .git/objects/info/commit-graph",
+          "n": "Deleting it is safe: it is a cache, not data."
+        },
+        {
+          "c": "git commit-graph write --reachable",
+          "n": "Rebuild it to restore the speed."
+        }
+      ],
+      "intent": "commit-graph-file",
+      "seealso": [
+        "git-maintenance"
+      ]
+    },
+    {
+      "id": "index-version-unsupported",
+      "msg": "fatal: unsupported index version <n>",
+      "why": "An older Git is reading an index written by a newer one.",
+      "fix": [
+        {
+          "c": "git update-index --index-version 2",
+          "n": "Rewrites the index in a widely supported version."
+        },
+        {
+          "c": "git --version",
+          "n": "Better, align the Git versions across the tools sharing this repository."
+        }
+      ],
+      "intent": "update-git",
+      "seealso": []
+    },
+    {
+      "id": "config-recursion",
+      "msg": "fatal: exceeded maximum include depth (10)",
+      "why": "Config includes form a loop, so Git stops before recursing forever.",
+      "fix": [
+        {
+          "c": "git config --show-origin --list",
+          "n": "Traces which files include which."
+        },
+        {
+          "c": "git config --global --edit",
+          "n": "Remove the circular include path."
+        }
+      ],
+      "intent": "track-config-across-machines",
+      "seealso": [
+        "config-precedence"
+      ]
+    },
+    {
+      "id": "hooks-path-missing",
+      "msg": "fatal: cannot run <path>/pre-commit: No such file or directory",
+      "why": "core.hooksPath points somewhere that does not exist, or the hook is not executable.",
+      "fix": [
+        {
+          "c": "git config core.hooksPath",
+          "n": "Shows the configured folder."
+        },
+        {
+          "c": "chmod +x .githooks/pre-commit",
+          "n": "Hooks must be executable; on Windows use Git Bash line endings too."
+        }
+      ],
+      "intent": "hooks",
+      "seealso": [
+        "hooks-catalog"
+      ]
+    },
+    {
+      "id": "hook-crlf-bad-interpreter",
+      "msg": "hooks/pre-commit: /bin/sh^M: bad interpreter: No such file or directory",
+      "why": "The hook script has Windows line endings, so the shebang line is unreadable.",
+      "fix": [
+        {
+          "c": "dos2unix .git/hooks/pre-commit",
+          "n": "Converts it to LF endings."
+        },
+        {
+          "c": "echo \"*.sh text eol=lf\" >> .gitattributes",
+          "n": "Stops the same conversion happening again."
+        }
+      ],
+      "intent": "line-endings",
+      "seealso": [
+        "hooks"
+      ]
+    },
+    {
+      "id": "husky-not-found",
+      "msg": "husky - command not found",
+      "why": "Hooks reference husky but dependencies were never installed in this checkout.",
+      "fix": [
+        {
+          "c": "npm install",
+          "n": "Installs husky and reinstalls the hooks."
+        },
+        {
+          "c": "git commit --no-verify",
+          "n": "Bypasses hooks once when you need to commit before fixing tooling."
+        }
+      ],
+      "intent": "hooks",
+      "seealso": [
+        "skip-hooks"
+      ]
+    },
+    {
+      "id": "precommit-hook-modified-files",
+      "msg": "files were modified by this hook",
+      "why": "A formatting hook rewrote files, so the staged content no longer matches.",
+      "fix": [
+        {
+          "c": "git add -u",
+          "n": "Stage what the hook changed, then commit again."
+        },
+        {
+          "c": "git diff",
+          "n": "Review the hook's edits first; blind restaging hides real changes."
+        }
+      ],
+      "intent": "pre-commit-framework",
+      "seealso": [
+        "hooks"
+      ]
+    },
+    {
+      "id": "gh-not-installed",
+      "msg": "gh: command not found",
+      "why": "GitHub CLI is not installed or not on PATH.",
+      "fix": [
+        {
+          "c": "winget install GitHub.cli",
+          "n": "brew install gh on macOS, apt install gh on Debian and Ubuntu."
+        },
+        {
+          "c": "gh auth login",
+          "n": "Sign in once after installing."
+        }
+      ],
+      "intent": "gh-cli-setup",
+      "seealso": []
+    },
+    {
+      "id": "gh-extension-not-found",
+      "msg": "extension not found: gh-<name>",
+      "why": "The extension is not installed for this account or machine.",
+      "fix": [
+        {
+          "c": "gh extension list",
+          "n": "Shows what is installed here."
+        },
+        {
+          "c": "gh extension install <owner>/gh-<name>",
+          "n": "Extensions are per machine, not per repository."
+        }
+      ],
+      "intent": "gh-extensions",
+      "seealso": [
+        "gh-cli-setup"
+      ]
+    },
+    {
+      "id": "gh-run-not-found",
+      "msg": "could not find any workflows named <name>",
+      "why": "The workflow file does not exist on the branch gh is looking at.",
+      "fix": [
+        {
+          "c": "gh workflow list --all",
+          "n": "Lists every workflow, including disabled ones."
+        },
+        {
+          "c": "gh workflow run ci.yml --ref <branch>",
+          "n": "Dispatch needs the workflow present on the default branch."
+        }
+      ],
+      "intent": "manual-workflow",
+      "seealso": [
+        "workflow-not-triggering"
+      ]
+    },
+    {
+      "id": "actions-oidc-missing",
+      "msg": "Error: Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable",
+      "why": "The job requested an OIDC token without permission to mint one.",
+      "fix": [
+        {
+          "c": "permissions: id-token: write",
+          "n": "Required for any keyless cloud authentication."
+        },
+        {
+          "c": "gh run view --log",
+          "n": "Confirms the step ran in the job that carries the permission."
+        }
+      ],
+      "intent": "oidc-deploys",
+      "seealso": [
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "actions-env-file-missing",
+      "msg": "Error: Unable to write to $GITHUB_ENV",
+      "why": "The step tried to write a runner file that does not exist in this context.",
+      "fix": [
+        {
+          "c": "echo \"KEY=value\" >> \"$GITHUB_ENV\"",
+          "n": "Quote the variable; composite actions and containers can lose it unquoted."
+        },
+        {
+          "c": "outputs:",
+          "n": "Between jobs use outputs rather than the environment file."
+        }
+      ],
+      "intent": "actions-env",
+      "seealso": [
+        "github-actions-artifacts-between-jobs"
+      ]
+    },
+    {
+      "id": "pages-not-enabled",
+      "msg": "Error: Get Pages site failed. Please verify that the repository has Pages enabled",
+      "why": "The deploy ran before Pages was switched on for the repository.",
+      "fix": [
+        {
+          "c": "Settings -> Pages -> Source: GitHub Actions",
+          "n": "Enable it once; the workflow then has a target."
+        },
+        {
+          "c": "gh api repos/<owner>/<repo>/pages",
+          "n": "Confirms whether Pages exists at all."
+        }
+      ],
+      "intent": "github-pages",
+      "seealso": []
+    },
+    {
+      "id": "pages-artifact-too-large",
+      "msg": "Error: Artifact exceeds maximum size for Pages deployment",
+      "why": "The uploaded site is larger than the Pages limit.",
+      "fix": [
+        {
+          "c": "du -sh dist",
+          "n": "Find what is inflating it: usually source maps or unoptimised media."
+        },
+        {
+          "c": "gh release upload <tag> <big-file>",
+          "n": "Serve large downloads from a release rather than the site."
+        }
+      ],
+      "intent": "github-pages",
+      "seealso": [
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "codespace-quota",
+      "msg": "You have exceeded your Codespaces usage limit",
+      "why": "The monthly included hours or storage are spent.",
+      "fix": [
+        {
+          "c": "gh codespace list",
+          "n": "Delete idle codespaces; storage is billed even when stopped."
+        },
+        {
+          "c": "Settings -> Billing -> Codespaces",
+          "n": "Raise the spending limit or wait for the next cycle."
+        }
+      ],
+      "intent": "codespaces",
+      "seealso": [
+        "actions-billing"
+      ]
+    },
+    {
+      "id": "packages-permission",
+      "msg": "denied: installation not allowed to Write organization package",
+      "why": "The token lacks package write permission for that organization.",
+      "fix": [
+        {
+          "c": "permissions: packages: write",
+          "n": "Grant it in the workflow that publishes."
+        },
+        {
+          "c": "gh auth refresh -s write:packages",
+          "n": "For a local push, add the scope to your token."
+        }
+      ],
+      "intent": "packages-registry",
+      "seealso": [
+        "ghcr"
+      ]
+    },
+    {
+      "id": "ghcr-unauthorized",
+      "msg": "unauthorized: unauthenticated: User cannot be authenticated with the token provided.",
+      "why": "The registry login used a token without the right scope, or an expired one.",
+      "fix": [
+        {
+          "c": "echo $TOKEN | docker login ghcr.io -u <user> --password-stdin",
+          "n": "Log in again with a token carrying write:packages."
+        },
+        {
+          "c": "gh auth token",
+          "n": "In CI, prefer the built-in token with packages: write."
+        }
+      ],
+      "intent": "ghcr",
+      "seealso": [
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "npm-publish-403",
+      "msg": "npm ERR! 403 Forbidden - PUT https://registry.npmjs.org/<pkg>",
+      "why": "The account may not publish that package name, or the version already exists.",
+      "fix": [
+        {
+          "c": "npm view <pkg> versions",
+          "n": "A published version can never be replaced, only superseded."
+        },
+        {
+          "c": "npm whoami",
+          "n": "Confirms which account the token belongs to."
+        }
+      ],
+      "intent": "npm-publish-ci",
+      "seealso": [
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "pypi-file-exists",
+      "msg": "HTTPError: 400 Bad Request  File already exists",
+      "why": "That exact version was already uploaded, and PyPI never allows a replacement.",
+      "fix": [
+        {
+          "c": "Bump the version",
+          "n": "Publish a new version rather than trying to overwrite."
+        },
+        {
+          "c": "twine upload --skip-existing dist/*",
+          "n": "Makes reruns idempotent in automation."
+        }
+      ],
+      "intent": "pypi-publish-ci",
+      "seealso": [
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "gitlab-push-blocked",
+      "msg": "GitLab: You are not allowed to push code to protected branches on this project.",
+      "why": "The branch is protected on GitLab, the same idea as a GitHub ruleset.",
+      "fix": [
+        {
+          "c": "git switch -c fix/<topic> && git push -u origin HEAD",
+          "n": "Push a branch and open a merge request."
+        },
+        {
+          "c": "Settings -> Repository -> Protected branches",
+          "n": "Maintainers can adjust who may push."
+        }
+      ],
+      "intent": "use-other-hosts",
+      "seealso": [
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "bitbucket-auth-failed",
+      "msg": "remote: Invalid credentials  fatal: Authentication failed for 'https://bitbucket.org/...'",
+      "why": "Bitbucket rejected the password: it requires an app password, not an account password.",
+      "fix": [
+        {
+          "c": "Personal settings -> App passwords",
+          "n": "Create one with repository write permission."
+        },
+        {
+          "c": "git remote set-url origin git@bitbucket.org:<team>/<repo>.git",
+          "n": "Or switch to SSH and avoid passwords entirely."
+        }
+      ],
+      "intent": "bitbucket-auth",
+      "seealso": [
+        "stop-password-prompts"
+      ]
+    },
+    {
+      "id": "mirror-push-rejected",
+      "msg": "! [remote rejected] refs/pull/1/head -> refs/pull/1/head (deny updating a hidden ref)",
+      "why": "A mirror push tried to write pull request refs, which servers keep read-only.",
+      "fix": [
+        {
+          "c": "git push --mirror <url>",
+          "n": "Works only into an empty repository you control."
+        },
+        {
+          "c": "git push --all && git push --tags",
+          "n": "For an existing target, push branches and tags instead of mirroring."
+        }
+      ],
+      "intent": "mirror-migrate",
+      "seealso": [
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "checkout-index-failed",
+      "msg": "fatal: unable to checkout working tree  warning: Clone succeeded, but checkout failed.",
+      "why": "The objects arrived but the files could not be written: usually a path or permission problem.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "The clone is intact; only the checkout failed."
+        },
+        {
+          "c": "git checkout -f HEAD",
+          "n": "Retry the checkout after fixing the path length, case collision, or permissions."
+        }
+      ],
+      "intent": null,
+      "seealso": []
+    },
+    {
+      "id": "symlink-not-supported",
+      "msg": "warning: <path>: symlink not created, symlinks are not supported",
+      "why": "The filesystem or platform will not create symbolic links, so Git wrote a plain file.",
+      "fix": [
+        {
+          "c": "git config core.symlinks true",
+          "n": "Requires Developer Mode or elevation on Windows."
+        },
+        {
+          "c": "git config core.symlinks false",
+          "n": "Or accept plain files, which keeps checkouts working."
+        }
+      ],
+      "intent": "symlinks",
+      "seealso": []
     }
   ]
 }

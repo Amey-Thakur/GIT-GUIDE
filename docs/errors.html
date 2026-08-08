@@ -1440,6 +1440,204 @@
   <p class="note">Two paths differ only by case, which a case-insensitive filesystem cannot represent at once.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#case-only-rename-windows">Rename a file to different capitalisation</a></p>
 </article>
+<article class="result errcard" id="worktree-locked">
+  <h2><code class="errmsg">fatal: &#x27;&lt;path&gt;&#x27; is a locked working tree</code><a class="anchor" href="#worktree-locked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The worktree was locked, usually because it lives on removable media.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#worktrees">Work on two branches at once (worktrees)</a></p>
+</article>
+<article class="result errcard" id="worktree-missing">
+  <h2><code class="errmsg">fatal: validation failed, cannot remove working tree: gitdir file does not exist</code><a class="anchor" href="#worktree-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The worktree folder was deleted without unregistering it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#worktrees">Work on two branches at once (worktrees)</a></p>
+</article>
+<article class="result errcard" id="notes-ref-missing">
+  <h2><code class="errmsg">error: no note found for object &lt;hash&gt;</code><a class="anchor" href="#notes-ref-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">That commit carries no note in the current notes ref.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-notes">Attach notes to commits without changing them</a></p>
+</article>
+<article class="result errcard" id="bisect-not-started">
+  <h2><code class="errmsg">fatal: You need to start by &quot;git bisect start&quot;</code><a class="anchor" href="#bisect-not-started" aria-label="Link to this error">#</a></h2>
+  <p class="note">A bisect subcommand ran outside a bisect session.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#bisect">Find the commit that introduced a bug (bisect)</a></p>
+</article>
+<article class="result errcard" id="bisect-bad-good-same">
+  <h2><code class="errmsg">fatal: Some good revs are not ancestors of the bad rev</code><a class="anchor" href="#bisect-bad-good-same" aria-label="Link to this error">#</a></h2>
+  <p class="note">The good commit is not on the path leading to the bad one, so bisect cannot search between them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#bisect">Find the commit that introduced a bug (bisect)</a></p>
+</article>
+<article class="result errcard" id="apply-does-not-apply">
+  <h2><code class="errmsg">error: patch failed: &lt;file&gt;:12  error: &lt;file&gt;: patch does not apply</code><a class="anchor" href="#apply-does-not-apply" aria-label="Link to this error">#</a></h2>
+  <p class="note">The patch expects surrounding lines that no longer match.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#apply-patch">Apply a patch or diff file</a></p>
+</article>
+<article class="result errcard" id="am-already-in-progress">
+  <h2><code class="errmsg">fatal: previous rebase directory .git/rebase-apply still exists</code><a class="anchor" href="#am-already-in-progress" aria-label="Link to this error">#</a></h2>
+  <p class="note">An earlier git am or rebase stopped and was never finished.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#apply-patch">Apply a patch or diff file</a></p>
+</article>
+<article class="result errcard" id="describe-no-tags">
+  <h2><code class="errmsg">fatal: No names found, cannot describe anything.</code><a class="anchor" href="#describe-no-tags" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository has no tags reachable from this commit.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#describe-version">What version or commit am I on</a></p>
+</article>
+<article class="result errcard" id="gc-lock-exists">
+  <h2><code class="errmsg">error: gc is already running on machine &#x27;&lt;host&gt;&#x27; pid &lt;n&gt;</code><a class="anchor" href="#gc-lock-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">Another maintenance process holds the lock, or one crashed and left it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-maintenance">Keep a big repository fast</a></p>
+</article>
+<article class="result errcard" id="prune-refused-worktree">
+  <h2><code class="errmsg">error: Cannot prune, other worktrees may be using objects</code><a class="anchor" href="#prune-refused-worktree" aria-label="Link to this error">#</a></h2>
+  <p class="note">Pruning is unsafe while another worktree may reference the objects.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-maintenance">Keep a big repository fast</a></p>
+</article>
+<article class="result errcard" id="filter-repo-not-fresh">
+  <h2><code class="errmsg">Aborting: Refusing to destructively overwrite repo history since this does not look like a fresh clone</code><a class="anchor" href="#filter-repo-not-fresh" aria-label="Link to this error">#</a></h2>
+  <p class="note">filter-repo insists on a fresh clone so a mistake cannot destroy your only copy.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#filter-repo-paths">Keep only some folders in the history</a></p>
+</article>
+<article class="result errcard" id="submodule-already-exists">
+  <h2><code class="errmsg">fatal: A git directory for &#x27;&lt;name&gt;&#x27; is found locally with remote(s)</code><a class="anchor" href="#submodule-already-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">A previous submodule of that name left its git directory behind in .git/modules.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-add">Add a submodule and clone a repo that has them</a></p>
+</article>
+<article class="result errcard" id="submodule-dirty-blocks">
+  <h2><code class="errmsg">error: Submodule &#x27;&lt;path&gt;&#x27; contains modified content</code><a class="anchor" href="#submodule-dirty-blocks" aria-label="Link to this error">#</a></h2>
+  <p class="note">The submodule has uncommitted work, so the parent refuses to record a clean pointer.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-update">Update submodules to their latest commits</a></p>
+</article>
+<article class="result errcard" id="remote-head-ambiguous">
+  <h2><code class="errmsg">warning: remote HEAD refers to nonexistent ref, unable to checkout</code><a class="anchor" href="#remote-head-ambiguous" aria-label="Link to this error">#</a></h2>
+  <p class="note">The remote&#x27;s default branch pointer names a branch that no longer exists.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#default-branch">See or change the default branch of a remote</a></p>
+</article>
+<article class="result errcard" id="push-hook-declined-lfs">
+  <h2><code class="errmsg">remote: error: GH008: Your push referenced at least &lt;n&gt; unknown Git LFS objects</code><a class="anchor" href="#push-hook-declined-lfs" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commits reference LFS objects the server never received.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="commit-graph-corrupt">
+  <h2><code class="errmsg">warning: commit-graph file is corrupt, ignoring it</code><a class="anchor" href="#commit-graph-corrupt" aria-label="Link to this error">#</a></h2>
+  <p class="note">The cached commit graph is damaged; Git falls back to reading history directly.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-graph-file">Speed up log and blame on a big repository</a></p>
+</article>
+<article class="result errcard" id="index-version-unsupported">
+  <h2><code class="errmsg">fatal: unsupported index version &lt;n&gt;</code><a class="anchor" href="#index-version-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">An older Git is reading an index written by a newer one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="config-recursion">
+  <h2><code class="errmsg">fatal: exceeded maximum include depth (10)</code><a class="anchor" href="#config-recursion" aria-label="Link to this error">#</a></h2>
+  <p class="note">Config includes form a loop, so Git stops before recursing forever.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#track-config-across-machines">Keep my Git configuration the same everywhere</a></p>
+</article>
+<article class="result errcard" id="hooks-path-missing">
+  <h2><code class="errmsg">fatal: cannot run &lt;path&gt;/pre-commit: No such file or directory</code><a class="anchor" href="#hooks-path-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">core.hooksPath points somewhere that does not exist, or the hook is not executable.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#hooks">Run checks automatically before each commit (hooks)</a></p>
+</article>
+<article class="result errcard" id="hook-crlf-bad-interpreter">
+  <h2><code class="errmsg">hooks/pre-commit: /bin/sh^M: bad interpreter: No such file or directory</code><a class="anchor" href="#hook-crlf-bad-interpreter" aria-label="Link to this error">#</a></h2>
+  <p class="note">The hook script has Windows line endings, so the shebang line is unreadable.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#line-endings">Fix line ending warnings (LF, CRLF)</a></p>
+</article>
+<article class="result errcard" id="husky-not-found">
+  <h2><code class="errmsg">husky - command not found</code><a class="anchor" href="#husky-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">Hooks reference husky but dependencies were never installed in this checkout.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#hooks">Run checks automatically before each commit (hooks)</a></p>
+</article>
+<article class="result errcard" id="precommit-hook-modified-files">
+  <h2><code class="errmsg">files were modified by this hook</code><a class="anchor" href="#precommit-hook-modified-files" aria-label="Link to this error">#</a></h2>
+  <p class="note">A formatting hook rewrote files, so the staged content no longer matches.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pre-commit-framework">Manage hooks with the pre-commit framework</a></p>
+</article>
+<article class="result errcard" id="gh-not-installed">
+  <h2><code class="errmsg">gh: command not found</code><a class="anchor" href="#gh-not-installed" aria-label="Link to this error">#</a></h2>
+  <p class="note">GitHub CLI is not installed or not on PATH.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-cli-setup">Install and sign in to GitHub CLI</a></p>
+</article>
+<article class="result errcard" id="gh-extension-not-found">
+  <h2><code class="errmsg">extension not found: gh-&lt;name&gt;</code><a class="anchor" href="#gh-extension-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The extension is not installed for this account or machine.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-extensions">Extend GitHub CLI with new commands</a></p>
+</article>
+<article class="result errcard" id="gh-run-not-found">
+  <h2><code class="errmsg">could not find any workflows named &lt;name&gt;</code><a class="anchor" href="#gh-run-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The workflow file does not exist on the branch gh is looking at.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#manual-workflow">Run a workflow by pressing a button</a></p>
+</article>
+<article class="result errcard" id="actions-oidc-missing">
+  <h2><code class="errmsg">Error: Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable</code><a class="anchor" href="#actions-oidc-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The job requested an OIDC token without permission to mint one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#oidc-deploys">Deploy to a cloud with no stored keys</a></p>
+</article>
+<article class="result errcard" id="actions-env-file-missing">
+  <h2><code class="errmsg">Error: Unable to write to $GITHUB_ENV</code><a class="anchor" href="#actions-env-file-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The step tried to write a runner file that does not exist in this context.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-env">Pass values between workflow steps</a></p>
+</article>
+<article class="result errcard" id="pages-not-enabled">
+  <h2><code class="errmsg">Error: Get Pages site failed. Please verify that the repository has Pages enabled</code><a class="anchor" href="#pages-not-enabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">The deploy ran before Pages was switched on for the repository.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-pages">Publish a website from a repository</a></p>
+</article>
+<article class="result errcard" id="pages-artifact-too-large">
+  <h2><code class="errmsg">Error: Artifact exceeds maximum size for Pages deployment</code><a class="anchor" href="#pages-artifact-too-large" aria-label="Link to this error">#</a></h2>
+  <p class="note">The uploaded site is larger than the Pages limit.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-pages">Publish a website from a repository</a></p>
+</article>
+<article class="result errcard" id="codespace-quota">
+  <h2><code class="errmsg">You have exceeded your Codespaces usage limit</code><a class="anchor" href="#codespace-quota" aria-label="Link to this error">#</a></h2>
+  <p class="note">The monthly included hours or storage are spent.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#codespaces">Open a repository in a cloud dev environment</a></p>
+</article>
+<article class="result errcard" id="packages-permission">
+  <h2><code class="errmsg">denied: installation not allowed to Write organization package</code><a class="anchor" href="#packages-permission" aria-label="Link to this error">#</a></h2>
+  <p class="note">The token lacks package write permission for that organization.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#packages-registry">Publish packages to GitHub Packages</a></p>
+</article>
+<article class="result errcard" id="ghcr-unauthorized">
+  <h2><code class="errmsg">unauthorized: unauthenticated: User cannot be authenticated with the token provided.</code><a class="anchor" href="#ghcr-unauthorized" aria-label="Link to this error">#</a></h2>
+  <p class="note">The registry login used a token without the right scope, or an expired one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ghcr">Publish a container image next to the code</a></p>
+</article>
+<article class="result errcard" id="npm-publish-403">
+  <h2><code class="errmsg">npm ERR! 403 Forbidden - PUT https://registry.npmjs.org/&lt;pkg&gt;</code><a class="anchor" href="#npm-publish-403" aria-label="Link to this error">#</a></h2>
+  <p class="note">The account may not publish that package name, or the version already exists.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#npm-publish-ci">Publish an npm package from a workflow</a></p>
+</article>
+<article class="result errcard" id="pypi-file-exists">
+  <h2><code class="errmsg">HTTPError: 400 Bad Request  File already exists</code><a class="anchor" href="#pypi-file-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">That exact version was already uploaded, and PyPI never allows a replacement.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pypi-publish-ci">Publish a Python package from a workflow</a></p>
+</article>
+<article class="result errcard" id="gitlab-push-blocked">
+  <h2><code class="errmsg">GitLab: You are not allowed to push code to protected branches on this project.</code><a class="anchor" href="#gitlab-push-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch is protected on GitLab, the same idea as a GitHub ruleset.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#use-other-hosts">Use Git with GitLab, Bitbucket, or AWS CodeCommit</a></p>
+</article>
+<article class="result errcard" id="bitbucket-auth-failed">
+  <h2><code class="errmsg">remote: Invalid credentials  fatal: Authentication failed for &#x27;https://bitbucket.org/...&#x27;</code><a class="anchor" href="#bitbucket-auth-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Bitbucket rejected the password: it requires an app password, not an account password.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#bitbucket-auth">Authenticate Git with Bitbucket</a></p>
+</article>
+<article class="result errcard" id="mirror-push-rejected">
+  <h2><code class="errmsg">! [remote rejected] refs/pull/1/head -&gt; refs/pull/1/head (deny updating a hidden ref)</code><a class="anchor" href="#mirror-push-rejected" aria-label="Link to this error">#</a></h2>
+  <p class="note">A mirror push tried to write pull request refs, which servers keep read-only.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#mirror-migrate">Move a repository anywhere with full history</a></p>
+</article>
+<article class="result errcard" id="checkout-index-failed">
+  <h2><code class="errmsg">fatal: unable to checkout working tree  warning: Clone succeeded, but checkout failed.</code><a class="anchor" href="#checkout-index-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The objects arrived but the files could not be written: usually a path or permission problem.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">The clone is intact; only the checkout failed.</p>
+  <div class="cmd"><code>git checkout -f HEAD</code><button class="copy" data-cmd="git checkout -f HEAD" aria-label="Copy command">Copy</button></div>
+  <p class="note">Retry the checkout after fixing the path length, case collision, or permissions.</p>
+</article>
+<article class="result errcard" id="symlink-not-supported">
+  <h2><code class="errmsg">warning: &lt;path&gt;: symlink not created, symlinks are not supported</code><a class="anchor" href="#symlink-not-supported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The filesystem or platform will not create symbolic links, so Git wrote a plain file.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#symlinks">How Git handles symbolic links</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
