@@ -1904,7 +1904,8 @@
         "create ssh key",
         "ssh-keygen",
         "add ssh key to github",
-        "ssh setup"
+        "ssh setup",
+        "ed25519 vs rsa"
       ],
       "variants": [
         {
@@ -3635,7 +3636,8 @@
       "aka": [
         "multiple branches simultaneously",
         "second working directory",
-        "worktree"
+        "worktree",
+        "worktree prune"
       ],
       "variants": [
         {
@@ -7699,7 +7701,8 @@
         "gitignore for node",
         "gitignore template",
         "generate gitignore",
-        "gitignore for xcode"
+        "gitignore for xcode",
+        "gitignore.io"
       ],
       "variants": [
         {
@@ -8444,7 +8447,8 @@
         "cannot approve my own pr",
         "merge despite failing checks",
         "push rejected protected branch",
-        "protect tags"
+        "protect tags",
+        "not available on private repo free plan"
       ],
       "variants": [
         {
@@ -9028,7 +9032,8 @@
         "commits by user",
         "who contributed most",
         "lines changed by author",
-        "filter commits by author on github"
+        "filter commits by author on github",
+        "count contributors"
       ],
       "variants": [
         {
@@ -9793,7 +9798,8 @@
         "drop a commit",
         "edit an old commit",
         "reorder last two commits",
-        "delete a commit in the middle"
+        "delete a commit in the middle",
+        "clean up a branch before pr"
       ],
       "variants": [
         {
@@ -10943,7 +10949,8 @@
       "aka": [
         "git flow vs github flow",
         "trunk based development",
-        "which branching model"
+        "which branching model",
+        "what is trunk"
       ],
       "variants": [
         {
@@ -11346,7 +11353,8 @@
       "aka": [
         "github projects board",
         "kanban on github",
-        "track issues in a table"
+        "track issues in a table",
+        "project board automation"
       ],
       "variants": [
         {
@@ -14435,7 +14443,8 @@
       "aka": [
         "codeql setup",
         "code scanning alerts",
-        "find security bugs"
+        "find security bugs",
+        "codeql vs dependabot"
       ],
       "variants": [
         {
@@ -15913,6 +15922,557 @@
         "partial-clone",
         "slow-git",
         "github-status"
+      ]
+    },
+    {
+      "id": "gh-auth-switch",
+      "q": "Switch GitHub CLI between two accounts",
+      "aka": [
+        "gh auth switch",
+        "multiple accounts in gh",
+        "work and personal cli"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh auth login",
+              "n": "Log in to the second account; both stay stored."
+            },
+            {
+              "c": "gh auth switch",
+              "n": "Flips the active account. gh auth status shows who is active for which host."
+            }
+          ],
+          "undo": "gh auth switch back"
+        }
+      ],
+      "seealso": [
+        "two-github-accounts",
+        "gh-cli-setup",
+        "https-two-accounts"
+      ]
+    },
+    {
+      "id": "what-is-ci-cd",
+      "q": "What CI and CD mean",
+      "aka": [
+        "ci cd explained",
+        "continuous integration meaning",
+        "difference ci and cd"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: push",
+              "n": "CI: every push builds and tests automatically, so breakage surfaces in minutes, not at release. CD continues the same pipeline into deployment, so shipping is a merge, not an event. On GitHub, both are workflows."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "deploy-environments",
+        "what-is-a-pr"
+      ]
+    },
+    {
+      "id": "github-certifications",
+      "q": "Get GitHub certified",
+      "aka": [
+        "github certification exam",
+        "github foundations",
+        "prove github skills"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "examregistration.github.com",
+              "n": "Foundations is the entry exam; Actions, Advanced Security, and Administration go deeper. Proctored online, and the badge lands on your profile via Credly."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-education",
+        "achievements",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "history-visualization",
+      "q": "Turn the history into a picture",
+      "aka": [
+        "gource animation",
+        "visualize repo history",
+        "commit history video"
+      ],
+      "variants": [
+        {
+          "when": "Animated",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "winget install Gource.Gource",
+              "n": "gource in any repo plays the project's life as an animation: files bloom, authors orbit. Startlingly good for talks and retrospectives."
+            }
+          ],
+          "undo": "Uninstall gource"
+        },
+        {
+          "when": "Static",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --graph --oneline --all",
+              "n": "The terminal picture, and Insights -> Network on GitHub for the interactive one."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pretty-log",
+        "network-graph",
+        "repo-traffic"
+      ]
+    },
+    {
+      "id": "squash-vs-fixup",
+      "q": "Squash or fixup in an interactive rebase",
+      "aka": [
+        "difference squash fixup",
+        "rebase keep message",
+        "combine commits messages"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i HEAD~3",
+              "n": "Both fold a commit into the one above. squash pauses to let you combine both messages; fixup discards the folded commit's message entirely. Typo fixes want fixup; merged ideas want squash."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "interactive-rebase",
+        "fixup-autosquash",
+        "squash-commits"
+      ]
+    },
+    {
+      "id": "amend-vs-new-commit",
+      "q": "Amend the last commit or make a new one",
+      "aka": [
+        "when to amend",
+        "amend etiquette",
+        "fix previous commit or commit again"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit --amend --no-edit",
+              "n": "Amend while the commit is still yours alone: unpushed, unfinished, unpolished. Once pushed where others fetch, amending rewrites shared history; from then on, corrections are new commits."
+            }
+          ],
+          "undo": "git reflog holds the pre-amend commit"
+        }
+      ],
+      "seealso": [
+        "add-to-last-commit",
+        "undo-amend",
+        "force-push-safely"
+      ]
+    },
+    {
+      "id": "feature-flags",
+      "q": "Merge unfinished work without releasing it",
+      "aka": [
+        "feature flags basics",
+        "ship dark",
+        "merge behind a flag"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "if (flags.newCheckout) { ... }",
+              "n": "A config switch guards the new path, so the branch merges early and often while users see nothing. The flag flips when ready, instantly and reversibly. This is what lets trunk-based teams skip long branches."
+            }
+          ],
+          "undo": "Flip the flag off"
+        }
+      ],
+      "seealso": [
+        "branching-strategy",
+        "long-lived-branch",
+        "solo-workflow"
+      ]
+    },
+    {
+      "id": "rollback-decision",
+      "q": "Production broke: revert or fix forward",
+      "aka": [
+        "rollback strategy",
+        "hotfix or revert",
+        "bad deploy what now"
+      ],
+      "variants": [
+        {
+          "when": "Default: revert first",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert -m 1 <merge-hash>",
+              "n": "Reverting is mechanical and fast, and it works while you are still confused. Production returns to known-good; the real fix then proceeds without a fire under it."
+            }
+          ],
+          "undo": "Revert the revert once fixed"
+        },
+        {
+          "when": "Fix forward only when",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c hotfix/issue",
+              "n": "The fix is genuinely one obvious line, or reverting would lose data. Honesty about which case you are in is the skill."
+            }
+          ],
+          "undo": "Revert the hotfix"
+        }
+      ],
+      "seealso": [
+        "revert-pr",
+        "hotfix-from-tag",
+        "undo-revert"
+      ]
+    },
+    {
+      "id": "codespaces-dotfiles",
+      "q": "Bring my shell setup into every codespace",
+      "aka": [
+        "codespaces dotfiles",
+        "personal settings in cloud dev",
+        "auto install dotfiles"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Codespaces -> Automatically install dotfiles",
+              "n": "Point it at your dotfiles repository. Every new codespace clones it and runs its install script, so the cloud terminal feels like home immediately."
+            }
+          ],
+          "undo": "Untick the setting"
+        }
+      ],
+      "seealso": [
+        "dotfiles-repo",
+        "codespaces",
+        "devcontainer"
+      ]
+    },
+    {
+      "id": "scalar",
+      "q": "Clone a giant repository the optimized way",
+      "aka": [
+        "scalar clone",
+        "microsoft scalar",
+        "monorepo clone preset"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "scalar clone <url>",
+              "n": "Ships with Git. One command that combines partial clone, cone sparse-checkout, and background maintenance: the whole big-repo toolkit preconfigured."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "partial-clone",
+        "sparse-checkout",
+        "git-maintenance"
+      ]
+    },
+    {
+      "id": "git-notes",
+      "q": "Attach notes to commits without changing them",
+      "aka": [
+        "git notes",
+        "annotate commit after push",
+        "metadata on commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git notes add -m \"Benchmarked: 12% faster\" <hash>",
+              "n": "The note rides alongside the commit without altering its hash, so even published history can be annotated. git log shows them; they push only via the notes ref: git push origin refs/notes/commits."
+            }
+          ],
+          "undo": "git notes remove <hash>"
+        }
+      ],
+      "seealso": [
+        "how-git-stores",
+        "edit-commit-message"
+      ]
+    },
+    {
+      "id": "stacked-prs",
+      "q": "Build one change on top of another (stacked pull requests)",
+      "aka": [
+        "stacked prs",
+        "dependent pull requests",
+        "chain of branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr create --base feature-1",
+              "n": "Branch feature-2 from feature-1 and target the pull request at it, so reviewers see only the new slice. When feature-1 merges, retarget feature-2 to main; GitHub often does this itself."
+            }
+          ],
+          "undo": "Change the base back in the pull request"
+        }
+      ],
+      "seealso": [
+        "change-pr-base",
+        "pr-checklist",
+        "rebase-onto"
+      ]
+    },
+    {
+      "id": "rendered-files",
+      "q": "Files GitHub renders instead of just showing",
+      "aka": [
+        "csv as table",
+        "geojson map on github",
+        "notebook rendering"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "data.csv",
+              "n": "CSV and TSV render as searchable tables, GeoJSON as interactive maps, STL as rotatable 3D, Jupyter notebooks with their outputs, PDFs in place. Commit the file; the rendering is free."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-markdown",
+        "notebooks-in-git",
+        "readme-images"
+      ]
+    },
+    {
+      "id": "require-signed-commits",
+      "q": "Require signed commits on a branch",
+      "aka": [
+        "signed commits ruleset",
+        "enforce commit signing",
+        "unsigned commits rejected"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require signed commits",
+              "n": "Pushes containing unsigned commits are rejected. Contributors each set up SSH or GPG signing once; the Verified badge stops being optional decoration."
+            }
+          ],
+          "undo": "Remove the rule"
+        }
+      ],
+      "seealso": [
+        "sign-commits",
+        "verify-signatures",
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "ignore-mechanisms",
+      "q": "The three ways to ignore, and which one you need",
+      "aka": [
+        "gitignore vs exclude vs skip-worktree",
+        "ignore decision",
+        "hide changes three ways"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".gitignore",
+              "n": "For untracked files everyone should ignore: committed, shared, versioned."
+            },
+            {
+              "c": ".git/info/exclude",
+              "n": "For untracked files only you ignore: same syntax, never committed."
+            },
+            {
+              "c": "git update-index --skip-worktree <file>",
+              "n": "For tracked files whose local edits should stay invisible. The one most people actually need last."
+            }
+          ],
+          "undo": "Remove the line, or --no-skip-worktree"
+        }
+      ],
+      "seealso": [
+        "ignore-files",
+        "local-only-ignore",
+        "skip-worktree"
+      ]
+    },
+    {
+      "id": "first-day-on-team",
+      "q": "First day on a team that uses Git",
+      "aka": [
+        "joined team using git",
+        "new job git workflow",
+        "onboarding with git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url> && git switch -c <type>/<first-task>",
+              "n": "Clone, branch, and make the first pull request small: a doc fix counts. Its journey through review teaches the team's real conventions faster than any wiki."
+            },
+            {
+              "c": "git log --oneline -20",
+              "n": "Read recent history: message style, PR size, merge method. Match what you see."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "branch-naming",
+        "pr-checklist",
+        "shared-branch-etiquette"
+      ]
+    },
+    {
+      "id": "professional-repo",
+      "q": "Make a repository look professionally kept",
+      "aka": [
+        "repo checklist",
+        "polish my repository",
+        "portfolio ready repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo edit --add-topic <topic>",
+              "n": "README that sells in one screen, license, topics, About description, a green CI badge, issue templates, and a social preview image. Each is minutes of work; together they read as care."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-structure",
+        "add-license",
+        "repo-topics",
+        "social-preview"
+      ]
+    },
+    {
+      "id": "avoid-conflicts",
+      "q": "Get fewer merge conflicts in the first place",
+      "aka": [
+        "minimize conflicts",
+        "conflicts constantly",
+        "team keeps conflicting"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull --rebase",
+              "n": "Sync often and keep branches short: conflict odds grow with divergence time. Agree on a formatter so style edits stop colliding, and split files that everyone edits at once."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "shared-branch-etiquette",
+        "long-lived-branch",
+        "rerere"
+      ]
+    },
+    {
+      "id": "mentions",
+      "q": "Mention people and teams the right way",
+      "aka": [
+        "@ mention on github",
+        "notify a team",
+        "cc someone on issue"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "@username",
+              "n": "Notifies them and subscribes them to the thread; @org/team-name pings a whole team. Mentions in commit messages notify too, once pushed to the default branch. Use precisely; every ping spends someone's attention."
+            }
+          ],
+          "undo": "Edits cannot unsend the notification"
+        }
+      ],
+      "seealso": [
+        "watch-unwatch",
+        "co-authors",
+        "codeowners"
       ]
     }
   ]
