@@ -31703,6 +31703,354 @@
         "check-a-pr-is-safe",
         "handle-dependabot-noise"
       ]
+    },
+    {
+      "id": "see-all-my-open-work",
+      "q": "See everything I have in flight",
+      "aka": [
+        "my open work everywhere",
+        "all my branches and prs",
+        "what am i in the middle of"
+      ],
+      "variants": [
+        {
+          "when": "Across GitHub",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search prs --author=@me --state open",
+              "n": "Open pull requests in every repository, which is the honest measure of unfinished work."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "On this machine",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch --sort=-committerdate --format=\"%(committerdate:short) %(refname:short)\"",
+              "n": "Local branches by recency; anything old is either finished or abandoned. git stash list catches the rest."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "my-prs-everywhere",
+        "keep-branch-list-short",
+        "see-everything-i-did-today"
+      ]
+    },
+    {
+      "id": "pick-between-two-solutions",
+      "q": "Try two approaches and keep the better one",
+      "aka": [
+        "experiment with two implementations",
+        "compare two attempts",
+        "spike two solutions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c try/approach-a main && git switch -c try/approach-b main",
+              "n": "Two branches from the same base, so neither influences the other and both stay comparable."
+            },
+            {
+              "c": "git diff try/approach-a try/approach-b",
+              "n": "Compare the finished shapes directly, keep one, and delete the other. The loser is a decision recorded, not wasted work."
+            }
+          ],
+          "undo": "git branch -D the discarded branch"
+        }
+      ],
+      "seealso": [
+        "solo-workflow",
+        "branch-lifetime",
+        "same-branch-two-worktrees"
+      ]
+    },
+    {
+      "id": "repo-for-config-files",
+      "q": "Version server or app configuration",
+      "aka": [
+        "config in git",
+        "infrastructure config repository",
+        "track configuration changes"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add config/",
+              "n": "Configuration in Git gives you history, review, and rollback for the changes that most often break production."
+            },
+            {
+              "c": "echo \"*.secret.yaml\" >> .gitignore",
+              "n": "Split values from secrets: the shape is committed, the credentials come from a secret store at deploy time."
+            }
+          ],
+          "undo": "Remove the ignore rule"
+        }
+      ],
+      "seealso": [
+        "kubernetes-manifests-git",
+        "env-files",
+        "keep-secrets-per-environment"
+      ]
+    },
+    {
+      "id": "understand-git-object-ids",
+      "q": "Why commits have those long hashes",
+      "aka": [
+        "what is a sha in git",
+        "why hashes not numbers",
+        "commit id explained"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse HEAD",
+              "n": "The hash is computed from the commit's own content: tree, parents, author, message. Change any of it and the hash changes, which is why rewriting history renames every commit after it."
+            },
+            {
+              "c": "git cat-file -p HEAD",
+              "n": "Sequential numbers would need a central authority to hand out. Hashes let any clone name a commit identically with no coordination."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "how-git-stores",
+        "current-commit",
+        "amend-vs-new-commit"
+      ]
+    },
+    {
+      "id": "stop-committing-formatting-noise",
+      "q": "Stop formatting changes polluting my commits",
+      "aka": [
+        "formatter changed everything",
+        "auto format noise in diff",
+        "editor reformats on save"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add -p",
+              "n": "Staging by hunk lets you commit the logic and leave the reformatting out, which keeps the diff reviewable."
+            },
+            {
+              "c": "git diff -w",
+              "n": "Better: agree one formatter, run it once in a dedicated commit, add that commit to .git-blame-ignore-revs, and the argument ends."
+            }
+          ],
+          "undo": "git restore --staged ."
+        }
+      ],
+      "seealso": [
+        "reduce-repo-noise",
+        "blame-ignore-revs",
+        "one-line-per-sentence"
+      ]
+    },
+    {
+      "id": "repo-with-no-network-access",
+      "q": "Use Git on an air-gapped machine",
+      "aka": [
+        "secure facility git",
+        "offline repository transfer",
+        "air gapped git workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git bundle create transfer.bundle main",
+              "n": "One file carrying commits, which crosses the gap on removable media and clones or fetches like a remote."
+            },
+            {
+              "c": "git bundle create update.bundle <last-transferred>..main",
+              "n": "Incremental bundles keep later transfers small, since only new commits travel."
+            }
+          ],
+          "undo": "Delete the bundle"
+        }
+      ],
+      "seealso": [
+        "git-bundle",
+        "work-offline",
+        "share-repo-with-non-github-user"
+      ]
+    },
+    {
+      "id": "choose-what-to-review-in-a-diff",
+      "q": "Know where to look first in a diff",
+      "aka": [
+        "how to read a pull request",
+        "review strategy",
+        "what matters in a diff"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number> --name-only",
+              "n": "Start with the file list: it tells you the shape of the change and which parts carry risk."
+            },
+            {
+              "c": "gh pr diff <number>",
+              "n": "Then read in order of consequence: data migrations, auth and permissions, error paths, public interfaces. Formatting last, or never."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "review-large-pr",
+        "first-review-i-give"
+      ]
+    },
+    {
+      "id": "repo-time-travel",
+      "q": "See the whole project as it was on a date",
+      "aka": [
+        "checkout repository at a date",
+        "project state last year",
+        "time travel in git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --before=\"2025-12-31\" -1 --format=%H",
+              "n": "The last commit before that moment."
+            },
+            {
+              "c": "git switch --detach <hash>",
+              "n": "Stand on it and the entire working tree becomes that day's project. Detached HEAD here is exactly right."
+            }
+          ],
+          "undo": "git switch - returns to your branch"
+        }
+      ],
+      "seealso": [
+        "file-as-of-date",
+        "clone-at-commit",
+        "understand-detached-head-danger"
+      ]
+    },
+    {
+      "id": "handle-two-prs-same-file",
+      "q": "Two pull requests touch the same file",
+      "aka": [
+        "conflicting pull requests",
+        "two prs same code",
+        "which pr merges first"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr list --search \"<filename>\"",
+              "n": "Merge the smaller or more urgent one first, then update the second against new main. Nothing is gained by both waiting."
+            },
+            {
+              "c": "git merge main",
+              "n": "The second author resolves once, in their own branch, where they understand both changes."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "merge-queue",
+        "avoid-conflicts",
+        "rebase-pull-request-branch"
+      ]
+    },
+    {
+      "id": "see-if-someone-changed-my-file",
+      "q": "Get notified when a specific file changes",
+      "aka": [
+        "watch a file for changes",
+        "alert on file change",
+        "track changes to one path"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"/schema.sql @your-username\" >> .github/CODEOWNERS",
+              "n": "Ownership means every pull request touching the path requests your review automatically, which is the built-in way to watch a file."
+            },
+            {
+              "c": "git log --oneline -5 -- <path>",
+              "n": "After the fact, the path's own log answers who and when."
+            }
+          ],
+          "undo": "Remove the CODEOWNERS line"
+        }
+      ],
+      "seealso": [
+        "codeowners",
+        "protect-a-file-from-edits",
+        "who-to-ask"
+      ]
+    },
+    {
+      "id": "finish-someone-elses-branch",
+      "q": "Take over an unfinished branch from a colleague",
+      "aka": [
+        "continue a teammate branch",
+        "pick up abandoned work",
+        "inherit a branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch && git switch <their-branch>",
+              "n": "Read the commits first: git log --oneline main..HEAD shows what they intended, which is faster than reconstructing it from the diff."
+            },
+            {
+              "c": "git switch -c <topic>-continued",
+              "n": "Continue on your own branch if theirs may still move, and credit them with Co-authored-by on the merged work."
+            }
+          ],
+          "undo": "Delete your branch"
+        }
+      ],
+      "seealso": [
+        "contributor-went-silent",
+        "see-someone-elses-branch",
+        "co-authors"
+      ]
     }
   ]
 }
