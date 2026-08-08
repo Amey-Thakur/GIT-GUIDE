@@ -11,9 +11,9 @@ how dangerous it is, and how to undo it.
 
 **[Open Git Guide](https://amey-thakur.github.io/GIT-GUIDE/)** · **[Ask a question](https://github.com/Amey-Thakur/GIT-GUIDE/discussions)**
 
-<img alt="Answers" src="https://img.shields.io/badge/dynamic/json?label=answers&query=%24.intents.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Fintents.json&color=f05133">
-<img alt="Errors decoded" src="https://img.shields.io/badge/dynamic/json?label=errors%20decoded&query=%24.errors.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Ferrors.json&color=8250df">
-<img alt="License" src="https://img.shields.io/github/license/Amey-Thakur/GIT-GUIDE?color=2e7d43&label=license">
+<img alt="Answers" src="https://img.shields.io/badge/dynamic/json?label=answers&query=%24.intents.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Fintents.json&color=39FF14">
+<img alt="Errors decoded" src="https://img.shields.io/badge/dynamic/json?label=errors%20decoded&query=%24.errors.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Ferrors.json&color=F05133">
+<img alt="License" src="https://img.shields.io/github/license/Amey-Thakur/GIT-GUIDE?color=lightgrey&label=license">
 
 </div>
 
