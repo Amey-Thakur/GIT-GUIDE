@@ -28218,6 +28218,485 @@
         "fast-forward",
         "merge-methods"
       ]
+    },
+    {
+      "id": "two-remotes-different-auth",
+      "q": "One remote over SSH and another over HTTPS",
+      "aka": [
+        "mixed auth remotes",
+        "ssh for one remote https for another",
+        "different credentials per remote"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote -v",
+              "n": "Authentication follows the URL scheme, per remote, so mixing them is fine: origin over SSH and a mirror over HTTPS coexist without configuration."
+            },
+            {
+              "c": "git remote set-url <name> <url>",
+              "n": "Switch either one at any time. Only the URL decides which credential path is used."
+            }
+          ],
+          "undo": "Set the URL back"
+        }
+      ],
+      "seealso": [
+        "https-vs-ssh",
+        "same-repo-two-remotes",
+        "stop-pushing-to-wrong-remote"
+      ]
+    },
+    {
+      "id": "repo-templates-vs-forks",
+      "q": "Template repository or fork for starting projects",
+      "aka": [
+        "use this template vs fork",
+        "boilerplate approach",
+        "start from an existing project"
+      ],
+      "variants": [
+        {
+          "when": "Template",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --template <owner>/<repo>",
+              "n": "Fresh history, no fork relationship, and the new repository stands alone. Right for boilerplate."
+            }
+          ],
+          "undo": "Delete the new repository"
+        },
+        {
+          "when": "Fork",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo fork <owner>/<repo>",
+              "n": "Keeps the link upstream so you can pull improvements and send changes back. Right when you intend to stay connected."
+            }
+          ],
+          "undo": "Delete the fork"
+        }
+      ],
+      "seealso": [
+        "template-repo",
+        "fork-vs-clone",
+        "detach-fork"
+      ]
+    },
+    {
+      "id": "stop-committing-passwords",
+      "q": "Habits that keep credentials out of commits",
+      "aka": [
+        "avoid committing passwords",
+        "credential hygiene",
+        "stop leaking keys"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --staged",
+              "n": "Read what you are about to commit. The single habit that catches most leaks costs ten seconds."
+            },
+            {
+              "c": "git add -p",
+              "n": "Staging by hunk makes blind git add . impossible, which is where pasted keys usually slip in."
+            }
+          ],
+          "undo": "Rotate anything that got through"
+        }
+      ],
+      "seealso": [
+        "gitignore-for-secrets",
+        "secret-scan-local",
+        "remove-secret-from-history"
+      ]
+    },
+    {
+      "id": "handle-merge-conflict-in-lockfile",
+      "q": "Resolve a conflict in a lockfile",
+      "aka": [
+        "package-lock conflict resolve",
+        "yarn lock conflict",
+        "lockfile merge conflict"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git checkout --theirs package-lock.json",
+              "n": "Never hand-merge a lockfile: take one side wholesale."
+            },
+            {
+              "c": "npm install",
+              "n": "Then regenerate it from the merged manifest so the result is internally consistent, and commit that."
+            }
+          ],
+          "undo": "git checkout -m package-lock.json restores the conflict"
+        }
+      ],
+      "seealso": [
+        "commit-lockfile",
+        "merge-conflict",
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "see-changes-since-i-last-looked",
+      "q": "See what changed since I last pulled",
+      "aka": [
+        "what happened while i was away",
+        "catch up on a repository",
+        "changes since last week"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch && git log HEAD..origin/main --oneline",
+              "n": "Exactly what arrived that you do not have."
+            },
+            {
+              "c": "git log --since=\"1 week ago\" --oneline --all --author-date-order",
+              "n": "Or by time, across every branch, which suits coming back from leave."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "see-what-pull-will-do",
+        "standup-log",
+        "understand-someone-else-repo"
+      ]
+    },
+    {
+      "id": "one-repo-many-deploy-targets",
+      "q": "Deploy one repository to staging and production",
+      "aka": [
+        "multiple environments one repo",
+        "staging and production deploys",
+        "deploy same code twice"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "environment: staging",
+              "n": "One workflow, two jobs, each naming its environment. Environment-scoped secrets and approvals keep the two apart without duplicating the pipeline."
+            },
+            {
+              "c": "gh release create <tag>",
+              "n": "Promote the same artifact rather than rebuilding, so what you tested is what ships."
+            }
+          ],
+          "undo": "Redeploy the previous release"
+        }
+      ],
+      "seealso": [
+        "deploy-environments",
+        "which-branch-is-deployed",
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "contributor-went-silent",
+      "q": "A contributor abandoned their pull request",
+      "aka": [
+        "pr author disappeared",
+        "stale pull request from contributor",
+        "finish someone else pr"
+      ],
+      "variants": [
+        {
+          "when": "You can push to their branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "With Allow edits by maintainers ticked, finish the work and push back to their fork. They keep authorship."
+            }
+          ],
+          "undo": "git reset --hard and force-push their branch back"
+        },
+        {
+          "when": "You cannot",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch <their-fork> <branch> && git switch -c continue/<topic> FETCH_HEAD",
+              "n": "Continue on your own branch, credit them with Co-authored-by, and close the original with thanks."
+            }
+          ],
+          "undo": "Delete the branch"
+        }
+      ],
+      "seealso": [
+        "maintainer-edits",
+        "co-authors",
+        "stale-issues"
+      ]
+    },
+    {
+      "id": "tell-what-changed-in-a-merge",
+      "q": "Understand what a merge brought in",
+      "aka": [
+        "what did this merge add",
+        "review a merge commit",
+        "contents of a merge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log <merge-hash>^1..<merge-hash>^2 --oneline",
+              "n": "The commits the merge brought from the other branch, which is usually the real question."
+            },
+            {
+              "c": "git diff <merge-hash>^1 <merge-hash>",
+              "n": "The net effect on the branch that received it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "diff-merge-commit",
+        "log-merges",
+        "tilde-vs-caret"
+      ]
+    },
+    {
+      "id": "branch-naming-for-bots",
+      "q": "Keep automated branches out of the way",
+      "aka": [
+        "dependabot branch clutter",
+        "bot branches everywhere",
+        "filter automated branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch -r --list \"origin/dependabot/*\"",
+              "n": "Bots use predictable prefixes, so listing and filtering them is easy."
+            },
+            {
+              "c": "Settings -> Automatically delete head branches",
+              "n": "With automatic deletion on merge, bot branches clean themselves up and never accumulate."
+            }
+          ],
+          "undo": "Untick the setting"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "auto-delete-branches",
+        "what-to-do-with-old-branches"
+      ]
+    },
+    {
+      "id": "partial-staging-then-test",
+      "q": "Test exactly what I am about to commit",
+      "aka": [
+        "test staged changes only",
+        "verify before commit",
+        "run tests on staged version"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash push --keep-index",
+              "n": "Shelves everything except what is staged, so the working tree matches the commit you are about to make."
+            },
+            {
+              "c": "git stash pop",
+              "n": "Run the tests, commit if green, then restore the rest. This catches the classic case where a commit passes only because of unstaged work."
+            }
+          ],
+          "undo": "git stash pop restores the shelf"
+        }
+      ],
+      "seealso": [
+        "commit-only-part-of-file",
+        "hooks",
+        "what-is-staging"
+      ]
+    },
+    {
+      "id": "github-projects-vs-issues",
+      "q": "Do I need Projects or are Issues enough",
+      "aka": [
+        "projects board worth it",
+        "issues only workflow",
+        "when to add a project board"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue list --label bug",
+              "n": "For a solo or small project, labels, milestones, and a saved search do everything a board would."
+            },
+            {
+              "c": "Projects -> New project",
+              "n": "Add a board when work spans repositories, needs custom fields like priority or size, or several people need one shared view."
+            }
+          ],
+          "undo": "Delete the project; issues are untouched"
+        }
+      ],
+      "seealso": [
+        "project-boards",
+        "milestones",
+        "issue-labels"
+      ]
+    },
+    {
+      "id": "reset-a-single-file-to-branch",
+      "q": "Take one file from another branch without merging",
+      "aka": [
+        "copy file from branch",
+        "one file from main",
+        "overwrite file from another branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --source main -- <path>",
+              "n": "That file becomes main's version, staged for review. Nothing else about the branches changes."
+            },
+            {
+              "c": "git diff --staged -- <path>",
+              "n": "Check the result before committing; taking a file wholesale can quietly drop your own work in it."
+            }
+          ],
+          "undo": "git restore --source HEAD -- <path>"
+        }
+      ],
+      "seealso": [
+        "copy-file-from-branch",
+        "see-remote-file",
+        "restore-single-commit-file"
+      ]
+    },
+    {
+      "id": "repo-for-experiments",
+      "q": "Somewhere to keep half-finished experiments",
+      "aka": [
+        "scratch repository",
+        "where to put prototypes",
+        "experiment repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create scratch --private",
+              "n": "One private repository with a folder per experiment beats twenty abandoned public ones, and keeps your profile honest."
+            },
+            {
+              "c": "gh gist create <file>",
+              "n": "For a single file, a secret gist is lighter still and is a real repository underneath."
+            }
+          ],
+          "undo": "Delete the folder or gist"
+        }
+      ],
+      "seealso": [
+        "gists",
+        "portfolio-repos",
+        "practice-sandbox"
+      ]
+    },
+    {
+      "id": "cannot-push-after-clone",
+      "q": "I cloned a project and cannot push to it",
+      "aka": [
+        "push denied on cloned repo",
+        "no write access to clone",
+        "cloned but cannot contribute"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo fork --remote",
+              "n": "Cloning grants no write access. Contributions go through your own fork, then a pull request."
+            },
+            {
+              "c": "git remote -v",
+              "n": "If you should have access, check you cloned the right repository and are authenticated as the right account."
+            }
+          ],
+          "undo": "Delete the fork"
+        }
+      ],
+      "seealso": [
+        "fork-vs-clone",
+        "pr-from-fork-branch",
+        "why-two-remotes-fork"
+      ]
+    },
+    {
+      "id": "what-does-origin-head-mean",
+      "q": "What origin/HEAD points at",
+      "aka": [
+        "origin head meaning",
+        "why is there an origin head",
+        "default branch pointer"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git symbolic-ref refs/remotes/origin/HEAD",
+              "n": "A local note of the remote's default branch, set at clone time. It is why plain git log origin works."
+            },
+            {
+              "c": "git remote set-head origin --auto",
+              "n": "Refresh it after the default branch is renamed, which is when it usually goes stale or breaks."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "default-branch",
+        "what-is-origin",
+        "remote-branch-vs-tracking"
+      ]
     }
   ]
 }
