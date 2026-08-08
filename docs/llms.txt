@@ -27,8 +27,9 @@ License: MIT
 
 ## Downloads
 
-- [git-guide-companion.pdf](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide-companion.pdf): the twelve-page printable companion: model, commands, rescues.
+- [git-guide.pdf](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf): the complete guide, printable: model, every command section, every error, the chapters.
 - [cheatsheet-card.png](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png): the daily commands on one printable card.
+- [cheatsheet-card-2.png](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png): everything beyond the daily, the second card.
 - [poster.png](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png): the eight doors and the danger levels, one sheet.
 
 ## Community

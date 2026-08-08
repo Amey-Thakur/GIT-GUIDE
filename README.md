@@ -15,6 +15,10 @@ how dangerous it is, and how to undo it.
 <img alt="Errors decoded" src="https://img.shields.io/badge/dynamic/json?label=errors%20decoded&query=%24.errors.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Ferrors.json&color=F05133">
 <img alt="License" src="https://img.shields.io/github/license/Amey-Thakur/GIT-GUIDE?color=lightgrey&label=license">
 
+<br><br>
+
+[<img src="docs/assets/poster.png" alt="Git Guide: the eight doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
+
 </div>
 
 <br>
@@ -90,11 +94,7 @@ The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms
 
 ## Take it with you
 
-**[The companion (PDF)](docs/assets/git-guide-companion.pdf)**: the model, the commands, and the rescues as a twelve-page booklet. One click on the site's [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) page, alongside the printable cards below. Every image is generated from the repository's live data.
-
-[<img src="docs/assets/poster.png" alt="Git Guide poster: the eight doors and the three danger levels">](docs/assets/poster.png)
-
-[The cheat card](docs/assets/cheatsheet-card.png) puts the daily commands on one printable page.
+**[Git Guide as a PDF](docs/assets/git-guide.pdf)**: the model, every command section, every error, and the chapters, printable and complete. The two cheat cards put [the daily commands](docs/assets/cheatsheet-card.png) and [everything beyond them](docs/assets/cheatsheet-card-2.png) on printable pages. All of it is one click on the site's [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) page, and every artifact is generated from the repository's live data.
 
 <br>
 

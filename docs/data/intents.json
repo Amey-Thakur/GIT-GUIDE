@@ -1635,7 +1635,7 @@
     {
       "id": "copy-file-from-branch",
       "q": "Copy a file from another branch",
-      "aka": ["get file from branch", "checkout single file from branch", "take file from main"],
+      "aka": ["get file from branch", "checkout single file from branch", "take file from main", "take folder from branch"],
       "variants": [
         {
           "when": "Standard case",
@@ -2164,7 +2164,7 @@
     {
       "id": "archive-export",
       "q": "Export the project as a zip without the .git folder",
-      "aka": ["export source", "zip without history", "clean source archive", "git export like svn"],
+      "aka": ["export source", "zip without history", "clean source archive", "git export like svn", "export one folder"],
       "variants": [
         {
           "when": "Standard case",
@@ -3628,6 +3628,113 @@
         }
       ],
       "seealso": ["archive-export", "checkout-tag"]
+    },
+    {
+      "id": "log-merges",
+      "q": "Show only merges, or hide them from the log",
+      "aka": ["log without merge commits", "list merges", "clean log no merges"],
+      "variants": [
+        {
+          "when": "Either direction",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git log --no-merges --oneline", "n": "The work itself, merge commits hidden." },
+            { "c": "git log --merges --oneline", "n": "Only the merges: the story of what landed when." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["see-history", "first-parent-log"]
+    },
+    {
+      "id": "first-parent-log",
+      "q": "Read main as a list of landed changes",
+      "aka": ["first parent log", "what merged into main", "release history view"],
+      "variants": [
+        {
+          "when": "One line per merged change",
+          "danger": "safe",
+          "cmds": [{ "c": "git log --first-parent --oneline main", "n": "Follows only main's own line, so every entry is a landing, not a detail. The cleanest answer to what shipped." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["log-merges", "branch-contains"]
+    },
+    {
+      "id": "restore-from-stash",
+      "q": "Take one file out of a stash",
+      "aka": ["single file from stash", "partial stash apply", "checkout file from stash"],
+      "variants": [
+        {
+          "when": "Without applying the rest",
+          "danger": "destructive",
+          "cmds": [{ "c": "git restore --source=stash@{0} -- <file>", "n": "Overwrites your working copy of that file with the stashed version; the stash itself stays whole." }],
+          "undo": "git restore <file> returns to the committed version"
+        }
+      ],
+      "seealso": ["stash-inspect", "stash-one-file"]
+    },
+    {
+      "id": "move-tag",
+      "q": "Move a tag to a different commit",
+      "aka": ["retag", "tag wrong commit", "force tag update"],
+      "variants": [
+        {
+          "when": "Point it where it should have been",
+          "danger": "history",
+          "cmds": [
+            { "c": "git tag -f <tag> <hash>", "n": "" },
+            { "c": "git push origin <tag> --force", "n": "Anyone who fetched the old tag keeps it until they delete it; moving a published release tag deserves an announcement." }
+          ],
+          "undo": "git tag -f <tag> <old-hash> and force push again"
+        }
+      ],
+      "seealso": ["rename-tag", "tag-old-commit"]
+    },
+    {
+      "id": "tag-old-commit",
+      "q": "Tag a commit from the past",
+      "aka": ["tag previous commit", "tag by hash", "late release tag"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git tag -a v1.0.0 <hash> -m \"<note>\"", "n": "Any commit in history; find the hash with git log --oneline. Push it like any tag." }],
+          "undo": "git tag -d v1.0.0"
+        }
+      ],
+      "seealso": ["tag-release", "move-tag"]
+    },
+    {
+      "id": "push-up-to-commit",
+      "q": "Push only up to a certain commit",
+      "aka": ["push some commits", "partial push", "hold back last commits"],
+      "variants": [
+        {
+          "when": "Publish part of your local work",
+          "danger": "safe",
+          "cmds": [{ "c": "git push origin <hash>:refs/heads/<branch>", "n": "Everything up to and including that commit goes; your later commits wait locally." }],
+          "undo": "Push the rest whenever ready; nothing was lost"
+        }
+      ],
+      "seealso": ["preview-push", "push-new-branch"]
+    },
+    {
+      "id": "protect-main-locally",
+      "q": "Stop yourself committing to main by accident",
+      "aka": ["block commits on main", "prevent commit to master", "local branch guard"],
+      "variants": [
+        {
+          "when": "A guard that runs before every commit",
+          "danger": "safe",
+          "cmds": [
+            { "c": "mkdir -p .githooks && git config core.hooksPath .githooks", "n": "" },
+            { "c": "printf '#!/bin/sh\\n[ \"$(git branch --show-current)\" = \"main\" ] && { echo \"On main; branch first.\"; exit 1; } || exit 0\\n' > .githooks/pre-commit && chmod +x .githooks/pre-commit", "n": "Committing on main now fails with a reminder. The server-side version is branch protection in the host's settings." }
+          ],
+          "undo": "git config --unset core.hooksPath"
+        }
+      ],
+      "seealso": ["hooks", "move-commits-to-branch"]
     }
   ]
 }

@@ -93,7 +93,7 @@ def social_card(intents, errors):
   <rect x="1092" y="346" width="66" height="32" rx="6" fill="none" stroke="{LINE}" stroke-width="1.5"/>
   <text x="1125" y="367" font-size="15" fill="{MUTED}" text-anchor="middle">Copy</text>
   <text x="716" y="432" font-size="18" fill="{MUTED}"><tspan font-weight="700" fill="{INK}">Undo:</tspan> git reset --soft HEAD@{{1}}</text>
-  {footer(524, 1280, "Open source on GitHub")}
+  {footer(524, 1280, "Every Git and GitHub answer in one place.")}
 </svg>'''
 
 
@@ -140,12 +140,11 @@ def poster(intents, errors):
   {boxes}
   {legend}
   <text x="1320" y="716" font-size="18" fill="{MUTED}" text-anchor="end">every answer carries its danger level and its undo</text>
-  {footer(772, 1400, "Generated from live data")}
+  {footer(772, 1400, "Every Git and GitHub answer in one place.")}
 </svg>'''
 
 
-def sheet_card(sheet):
-    wanted = ["The daily loop", "Branches", "Undo and rescue"]
+def sheet_card(sheet, wanted, title):
     sections = [s for s in sheet if s["title"] in wanted]
     y = 208
     body = ""
@@ -167,10 +166,10 @@ def sheet_card(sheet):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="{height}" viewBox="0 0 1240 {height}" font-family="{FONT}">
   <rect width="1240" height="{height}" fill="{PAPER}"/>
   {git_logo(80, 56, 64)}
-  <text x="164" y="106" font-size="46" font-weight="700" fill="{INK}">The Git you use daily<tspan fill="{ACCENT}">.</tspan></text>
+  <text x="164" y="106" font-size="46" font-weight="700" fill="{INK}">{title}<tspan fill="{ACCENT}">.</tspan></text>
   <text x="82" y="150" font-size="21" fill="{MUTED}">Red commands rewrite history or can destroy work. Every one has its undo at amey-thakur.github.io/GIT-GUIDE</text>
   {body}
-  {footer(y - 14, 1240, "Generated from live data")}
+  {footer(y - 14, 1240, "Every Git and GitHub answer in one place.")}
 </svg>''', height
 
 
@@ -199,15 +198,19 @@ def render(jobs):
 def main():
     ASSETS.mkdir(parents=True, exist_ok=True)
     intents, errors, sheet = data()
-    sheet_svg, sheet_h = sheet_card(sheet)
+    titles = [sec["title"] for sec in sheet]
+    daily, beyond = titles[:8], titles[8:]
+    c1_svg, c1_h = sheet_card(sheet, daily, "The Git you use daily")
+    c2_svg, c2_h = sheet_card(sheet, beyond, "The Git beyond daily")
     jobs = [
         (ASSETS / "social-preview.svg", DOCS / "assets" / "social-preview.png", 1280, 640, social_card(intents, errors)),
         (ASSETS / "poster.svg", DOCS / "assets" / "poster.png", 1400, 900, poster(intents, errors)),
-        (ASSETS / "cheatsheet-card.svg", DOCS / "assets" / "cheatsheet-card.png", 1240, sheet_h, sheet_card(sheet)[0]),
+        (ASSETS / "cheatsheet-card.svg", DOCS / "assets" / "cheatsheet-card.png", 1240, c1_h, c1_svg),
+        (ASSETS / "cheatsheet-card-2.svg", DOCS / "assets" / "cheatsheet-card-2.png", 1240, c2_h, c2_svg),
     ]
     for svg_path, _, _, _, svg in jobs:
         svg_path.write_text(svg, encoding="utf-8", newline="\n")
-    print(f"3 SVGs composed from live data: {len(intents)} answers, {len(errors)} errors")
+    print(f"{len(jobs)} SVGs composed from live data")
     if "--render" in sys.argv:
         render([j[:4] for j in jobs])
 
