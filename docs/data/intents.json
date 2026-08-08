@@ -339,7 +339,8 @@
         "remove file from repo but keep it locally",
         "ignore files already committed",
         "remove file from repository without deleting it from disk",
-        "remove node_modules from repository"
+        "remove node_modules from repository",
+        "remove directory from remote after gitignore"
       ],
       "variants": [
         {
@@ -382,7 +383,9 @@
         "remove new files",
         "git clean",
         "delete files not in repo",
-        "delete a single untracked file"
+        "delete a single untracked file",
+        "reset --hard leaves untracked files",
+        "clear my working directory"
       ],
       "variants": [
         {
@@ -1365,7 +1368,8 @@
         "configure git",
         "set name and email",
         "git config global",
-        "initial setup"
+        "initial setup",
+        "git for beginners practical guide"
       ],
       "variants": [
         {
@@ -1842,7 +1846,8 @@
         "move file",
         "git mv",
         "rename keep history",
-        "rename a folder"
+        "rename a folder",
+        "move files and keep history"
       ],
       "variants": [
         {
@@ -2014,7 +2019,9 @@
         "git push asks for username and password",
         "clone with username and password",
         "update saved git password",
-        "remove credentials from git"
+        "remove credentials from git",
+        "git keeps prompting for a password",
+        "403 fatal http request failed"
       ],
       "variants": [
         {
@@ -2070,7 +2077,8 @@
       "aka": [
         "unable to auto-detect email address",
         "author identity unknown",
-        "empty ident name"
+        "empty ident name",
+        "check my git identity"
       ],
       "variants": [
         {
@@ -2486,7 +2494,8 @@
       "aka": [
         "index.lock",
         "another git process seems to be running",
-        "lock file error"
+        "lock file error",
+        "cannot lock existing info/refs"
       ],
       "variants": [
         {
@@ -2858,7 +2867,8 @@
         "where is this commit",
         "which release has this fix",
         "which branch did this commit come from",
-        "remote branches containing a commit"
+        "remote branches containing a commit",
+        "find what branch a commit came from"
       ],
       "variants": [
         {
@@ -3285,7 +3295,8 @@
         "search log",
         "grep through committed code",
         "search git history for a string",
-        "who deleted this line"
+        "who deleted this line",
+        "grep git commits for a word"
       ],
       "variants": [
         {
@@ -4617,7 +4628,8 @@
         "work and personal github",
         "multiple ssh keys",
         "second account push",
-        "ssh config host alias"
+        "ssh config host alias",
+        "multiple github accounts on the same computer"
       ],
       "variants": [
         {
@@ -4754,7 +4766,8 @@
         "old mode new mode",
         "filemode false",
         "permissions diff",
-        "wsl all files modified"
+        "wsl all files modified",
+        "unlink of file failed"
       ],
       "variants": [
         {
@@ -4951,7 +4964,8 @@
         "pushed by mistake",
         "remove commits from remote branch",
         "reset remote to a commit",
-        "pushed to wrong branch"
+        "pushed to wrong branch",
+        "undoing a git push"
       ],
       "variants": [
         {
@@ -6356,7 +6370,8 @@
         "branch graph terminal",
         "log with colors and branches",
         "visualize branch topology",
-        "show absolute dates in log"
+        "show absolute dates in log",
+        "shortest log output with author and date"
       ],
       "variants": [
         {
@@ -6499,7 +6514,8 @@
         "q to quit",
         "END in terminal",
         "colon at bottom of screen",
-        "prevent git diff from using a pager"
+        "prevent git diff from using a pager",
+        "git branch behaves like less"
       ],
       "variants": [
         {
@@ -6608,7 +6624,8 @@
         "git config list",
         "effective configuration",
         "where is global git config stored",
-        "gitconfig file location"
+        "gitconfig file location",
+        "know the username and email saved in configuration"
       ],
       "variants": [
         {
@@ -6701,7 +6718,8 @@
       "aka": [
         "push every branch",
         "push --all",
-        "publish all branches"
+        "publish all branches",
+        "push all branches and tags to a new remote"
       ],
       "variants": [
         {
@@ -7697,7 +7715,8 @@
         "gitignore template",
         "generate gitignore",
         "gitignore for xcode",
-        "gitignore.io"
+        "gitignore.io",
+        "gitignore for xcode projects"
       ],
       "variants": [
         {
@@ -9886,7 +9905,8 @@
       "aka": [
         "difference between fork and clone",
         "copy repo to contribute",
-        "fork explained"
+        "fork explained",
+        "are forks actually clones"
       ],
       "variants": [
         {
@@ -10381,7 +10401,8 @@
       "aka": [
         "git root directory",
         "cd to repo root",
-        "show toplevel"
+        "show toplevel",
+        "git root directory in one command"
       ],
       "variants": [
         {
@@ -13980,7 +14001,9 @@
         "gitignore wildcards",
         "gitignore syntax",
         "double asterisk pattern",
-        "multiple gitignore files"
+        "multiple gitignore files",
+        "ignore subfolders",
+        "ignore a directory recursively"
       ],
       "variants": [
         {
@@ -17763,6 +17786,307 @@
         "dangling-objects",
         "what-is-reflog",
         "git-maintenance"
+      ]
+    },
+    {
+      "id": "deploy-heroku",
+      "q": "Deploy to Heroku with Git",
+      "aka": [
+        "heroku git remote",
+        "link folder to heroku app",
+        "git push heroku main"
+      ],
+      "variants": [
+        {
+          "when": "Connect an existing app",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "heroku git:remote -a <app-name>",
+              "n": "Adds a remote named heroku to this folder. From then on git push heroku main deploys."
+            }
+          ],
+          "undo": "git remote remove heroku"
+        },
+        {
+          "when": "Permission denied on push",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "heroku keys:add",
+              "n": "Heroku authenticates the push by SSH key or by the CLI's HTTP credentials. This uploads the key that publickey errors are complaining about."
+            }
+          ],
+          "undo": "heroku keys:remove <key>"
+        }
+      ],
+      "seealso": [
+        "permission-denied-publickey",
+        "deploy-ssh-server",
+        "push-two-remotes"
+      ]
+    },
+    {
+      "id": "unlink-of-file-failed",
+      "q": "Unlink of file failed on Windows",
+      "aka": [
+        "unlink of file failed should i try again",
+        "permission denied windows git",
+        "file locked by another process"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "tasklist | findstr node",
+              "n": "Something has the file open: a dev server, an editor indexing, antivirus, or Explorer previewing. Close it and answer yes to retry."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "It keeps happening",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.fscache true",
+              "n": "On for Git for Windows by default; confirm it is not disabled. Excluding the working folder from real-time antivirus scanning cures the stubborn cases."
+            }
+          ],
+          "undo": "git config --unset core.fscache"
+        }
+      ],
+      "seealso": [
+        "filemode",
+        "index-lock",
+        "slow-git"
+      ]
+    },
+    {
+      "id": "remove-remote-folder",
+      "q": "Remove a folder from the remote but keep it locally",
+      "aka": [
+        "delete folder from github not disk",
+        "remove committed directory",
+        "stop tracking a folder"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"build/\" >> .gitignore",
+              "n": "Ignore it first, or the next add puts it straight back."
+            },
+            {
+              "c": "git rm -r --cached build/ && git commit -m \"Stop tracking build output\" && git push",
+              "n": "Gone from the repository and from GitHub, still on your disk. Teammates lose their copy on pull, which is usually the point."
+            }
+          ],
+          "undo": "git revert the commit restores tracking"
+        }
+      ],
+      "seealso": [
+        "untrack-file",
+        "gitignore-not-working",
+        "ignore-mechanisms"
+      ]
+    },
+    {
+      "id": "reset-remote-to-commit",
+      "q": "Reset a remote branch to an older commit",
+      "aka": [
+        "resetting remote to a certain commit",
+        "rewind origin",
+        "force remote back"
+      ],
+      "variants": [
+        {
+          "when": "You are sure and coordinated",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --hard <hash>",
+              "n": "Move your local branch first."
+            },
+            {
+              "c": "git push --force-with-lease",
+              "n": "The remote follows. Anyone who already pulled keeps the newer commits and will try to push them back, so tell the team before, not after."
+            }
+          ],
+          "undo": "git reflog for the old tip, then force-push it back"
+        },
+        {
+          "when": "Shared branch: prefer revert",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash>..HEAD",
+              "n": "Undoes the same changes by adding new commits. Nobody's clone breaks, and the record stays honest."
+            }
+          ],
+          "undo": "git revert the reverts"
+        }
+      ],
+      "seealso": [
+        "undo-push",
+        "force-push-safely",
+        "recover-force-push"
+      ]
+    },
+    {
+      "id": "gitignore-itself",
+      "q": "Should .gitignore be committed",
+      "aka": [
+        "stop gitignore appearing in untracked",
+        "commit gitignore or not",
+        "ignore the gitignore"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add .gitignore && git commit -m \"Add gitignore\"",
+              "n": "Commit it: the rules are part of the project and every clone needs them. It shows as untracked only because you have not yet."
+            }
+          ],
+          "undo": "git rm --cached .gitignore"
+        },
+        {
+          "when": "Rules that are only yours",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".git/info/exclude",
+              "n": "Same syntax, never committed, invisible to everyone else. The right home for personal ignores."
+            }
+          ],
+          "undo": "Remove the lines"
+        }
+      ],
+      "seealso": [
+        "ignore-mechanisms",
+        "local-only-ignore",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "merge-message-prompt",
+      "q": "Git opened an editor asking why this merge is necessary",
+      "aka": [
+        "please enter a commit message to explain why this merge",
+        "editor opens on pull",
+        "merge commit message prompt"
+      ],
+      "variants": [
+        {
+          "when": "Right now",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ":wq",
+              "n": "In Vim, or Ctrl+X in nano. The prefilled message is fine; the prompt only wants you to confirm it. Nothing has gone wrong."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Stop seeing it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global pull.rebase true",
+              "n": "Rebasing on pull produces no merge commit, so nothing to describe. To keep merging but skip the prompt: git config --global merge.ff true accepts fast-forwards silently, and pull --no-edit takes the default message."
+            }
+          ],
+          "undo": "git config --global --unset pull.rebase"
+        }
+      ],
+      "seealso": [
+        "pull-rebase",
+        "exit-vim",
+        "diverged-branches"
+      ]
+    },
+    {
+      "id": "clone-with-credentials",
+      "q": "Clone using a username and password or token",
+      "aka": [
+        "clone with credentials in url",
+        "provide password to git clone",
+        "non interactive clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://<token>@github.com/<owner>/<repo>.git",
+              "n": "Passwords have not worked for Git operations on GitHub since 2021; use a token. It lands in your shell history and in .git/config, so prefer a credential helper for daily work and this only for one-shot scripts."
+            }
+          ],
+          "undo": "git remote set-url origin <clean-url>"
+        },
+        {
+          "when": "Nothing interactive available",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GIT_ASKPASS=true GIT_TERMINAL_PROMPT=0 git clone <url>",
+              "n": "Fails fast instead of hanging on a prompt no one can answer: what CI wants."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "access-tokens",
+        "stop-password-prompts",
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "pull-without-checkout",
+      "q": "Update branches without checking them out",
+      "aka": [
+        "merge update pull without checkouts",
+        "refresh branches in background",
+        "update several branches"
+      ],
+      "variants": [
+        {
+          "when": "One branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch origin main:main",
+              "n": "Fast-forwards local main while you stay where you are. It refuses anything that is not a fast-forward, so it cannot mangle work."
+            }
+          ],
+          "undo": "git branch -f main main@{1}"
+        },
+        {
+          "when": "Everything at once",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --all --prune",
+              "n": "Updates every remote-tracking branch. Local branches stay put, which is precisely what makes it safe to run any time."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "update-branch-no-checkout",
+        "fetch-all",
+        "worktrees"
       ]
     }
   ]
