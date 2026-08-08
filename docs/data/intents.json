@@ -1001,7 +1001,8 @@
       "aka": [
         "update fork",
         "fork behind upstream",
-        "pull upstream changes"
+        "pull upstream changes",
+        "pull original repository into my fork"
       ],
       "variants": [
         {
@@ -1191,7 +1192,8 @@
         "you are in detached head state",
         "not on a branch",
         "head detached at",
-        "reconcile detached head with main"
+        "reconcile detached head with main",
+        "go to a particular revision"
       ],
       "variants": [
         {
@@ -1231,7 +1233,8 @@
         "switch branch with uncommitted work",
         "stash pop conflict",
         "stash but keep staged",
-        "stash apply vs pop"
+        "stash apply vs pop",
+        "undo stash pop"
       ],
       "variants": [
         {
@@ -1546,7 +1549,8 @@
       "aka": [
         "forgot file in commit",
         "amend commit add file",
-        "include file in previous commit"
+        "include file in previous commit",
+        "amend without changing the message"
       ],
       "variants": [
         {
@@ -1650,7 +1654,8 @@
         "apply commit from other branch",
         "pick one commit",
         "port a fix",
-        "what does cherry picking mean"
+        "what does cherry picking mean",
+        "selectively merge changes from another branch"
       ],
       "variants": [
         {
@@ -1776,7 +1781,8 @@
         "gitignore a folder",
         "ignore directory on windows",
         ".gitignore for visual studio",
-        "ignoring directories"
+        "ignoring directories",
+        "gitignore file itself shows as untracked"
       ],
       "variants": [
         {
@@ -1986,7 +1992,9 @@
         "save username and password",
         "cache https credentials",
         "git push asks for username and password",
-        "clone with username and password"
+        "clone with username and password",
+        "update saved git password",
+        "remove credentials from git"
       ],
       "variants": [
         {
@@ -2660,7 +2668,8 @@
         "what changed between versions",
         "list file names changed between two commits",
         "git diff --name-only",
-        "show which files changed between two revisions"
+        "show which files changed between two revisions",
+        "diff with the previous commit"
       ],
       "variants": [
         {
@@ -2776,7 +2785,8 @@
         "fetch prune",
         "origin branch deleted but still shows",
         "stale remote branches",
-        "prune local tracking branches deleted on remote"
+        "prune local tracking branches deleted on remote",
+        "unable to update local ref"
       ],
       "variants": [
         {
@@ -2813,7 +2823,8 @@
       "aka": [
         "is this commit in main",
         "where is this commit",
-        "which release has this fix"
+        "which release has this fix",
+        "which branch did this commit come from"
       ],
       "variants": [
         {
@@ -3096,7 +3107,8 @@
         "checkout single file from branch",
         "take file from main",
         "take folder from branch",
-        "take a folder from another branch"
+        "take a folder from another branch",
+        "cherry-pick only certain files"
       ],
       "variants": [
         {
@@ -3200,7 +3212,8 @@
       "aka": [
         "stash pop lost",
         "deleted stash",
-        "get stash back"
+        "get stash back",
+        "recover stashed uncommitted changes"
       ],
       "variants": [
         {
@@ -3399,7 +3412,8 @@
         "updates were rejected",
         "failed to push some refs",
         "fetch first",
-        "remote contains work"
+        "remote contains work",
+        "tip of your current branch is behind"
       ],
       "variants": [
         {
@@ -4209,7 +4223,8 @@
         "origin meaning",
         "upstream vs origin",
         "rename remote",
-        "what is upstream"
+        "what is upstream",
+        "downstream and upstream definition"
       ],
       "variants": [
         {
@@ -4328,7 +4343,8 @@
       "aka": [
         "good commit message",
         "conventional commits",
-        "commit style"
+        "commit style",
+        "gitmoji"
       ],
       "variants": [
         {
@@ -4508,7 +4524,8 @@
         "remove all commits",
         "reset history",
         "start over one commit",
-        "squash everything"
+        "squash everything",
+        "squash all commits into one"
       ],
       "variants": [
         {
@@ -4619,7 +4636,8 @@
         "git proxy",
         "clone behind firewall",
         "corporate network git",
-        "unset proxy"
+        "unset proxy",
+        "self signed certificate"
       ],
       "variants": [
         {
@@ -6419,7 +6437,8 @@
         "exit git log",
         "q to quit",
         "END in terminal",
-        "colon at bottom of screen"
+        "colon at bottom of screen",
+        "prevent git diff from using a pager"
       ],
       "variants": [
         {
@@ -6681,7 +6700,8 @@
         "which gitignore rule",
         "file not added ignored",
         "debug gitignore",
-        "list all ignored files"
+        "list all ignored files",
+        "show files ignored by gitignore"
       ],
       "variants": [
         {
@@ -7401,7 +7421,8 @@
         "standup summary",
         "my commits today",
         "yesterday's work",
-        "filter log by author"
+        "filter log by author",
+        "log between two dates"
       ],
       "variants": [
         {
@@ -7610,7 +7631,8 @@
         "gitignore for android studio",
         "gitignore for node",
         "gitignore template",
-        "generate gitignore"
+        "generate gitignore",
+        "gitignore for xcode"
       ],
       "variants": [
         {
@@ -7764,7 +7786,8 @@
       "aka": [
         "show file at commit",
         "see file from old commit",
-        "print previous version of file"
+        "print previous version of file",
+        "view file in another branch without switching"
       ],
       "variants": [
         {
@@ -8179,7 +8202,8 @@
       "aka": [
         "pull.rebase true",
         "pull creates merge commit",
-        "avoid merge commits on pull"
+        "avoid merge commits on pull",
+        "please enter a commit message to explain why this merge is necessary"
       ],
       "variants": [
         {
@@ -8455,7 +8479,8 @@
       "aka": [
         "closes #123",
         "link issue to pull request",
-        "fixes keyword"
+        "fixes keyword",
+        "reference issue number in commit message"
       ],
       "variants": [
         {
@@ -8699,7 +8724,8 @@
       "aka": [
         "removed files still listed",
         "record deletions",
-        "git add deleted files"
+        "git add deleted files",
+        "add only modified files, not untracked"
       ],
       "variants": [
         {
@@ -8914,7 +8940,8 @@
       "aka": [
         "git log author filter",
         "commits by user",
-        "who contributed most"
+        "who contributed most",
+        "lines changed by author"
       ],
       "variants": [
         {
@@ -9096,7 +9123,8 @@
       "aka": [
         "stop github notification flood",
         "watch releases only",
-        "unsubscribe repo"
+        "unsubscribe repo",
+        "notification inbox"
       ],
       "variants": [
         {
@@ -9641,7 +9669,8 @@
       "aka": [
         "cherry-pick -m",
         "mainline parent",
-        "cherry pick merge fails"
+        "cherry pick merge fails",
+        "is a merge but no -m option was given"
       ],
       "variants": [
         {
@@ -12350,6 +12379,340 @@
         "what-is-a-pr",
         "commit-frequency",
         "review-pr"
+      ]
+    },
+    {
+      "id": "push-to-non-bare",
+      "q": "Push rejected: branch is currently checked out",
+      "aka": [
+        "remote rejected checked out branch",
+        "push to non-bare repository",
+        "denyCurrentBranch"
+      ],
+      "variants": [
+        {
+          "when": "The right fix",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --bare /path/repo.git",
+              "n": "You pushed to a repository with a working tree, and Git refused to yank the branch out from under it. Repos that receive pushes should be bare; push there and pull from the working repo."
+            }
+          ],
+          "undo": "Delete the bare folder"
+        },
+        {
+          "when": "A machine you also work on",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config receive.denyCurrentBranch updateInstead",
+              "n": "Run in the receiving repo: pushes update its working tree too, refusing only when uncommitted changes would be lost."
+            }
+          ],
+          "undo": "git config --unset receive.denyCurrentBranch"
+        }
+      ],
+      "seealso": [
+        "bare-repo",
+        "two-machines"
+      ]
+    },
+    {
+      "id": "update-branch-no-checkout",
+      "q": "Update another branch without switching to it",
+      "aka": [
+        "fast forward branch without checkout",
+        "fetch into local branch",
+        "update main while on feature"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch origin main:main",
+              "n": "Fast-forwards local main to the remote while you stay on your branch. Git refuses if main cannot fast-forward or is checked out elsewhere."
+            }
+          ],
+          "undo": "git branch -f main main@{1}"
+        }
+      ],
+      "seealso": [
+        "fetch-all",
+        "move-branch-pointer",
+        "update-branch"
+      ]
+    },
+    {
+      "id": "upstream-downstream",
+      "q": "What upstream and downstream mean",
+      "aka": [
+        "definition of upstream",
+        "downstream repository",
+        "upstream branch vs upstream repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add upstream <original-url>",
+              "n": "Data flows downstream: the project you forked is upstream of your fork, and your fork is upstream of your clone. The same word also names the remote branch yours tracks, which is what @{u} points at."
+            }
+          ],
+          "undo": "git remote remove upstream"
+        }
+      ],
+      "seealso": [
+        "what-is-origin",
+        "sync-fork",
+        "branch-upstream"
+      ]
+    },
+    {
+      "id": "recover-force-push",
+      "q": "Recover commits lost to a force push",
+      "aka": [
+        "force push overwrote my work",
+        "restore branch after force push",
+        "teammate force pushed"
+      ],
+      "variants": [
+        {
+          "when": "You have the commits locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog",
+              "n": "If any clone ever had the commits, they are still in that clone's reflog. Find the hash from before the overwrite."
+            },
+            {
+              "c": "git branch rescue <hash>",
+              "n": "Named, they are safe. Merge or push as needed."
+            }
+          ],
+          "undo": "git branch -D rescue"
+        },
+        {
+          "when": "No clone has them",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/events",
+              "n": "Push events expose the previous head hash for a while. Fetch it directly: git fetch origin <hash> works on GitHub."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-reflog",
+        "force-push-safely",
+        "recover-lost-commit"
+      ]
+    },
+    {
+      "id": "merge-two-repos",
+      "q": "Merge one repository into another, keeping both histories",
+      "aka": [
+        "combine two repos",
+        "import repo with history",
+        "absorb project into monorepo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add other <url> && git fetch other",
+              "n": "Bring the other project's history in."
+            },
+            {
+              "c": "git merge --allow-unrelated-histories other/main",
+              "n": "Two roots, one repository, every commit preserved. Move the files into a subfolder first, in the other repo, if you want them contained."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD and git remote remove other"
+        }
+      ],
+      "seealso": [
+        "unrelated-histories",
+        "monorepo",
+        "split-subfolder-repo"
+      ]
+    },
+    {
+      "id": "actions-locally",
+      "q": "Test a workflow before pushing it",
+      "aka": [
+        "run github actions locally",
+        "act tool",
+        "debug workflow without pushing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "winget install nektos.act",
+              "n": "act runs workflows in Docker containers on your machine. Not perfect parity with GitHub runners, but it catches YAML mistakes and broken steps before they burn commits."
+            },
+            {
+              "c": "act push",
+              "n": "Simulates a push event against your workflow files."
+            }
+          ],
+          "undo": "Uninstall act"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "rerun-checks"
+      ]
+    },
+    {
+      "id": "clone-all-repos",
+      "q": "Clone every repository I own",
+      "aka": [
+        "clone all my repos",
+        "backup all repositories",
+        "new machine setup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo list <user> --limit 200 --json nameWithOwner -q \".[].nameWithOwner\" | xargs -n1 gh repo clone",
+              "n": "Every repository, one folder each. Run it in Git Bash on Windows."
+            }
+          ],
+          "undo": "Delete the folders"
+        }
+      ],
+      "seealso": [
+        "update-many-repos",
+        "backup-repo",
+        "gh-cli-setup"
+      ]
+    },
+    {
+      "id": "issue-search",
+      "q": "Search issues and pull requests precisely",
+      "aka": [
+        "github issue filters",
+        "is:open label search",
+        "find my assigned issues"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "is:issue is:open label:bug author:<user>",
+              "n": "In any issue list's search box. sort:reactions surfaces what the community wants; no:assignee finds unclaimed work; involves:<user> finds everything someone touched."
+            },
+            {
+              "c": "gh issue list --label bug --state open",
+              "n": "The same filters as flags."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "code-search",
+        "issue-labels"
+      ]
+    },
+    {
+      "id": "nojekyll",
+      "q": "Pages site missing files that start with an underscore",
+      "aka": [
+        ".nojekyll",
+        "pages underscore folder 404",
+        "css not loading on pages"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "touch .nojekyll",
+              "n": "Pages runs Jekyll by default, which silently drops _folders like _next or _assets. An empty .nojekyll at the site root turns Jekyll off and serves everything as-is."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "pages-custom-domain"
+      ]
+    },
+    {
+      "id": "github-education",
+      "q": "Get GitHub's free student and teacher benefits",
+      "aka": [
+        "student developer pack",
+        "github education",
+        "free pro for students"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "education.github.com",
+              "n": "Verify with a school email or document. Students get Pro features, Copilot, and a pack of partner credits and tools while enrolled; teachers get classroom tooling."
+            }
+          ],
+          "undo": "Benefits lapse when verification does"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "codespaces"
+      ]
+    },
+    {
+      "id": "gh-copilot",
+      "q": "Ask for a command instead of remembering it",
+      "aka": [
+        "gh copilot suggest",
+        "explain a command",
+        "ai in the terminal"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh extension install github/gh-copilot",
+              "n": "Adds two verbs to gh. Requires a Copilot subscription or the student pack."
+            },
+            {
+              "c": "gh copilot suggest \"undo the last two commits but keep the work\"",
+              "n": "Proposes the command and explains it before you run anything. gh copilot explain decodes a command you found."
+            }
+          ],
+          "undo": "gh extension remove gh-copilot"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "github-education"
       ]
     }
   ]
