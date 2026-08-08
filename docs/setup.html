@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 
@@ -75,7 +75,7 @@
     <section class="chapter" aria-label="Setup steps">
       <div class="wrap">
 
-        <h2 id="install">1. Install Git</h2>
+        <h2 id="install"><span class="num">1.</span> Install Git</h2>
         <div class="cmd"><span class="oslabel">Windows</span><code>winget install Git.Git</code><button class="copy" data-cmd="winget install Git.Git" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><span class="oslabel">macOS</span><code>brew install git</code><button class="copy" data-cmd="brew install git" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><span class="oslabel">Debian, Ubuntu</span><code>sudo apt install git</code><button class="copy" data-cmd="sudo apt install git" aria-label="Copy command">Copy</button></div>
@@ -83,18 +83,18 @@
         <div class="cmd"><span class="oslabel">Verify</span><code>git --version</code><button class="copy" data-cmd="git --version" aria-label="Copy command">Copy</button></div>
         <p class="note">macOS without Homebrew: run <code>git</code> once and accept the developer tools prompt. Any other system: <a href="https://git-scm.com/downloads">git-scm.com/downloads</a>. Anything 2.23 or newer is fine.</p>
 
-        <h2 id="identity">2. Tell Git who you are</h2>
+        <h2 id="identity"><span class="num">2.</span> Tell Git who you are</h2>
         <div class="cmd"><code>git config --global user.name "&lt;your name&gt;"</code><button class="copy" data-cmd="git config --global user.name &quot;<your name>&quot;" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git config --global user.email "&lt;your email&gt;"</code><button class="copy" data-cmd="git config --global user.email &quot;<your email>&quot;" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git config --global init.defaultBranch main</code><button class="copy" data-cmd="git config --global init.defaultBranch main" aria-label="Copy command">Copy</button></div>
         <p class="note">Use the same email as your GitHub account, or your commits will not count on your profile.</p>
 
-        <h2 id="ssh">3. One key, every host</h2>
+        <h2 id="ssh"><span class="num">3.</span> One key, every host</h2>
         <div class="cmd"><code>ssh-keygen -t ed25519 -C "&lt;your email&gt;"</code><button class="copy" data-cmd="ssh-keygen -t ed25519 -C &quot;<your email>&quot;" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>cat ~/.ssh/id_ed25519.pub</code><button class="copy" data-cmd="cat ~/.ssh/id_ed25519.pub" aria-label="Copy command">Copy</button></div>
         <p class="note">Copy the output into GitHub: Settings, SSH and GPG keys, New SSH key. The same public key works on GitLab, Bitbucket, and Azure DevOps. Test with <code>ssh -T git@github.com</code>; it should greet you by name.</p>
 
-        <h2 id="first-repo">4. Your first repository</h2>
+        <h2 id="first-repo"><span class="num">4.</span> Your first repository</h2>
         <p>Joining something that exists:</p>
         <div class="cmd"><code>git clone git@github.com:&lt;user&gt;/&lt;repo&gt;.git</code><button class="copy" data-cmd="git clone git@github.com:<user>/<repo>.git" aria-label="Copy command">Copy</button></div>
         <p>Publishing something of yours:</p>
@@ -103,14 +103,14 @@
         <div class="cmd"><code>gh repo create &lt;name&gt; --public --source . --push</code><button class="copy" data-cmd="gh repo create <name> --public --source . --push" aria-label="Copy command">Copy</button></div>
         <p class="note">The last command uses <a href="github.html#cli">GitHub CLI</a>. Without it: create an empty repository on the website, then <code>git remote add origin &lt;url&gt;</code> and <code>git push -u origin main</code>.</p>
 
-        <h2 id="loop">5. The loop you will run forever</h2>
+        <h2 id="loop"><span class="num">5.</span> The loop you will run forever</h2>
         <div class="cmd"><code>git status -sb</code><button class="copy" data-cmd="git status -sb" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git add &lt;file&gt;</code><button class="copy" data-cmd="git add <file>" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git commit -m "&lt;what and why&gt;"</code><button class="copy" data-cmd="git commit -m &quot;<what and why>&quot;" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git push</code><button class="copy" data-cmd="git push" aria-label="Copy command">Copy</button></div>
         <p class="note">Edit, stage, commit, push. Everything else is a variation. <a href="learn.html">See what each step actually moves</a>, once, and the commands stop being magic words.</p>
 
-        <h2 id="stuck">6. When it goes wrong</h2>
+        <h2 id="stuck"><span class="num">6.</span> When it goes wrong</h2>
         <p>It will, for everyone, forever. That is what the rest of this guide is for: <a href="./">ask the finder</a> in plain language, <a href="fix.html">walk the rescue triage</a>, or <a href="errors.html">paste the exact error</a>. Nothing you can do as a beginner is unrecoverable if you stop and look before typing a command marked destructive.</p>
 
       </div>

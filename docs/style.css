@@ -210,7 +210,7 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   margin: 1.1rem 0 0;
 }
 
-.stats strong { color: var(--ink); }
+.stats strong { color: var(--accent); }
 
 .chip.active { border-color: var(--accent); color: var(--accent); }
 
@@ -385,6 +385,10 @@ a.chip { text-decoration: none; }
 .browse h2 { font-size: 1.3rem; margin: 0 0 0.3rem; }
 
 .muted { color: var(--muted); }
+
+#count, #ecount { color: var(--accent); font-weight: 700; }
+
+.chapter h2 .num { color: var(--accent); }
 
 .qlist {
   list-style: none;
