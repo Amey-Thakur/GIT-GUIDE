@@ -570,7 +570,7 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
   color: var(--accent);
   font-weight: 600;
 }
-.stepcap p { margin: 0.5rem 0 0; color: var(--muted); max-width: 44rem; }
+.stepcap p { margin: 0.5rem 0 0; color: var(--muted); }
 
 .stepper-controls { display: flex; align-items: center; gap: 1rem; }
 .stepper-controls .wizard-opt { padding: 0.45rem 1rem; }
