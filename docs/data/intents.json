@@ -17398,6 +17398,372 @@
         "signing-choices",
         "sign-commits"
       ]
+    },
+    {
+      "id": "migrate-to-github",
+      "q": "Move a repository to GitHub from another host",
+      "aka": [
+        "import repo to github",
+        "gitlab to github",
+        "bitbucket to github migration"
+      ],
+      "variants": [
+        {
+          "when": "Code and history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --mirror <old-url> && cd <repo>.git",
+              "n": "A complete copy: branches, tags, notes."
+            },
+            {
+              "c": "git push --mirror <new-github-url>",
+              "n": "Everything lands in the new empty repository. Then update remotes in every working clone."
+            }
+          ],
+          "undo": "Delete the new repository; the source is untouched"
+        },
+        {
+          "when": "Issues and pull requests too",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.com/new/import",
+              "n": "GitHub's importer handles Subversion, Mercurial, and plain Git URLs. Issue history from GitLab or Jira needs a dedicated migration tool or the API."
+            }
+          ],
+          "undo": "Delete the imported repository"
+        }
+      ],
+      "seealso": [
+        "mirror-migrate",
+        "migrate-from-svn",
+        "migrate-from-mercurial"
+      ]
+    },
+    {
+      "id": "azure-devops-git",
+      "q": "Work with Azure DevOps Repos",
+      "aka": [
+        "azure repos git",
+        "tfs git",
+        "vsts remote"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://<org>@dev.azure.com/<org>/<project>/_git/<repo>",
+              "n": "Ordinary Git underneath: branches, tags, and hooks all behave. Pull requests there mean the same thing they do on GitHub."
+            },
+            {
+              "c": "az repos pr create",
+              "n": "The Azure CLI covers what gh covers on GitHub."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "use-azure-devops",
+        "pr-vs-mr",
+        "use-other-hosts"
+      ]
+    },
+    {
+      "id": "bitbucket-pipelines",
+      "q": "Bitbucket Pipelines next to GitHub Actions",
+      "aka": [
+        "bitbucket-pipelines.yml",
+        "bitbucket ci",
+        "atlassian ci comparison"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "bitbucket-pipelines.yml",
+              "n": "One file at the root, steps built from Docker images, secrets as repository variables. Actions' marketplace of reusable steps is the main thing without a direct equal; Pipes are the nearest idea."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "gitlab-ci-vs-actions",
+        "bitbucket-auth",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "commit-graph-file",
+      "q": "Speed up log and blame on a big repository",
+      "aka": [
+        "commit-graph",
+        "git log slow",
+        "speed up history commands"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit-graph write --reachable",
+              "n": "Precomputes the commit walk. log --graph, blame, and merge-base get dramatically faster on large histories."
+            },
+            {
+              "c": "git maintenance start",
+              "n": "Keeps it fresh automatically, along with other upkeep."
+            }
+          ],
+          "undo": "Delete .git/objects/info/commit-graph"
+        }
+      ],
+      "seealso": [
+        "git-maintenance",
+        "slow-git",
+        "scalar"
+      ]
+    },
+    {
+      "id": "fsmonitor",
+      "q": "Make git status instant on huge working trees",
+      "aka": [
+        "fsmonitor",
+        "status slow big repo",
+        "untracked cache"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.fsmonitor true",
+              "n": "A built-in file-system monitor tells Git what changed instead of Git scanning every path. Pair with git config core.untrackedCache true. The difference on a monorepo is seconds to milliseconds."
+            }
+          ],
+          "undo": "git config --unset core.fsmonitor"
+        }
+      ],
+      "seealso": [
+        "slow-git",
+        "git-maintenance",
+        "scalar"
+      ]
+    },
+    {
+      "id": "repack-aggressive",
+      "q": "When aggressive repacking is worth it",
+      "aka": [
+        "git gc --aggressive",
+        "repack -a -d",
+        "shrink pack files"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git repack -a -d --depth=50 --window=250",
+              "n": "Rarely needed: normal gc is enough, and aggressive runs cost hours on big repos. Worth one run after a history rewrite or an import that left the object store messy."
+            }
+          ],
+          "undo": "Nothing to undo; repacking never changes history"
+        }
+      ],
+      "seealso": [
+        "git-maintenance",
+        "shrink-repo",
+        "commit-graph-file"
+      ]
+    },
+    {
+      "id": "filter-repo-paths",
+      "q": "Keep only some folders in the history",
+      "aka": [
+        "git filter-repo path",
+        "strip folders from history",
+        "extract part of a repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git filter-repo --path src/ --path README.md",
+              "n": "Rewrites every commit to contain only those paths, dropping commits that touched nothing else. --invert-paths removes them instead. Every hash changes, so this is for fresh copies, never a shared repository."
+            }
+          ],
+          "undo": "None in place; work on a clone and keep the original"
+        }
+      ],
+      "seealso": [
+        "split-subfolder-repo",
+        "remove-secret-from-history",
+        "shrink-repo"
+      ]
+    },
+    {
+      "id": "replace-objects",
+      "q": "Graft old history onto a truncated repository",
+      "aka": [
+        "git replace",
+        "graft history",
+        "reattach old commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git replace --graft <root-commit> <old-tip>",
+              "n": "Joins a truncated history to an archived one without rewriting anything: log and blame follow through the join. The replacement is local until pushed with git push origin refs/replace/*."
+            }
+          ],
+          "undo": "git replace -d <hash>"
+        }
+      ],
+      "seealso": [
+        "fresh-history",
+        "merge-two-repos",
+        "how-git-stores"
+      ]
+    },
+    {
+      "id": "empty-tree-hash",
+      "q": "Diff the very first commit",
+      "aka": [
+        "diff first commit",
+        "empty tree hash",
+        "show initial commit changes"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show --root <first-hash>",
+              "n": "The root commit has no parent, so plain diffs come out empty. --root shows it as all additions."
+            },
+            {
+              "c": "git diff 4b825dc642cb6eb9a060e54bf8d69288fbee4904 <hash>",
+              "n": "That constant is the empty tree, useful in scripts that must diff anything against nothing."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "find-first-commit",
+        "diff-merge-commit",
+        "how-git-stores"
+      ]
+    },
+    {
+      "id": "pathspec-magic",
+      "q": "Target files precisely with pathspecs",
+      "aka": [
+        "pathspec exclude",
+        ":(exclude) syntax",
+        "git add all but one file"
+      ],
+      "variants": [
+        {
+          "when": "Exclude while including",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add . \":(exclude)*.log\"",
+              "n": "The :(exclude) prefix subtracts from a match. Quote it so the shell leaves it alone."
+            }
+          ],
+          "undo": "git restore --staged ."
+        },
+        {
+          "when": "Match from the repository root",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log \":(top)src/\"",
+              "n": ":(top) anchors at the root no matter where you stand; :(icase) matches case-insensitively."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "add-a-vs-dot",
+        "gitignore-patterns",
+        "sparse-checkout"
+      ]
+    },
+    {
+      "id": "stash-create-store",
+      "q": "Stash without touching the working tree",
+      "aka": [
+        "git stash create",
+        "script a backup commit",
+        "snapshot without disturbing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash create",
+              "n": "Builds a stash commit and prints its hash, changing nothing on disk. The scriptable way to snapshot a dirty tree before a risky operation."
+            },
+            {
+              "c": "git stash store -m \"safety net\" <hash>",
+              "n": "Files that commit into the stash list so it survives garbage collection."
+            }
+          ],
+          "undo": "git stash drop after storing"
+        }
+      ],
+      "seealso": [
+        "stash",
+        "patch-uncommitted",
+        "dangling-objects"
+      ]
+    },
+    {
+      "id": "gc-safety",
+      "q": "Is git gc ever going to delete my work",
+      "aka": [
+        "is git gc safe",
+        "gc prune reflog",
+        "garbage collection risk"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git gc",
+              "n": "Safe by design: anything reachable from a branch, tag, stash, index, or reflog is kept. Loose unreachable objects survive a two-week grace period, and reflog entries ninety days. Only gc --prune=now removes them immediately, which is why panic-recovery advice always says stop running that."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dangling-objects",
+        "what-is-reflog",
+        "git-maintenance"
+      ]
     }
   ]
 }
