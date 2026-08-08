@@ -164,7 +164,8 @@
       "aka": [
         "difference between pull and fetch",
         "what does fetch do",
-        "what does pull do"
+        "what does pull do",
+        "get the latest changes"
       ],
       "variants": [
         {
@@ -841,7 +842,8 @@
         "conflict markers",
         "both modified",
         "merge failed",
-        "git merge continue"
+        "git merge continue",
+        "why do conflicts happen"
       ],
       "variants": [
         {
@@ -1321,7 +1323,8 @@
       "aka": [
         "download repo",
         "git clone",
-        "copy repository"
+        "copy repository",
+        "download code from github"
       ],
       "variants": [
         {
@@ -2340,7 +2343,8 @@
         "ssh signing",
         "gpg sign",
         "signature",
-        "verified badge on commits"
+        "verified badge on commits",
+        "vigilant mode"
       ],
       "variants": [
         {
@@ -2645,7 +2649,8 @@
         "compare file between branches",
         "diff between two branches",
         "see differences between branches",
-        "files different between branches"
+        "files different between branches",
+        "diff working tree against another branch"
       ],
       "variants": [
         {
@@ -2843,7 +2848,8 @@
         "is this commit in main",
         "where is this commit",
         "which release has this fix",
-        "which branch did this commit come from"
+        "which branch did this commit come from",
+        "remote branches containing a commit"
       ],
       "variants": [
         {
@@ -2923,7 +2929,8 @@
       "aka": [
         "update feature branch",
         "rebase on main",
-        "branch is behind main"
+        "branch is behind main",
+        "which direction does rebase go"
       ],
       "variants": [
         {
@@ -4117,7 +4124,8 @@
         "zip without history",
         "clean source archive",
         "git export like svn",
-        "export one folder"
+        "export one folder",
+        "archive only a folder"
       ],
       "variants": [
         {
@@ -4405,7 +4413,8 @@
         "run tests before push",
         "husky hooks",
         "run formatter before commit",
-        "pre-push hook"
+        "pre-push hook",
+        "enforce commit message format"
       ],
       "variants": [
         {
@@ -4627,7 +4636,8 @@
       "aka": [
         "open pr command line",
         "gh pr create",
-        "merge request cli"
+        "merge request cli",
+        "pr for the current branch"
       ],
       "variants": [
         {
@@ -6540,7 +6550,8 @@
         "show all tags",
         "tags sorted",
         "fetch tags from remote",
-        "show tag messages"
+        "show tag messages",
+        "sort tags by version number"
       ],
       "variants": [
         {
@@ -8377,7 +8388,8 @@
       "aka": [
         "github release",
         "release from tag",
-        "attach binaries to release"
+        "attach binaries to release",
+        "release notes categories config"
       ],
       "variants": [
         {
@@ -10034,7 +10046,8 @@
       "aka": [
         "contributions not showing",
         "green squares missing",
-        "profile graph empty"
+        "profile graph empty",
+        "green squares meaning"
       ],
       "variants": [
         {
@@ -12384,7 +12397,8 @@
       "aka": [
         "upload files to github",
         "drag and drop repo",
-        "delete file on github"
+        "delete file on github",
+        "upload a folder"
       ],
       "variants": [
         {
@@ -14869,6 +14883,245 @@
         "create-release",
         "github-api",
         "download-release"
+      ]
+    },
+    {
+      "id": "secret-scan-local",
+      "q": "Catch secrets before they ever reach a commit",
+      "aka": [
+        "gitleaks",
+        "scan for api keys locally",
+        "pre-commit secret scanner"
+      ],
+      "variants": [
+        {
+          "when": "Scan on every commit",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "winget install Gitleaks.Gitleaks",
+              "n": "Then gitleaks as a pre-commit hook blocks commits containing anything shaped like a credential."
+            },
+            {
+              "c": "gitleaks git .",
+              "n": "Scans the existing history too, which is worth one run on any repository about to go public."
+            }
+          ],
+          "undo": "Remove the hook"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "code-scanning",
+        "remove-secret-from-history"
+      ]
+    },
+    {
+      "id": "delete-gone-branches",
+      "q": "Delete local branches whose remote is gone",
+      "aka": [
+        "branches marked gone",
+        "clean up after prune",
+        "stale local branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune",
+              "n": "First, so tracking information is current."
+            },
+            {
+              "c": "git branch -vv | grep \": gone]\" | awk \"{print \\$1}\" | xargs -r git branch -d",
+              "n": "Deletes every branch tracking a deleted remote branch. -d refuses unmerged work; on Windows run it in Git Bash."
+            }
+          ],
+          "undo": "git branch <name> <hash> from the delete output"
+        }
+      ],
+      "seealso": [
+        "prune-remote-branches",
+        "delete-merged-branches",
+        "auto-delete-branches"
+      ]
+    },
+    {
+      "id": "archive-branch",
+      "q": "Retire a branch without losing it",
+      "aka": [
+        "archive a branch",
+        "keep branch history delete branch",
+        "tag before deleting branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag archive/<branch> <branch>",
+              "n": "The tip is preserved under a tag; push it with git push origin archive/<branch>."
+            },
+            {
+              "c": "git branch -D <branch> && git push origin --delete <branch>",
+              "n": "The branch list gets shorter; the history stays reachable forever."
+            }
+          ],
+          "undo": "git branch <branch> archive/<branch> resurrects it"
+        }
+      ],
+      "seealso": [
+        "delete-branch",
+        "recover-deleted-branch",
+        "tag-old-commit"
+      ]
+    },
+    {
+      "id": "skip-ci",
+      "q": "Push without triggering workflows",
+      "aka": [
+        "[skip ci]",
+        "commit without running actions",
+        "docs change skip build"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Fix typo [skip ci]\"",
+              "n": "Any of [skip ci], [ci skip], [no ci] in the message skips push and pull_request workflows for that push. Paths filters in the workflow are the durable version of the same idea."
+            }
+          ],
+          "undo": "git commit --amend to remove the token, or push an empty commit to trigger a run"
+        }
+      ],
+      "seealso": [
+        "workflow-not-triggering",
+        "empty-commit",
+        "actions-billing"
+      ]
+    },
+    {
+      "id": "no-terminal-github",
+      "q": "Use GitHub without a terminal at all",
+      "aka": [
+        "github without command line",
+        "no cli workflow",
+        "github for non programmers"
+      ],
+      "variants": [
+        {
+          "when": "In the browser",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.dev",
+              "n": "Press . in any repository: a full editor that commits and branches. Uploads, edits, and deletes all work from the site itself."
+            }
+          ],
+          "undo": "Every action is a commit; revert from the history page"
+        },
+        {
+          "when": "On the desktop",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GitHub Desktop",
+              "n": "Clone, branch, commit, push, and pull requests as buttons. The Git underneath is real, so a terminal remains available the day you want one."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "upload-via-web",
+        "edit-on-github",
+        "git-guis"
+      ]
+    },
+    {
+      "id": "npm-publish-ci",
+      "q": "Publish an npm package from a workflow",
+      "aka": [
+        "npm publish github actions",
+        "automate package release",
+        "provenance npm"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npm publish --provenance",
+              "n": "In a workflow with id-token: write and an NPM_TOKEN secret. Provenance links the package to the exact commit and workflow that built it, visible on npmjs.com."
+            }
+          ],
+          "undo": "npm unpublish within 72 hours, npm deprecate after"
+        }
+      ],
+      "seealso": [
+        "release-workflow",
+        "actions-secrets",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "pypi-publish-ci",
+      "q": "Publish a Python package from a workflow",
+      "aka": [
+        "pypi trusted publishing",
+        "publish to pypi actions",
+        "python package release"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: pypa/gh-action-pypi-publish@release/v1",
+              "n": "With trusted publishing configured on PyPI, no token exists to leak: PyPI trusts the workflow identity itself. The job needs only id-token: write."
+            }
+          ],
+          "undo": "Yank the release on PyPI"
+        }
+      ],
+      "seealso": [
+        "release-workflow",
+        "workflow-permissions",
+        "npm-publish-ci"
+      ]
+    },
+    {
+      "id": "deploy-ssh-server",
+      "q": "Deploy to my own server when main changes",
+      "aka": [
+        "deploy via ssh actions",
+        "rsync deploy workflow",
+        "push to vps"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "rsync -az --delete dist/ deploy@server:/srv/app/",
+              "n": "In a workflow step, with the server's private key stored as a secret and loaded via ssh-agent. Deploy keys scoped to one purpose beat your personal key every time."
+            }
+          ],
+          "undo": "Redeploy the previous release from its tag"
+        }
+      ],
+      "seealso": [
+        "deploy-keys",
+        "actions-secrets",
+        "deploy-environments"
       ]
     }
   ]
