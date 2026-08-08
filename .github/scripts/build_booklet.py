@@ -240,7 +240,7 @@ def github_page():
 
 def error_pages(errs):
     pages_out = []
-    chunk = 16
+    chunk = 12
     for n in range(0, len(errs), chunk):
         part = errs[n:n + chunk]
         half = (len(part) + 1) // 2
@@ -283,7 +283,7 @@ body {{ font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: {PAP
 .phead span {{ font-weight: 700; font-size: 12.5pt; }}
 .phead em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 10pt; }}
 i {{ color: {ACCENT}; font-style: normal; }}
-h2 {{ font-size: 17pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; padding-left: 4mm; }}
+h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; padding-left: 4mm; }}
 .h2gap {{ margin-top: 7mm; }}
 .cover {{ display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }}
 .cover h1 {{ font-size: 46pt; margin-top: 7mm; }}
@@ -292,36 +292,36 @@ h2 {{ font-size: 17pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; pa
 .cover .qual {{ font-size: 10.5pt; margin-top: 7mm; }}
 .cover .qual b {{ color: {MUTED}; font-weight: 400; padding: 0 2mm; }}
 .prose {{ max-width: 205mm; }}
-.prose p {{ font-size: 12.5pt; line-height: 1.8; margin-bottom: 5.5mm; }}
+.prose p {{ font-size: 13.5pt; line-height: 1.85; margin-bottom: 6mm; }}
 .prose .sign {{ color: {ACCENT}; font-weight: 700; font-size: 13pt; }}
 .diag {{ width: 100%; max-height: 96mm; margin-bottom: 7mm; }}
 .defs {{ display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 12mm; }}
-.defs div {{ font-size: 11pt; color: {MUTED}; line-height: 1.6; }}
+.defs div {{ font-size: 12pt; color: {MUTED}; line-height: 1.6; }}
 .defs b {{ color: {INK}; font-family: Consolas, monospace; }}
-.note {{ color: {MUTED}; font-size: 10pt; margin-bottom: 4mm; }}
+.note {{ color: {MUTED}; font-size: 10.5pt; margin-bottom: 4mm; }}
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
-.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.1mm 0; }}
-.list code {{ font-family: Consolas, monospace; font-size: 9.5pt; display: block; overflow-wrap: anywhere; }}
+.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.2mm 0; }}
+.list code {{ font-family: Consolas, monospace; font-size: 10.5pt; display: block; overflow-wrap: anywhere; }}
 .list code.danger {{ color: {DANGER}; }}
-.list span {{ font-size: 8.5pt; color: {MUTED}; display: block; margin-top: 0.8mm; }}
-.steps {{ display: grid; gap: 5mm; max-width: 230mm; }}
+.list span {{ font-size: 9.5pt; color: {MUTED}; display: block; margin-top: 1mm; }}
+.steps {{ display: grid; grid-template-columns: 1fr 1fr; gap: 7mm 12mm; }}
 .step {{ display: flex; gap: 5mm; align-items: flex-start; }}
 .step > b {{ color: {ACCENT}; font-size: 15pt; min-width: 8mm; }}
-.step strong {{ font-size: 12pt; display: block; }}
-.step span {{ font-size: 10pt; color: {MUTED}; display: block; margin: 1mm 0 1.5mm; }}
-.step code {{ font-family: Consolas, monospace; font-size: 9.5pt; background: #23211d; border-radius: 2mm; padding: 1.6mm 3mm; display: inline-block; }}
-.rules {{ font-size: 10.5pt; color: {MUTED}; line-height: 1.7; margin-top: 6mm; max-width: 230mm; }}
+.step strong {{ font-size: 13.5pt; display: block; }}
+.step span {{ font-size: 11pt; color: {MUTED}; display: block; margin: 1.2mm 0 2mm; }}
+.step code {{ font-family: Consolas, monospace; font-size: 10.5pt; background: #23211d; border-radius: 2mm; padding: 1.6mm 3mm; display: inline-block; }}
+.rules {{ font-size: 11.5pt; color: {MUTED}; line-height: 1.75; margin-top: 8mm; max-width: 250mm; }}
 .rules b {{ color: {INK}; }}
-.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.9mm 0; }}
-.errs code {{ font-family: Consolas, monospace; font-size: 9pt; color: {DANGER}; overflow-wrap: anywhere; }}
-.errs p {{ font-size: 8.5pt; color: {MUTED}; margin-top: 0.5mm; }}
+.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.5mm 0; }}
+.errs code {{ font-family: Consolas, monospace; font-size: 10pt; color: {DANGER}; overflow-wrap: anywhere; }}
+.errs p {{ font-size: 9.3pt; color: {MUTED}; margin-top: 0.8mm; }}
 .list.inline code {{ display: inline; }}
 .list.inline span {{ display: inline; margin-left: 2.5mm; }}
 .doors {{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5mm; margin: 7mm 0 8mm; }}
 .doors div {{ border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 5mm; background: {CARD};
   border-left: 1.4mm solid {ACCENT}; }}
-.doors b {{ color: {ACCENT}; font-size: 12pt; display: block; margin-bottom: 1.5mm; }}
-.doors span {{ color: {MUTED}; font-size: 9.5pt; }}
+.doors b {{ color: {ACCENT}; font-size: 13pt; display: block; margin-bottom: 1.5mm; }}
+.doors span {{ color: {MUTED}; font-size: 10.5pt; }}
 '''
 
 
