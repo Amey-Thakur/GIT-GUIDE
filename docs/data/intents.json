@@ -16468,6 +16468,596 @@
         "co-authors",
         "codeowners"
       ]
+    },
+    {
+      "id": "private-go-modules",
+      "q": "Use a private repository as a Go module",
+      "aka": [
+        "goprivate",
+        "go get private repo",
+        "go modules github auth"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "go env -w GOPRIVATE=github.com/<org>/*",
+              "n": "Tells Go to skip the public proxy for those paths."
+            },
+            {
+              "c": "git config --global url.\"git@github.com:\".insteadOf \"https://github.com/\"",
+              "n": "go get shells out to Git, so Git's SSH auth carries the fetch. In CI, swap the SSH prefix for one with a token."
+            }
+          ],
+          "undo": "go env -w GOPRIVATE= and git config --global --unset url.git@github.com:.insteadOf"
+        }
+      ],
+      "seealso": [
+        "install-from-git",
+        "access-tokens",
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "cargo-git-dependency",
+      "q": "Depend on a Git repository in Cargo",
+      "aka": [
+        "cargo git dependency",
+        "rust crate from github",
+        "unpublished crate dependency"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "tokio = { git = \"https://github.com/tokio-rs/tokio\", tag = \"tokio-1.38.0\" }",
+              "n": "In Cargo.toml. branch and rev work in place of tag; Cargo records the exact commit in Cargo.lock either way, so builds stay reproducible."
+            }
+          ],
+          "undo": "Point the dependency back at crates.io"
+        }
+      ],
+      "seealso": [
+        "install-from-git",
+        "private-go-modules"
+      ]
+    },
+    {
+      "id": "create-github-action",
+      "q": "Write my own GitHub Action",
+      "aka": [
+        "custom action",
+        "publish an action",
+        "action.yml"
+      ],
+      "variants": [
+        {
+          "when": "Composite: bundle steps you repeat",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "action.yml with runs: using: composite",
+              "n": "A folder with one YAML of ordinary steps. Other workflows call it with uses: <owner>/<repo>/path@ref. Most custom actions never need more than this."
+            }
+          ],
+          "undo": "Delete the folder"
+        },
+        {
+          "when": "JavaScript or Docker: when you need logic",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "runs: using: node20",
+              "n": "Code with inputs and outputs, publishable to the Marketplace from a public repo with a versioned release."
+            }
+          ],
+          "undo": "Delete the release and repo"
+        }
+      ],
+      "seealso": [
+        "reusable-workflows",
+        "github-actions-start",
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "services-in-ci",
+      "q": "Run a database next to my CI job",
+      "aka": [
+        "postgres in github actions",
+        "service containers",
+        "redis for tests in ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "services: postgres: image: postgres:16",
+              "n": "Under the job. The container starts before your steps and is reachable on localhost through the mapped port. Add a health check option so tests wait until it is ready."
+            }
+          ],
+          "undo": "Remove the services block"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-env",
+        "container-jobs"
+      ]
+    },
+    {
+      "id": "container-jobs",
+      "q": "Run a whole job inside a container",
+      "aka": [
+        "container: image in workflow",
+        "pin ci environment",
+        "job in docker image"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "container: image: node:20-bookworm",
+              "n": "Every step of the job executes inside that image, so the toolchain is pinned exactly. Linux runners only; setup-* actions cover most cases with less weight."
+            }
+          ],
+          "undo": "Remove the container block"
+        }
+      ],
+      "seealso": [
+        "services-in-ci",
+        "setup-runtimes",
+        "devcontainer"
+      ]
+    },
+    {
+      "id": "what-is-fetch-head",
+      "q": "What FETCH_HEAD and ORIG_HEAD are",
+      "aka": [
+        "fetch_head meaning",
+        "orig_head meaning",
+        "strange head files in .git"
+      ],
+      "variants": [
+        {
+          "when": "FETCH_HEAD",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log FETCH_HEAD -1",
+              "n": "A note of what the last fetch brought, usable as a commit reference. git pull is fetch plus merging FETCH_HEAD."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "ORIG_HEAD",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reset --hard ORIG_HEAD",
+              "n": "Where HEAD stood before the last drastic move: merge, rebase, or reset. That is why it appears in so many undo recipes."
+            }
+          ],
+          "undo": "ORIG_HEAD itself; the reflog if it was overwritten"
+        }
+      ],
+      "seealso": [
+        "what-is-head",
+        "what-is-reflog",
+        "undo-merge"
+      ]
+    },
+    {
+      "id": "self-host-git",
+      "q": "Host my own Git server",
+      "aka": [
+        "own git server",
+        "git over ssh server",
+        "gitea self hosted"
+      ],
+      "variants": [
+        {
+          "when": "Bare SSH: zero software",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "ssh server git init --bare /srv/git/project.git",
+              "n": "Any machine with SSH is already a Git server. Clone with git clone user@server:/srv/git/project.git; access control is SSH keys."
+            }
+          ],
+          "undo": "Delete the folder on the server"
+        },
+        {
+          "when": "A web UI too",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "docker run -p 3000:3000 gitea/gitea",
+              "n": "Gitea is a single lightweight binary with issues, pull requests, and CI hooks: GitHub's shape, your hardware."
+            }
+          ],
+          "undo": "Stop the container; repos live in its volume"
+        }
+      ],
+      "seealso": [
+        "bare-repo",
+        "use-other-hosts",
+        "deploy-keys"
+      ]
+    },
+    {
+      "id": "migrate-from-mercurial",
+      "q": "Convert a Mercurial repository to Git",
+      "aka": [
+        "hg to git",
+        "mercurial migration",
+        "convert hg history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "hg-fast-export.sh -r /path/to/hg-repo",
+              "n": "From fresch/fast-export, run inside a fresh git init. Full history, branches, and authors carry over; map usernames with an authors file, then push to a new remote."
+            }
+          ],
+          "undo": "Delete the Git folder; the Mercurial repo is untouched"
+        }
+      ],
+      "seealso": [
+        "migrate-from-svn",
+        "upload-existing-project"
+      ]
+    },
+    {
+      "id": "dvc",
+      "q": "Version large datasets alongside the code",
+      "aka": [
+        "data version control",
+        "dvc basics",
+        "ml datasets in git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "dvc init && dvc add data/train.csv",
+              "n": "DVC stores the data in object storage of your choice and commits a small .dvc pointer file to Git. History stays light; checkouts of old commits can pull the matching data with dvc pull."
+            }
+          ],
+          "undo": "dvc remove data/train.csv.dvc"
+        }
+      ],
+      "seealso": [
+        "big-files-where",
+        "git-lfs",
+        "notebooks-in-git"
+      ]
+    },
+    {
+      "id": "embed-gist",
+      "q": "Embed a gist in a web page",
+      "aka": [
+        "gist embed script",
+        "code snippet on blog",
+        "share runnable snippet"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "<script src=\"https://gist.github.com/<user>/<id>.js\"></script>",
+              "n": "The gist renders with syntax highlighting wherever the page allows scripts. Append ?file=name.py to embed one file of a multi-file gist."
+            }
+          ],
+          "undo": "Remove the tag"
+        }
+      ],
+      "seealso": [
+        "gists",
+        "permalink-lines"
+      ]
+    },
+    {
+      "id": "file-history-on-web",
+      "q": "Walk a file's history on GitHub",
+      "aka": [
+        "history button",
+        "previous versions on github",
+        "blame navigate older"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "History button on any file view",
+              "n": "Every commit that touched the file; click one to read that version. In Blame view, the stacked-rectangles icon beside a hunk re-blames before that change, walking attribution backward layer by layer."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "file-history",
+        "blame-line",
+        "permalink-lines"
+      ]
+    },
+    {
+      "id": "search-commits-web",
+      "q": "Search commit messages across GitHub",
+      "aka": [
+        "find commit by message online",
+        "commit search",
+        "who referenced this ticket"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search commits \"JIRA-482\" --repo <owner>/<repo>",
+              "n": "Commit-message search, scoped by repo, org, or author. On the site, pick Commits in the search result tabs."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "log-search",
+        "code-search",
+        "pr-for-commit"
+      ]
+    },
+    {
+      "id": "releases-feed",
+      "q": "Follow releases without a GitHub account",
+      "aka": [
+        "releases rss",
+        "atom feed for tags",
+        "new version notifications"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "https://github.com/<owner>/<repo>/releases.atom",
+              "n": "A feed any RSS reader takes. tags.atom and commits/<branch>.atom exist too. With an account, Watch -> Custom -> Releases does the same through notifications."
+            }
+          ],
+          "undo": "Unsubscribe in the reader"
+        }
+      ],
+      "seealso": [
+        "watch-unwatch",
+        "latest-release-api"
+      ]
+    },
+    {
+      "id": "saved-replies",
+      "q": "Stop typing the same review comment",
+      "aka": [
+        "saved replies",
+        "canned responses",
+        "template comments"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Saved replies",
+              "n": "Reusable comment snippets, inserted from the toolbar icon or Ctrl+. in any comment box. The kind welcome for first-time contributors writes itself once."
+            }
+          ],
+          "undo": "Delete the reply in settings"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "contributing-file"
+      ]
+    },
+    {
+      "id": "sha256-repos",
+      "q": "Git's move beyond SHA-1",
+      "aka": [
+        "sha256 repository",
+        "sha-1 collision risk",
+        "object format"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --object-format=sha256",
+              "n": "Works today, and hashes become 64 characters. Adopt with caution: SHA-1 and SHA-256 repositories cannot push to each other, and major hosts still speak SHA-1. For ordinary threat models, hardened SHA-1 already detects known collision attacks."
+            }
+          ],
+          "undo": "There is no in-place conversion back; re-init and re-import"
+        }
+      ],
+      "seealso": [
+        "how-git-stores",
+        "current-commit"
+      ]
+    },
+    {
+      "id": "github-apps-vs-oauth",
+      "q": "GitHub App or OAuth app for my integration",
+      "aka": [
+        "github app vs oauth app",
+        "build an integration",
+        "act as user or app"
+      ],
+      "variants": [
+        {
+          "when": "Default: GitHub App",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Developer settings -> GitHub Apps",
+              "n": "Installed per repository with fine-grained permissions, acting as itself with short-lived tokens. This is what GitHub recommends for almost everything new."
+            }
+          ],
+          "undo": "Delete the app"
+        },
+        {
+          "when": "OAuth app only when",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Developer settings -> OAuth Apps",
+              "n": "You genuinely need to act as the user across everything they can reach, like a sign-in-with-GitHub flow."
+            }
+          ],
+          "undo": "Delete the app"
+        }
+      ],
+      "seealso": [
+        "access-tokens",
+        "webhooks",
+        "github-api"
+      ]
+    },
+    {
+      "id": "merge-union",
+      "q": "Stop changelog files from conflicting",
+      "aka": [
+        "merge=union",
+        "changelog conflicts every merge",
+        "append-only file conflicts"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"CHANGELOG.md merge=union\" >> .gitattributes",
+              "n": "Merges keep both sides' added lines instead of conflicting. Only for append-mostly files: union never reports conflicts, and line order between sides is not guaranteed."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "gitattributes",
+        "generate-changelog",
+        "avoid-conflicts"
+      ]
+    },
+    {
+      "id": "textconv",
+      "q": "Diff binary documents as text",
+      "aka": [
+        "diff docx",
+        "textconv",
+        "readable diff for pdf"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"*.docx diff=pandoc\" >> .gitattributes",
+              "n": "Pair with git config diff.pandoc.textconv \"pandoc --to=markdown\": diffs convert the document to text first, so changes read as prose. exiftool does the same for image metadata."
+            }
+          ],
+          "undo": "Remove the line and config"
+        }
+      ],
+      "seealso": [
+        "gitattributes",
+        "git-for-non-code",
+        "diff-word"
+      ]
+    },
+    {
+      "id": "hooks-catalog",
+      "q": "Which hook fires when",
+      "aka": [
+        "git hooks list",
+        "hook types",
+        "post-merge hook"
+      ],
+      "variants": [
+        {
+          "when": "The ones that matter",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "pre-commit",
+              "n": "Before the commit is recorded: linting and formatting. commit-msg validates the message."
+            },
+            {
+              "c": "pre-push",
+              "n": "Before anything leaves: the last cheap gate for tests."
+            },
+            {
+              "c": "post-merge",
+              "n": "After a pull lands: the classic spot to reinstall dependencies when the lockfile changed. post-checkout fires on branch switches."
+            }
+          ],
+          "undo": "Hooks live in .git/hooks or core.hooksPath; delete the file"
+        }
+      ],
+      "seealso": [
+        "hooks",
+        "skip-hooks",
+        "secret-scan-local"
+      ]
+    },
+    {
+      "id": "gh-api-pagination",
+      "q": "Get every page from the GitHub API",
+      "aka": [
+        "api pagination",
+        "only 30 results",
+        "link header next page"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api --paginate repos/<owner>/<repo>/issues --jq \".[].title\"",
+              "n": "Follows the Link headers until the list ends; without it you silently get the first 30. Add per_page=100 to cut round trips."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "api-rate-limits",
+        "octokit"
+      ]
     }
   ]
 }
