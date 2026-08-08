@@ -1539,7 +1539,8 @@
         "version tag",
         "annotated tag",
         "push tags",
-        "tags not pushed"
+        "tags not pushed",
+        "push commits and tags together"
       ],
       "variants": [
         {
@@ -2130,7 +2131,8 @@
         "how to exit vim",
         "cannot quit editor",
         "git commit opened strange screen",
-        "wq"
+        "wq",
+        "aborting commit due to empty message"
       ],
       "variants": [
         {
@@ -2460,7 +2462,8 @@
         "safe.directory",
         "dubious ownership",
         "wsl git error",
-        "docker mounted repo error"
+        "docker mounted repo error",
+        "git inside a docker container"
       ],
       "variants": [
         {
@@ -2562,7 +2565,8 @@
       "aka": [
         "git version",
         "upgrade git",
-        "install latest git"
+        "install latest git",
+        "which git version has this feature"
       ],
       "variants": [
         {
@@ -8023,7 +8027,8 @@
         "git fetch --all",
         "update all remotes",
         "refresh remote branches",
-        "prune automatically on fetch"
+        "prune automatically on fetch",
+        "git remote update"
       ],
       "variants": [
         {
@@ -8438,7 +8443,8 @@
         "block force push to main",
         "cannot approve my own pr",
         "merge despite failing checks",
-        "push rejected protected branch"
+        "push rejected protected branch",
+        "protect tags"
       ],
       "variants": [
         {
@@ -9587,7 +9593,8 @@
         "file an issue",
         "assign issue",
         "pin an issue",
-        "close as not planned"
+        "close as not planned",
+        "lock a conversation"
       ],
       "variants": [
         {
@@ -10071,7 +10078,8 @@
         "contributions not showing",
         "green squares missing",
         "profile graph empty",
-        "green squares meaning"
+        "green squares meaning",
+        "add another email to the account"
       ],
       "variants": [
         {
@@ -11011,7 +11019,8 @@
       "aka": [
         "changelog from commits",
         "release notes from git",
-        "what changed since last release"
+        "what changed since last release",
+        "keep a changelog format"
       ],
       "variants": [
         {
@@ -11050,7 +11059,8 @@
         "semver explained",
         "major minor patch",
         "when to bump version",
-        "calver"
+        "calver",
+        "prerelease versions beta rc"
       ],
       "variants": [
         {
@@ -13831,7 +13841,8 @@
       "aka": [
         "what to put in readme",
         "readme sections",
-        "good readme structure"
+        "good readme structure",
+        "what is a readme"
       ],
       "variants": [
         {
@@ -15590,6 +15601,318 @@
         "repo-traffic",
         "create-release",
         "github-api"
+      ]
+    },
+    {
+      "id": "what-is-a-branch",
+      "q": "What a branch really is",
+      "aka": [
+        "branch explained",
+        "are branches copies",
+        "branch meaning"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "cat .git/refs/heads/main",
+              "n": "Forty hex characters: a branch is a movable label pointing at one commit, nothing more. Creating one copies nothing, which is why it is instant and why you should branch without hesitation."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "create-branch",
+        "tag-vs-branch",
+        "what-is-head"
+      ]
+    },
+    {
+      "id": "what-is-merging",
+      "q": "What merging actually does",
+      "aka": [
+        "merge explained",
+        "what happens when i merge",
+        "combining branches meaning"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge <branch>",
+              "n": "Git finds the common ancestor, takes both sets of changes since it, and combines them into a new commit with two parents. Only when both sides changed the same lines does it stop and ask you: that is a conflict, not a failure."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD if not pushed"
+        }
+      ],
+      "seealso": [
+        "merge-branch",
+        "merge-conflict",
+        "fast-forward"
+      ]
+    },
+    {
+      "id": "what-is-an-issue",
+      "q": "What issues are for",
+      "aka": [
+        "github issues explained",
+        "issue vs bug",
+        "where to report problems"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Issues tab -> New issue",
+              "n": "A tracked conversation about one piece of work: a bug, a request, a task. Numbered, linkable, assignable, and closeable by the pull request that resolves it. The project's shared memory of what needs doing."
+            }
+          ],
+          "undo": "Close the issue"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "what-is-a-pr",
+        "discussions-vs-issues"
+      ]
+    },
+    {
+      "id": "what-is-markdown",
+      "q": "What Markdown is and why GitHub runs on it",
+      "aka": [
+        "markdown explained",
+        ".md file meaning",
+        "how to write markdown"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "# Heading, **bold**, - list, [link](url)",
+              "n": "Plain text with light punctuation that renders as formatting. Every .md file, README, issue, and comment on GitHub speaks it. Ten minutes of syntax covers years of use."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-markdown",
+        "readme-structure",
+        "docs-home"
+      ]
+    },
+    {
+      "id": "how-open-source-works",
+      "q": "How open source actually works on GitHub",
+      "aka": [
+        "open source explained",
+        "how do projects accept code",
+        "who owns open source"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo fork <owner>/<repo> --clone",
+              "n": "The license grants use; maintainers hold the merge button; anyone may propose changes by fork and pull request. Contributions are judged in the open, and the history credits every author permanently."
+            }
+          ],
+          "undo": "Delete the fork"
+        }
+      ],
+      "seealso": [
+        "add-license",
+        "first-contribution",
+        "find-projects-to-contribute"
+      ]
+    },
+    {
+      "id": "git-in-jetbrains",
+      "q": "Use Git inside IntelliJ or PyCharm",
+      "aka": [
+        "jetbrains git integration",
+        "pycharm commit push",
+        "idea version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Alt+9",
+              "n": "The Git tool window: staging by checkbox, diff on every file, log with graph. Commit with Ctrl+K, push with Ctrl+Shift+K; conflicts open a three-pane merge editor."
+            }
+          ],
+          "undo": "Git menu -> Undo Commit before pushing"
+        },
+        {
+          "when": "The safety net beyond Git",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Right-click -> Local History -> Show History",
+              "n": "JetBrains records every save independently of commits, which rescues even work Git never saw."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-guis",
+        "clone-in-vscode",
+        "undo-clean"
+      ]
+    },
+    {
+      "id": "gh-extensions",
+      "q": "Extend GitHub CLI with new commands",
+      "aka": [
+        "gh extension install",
+        "gh dash",
+        "custom gh commands"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh extension browse",
+              "n": "Community commands installable in one keystroke: gh dash for a terminal dashboard, gh poi for safe branch cleanup. Any repo named gh-* can be one."
+            }
+          ],
+          "undo": "gh extension remove <name>"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "gh-copilot",
+        "my-prs-everywhere"
+      ]
+    },
+    {
+      "id": "approve-fork-runs",
+      "q": "Approve workflow runs for first-time contributors",
+      "aka": [
+        "approve and run button",
+        "workflow awaiting approval",
+        "first time contributor ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Approve and run, on the pull request checks",
+              "n": "First-time contributors' workflows wait for a maintainer by default, so strangers cannot burn your minutes or probe your workflows. Settings -> Actions adjusts how strict."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pr-vs-push-triggers",
+        "first-contribution",
+        "actions-billing"
+      ]
+    },
+    {
+      "id": "rename-detection",
+      "q": "How Git knows a file was renamed",
+      "aka": [
+        "rename detection",
+        "status shows r",
+        "rename plus edit lost history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --follow -- <new-path>",
+              "n": "Git stores no rename records; it infers them by content similarity when diffing. Rename and heavy edits in one commit can break the inference, so rename in one commit, edit in the next when history matters."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "rename-file",
+        "file-history",
+        "how-git-stores"
+      ]
+    },
+    {
+      "id": "name-vs-username",
+      "q": "Git user.name is not my GitHub username",
+      "aka": [
+        "user.name vs github login",
+        "wrong name on commits",
+        "display name in commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global user.name \"Amey Thakur\"",
+              "n": "A display name, free text, no login attached. The email is what links commits to a GitHub account, so that is the field that must match one registered there."
+            }
+          ],
+          "undo": "Set it again to anything"
+        }
+      ],
+      "seealso": [
+        "tell-me-who-you-are",
+        "contributions-graph",
+        "private-email"
+      ]
+    },
+    {
+      "id": "resume-clone",
+      "q": "Clone keeps failing on a slow connection",
+      "aka": [
+        "resume interrupted clone",
+        "clone timeout large repo",
+        "download repo unreliable network"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --depth 1 <url>",
+              "n": "Clone cannot resume mid-transfer, so shrink the transfer: a shallow clone is a fraction of the data and nearly always survives."
+            },
+            {
+              "c": "git fetch --unshallow",
+              "n": "Deepen to full history later, resumable in the sense that each attempt keeps what previous ones fetched."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "partial-clone",
+        "slow-git",
+        "github-status"
       ]
     }
   ]
