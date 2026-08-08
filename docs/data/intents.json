@@ -1006,7 +1006,8 @@
         "fork behind upstream",
         "pull upstream changes",
         "pull original repository into my fork",
-        "sync fork button"
+        "sync fork button",
+        "rebase fork on upstream"
       ],
       "variants": [
         {
@@ -1392,7 +1393,9 @@
         "git log",
         "view commits",
         "history graph",
-        "show log"
+        "show log",
+        "oldest commits first",
+        "hide merge commits"
       ],
       "variants": [
         {
@@ -2371,7 +2374,8 @@
         "change default branch",
         "master to main",
         "rename default branch",
-        "init.defaultBranch main"
+        "init.defaultBranch main",
+        "main vs master difference"
       ],
       "variants": [
         {
@@ -4242,7 +4246,8 @@
         "upstream vs origin",
         "rename remote",
         "what is upstream",
-        "downstream and upstream definition"
+        "downstream and upstream definition",
+        "what is a remote"
       ],
       "variants": [
         {
@@ -5944,7 +5949,8 @@
       "aka": [
         "difference init clone",
         "start new repo or copy",
-        "git init vs git clone"
+        "git init vs git clone",
+        "clone vs pull"
       ],
       "variants": [
         {
@@ -7887,7 +7893,8 @@
         "blobless clone",
         "clone too slow",
         "reduce clone size",
-        "check if clone is shallow"
+        "check if clone is shallow",
+        "deepen a shallow clone"
       ],
       "variants": [
         {
@@ -8269,7 +8276,8 @@
         "github pages setup",
         "host site on github",
         "deploy static site free",
-        "pages from a private repository"
+        "pages from a private repository",
+        "deploy pages with an actions workflow"
       ],
       "variants": [
         {
@@ -9628,7 +9636,8 @@
       "aka": [
         "staging area explained",
         "git index",
-        "why stage before commit"
+        "why stage before commit",
+        "difference between add and commit"
       ],
       "variants": [
         {
@@ -13074,7 +13083,8 @@
       "aka": [
         "organize starred repos",
         "star lists",
-        "find repo i starred"
+        "find repo i starred",
+        "what do stars do"
       ],
       "variants": [
         {
@@ -14169,6 +14179,277 @@
         "github-api",
         "access-tokens",
         "api-rate-limits"
+      ]
+    },
+    {
+      "id": "commit-vs-push",
+      "q": "Commit and push are two different steps",
+      "aka": [
+        "difference between commit and push",
+        "committed but not on github",
+        "why push after commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"<message>\"",
+              "n": "Records a snapshot in the repository on your machine. Nothing has left your computer."
+            },
+            {
+              "c": "git push",
+              "n": "Uploads your new commits to the remote. Only now can anyone else, or GitHub, see them. Two steps so you can commit ten times and publish once, even offline."
+            }
+          ],
+          "undo": "git reset --soft HEAD~1 before pushing; git revert after"
+        }
+      ],
+      "seealso": [
+        "what-is-staging",
+        "pull-vs-fetch",
+        "why-version-control"
+      ]
+    },
+    {
+      "id": "cherry-pick-no-commit",
+      "q": "Apply a commit's changes without committing them",
+      "aka": [
+        "cherry-pick -n",
+        "stage changes from a commit",
+        "take changes but edit first"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cherry-pick -n <hash>",
+              "n": "The changes land staged, no commit made: edit, split, or combine before committing yourself. git revert -n works the same way for undoing."
+            }
+          ],
+          "undo": "git restore --staged . && git restore ."
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "add-patch",
+        "copy-file-from-branch"
+      ]
+    },
+    {
+      "id": "remove-big-file-unpushed",
+      "q": "Remove a huge file I committed but have not pushed",
+      "aka": [
+        "push rejected large file not pushed yet",
+        "undo committing big file",
+        "excise file before push"
+      ],
+      "variants": [
+        {
+          "when": "It went in with the last commit",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rm --cached <big-file>",
+              "n": "Out of the index, still on disk. Add it to .gitignore now."
+            },
+            {
+              "c": "git commit --amend --no-edit",
+              "n": "The commit no longer contains it, and the push will pass. The same recipe applies to an accidentally committed secret, though a secret must be rotated regardless."
+            }
+          ],
+          "undo": "git reflog holds the original commit"
+        },
+        {
+          "when": "It is a few commits back",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i <hash-before-it>",
+              "n": "Mark the commit edit, remove the file with git rm --cached, amend, continue. Unpushed history is yours to rewrite."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "file-too-large",
+        "remove-secret-from-history",
+        "git-lfs"
+      ]
+    },
+    {
+      "id": "devcontainer",
+      "q": "Define the dev environment inside the repository",
+      "aka": [
+        "devcontainer.json",
+        "codespaces configuration",
+        "same environment for everyone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".devcontainer/devcontainer.json",
+              "n": "Image, extensions, and setup commands as code. Codespaces builds exactly this; VS Code with Docker opens the same container locally. Onboarding becomes: open the repo."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "codespaces",
+        "clone-in-vscode"
+      ]
+    },
+    {
+      "id": "setup-runtimes",
+      "q": "Install language runtimes in a workflow properly",
+      "aka": [
+        "setup-node in actions",
+        "setup-python version",
+        "runtime version in ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/setup-node@v4",
+              "n": "With node-version and cache: npm. The setup-* actions pin the version, wire caching, and add the runtime to PATH; installing by hand in CI is always the wrong path."
+            }
+          ],
+          "undo": "Remove the step"
+        }
+      ],
+      "seealso": [
+        "actions-cache",
+        "actions-matrix",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "actions-billing",
+      "q": "What GitHub Actions costs",
+      "aka": [
+        "actions free minutes",
+        "workflow billing",
+        "private repo ci cost"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Billing and licensing",
+              "n": "Public repositories run free on GitHub-hosted runners. Private ones draw from your plan's monthly minutes and storage; larger runners and macOS burn minutes at multiplied rates. The billing page shows live usage."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-cache",
+        "cancel-in-progress"
+      ]
+    },
+    {
+      "id": "code-scanning",
+      "q": "Scan the repository for vulnerabilities automatically",
+      "aka": [
+        "codeql setup",
+        "code scanning alerts",
+        "find security bugs"
+      ],
+      "variants": [
+        {
+          "when": "Code",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Advanced Security -> Code scanning -> Default setup",
+              "n": "CodeQL analyzes every push and pull request and files alerts on the Security tab. One click, no workflow to maintain, free for public repositories."
+            }
+          ],
+          "undo": "Disable in the same place"
+        },
+        {
+          "when": "Secrets",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Advanced Security -> Secret scanning + Push protection",
+              "n": "Known token formats are caught in pushes before they land, which beats every cleanup that would follow."
+            }
+          ],
+          "undo": "Disable in the same place"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "remove-secret-from-history",
+        "security-policy"
+      ]
+    },
+    {
+      "id": "clone-in-vscode",
+      "q": "Clone and open a repository in VS Code",
+      "aka": [
+        "vscode git clone",
+        "open github repo in vscode",
+        "clone without terminal"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ctrl+Shift+P -> Git: Clone",
+              "n": "Paste the URL, pick a folder, open. Signing in to GitHub from VS Code lists your repositories to pick from instead."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "clone-repo",
+        "git-guis",
+        "devcontainer"
+      ]
+    },
+    {
+      "id": "profile-status",
+      "q": "Set a status on my GitHub profile",
+      "aka": [
+        "github status message",
+        "busy indicator",
+        "on vacation github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Profile photo -> Set status",
+              "n": "An emoji and a line, visible wherever your name appears. Busy mode tells reviewers and mention-senders to expect delay, and auto-assignment skips you."
+            }
+          ],
+          "undo": "Clear status in the same dialog"
+        }
+      ],
+      "seealso": [
+        "profile-readme",
+        "watch-unwatch"
       ]
     }
   ]
