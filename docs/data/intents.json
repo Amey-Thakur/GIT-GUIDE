@@ -27255,6 +27255,462 @@
         "multiple-identities",
         "git-defaults-modern"
       ]
+    },
+    {
+      "id": "submodule-or-package",
+      "q": "Submodule or published package for shared code",
+      "aka": [
+        "share code between projects",
+        "library vs submodule",
+        "reuse code across repos"
+      ],
+      "variants": [
+        {
+          "when": "Publish it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npm publish",
+              "n": "A versioned package is the answer whenever consumers can tolerate release cycles. Dependency tooling handles upgrades, and nobody needs to know your repository layout."
+            }
+          ],
+          "undo": "Deprecate the version"
+        },
+        {
+          "when": "Submodule it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule add <url> <path>",
+              "n": "Right when the code must be built from source in step with the parent, or when no registry exists for it. The cost is that every clone and CI job must handle submodules."
+            }
+          ],
+          "undo": "git rm <path> and remove the .gitmodules entry"
+        }
+      ],
+      "seealso": [
+        "submodule-vs-subtree",
+        "monorepo",
+        "packages-registry"
+      ]
+    },
+    {
+      "id": "who-can-see-my-forks",
+      "q": "My fork of a private repository and who sees it",
+      "aka": [
+        "fork private repo visibility",
+        "who can see forks",
+        "private fork access"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo view <you>/<fork> --json isPrivate,parent",
+              "n": "A fork inherits the upstream's visibility and access, so anyone with access to the original can reach yours. It is not a private workspace."
+            },
+            {
+              "c": "git clone --bare <url>",
+              "n": "For genuinely separate work, mirror into a repository you own instead of forking."
+            }
+          ],
+          "undo": "Delete the fork"
+        }
+      ],
+      "seealso": [
+        "keep-fork-private",
+        "repo-visibility-who-sees",
+        "detach-fork"
+      ]
+    },
+    {
+      "id": "pull-request-size",
+      "q": "How large a pull request should be",
+      "aka": [
+        "pr too big",
+        "ideal pull request size",
+        "how many lines per pr"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --shortstat main..HEAD",
+              "n": "Review quality falls off sharply past a few hundred changed lines. If the diff is larger, the split is usually obvious: refactor first, behaviour second."
+            },
+            {
+              "c": "git switch -c part-1 && git rebase -i",
+              "n": "Splitting after the fact is work, but far less than the review it saves."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-large-pr",
+        "stacked-prs",
+        "one-branch-per-task"
+      ]
+    },
+    {
+      "id": "protect-against-lost-work",
+      "q": "Set up so I can never lose work",
+      "aka": [
+        "never lose code again",
+        "git safety habits",
+        "protect my work"
+      ],
+      "variants": [
+        {
+          "when": "The habits that matter",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "Commit early and often: the reflog protects anything committed for about ninety days, and nothing else."
+            },
+            {
+              "c": "git push -u origin HEAD",
+              "n": "Push at least daily, even to a wip branch. A commit on one machine is not a backup."
+            },
+            {
+              "c": "git stash push -u",
+              "n": "Before any risky command, shelve everything, including untracked files."
+            }
+          ],
+          "undo": "Each has its own recovery route"
+        }
+      ],
+      "seealso": [
+        "safe-commands-list",
+        "recover-anything",
+        "two-machines"
+      ]
+    },
+    {
+      "id": "review-someone-elses-force-push",
+      "q": "A pull request was force-pushed mid-review",
+      "aka": [
+        "pr rewritten during review",
+        "force push during code review",
+        "comments detached from commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Compare button on the pull request timeline",
+              "n": "GitHub records each force push and offers a diff between the old and new head, so you can review only what changed since your last pass."
+            },
+            {
+              "c": "gh pr diff <number>",
+              "n": "Outdated review comments detach from rewritten commits, which is why rebasing mid-review is discouraged rather than forbidden."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "rebase-pull-request-branch",
+        "handle-review-feedback",
+        "detect-force-push"
+      ]
+    },
+    {
+      "id": "repo-size-vs-clone-time",
+      "q": "Make a large repository pleasant for new joiners",
+      "aka": [
+        "onboarding clone too slow",
+        "new developer clone time",
+        "big repo first clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "scalar clone <url>",
+              "n": "Sets up partial clone, sparse checkout, and background maintenance in one command, which is the whole large-repository toolkit."
+            },
+            {
+              "c": "git maintenance start",
+              "n": "On an existing clone, scheduled upkeep keeps day-to-day commands fast without changing anyone's workflow."
+            }
+          ],
+          "undo": "git maintenance unregister"
+        }
+      ],
+      "seealso": [
+        "scalar",
+        "partial-clone",
+        "git-maintenance"
+      ]
+    },
+    {
+      "id": "share-a-branch-privately",
+      "q": "Share work in progress with one person",
+      "aka": [
+        "show branch to one colleague",
+        "private feedback before pr",
+        "share code before review"
+      ],
+      "variants": [
+        {
+          "when": "Same repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push -u origin wip/<topic>",
+              "n": "A pushed branch is visible to anyone with repository access but appears in no pull request list until you open one."
+            },
+            {
+              "c": "gh pr create --draft --reviewer <user>",
+              "n": "A draft pull request is the clearer signal when you want their eyes but not the team's."
+            }
+          ],
+          "undo": "git push origin --delete wip/<topic>"
+        }
+      ],
+      "seealso": [
+        "draft-pr",
+        "see-someone-elses-branch",
+        "share-a-branch-privately"
+      ]
+    },
+    {
+      "id": "what-to-do-with-old-branches",
+      "q": "Decide what to do with dozens of old branches",
+      "aka": [
+        "branch graveyard",
+        "too many stale branches",
+        "clean up branch list"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git for-each-ref --sort=committerdate refs/remotes --format=\"%(committerdate:short) %(refname:short)\"",
+              "n": "Oldest first. Merged branches can go immediately; the rest need a decision, not indefinite storage."
+            },
+            {
+              "c": "git tag archive/<branch> <branch>",
+              "n": "For unmerged work worth keeping, tag it and delete the branch. The history survives without cluttering the list."
+            }
+          ],
+          "undo": "Recreate a branch from its archive tag"
+        }
+      ],
+      "seealso": [
+        "archive-branch",
+        "delete-gone-branches",
+        "list-branch-authors"
+      ]
+    },
+    {
+      "id": "understand-checkout-vs-switch-restore",
+      "q": "Why checkout was split into switch and restore",
+      "aka": [
+        "checkout does too much",
+        "switch and restore explained",
+        "why two new commands"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch <branch>",
+              "n": "Moving between branches. Its own command because that is what checkout was mostly used for."
+            },
+            {
+              "c": "git restore <path>",
+              "n": "Changing file contents. Splitting the two removed the classic trap where one careless checkout silently discarded work."
+            }
+          ],
+          "undo": "Each has its own; checkout still works for both"
+        }
+      ],
+      "seealso": [
+        "checkout-vs-switch",
+        "checkout-three-jobs",
+        "revert-vs-reset-vs-restore"
+      ]
+    },
+    {
+      "id": "commit-then-realize-mistake",
+      "q": "I committed then immediately spotted a typo",
+      "aka": [
+        "fix commit right after making it",
+        "small mistake just committed",
+        "forgot something in last commit"
+      ],
+      "variants": [
+        {
+          "when": "Not pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add <file> && git commit --amend --no-edit",
+              "n": "Folds the fix into the commit you just made, message unchanged. The cleanest option while the commit is still private."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Fix typo in <file>\"",
+              "n": "A new commit. Rewriting published history for a typo costs everyone more than the extra line in the log."
+            }
+          ],
+          "undo": "git revert the fix"
+        }
+      ],
+      "seealso": [
+        "add-to-last-commit",
+        "amend-vs-new-commit",
+        "keep-history-clean-solo"
+      ]
+    },
+    {
+      "id": "branch-from-a-pull-request",
+      "q": "Build on top of an unmerged pull request",
+      "aka": [
+        "branch off someone else pr",
+        "depend on open pull request",
+        "continue their work"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "Brings their branch down locally."
+            },
+            {
+              "c": "git switch -c mine/<topic>",
+              "n": "Branch from it and target your pull request at theirs, so reviewers see only your addition. Retarget to main once theirs merges."
+            }
+          ],
+          "undo": "Change the base and rebase onto main"
+        }
+      ],
+      "seealso": [
+        "stacked-prs",
+        "checkout-pr",
+        "change-pr-base"
+      ]
+    },
+    {
+      "id": "gitignore-for-secrets",
+      "q": "Make sure a secret file can never be committed",
+      "aka": [
+        "prevent committing secrets file",
+        "belt and braces secret protection",
+        "never commit credentials"
+      ],
+      "variants": [
+        {
+          "when": "Layer the defences",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \".env*\" >> .gitignore",
+              "n": "First line: it never becomes tracked."
+            },
+            {
+              "c": "gitleaks protect --staged",
+              "n": "Second line, as a pre-commit hook: catches credentials pasted into files that are not ignored."
+            },
+            {
+              "c": "Settings -> Advanced Security -> Push protection",
+              "n": "Third line, on the server, in case the first two are bypassed."
+            }
+          ],
+          "undo": "Remove each layer separately"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "secret-scan-local",
+        "code-scanning"
+      ]
+    },
+    {
+      "id": "clone-only-latest-branch",
+      "q": "Clone one branch and nothing else",
+      "aka": [
+        "single branch clone",
+        "clone without other branches",
+        "only fetch one branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --single-branch --branch <name> <url>",
+              "n": "Only that branch's history comes down, and fetch stays limited to it afterwards."
+            },
+            {
+              "c": "git remote set-branches --add origin <other>",
+              "n": "To add another branch later without recloning, then fetch."
+            }
+          ],
+          "undo": "git remote set-branches origin \"*\" && git fetch"
+        }
+      ],
+      "seealso": [
+        "clone-branch",
+        "partial-clone",
+        "limit-clone-history"
+      ]
+    },
+    {
+      "id": "tell-if-commit-is-merged",
+      "q": "Check whether a specific commit reached main",
+      "aka": [
+        "did my commit reach main",
+        "did my fix ship",
+        "commit merged or not"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch --contains <hash>",
+              "n": "Every branch holding that exact commit. Add -r for remote branches."
+            },
+            {
+              "c": "git cherry main <branch>",
+              "n": "After a squash or rebase the hash changes, so containment fails even though the change shipped. cherry compares by content instead."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "branch-contains",
+        "squash-merge-branch-behind",
+        "which-commits-in-release"
+      ]
     }
   ]
 }
