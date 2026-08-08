@@ -3735,6 +3735,324 @@
         }
       ],
       "seealso": ["hooks", "move-commits-to-branch"]
+    },
+    {
+      "id": "clean-ignored",
+      "q": "Delete ignored files (build output, caches)",
+      "aka": ["remove ignored files", "clean node_modules dist", "fresh build state"],
+      "variants": [
+        {
+          "when": "Only what .gitignore ignores",
+          "danger": "destructive",
+          "cmds": [
+            { "c": "git clean -Xnd", "n": "Preview: capital X targets ignored files only; tracked and untracked-but-unignored files are safe." },
+            { "c": "git clean -Xfd", "n": "Delete them. The cleanest possible build reset." }
+          ],
+          "undo": "None; these were disposable by your own .gitignore's word"
+        }
+      ],
+      "seealso": ["remove-untracked", "ignore-files"]
+    },
+    {
+      "id": "change-commit-date",
+      "q": "Change a commit's date",
+      "aka": ["backdate commit", "fix commit timestamp", "author date vs commit date"],
+      "variants": [
+        {
+          "when": "The last commit",
+          "danger": "history",
+          "cmds": [
+            { "c": "git commit --amend --date=\"2026-08-01 12:00:00\" --no-edit", "n": "Sets the author date. Git records two dates; the committer date updates to now on every rewrite." }
+          ],
+          "undo": "git reflog has the original"
+        }
+      ],
+      "seealso": ["edit-commit-message", "change-commit-author"]
+    },
+    {
+      "id": "mergetool-vscode",
+      "q": "Use VS Code for diffs and merge conflicts",
+      "aka": ["vscode mergetool", "visual conflict resolution", "difftool setup"],
+      "variants": [
+        {
+          "when": "Once, then it is your conflict editor",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config --global merge.tool vscode && git config --global mergetool.vscode.cmd \"code --wait --merge \\$REMOTE \\$LOCAL \\$BASE \\$MERGED\"", "n": "Then run git mergetool during any conflict for the three-way view." },
+            { "c": "git config --global diff.tool vscode && git config --global difftool.vscode.cmd \"code --wait --diff \\$LOCAL \\$REMOTE\"", "n": "git difftool opens visual diffs the same way." }
+          ],
+          "undo": "git config --global --unset merge.tool (and the others)"
+        }
+      ],
+      "seealso": ["merge-conflict", "set-editor"]
+    },
+    {
+      "id": "submodule-update",
+      "q": "Update submodules to their latest commits",
+      "aka": ["pull all submodules", "submodule newer version", "bump submodule"],
+      "variants": [
+        {
+          "when": "Move every pin forward",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git submodule update --remote --merge", "n": "Each submodule advances to its branch's latest; the new pins land in your index." },
+            { "c": "git commit -am \"Update submodules\"", "n": "The pins are versioned like any change." }
+          ],
+          "undo": "git restore --staged . && git submodule update restores the old pins"
+        }
+      ],
+      "seealso": ["submodule-add", "submodule-url"]
+    },
+    {
+      "id": "submodule-url",
+      "q": "Change a submodule's URL",
+      "aka": ["submodule moved", "update .gitmodules url", "submodule remote changed"],
+      "variants": [
+        {
+          "when": "The inner repository moved hosts",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config -f .gitmodules submodule.<path>.url <new-url>", "n": "" },
+            { "c": "git submodule sync && git submodule update --init", "n": "sync pushes the new URL into each clone's config; commit the .gitmodules change." }
+          ],
+          "undo": "Repeat with the old URL"
+        }
+      ],
+      "seealso": ["submodule-add", "change-remote-url"]
+    },
+    {
+      "id": "list-conflicts",
+      "q": "List the files still in conflict",
+      "aka": ["which files conflicted", "remaining conflicts", "unmerged paths list"],
+      "variants": [
+        {
+          "when": "Mid-merge or mid-rebase",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git diff --name-only --diff-filter=U", "n": "Just the unresolved paths, one per line, scriptable." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["merge-conflict", "abort-operation"]
+    },
+    {
+      "id": "merge-base",
+      "q": "Find where two branches diverged",
+      "aka": ["common ancestor", "merge base", "branch point commit"],
+      "variants": [
+        {
+          "when": "The fork point itself",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git merge-base main <branch>", "n": "The last commit both share. Everything after it on either side is the divergence, which git log <hash>..<branch> then shows." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["compare-branches", "rebase-onto-main"]
+    },
+    {
+      "id": "preview-pull",
+      "q": "See what pull will bring before pulling",
+      "aka": ["incoming commits", "preview pull", "what changed on remote"],
+      "variants": [
+        {
+          "when": "Look, then decide",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch", "n": "" },
+            { "c": "git log ..origin/<branch> --oneline", "n": "The commits pull would merge. Their combined diff: git diff ...origin/<branch>" }
+          ],
+          "undo": "Nothing to undo; fetch never touches your work"
+        }
+      ],
+      "seealso": ["pull-vs-fetch", "preview-push"]
+    },
+    {
+      "id": "ours-theirs-rebase",
+      "q": "ours and theirs are swapped during rebase",
+      "aka": ["rebase ours theirs reversed", "wrong side kept in rebase conflict", "checkout theirs rebase"],
+      "variants": [
+        {
+          "when": "The trap, named",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git checkout --theirs <file>", "n": "In a REBASE this keeps YOUR commit's version: your commits replay onto the other branch, so they arrive as the incoming side." },
+            { "c": "git checkout --ours <file>", "n": "Keeps the branch you rebased onto. In a plain merge the words mean what you expect; only rebase inverts them." }
+          ],
+          "undo": "Re-resolve before git add; git rebase --abort unwinds everything"
+        }
+      ],
+      "seealso": ["merge-conflict", "rebase-onto-main"]
+    },
+    {
+      "id": "debug-ssh-key",
+      "q": "See which SSH key Git is actually using",
+      "aka": ["which key is offered", "ssh verbose git", "wrong key used"],
+      "variants": [
+        {
+          "when": "Watch the handshake",
+          "danger": "safe",
+          "cmds": [
+            { "c": "ssh -vT git@github.com", "n": "The lines reading Offering public key name each identity tried, in order. Pin the right one with the per-repository key answer." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["ssh-key-per-command", "two-github-accounts"]
+    },
+    {
+      "id": "https-two-accounts",
+      "q": "Two accounts over HTTPS on one machine",
+      "aka": ["credential manager wrong account", "per repo https credentials", "useHttpPath"],
+      "variants": [
+        {
+          "when": "Credentials per repository, not per host",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config --global credential.useHttpPath true", "n": "The credential manager now stores a login per repository path, so work and personal stop overwriting each other. The SSH host-alias answer remains the cleaner cure." }
+          ],
+          "undo": "git config --global --unset credential.useHttpPath"
+        }
+      ],
+      "seealso": ["two-github-accounts", "stop-password-prompts"]
+    },
+    {
+      "id": "move-repo-folder",
+      "q": "Move or rename the repository folder itself",
+      "aka": ["relocate project folder", "can i move my repo", "rename project directory"],
+      "variants": [
+        {
+          "when": "Just move it",
+          "danger": "safe",
+          "cmds": [
+            { "c": "mv <old-path> <new-path>", "n": "Everything inside .git is relative; Git neither notices nor cares. Only linked worktrees pin absolute paths: git worktree repair fixes those." }
+          ],
+          "undo": "Move it back"
+        }
+      ],
+      "seealso": ["worktrees", "undo-git-init"]
+    },
+    {
+      "id": "verify-signatures",
+      "q": "Check which commits are signed",
+      "aka": ["verify signed commits", "show signature log", "is this commit verified"],
+      "variants": [
+        {
+          "when": "Locally, like the badge",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git log --show-signature -5", "n": "Signature status under each commit. For SSH signatures, point gpg.ssh.allowedSignersFile at a file of trusted keys or Git reports them unverifiable." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["sign-commits"]
+    },
+    {
+      "id": "mailmap",
+      "q": "Fix wrong names in history without rewriting it",
+      "aka": ["mailmap", "merge duplicate authors", "shortlog wrong name"],
+      "variants": [
+        {
+          "when": "Map old identities to the right one",
+          "danger": "safe",
+          "cmds": [
+            { "c": "printf \"Amey Thakur <right@email> <old@email>\\n\" > .mailmap", "n": "Committed at the root. log, shortlog, and blame display the corrected identity; the history itself stays untouched, so nothing breaks for anyone." }
+          ],
+          "undo": "Delete .mailmap"
+        }
+      ],
+      "seealso": ["change-commit-author", "count-commits"]
+    },
+    {
+      "id": "diff-ignore-whitespace",
+      "q": "Diff without the whitespace noise",
+      "aka": ["ignore whitespace diff", "indentation only changes", "reformat diff huge"],
+      "variants": [
+        {
+          "when": "See the real changes",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git diff -w", "n": "Ignores all whitespace change; -b ignores amount-only changes. Works on show and blame too." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["what-changed", "blame-ignore-revs"]
+    },
+    {
+      "id": "find-first-commit",
+      "q": "Find the repository's first commit",
+      "aka": ["initial commit hash", "oldest commit", "root commit"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git rev-list --max-parents=0 HEAD", "n": "The commit with no parent: the beginning. View it with git show <hash>." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["see-history", "count-commits"]
+    },
+    {
+      "id": "standup-log",
+      "q": "What did I do today (or this week)",
+      "aka": ["standup summary", "my commits today", "yesterday's work"],
+      "variants": [
+        {
+          "when": "The standup answer",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git log --since=midnight --author=\"$(git config user.name)\" --oneline --all", "n": "Every commit of yours today, across all branches. Swap --since=midnight for \"last monday\" or \"1 week ago\"." }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["log-search", "count-commits"]
+    },
+    {
+      "id": "patch-uncommitted",
+      "q": "Share uncommitted changes as a patch",
+      "aka": ["export working changes", "diff to file", "send wip without commit"],
+      "variants": [
+        {
+          "when": "Out",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git diff > changes.patch", "n": "Staged too: git diff HEAD > changes.patch. Send the file anywhere." }
+          ],
+          "undo": "Delete the file"
+        },
+        {
+          "when": "In",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git apply changes.patch", "n": "Recreates the edits uncommitted. --3way merges through small drift; --check rehearses first." }
+          ],
+          "undo": "git apply -R changes.patch reverses it"
+        }
+      ],
+      "seealso": ["patches-email", "stash"]
+    },
+    {
+      "id": "log-between-tags",
+      "q": "List the changes between two releases",
+      "aka": ["changelog between tags", "commits since last release", "release notes range"],
+      "variants": [
+        {
+          "when": "The raw changelog",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git log v1.0.0..v2.0.0 --oneline --no-merges", "n": "Everything the newer release carries that the older lacked. Since the last release: git log $(git describe --tags --abbrev=0)..HEAD --oneline" }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["tag-release", "first-parent-log"]
     }
   ]
 }

@@ -390,6 +390,8 @@ a.chip { text-decoration: none; }
 
 .chapter h2 .num { color: var(--accent); }
 
+.chapter h2:has(.num) { border-left: 0; padding-left: 0; }
+
 .qlist {
   list-style: none;
   margin: 1rem 0 0;
