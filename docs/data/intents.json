@@ -30566,6 +30566,385 @@
         "git-maintenance",
         "why-status-is-slow"
       ]
+    },
+    {
+      "id": "see-if-branch-is-safe-to-delete",
+      "q": "Check a branch is safe to delete",
+      "aka": [
+        "is this branch merged",
+        "safe to delete branch",
+        "will i lose work deleting this"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch --merged main",
+              "n": "Anything listed here is fully contained in main. git branch -d refuses anything that is not, which makes it the safe delete."
+            },
+            {
+              "c": "git log main..<branch> --oneline",
+              "n": "For squash-merged branches, containment fails even though the change shipped, so read the commits before trusting -D."
+            }
+          ],
+          "undo": "git branch <name> <hash> from the delete output or reflog"
+        }
+      ],
+      "seealso": [
+        "delete-branch",
+        "tell-if-commit-is-merged",
+        "squash-merge-branch-behind"
+      ]
+    },
+    {
+      "id": "understand-git-add-dot",
+      "q": "What git add . actually stages",
+      "aka": [
+        "does add dot include deletions",
+        "add . vs add -A",
+        "what does the dot mean"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add .",
+              "n": "Everything under the current directory: modifications, deletions, and new files. From a subfolder it stages only that subtree, which is the usual surprise."
+            },
+            {
+              "c": "git add -A",
+              "n": "The whole working tree regardless of where you stand. git status before committing settles any doubt."
+            }
+          ],
+          "undo": "git restore --staged ."
+        }
+      ],
+      "seealso": [
+        "add-a-vs-dot",
+        "stage-deletions",
+        "undo-add-all"
+      ]
+    },
+    {
+      "id": "why-did-my-branch-disappear",
+      "q": "My branch vanished after merging",
+      "aka": [
+        "branch gone after merge",
+        "cannot find my branch",
+        "branch deleted itself"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune",
+              "n": "With automatic deletion on merge, the remote branch goes and your local copy is marked gone at the next prune. Expected behaviour, not a loss."
+            },
+            {
+              "c": "Restore branch, on the merged pull request",
+              "n": "The commits live on in the target branch, and the branch itself can be restored with one click if you still need it."
+            }
+          ],
+          "undo": "git branch <name> <hash> locally"
+        }
+      ],
+      "seealso": [
+        "auto-delete-branches",
+        "recover-deleted-branch",
+        "local-branch-out-of-sync"
+      ]
+    },
+    {
+      "id": "stop-editor-on-rebase",
+      "q": "Run an interactive rebase without editing the list",
+      "aka": [
+        "rebase without editor",
+        "autosquash non interactive",
+        "skip the todo editor"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <base>",
+              "n": "Accepts the generated list as-is, which is exactly what you want when fixup commits already say what to fold."
+            },
+            {
+              "c": "GIT_SEQUENCE_EDITOR=\"sed -i 's/^pick/squash/2,$'\" git rebase -i <base>",
+              "n": "Scripted edits to the list are possible, though usually more trouble than doing it by hand."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "fixup-autosquash",
+        "interactive-rebase",
+        "keep-history-clean-solo"
+      ]
+    },
+    {
+      "id": "repo-language-detection",
+      "q": "GitHub shows the wrong language for my project",
+      "aka": [
+        "language bar wrong",
+        "github thinks my repo is html",
+        "fix repository language"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"docs/* linguist-documentation\" >> .gitattributes",
+              "n": "Vendored, generated, and documentation paths skew the bar. Marking them corrects it within a day."
+            },
+            {
+              "c": "echo \"*.js linguist-language=TypeScript\" >> .gitattributes",
+              "n": "Or override the detected language outright for specific paths."
+            }
+          ],
+          "undo": "Remove the lines"
+        }
+      ],
+      "seealso": [
+        "gitattributes",
+        "exclude-from-diff",
+        "repo-topics"
+      ]
+    },
+    {
+      "id": "handle-a-rude-issue",
+      "q": "Handle a hostile issue or comment",
+      "aka": [
+        "rude comment on my repo",
+        "abusive issue",
+        "toxic contributor"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Lock conversation, on the issue",
+              "n": "Locking stops the thread without deleting the record. Hide individual comments as off-topic or abusive rather than arguing."
+            },
+            {
+              "c": "Settings -> Moderation -> Blocked users",
+              "n": "Block repeat offenders and report abuse. Maintainers owe nobody unpaid emotional labour."
+            }
+          ],
+          "undo": "Unlock or unblock at any time"
+        }
+      ],
+      "seealso": [
+        "contributing-file",
+        "stale-issues",
+        "multiple-maintainers"
+      ]
+    },
+    {
+      "id": "partial-file-history-move",
+      "q": "Keep history when splitting a file in two",
+      "aka": [
+        "split file keep blame",
+        "history after splitting a file",
+        "preserve blame when extracting code"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git mv <old> <new-a> && git commit",
+              "n": "Move first, in its own commit, so Git records the rename cleanly."
+            },
+            {
+              "c": "git blame -C -C <new-b>",
+              "n": "Then extract the second file in the next commit. The -C flags follow code moved between files, which is how blame survives the split."
+            }
+          ],
+          "undo": "Revert both commits"
+        }
+      ],
+      "seealso": [
+        "rename-detection",
+        "blame-line",
+        "split-one-commit"
+      ]
+    },
+    {
+      "id": "repo-mirroring-schedule",
+      "q": "Keep a mirror repository automatically in sync",
+      "aka": [
+        "scheduled mirror",
+        "auto sync to second host",
+        "keep backup repo updated"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: schedule: - cron: \"23 4 * * *\"",
+              "n": "A nightly workflow that fetches and pushes --mirror keeps a second host current without anyone remembering."
+            },
+            {
+              "c": "git push --mirror <backup-url>",
+              "n": "Mirror pushes replace refs wholesale, so point them only at a repository that exists to be a mirror."
+            }
+          ],
+          "undo": "Delete the workflow"
+        }
+      ],
+      "seealso": [
+        "mirror-migrate",
+        "backup-repo",
+        "scheduled-workflow"
+      ]
+    },
+    {
+      "id": "why-diff-shows-whole-file",
+      "q": "The diff shows the entire file as changed",
+      "aka": [
+        "whole file marked changed",
+        "every line changed in diff",
+        "diff shows all lines"
+      ],
+      "variants": [
+        {
+          "when": "Usually line endings or encoding",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --stat",
+              "n": "Every line added and removed at once means the file was rewritten wholesale: CRLF conversion, an encoding change, or a reformat."
+            },
+            {
+              "c": "git diff -w --ignore-blank-lines",
+              "n": "If ignoring whitespace collapses the diff to nothing, formatting is the whole story."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "phantom-modifications",
+        "diff-ignore-whitespace"
+      ]
+    },
+    {
+      "id": "work-with-flaky-tests",
+      "q": "CI fails randomly on the same commit",
+      "aka": [
+        "flaky ci",
+        "tests pass on rerun",
+        "intermittent workflow failure"
+      ],
+      "variants": [
+        {
+          "when": "Confirm it is flaky",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run rerun --failed",
+              "n": "A pass on rerun with no code change means the test is unreliable, not the commit."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Then treat it as a bug",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue create --title \"Flaky: <test name>\"",
+              "n": "Quarantine or fix it. A retry habit teaches everyone to ignore red, which costs far more than the flaky test ever did."
+            }
+          ],
+          "undo": "Close the issue"
+        }
+      ],
+      "seealso": [
+        "rerun-checks",
+        "works-locally-fails-ci",
+        "commit-that-breaks-build"
+      ]
+    },
+    {
+      "id": "decide-what-to-tag-in-monorepo",
+      "q": "Version several packages in one repository",
+      "aka": [
+        "monorepo tagging",
+        "tags per package",
+        "independent versions one repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a api-v2.1.0 -m \"api 2.1.0\"",
+              "n": "Prefix tags with the package name so each can move independently and git describe stays meaningful per package."
+            },
+            {
+              "c": "git tag -l \"api-v*\" --sort=-v:refname | head -1",
+              "n": "Then release tooling filters by prefix to find each package's latest version."
+            }
+          ],
+          "undo": "git tag -d <tag>"
+        }
+      ],
+      "seealso": [
+        "monorepo",
+        "changesets",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "understand-detached-head-danger",
+      "q": "Is detached HEAD dangerous",
+      "aka": [
+        "detached head risk",
+        "can i lose work in detached head",
+        "is detached head bad"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch --detach <hash>",
+              "n": "Not dangerous by itself: you are simply standing on a commit rather than a branch. Looking around, building, and testing are all fine."
+            },
+            {
+              "c": "git switch -c <name>",
+              "n": "It becomes risky only if you commit and then switch away, since nothing names those commits. Branch before committing and the risk disappears."
+            }
+          ],
+          "undo": "git reflog finds commits left behind"
+        }
+      ],
+      "seealso": [
+        "detached-head",
+        "what-is-head",
+        "branch-from-commit"
+      ]
     }
   ]
 }
