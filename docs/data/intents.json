@@ -22976,6 +22976,303 @@
         "what-is-reflog",
         "abort-operation"
       ]
+    },
+    {
+      "id": "database-migrations-git",
+      "q": "Handle database migration conflicts",
+      "aka": [
+        "two migrations same number",
+        "migration merge conflict",
+        "schema version clash"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull --rebase",
+              "n": "Rebase before pushing so your migration lands after theirs and gets the later timestamp naturally."
+            },
+            {
+              "c": "git mv migrations/0007_x.sql migrations/0009_x.sql",
+              "n": "Renumber yours rather than editing theirs; a migration already applied elsewhere must never change."
+            }
+          ],
+          "undo": "Rename back"
+        }
+      ],
+      "seealso": [
+        "merge-conflict",
+        "pull-rebase",
+        "avoid-conflicts"
+      ]
+    },
+    {
+      "id": "detect-force-push",
+      "q": "Tell whether someone rewrote a branch",
+      "aka": [
+        "was this branch force pushed",
+        "history changed remotely",
+        "commits disappeared from remote"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch && git log --oneline HEAD...origin/<branch>",
+              "n": "Commits on your side only, with the remote missing them, is the signature of a rewrite rather than new work."
+            },
+            {
+              "c": "git reflog show origin/<branch>",
+              "n": "Your clone records each fetched position, so a non-fast-forward jump is visible here."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "recover-force-push",
+        "what-is-reflog",
+        "shared-branch-etiquette"
+      ]
+    },
+    {
+      "id": "squash-vs-merge-team",
+      "q": "Choose a merge method for the team",
+      "aka": [
+        "team merge policy",
+        "squash for everyone",
+        "which merge strategy to enforce"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Pull Requests",
+              "n": "Enable one method and disable the rest, so history stays uniform. Squash suits teams whose branches are messy drafts; merge commits suit teams whose commits are already curated."
+            },
+            {
+              "c": "gh pr merge --squash",
+              "n": "Whichever you pick, make CI and the changelog assume it, and stop debating it per pull request."
+            }
+          ],
+          "undo": "Re-enable the other methods"
+        }
+      ],
+      "seealso": [
+        "merge-methods",
+        "generate-changelog",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "restore-single-commit-file",
+      "q": "Get back a file exactly as one commit left it",
+      "aka": [
+        "extract file from commit",
+        "save old version as new file",
+        "export file from history"
+      ],
+      "variants": [
+        {
+          "when": "Overwrite in place",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --source <hash> -- <path>",
+              "n": "The working copy becomes that version, staged for review."
+            }
+          ],
+          "undo": "git restore --source HEAD -- <path>"
+        },
+        {
+          "when": "Keep both versions",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show <hash>:<path> > <path>.old",
+              "n": "Writes it beside the current file so you can compare before deciding."
+            }
+          ],
+          "undo": "Delete the extra file"
+        }
+      ],
+      "seealso": [
+        "show-old-version",
+        "restore-file",
+        "partial-revert"
+      ]
+    },
+    {
+      "id": "prevent-committing-to-main",
+      "q": "Warn myself before committing to the wrong branch",
+      "aka": [
+        "accidentally on main",
+        "guard against wrong branch",
+        "branch check before commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '#!/bin/sh\\ntest \"$(git branch --show-current)\" != main || { echo \"On main. Branch first.\"; exit 1; }\\n' > .git/hooks/pre-commit",
+              "n": "Blocks the commit and names the reason. Make it executable with chmod +x."
+            },
+            {
+              "c": "git config core.hooksPath .githooks",
+              "n": "Move hooks into a tracked folder so the whole team gets the same guard."
+            }
+          ],
+          "undo": "Delete the hook or unset hooksPath"
+        }
+      ],
+      "seealso": [
+        "protect-main-solo",
+        "hooks",
+        "move-commits-to-branch"
+      ]
+    },
+    {
+      "id": "see-all-remote-branches",
+      "q": "See every branch on the server, including new ones",
+      "aka": [
+        "list all remote branches",
+        "branches i do not have locally",
+        "what branches exist on github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --prune && git branch -r",
+              "n": "Fetch first or the list is whatever you last saw. Prune drops branches deleted upstream."
+            },
+            {
+              "c": "git ls-remote --heads origin",
+              "n": "Asks the server directly without touching your clone at all."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "checkout-remote-branch",
+        "list-branch-authors",
+        "ls-remote"
+      ]
+    },
+    {
+      "id": "clean-history-before-public",
+      "q": "Prepare a private repository to go public",
+      "aka": [
+        "make repo public safely",
+        "open sourcing checklist",
+        "publish internal project"
+      ],
+      "variants": [
+        {
+          "when": "Before flipping the switch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gitleaks git .",
+              "n": "Scan the entire history, not the current files. Anything found must be rotated, not just deleted."
+            },
+            {
+              "c": "git log --format=\"%an %ae\" | sort -u",
+              "n": "Check which names and internal addresses the history will publish."
+            },
+            {
+              "c": "git filter-repo --path <internal-file> --invert-paths",
+              "n": "Remove anything that must not ship, then add a license and README before publishing."
+            }
+          ],
+          "undo": "Visibility can be flipped back, but anything fetched while public stays out there"
+        }
+      ],
+      "seealso": [
+        "make-repo-private",
+        "remove-secret-from-history",
+        "add-license"
+      ]
+    },
+    {
+      "id": "link-commit-to-issue",
+      "q": "Connect commits and pull requests to issues",
+      "aka": [
+        "reference an issue",
+        "link work to ticket",
+        "cross reference on github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Handle empty rows (#482)\"",
+              "n": "A bare number links; the issue shows a timeline entry pointing back."
+            },
+            {
+              "c": "git commit -m \"Fixes #482\"",
+              "n": "Closing keywords also close the issue when the commit reaches the default branch. Cross-repository links use owner/repo#482."
+            }
+          ],
+          "undo": "Reopen the issue if it closed too early"
+        }
+      ],
+      "seealso": [
+        "close-issue-with-pr",
+        "issue-develop",
+        "commit-messages"
+      ]
+    },
+    {
+      "id": "parallel-review-and-work",
+      "q": "Keep working while a pull request is in review",
+      "aka": [
+        "continue coding during review",
+        "next task while waiting",
+        "stacked work during review"
+      ],
+      "variants": [
+        {
+          "when": "Independent work",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch main && git switch -c next/<topic>",
+              "n": "Branch from main, not from the branch under review, so a rejected review does not strand the new work."
+            }
+          ],
+          "undo": "git branch -D next/<topic>"
+        },
+        {
+          "when": "It genuinely depends on the review",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c next/<topic> <branch-in-review>",
+              "n": "Stack it, and target the pull request at the first branch so reviewers see only the new slice."
+            }
+          ],
+          "undo": "Change the base and rebase onto main once the first merges"
+        }
+      ],
+      "seealso": [
+        "stacked-prs",
+        "same-branch-two-worktrees",
+        "change-pr-base"
+      ]
     }
   ]
 }
