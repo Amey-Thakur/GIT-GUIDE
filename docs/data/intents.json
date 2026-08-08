@@ -18761,6 +18761,346 @@
         "clone-in-vscode",
         "git-guis"
       ]
+    },
+    {
+      "id": "first-repo-walkthrough",
+      "q": "Put my first project on GitHub, start to finish",
+      "aka": [
+        "first time pushing to github",
+        "complete beginner walkthrough",
+        "get my code online"
+      ],
+      "variants": [
+        {
+          "when": "The whole path",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init && git add . && git commit -m \"First commit\"",
+              "n": "History begins locally. Check nothing secret is included before this line."
+            },
+            {
+              "c": "gh repo create <name> --public --source . --push",
+              "n": "Creates the repository, wires it up, and pushes. Without gh: create it empty on the site, then git remote add origin <url> and git push -u origin main."
+            }
+          ],
+          "undo": "gh repo delete <name>, and remove .git to undo the local history"
+        }
+      ],
+      "seealso": [
+        "upload-existing-project",
+        "first-time-setup",
+        "create-repo-cli"
+      ]
+    },
+    {
+      "id": "daily-git-loop",
+      "q": "The four commands most days need",
+      "aka": [
+        "everyday git workflow",
+        "basic daily commands",
+        "what do i run each day"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull",
+              "n": "Start from what everyone else has done."
+            },
+            {
+              "c": "git add -p",
+              "n": "Stage deliberately, reviewing each change as it goes in."
+            },
+            {
+              "c": "git commit -m \"<one idea>\"",
+              "n": "Record it, small enough to describe in a line."
+            },
+            {
+              "c": "git push",
+              "n": "Publish. Everything else in Git exists for the days this loop is not enough."
+            }
+          ],
+          "undo": "Each step has its own undo; nothing here is irreversible"
+        }
+      ],
+      "seealso": [
+        "what-is-staging",
+        "commit-frequency",
+        "commit-vs-push"
+      ]
+    },
+    {
+      "id": "safe-experiment",
+      "q": "Try something risky without fear",
+      "aka": [
+        "experiment safely in git",
+        "what if i break something",
+        "try before committing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c try/idea",
+              "n": "A branch is free and disposable. If the idea fails, delete it and main never knew."
+            },
+            {
+              "c": "git commit -am \"wip\"",
+              "n": "Commit early on the branch: committed work is recoverable through the reflog for months, while uncommitted work is the only kind Git can truly lose."
+            }
+          ],
+          "undo": "git switch - and git branch -D try/idea"
+        }
+      ],
+      "seealso": [
+        "practice-sandbox",
+        "what-is-reflog",
+        "stash"
+      ]
+    },
+    {
+      "id": "git-mental-model",
+      "q": "The one mental model that makes Git click",
+      "aka": [
+        "understand git properly",
+        "git makes no sense",
+        "core idea of git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline --graph --all",
+              "n": "Git is a graph of snapshots plus labels pointing into it. Commits are immutable snapshots chained to their parents; branches, tags, and HEAD are movable labels. Nearly every command either adds a snapshot or moves a label, and knowing which one it does tells you how dangerous it is."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "how-git-stores",
+        "what-is-a-branch",
+        "what-is-head"
+      ]
+    },
+    {
+      "id": "undo-decision-tree",
+      "q": "Which undo command do I need",
+      "aka": [
+        "how to undo in git",
+        "revert reset restore checkout",
+        "which undo when"
+      ],
+      "variants": [
+        {
+          "when": "Nothing is committed yet",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore <file>",
+              "n": "Discards edits in the working tree. git restore --staged <file> unstages without discarding."
+            }
+          ],
+          "undo": "None once discarded; the file was never recorded"
+        },
+        {
+          "when": "Committed, not pushed",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --soft HEAD~1",
+              "n": "Removes the commit, keeps the work. --hard removes both. Rewriting is fine while the commits are still only yours."
+            }
+          ],
+          "undo": "git reset --soft HEAD@{1} through the reflog"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash>",
+              "n": "A new commit that cancels the old one. Nobody's clone breaks, and the record stays honest."
+            }
+          ],
+          "undo": "Revert the revert"
+        }
+      ],
+      "seealso": [
+        "revert-vs-reset",
+        "undo-last-commit",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "read-git-errors",
+      "q": "Read a Git error message properly",
+      "aka": [
+        "understand git errors",
+        "git error meaning",
+        "what is git telling me"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Git's errors almost always end with the fix: hint lines suggest the exact command, and status states what is in progress. Read the last three lines first, then run status before trying anything from the internet."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "abort-operation",
+        "git-help",
+        "status-codes"
+      ]
+    },
+    {
+      "id": "when-not-to-git",
+      "q": "When Git is the wrong tool",
+      "aka": [
+        "should i use git for this",
+        "git limitations",
+        "not everything belongs in git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git check-ignore -v <path>",
+              "n": "Secrets, credentials, and personal data: never. Generated output and dependencies: no, they belong to a build. Huge binaries that change often: only through LFS or object storage. Live databases and user uploads: not at all. Git versions source, not state."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "big-files-where",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "recover-anything",
+      "q": "I think I lost work: the recovery order",
+      "aka": [
+        "lost my changes",
+        "recover lost work git",
+        "panic recovery"
+      ],
+      "variants": [
+        {
+          "when": "Work through it in order",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "First: it may simply be on another branch or still staged."
+            },
+            {
+              "c": "git stash list",
+              "n": "Second: shelved work hides here and survives branch switches."
+            },
+            {
+              "c": "git reflog",
+              "n": "Third, and usually the answer: every position HEAD has held for about ninety days, including commits no branch points to."
+            },
+            {
+              "c": "git fsck --dangling",
+              "n": "Last: objects nothing references at all. Stop running gc --prune until you are done looking."
+            }
+          ],
+          "undo": "Recovery only adds references; nothing here destroys anything"
+        }
+      ],
+      "seealso": [
+        "recover-lost-commit",
+        "what-is-reflog",
+        "dangling-objects",
+        "undo-clean"
+      ]
+    },
+    {
+      "id": "why-git-refuses",
+      "q": "Git refused to do what I asked",
+      "aka": [
+        "git blocked my command",
+        "why did git say no",
+        "git refuses to overwrite"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Refusal is a feature: Git stops when a command would silently lose work you cannot get back. Uncommitted changes in the way, a non-fast-forward push, deleting an unmerged branch. Commit or stash, then retry."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "You truly mean it",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git branch -D <branch>",
+              "n": "The capital or forced version of a command overrides the guard: -D, --force, --hard. Reach for these knowing exactly what the guard was protecting."
+            }
+          ],
+          "undo": "git reflog, while the entries last"
+        }
+      ],
+      "seealso": [
+        "read-git-errors",
+        "switch-with-changes",
+        "force-push-safely"
+      ]
+    },
+    {
+      "id": "git-glossary",
+      "q": "The Git words everyone assumes you know",
+      "aka": [
+        "git terminology",
+        "git glossary",
+        "jargon explained"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "HEAD, ref, index, tree, blob",
+              "n": "HEAD is where you stand. A ref is any name pointing at a commit, so branches and tags are refs. The index is the staging area. A tree is a folder snapshot, a blob is file content."
+            },
+            {
+              "c": "upstream, origin, tracking",
+              "n": "origin is the default remote's nickname; upstream is either the original repository you forked or the remote branch yours tracks. Tracking is the link that lets push and pull work bare."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-head",
+        "upstream-downstream",
+        "how-git-stores"
+      ]
     }
   ]
 }
