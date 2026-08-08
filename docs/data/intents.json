@@ -26762,6 +26762,499 @@
         "branch-protection",
         "solo-workflow"
       ]
+    },
+    {
+      "id": "work-offline",
+      "q": "Work with no internet connection",
+      "aka": [
+        "git offline",
+        "commit without internet",
+        "use git on a plane"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "Every clone holds the full history, so committing, branching, merging, searching, and reading logs need no network at all."
+            },
+            {
+              "c": "git fetch",
+              "n": "Before going offline, fetch everything you might need: other branches, tags, and submodules. Only push and fetch require a connection."
+            }
+          ],
+          "undo": "Push normally when back online"
+        }
+      ],
+      "seealso": [
+        "github-down-workaround",
+        "git-bundle",
+        "why-version-control"
+      ]
+    },
+    {
+      "id": "pick-a-git-client",
+      "q": "Terminal or a graphical client",
+      "aka": [
+        "should i use the command line",
+        "gui vs cli git",
+        "best way to use git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Learn the terminal for the model and for anything unusual: every guide, error message, and answer online speaks it."
+            },
+            {
+              "c": "code .",
+              "n": "Use a graphical client for what it does better: staging hunks, reading history, and resolving conflicts side by side. Most people end up using both."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-guis",
+        "clone-in-vscode",
+        "learn-git-effectively"
+      ]
+    },
+    {
+      "id": "repo-per-client",
+      "q": "Separate repositories per client or project",
+      "aka": [
+        "one repo per client",
+        "freelance repository setup",
+        "client work organization"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <client>-<project> --private",
+              "n": "One private repository per engagement keeps access, history, and handover boundaries clean when the relationship ends."
+            },
+            {
+              "c": "git config user.email \"<work-address>\"",
+              "n": "Set the identity per repository so client work never carries a personal address, or the reverse."
+            }
+          ],
+          "undo": "Transfer or archive the repository at handover"
+        }
+      ],
+      "seealso": [
+        "multiple-identities",
+        "handover-project",
+        "organize-many-repos"
+      ]
+    },
+    {
+      "id": "repo-naming-collision",
+      "q": "The repository name I want is taken",
+      "aka": [
+        "name already exists",
+        "repo name unavailable",
+        "cannot create repository name"
+      ],
+      "variants": [
+        {
+          "when": "Your own account",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo list --limit 200 | grep <name>",
+              "n": "Often an old or archived repository of yours holds it. Rename or delete that one, or pick a scoped name."
+            }
+          ],
+          "undo": "Rename back"
+        },
+        {
+          "when": "Someone else has it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <org>/<name>",
+              "n": "Names are unique per account, not globally, so an organization or a prefix frees it immediately."
+            }
+          ],
+          "undo": "Delete the new repository"
+        }
+      ],
+      "seealso": [
+        "repo-naming",
+        "rename-repo",
+        "org-vs-personal"
+      ]
+    },
+    {
+      "id": "see-file-at-two-commits",
+      "q": "Diff a single path across two commits",
+      "aka": [
+        "diff file across commits",
+        "file before and after",
+        "compare same file two versions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff <old>..<new> -- <path>",
+              "n": "Any two commits, tags, or branches, limited to that path."
+            },
+            {
+              "c": "git difftool <old>..<new> -- <path>",
+              "n": "The same comparison in your editor when the patch is hard to read."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "diff-file-branches",
+        "one-file-many-commits",
+        "difftool-vscode"
+      ]
+    },
+    {
+      "id": "restore-repo-from-backup",
+      "q": "Recreate a lost repository from a surviving copy",
+      "aka": [
+        "restore from bundle",
+        "recreate repo from clone",
+        "repository lost restore"
+      ],
+      "variants": [
+        {
+          "when": "From any clone",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push --mirror <new-empty-repo-url>",
+              "n": "Run it in a clone that has the history. Branches and tags all land in the new repository."
+            }
+          ],
+          "undo": "Delete the new repository"
+        },
+        {
+          "when": "From a bundle",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone backup.bundle restored",
+              "n": "A bundle is a complete repository in one file; clone it, add the new remote, and push."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "backup-repo",
+        "git-bundle",
+        "restore-deleted-repo"
+      ]
+    },
+    {
+      "id": "stop-being-asked-to-merge-message",
+      "q": "Stop Git opening an editor on every pull",
+      "aka": [
+        "merge message editor every time",
+        "pull opens vim",
+        "no edit on merge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global core.mergeAutoEdit false",
+              "n": "Or set the environment variable GIT_MERGE_AUTOEDIT to no. The prompt exists so you can explain merges into a topic branch."
+            },
+            {
+              "c": "git config --global pull.rebase true",
+              "n": "Rebasing on pull avoids the merge entirely, which removes the prompt and the merge noise together."
+            }
+          ],
+          "undo": "Unset the setting"
+        }
+      ],
+      "seealso": [
+        "merge-message-prompt",
+        "pull-rebase",
+        "stop-merge-commits-on-pull"
+      ]
+    },
+    {
+      "id": "one-line-per-sentence",
+      "q": "Format prose so diffs stay readable",
+      "aka": [
+        "semantic line breaks",
+        "one sentence per line",
+        "markdown diff noise"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --word-diff",
+              "n": "Reflowed paragraphs turn a one-word edit into a whole-paragraph diff. Word diff helps, but the real fix is in how you write the file."
+            },
+            {
+              "c": "git add <file>",
+              "n": "Break lines at sentence ends. Rendering is unaffected in Markdown, and every future diff points at the sentence that actually changed."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-for-non-code",
+        "latex-thesis-git",
+        "diff-word"
+      ]
+    },
+    {
+      "id": "delete-remote-repo-mistake",
+      "q": "I deleted the wrong repository",
+      "aka": [
+        "deleted repo by accident",
+        "restore repository i deleted",
+        "undo repository deletion"
+      ],
+      "variants": [
+        {
+          "when": "Act immediately",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Repositories -> Deleted repositories",
+              "n": "Restorable for a limited window with issues and stars intact, unless it was part of a fork network."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Past the window",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push --mirror <new-repo-url>",
+              "n": "Any surviving clone rebuilds the code and history. Issues and pull requests do not come back."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "restore-deleted-repo",
+        "backup-repo",
+        "restore-repo-from-backup"
+      ]
+    },
+    {
+      "id": "what-happens-on-clone",
+      "q": "What actually happens when I clone",
+      "aka": [
+        "what does clone do",
+        "clone explained",
+        "what do i get when cloning"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url>",
+              "n": "Downloads the full object database, creates a remote named origin, sets up a tracking branch for the default branch, and checks out its files."
+            },
+            {
+              "c": "git branch -a",
+              "n": "Other branches came down too as remote-tracking refs; only one is checked out. Nothing further is downloaded until you fetch."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "init-vs-clone",
+        "remote-branch-vs-tracking",
+        "what-is-a-repo"
+      ]
+    },
+    {
+      "id": "amend-author-only",
+      "q": "Fix the author on the last commit only",
+      "aka": [
+        "wrong author last commit",
+        "change author of head",
+        "fix committer on latest"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config user.email \"<right-address>\"",
+              "n": "Set the identity first, or the amend repeats the mistake."
+            },
+            {
+              "c": "git commit --amend --reset-author --no-edit",
+              "n": "Rewrites the last commit with the current identity and keeps the message."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD, or the reflog after pushing"
+        }
+      ],
+      "seealso": [
+        "change-commit-author",
+        "commit-as-other",
+        "amend-vs-new-commit"
+      ]
+    },
+    {
+      "id": "read-only-access",
+      "q": "Give someone read-only access",
+      "aka": [
+        "read only collaborator",
+        "let them see but not push",
+        "view access only"
+      ],
+      "variants": [
+        {
+          "when": "One person",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators -> Add people -> Read",
+              "n": "They can clone, read issues, and open pull requests from a fork, but cannot push."
+            }
+          ],
+          "undo": "Remove them"
+        },
+        {
+          "when": "A machine",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Deploy keys -> Add deploy key",
+              "n": "Read-only unless you tick write access, and scoped to this repository alone. The right choice for servers and CI."
+            }
+          ],
+          "undo": "Remove the key"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "deploy-keys",
+        "org-base-permissions"
+      ]
+    },
+    {
+      "id": "stop-pushing-to-wrong-remote",
+      "q": "I keep pushing to the wrong remote",
+      "aka": [
+        "pushed to upstream by accident",
+        "wrong remote push",
+        "protect against pushing to origin"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote set-url --push upstream no-push",
+              "n": "Makes pushes to that remote fail immediately with an obvious message, which is the usual guard on a fork's upstream."
+            },
+            {
+              "c": "git remote -v",
+              "n": "Confirms which URL each remote pushes to; fetch and push can differ."
+            }
+          ],
+          "undo": "git remote set-url --push upstream <real-url>"
+        }
+      ],
+      "seealso": [
+        "why-two-remotes-fork",
+        "same-repo-two-remotes",
+        "changes-not-showing-on-github"
+      ]
+    },
+    {
+      "id": "check-before-force-push",
+      "q": "Make force pushing as safe as it can be",
+      "aka": [
+        "safe force push",
+        "force with lease explained",
+        "avoid destroying commits on push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git fetch && git log --oneline HEAD..origin/<branch>",
+              "n": "Anything listed here is work you are about to erase. Empty output means only your own commits are being replaced."
+            },
+            {
+              "c": "git push --force-with-lease --force-if-includes",
+              "n": "Refuses unless your clone has seen the remote's current tip, which catches the case plain force-with-lease misses after a background fetch."
+            }
+          ],
+          "undo": "Push the previous hash back from the reflog"
+        }
+      ],
+      "seealso": [
+        "force-push-safely",
+        "prevent-force-push-main",
+        "recover-force-push"
+      ]
+    },
+    {
+      "id": "track-config-across-machines",
+      "q": "Keep my Git configuration the same everywhere",
+      "aka": [
+        "sync gitconfig",
+        "same git settings on all machines",
+        "portable git config"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global include.path ~/dotfiles/gitconfig-shared",
+              "n": "Keep shared settings in a versioned file and include them, so machine-specific values stay out of the repository."
+            },
+            {
+              "c": "git config --global includeIf.\"gitdir:~/work/\".path ~/.gitconfig-work",
+              "n": "Conditional includes switch identity and settings by folder, which handles work and personal on one machine."
+            }
+          ],
+          "undo": "Remove the include lines"
+        }
+      ],
+      "seealso": [
+        "dotfiles-repo",
+        "multiple-identities",
+        "git-defaults-modern"
+      ]
     }
   ]
 }
