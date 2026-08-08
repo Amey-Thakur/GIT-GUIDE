@@ -637,7 +637,8 @@
         "sync with remote discard local",
         "reset local branch to remote head",
         "make local identical to origin",
-        "reset local branch to be just like remote head"
+        "reset local branch to be just like remote head",
+        "start over completely"
       ],
       "variants": [
         {
@@ -1246,7 +1247,8 @@
         "undo stash pop",
         "stash including ignored files",
         "name a stash",
-        "backup before a risky command"
+        "backup before a risky command",
+        "drop or clear stashes"
       ],
       "variants": [
         {
@@ -1326,7 +1328,8 @@
         "download repo",
         "git clone",
         "copy repository",
-        "download code from github"
+        "download code from github",
+        "what does cloning mean"
       ],
       "variants": [
         {
@@ -1798,7 +1801,8 @@
         "ignore directory on windows",
         ".gitignore for visual studio",
         "ignoring directories",
-        "gitignore file itself shows as untracked"
+        "gitignore file itself shows as untracked",
+        "what is gitignore"
       ],
       "variants": [
         {
@@ -2418,7 +2422,8 @@
         "what is the default branch",
         "remote head",
         "set default branch",
-        "origin/HEAD missing"
+        "origin/HEAD missing",
+        "what is the main branch"
       ],
       "variants": [
         {
@@ -2724,7 +2729,8 @@
       "aka": [
         "show files in commit",
         "commit file list",
-        "what did a commit touch"
+        "what did a commit touch",
+        "show a commit by hash"
       ],
       "variants": [
         {
@@ -3138,7 +3144,8 @@
         "take file from main",
         "take folder from branch",
         "take a folder from another branch",
-        "cherry-pick only certain files"
+        "cherry-pick only certain files",
+        "all files from another branch"
       ],
       "variants": [
         {
@@ -5127,7 +5134,8 @@
         "see branches before clone",
         "check repo access",
         "ls-remote",
-        "test if a remote url works"
+        "test if a remote url works",
+        "find the default branch of a remote"
       ],
       "variants": [
         {
@@ -8342,7 +8350,8 @@
       "aka": [
         "github actions basics",
         "set up ci on github",
-        "first workflow"
+        "first workflow",
+        "what is github actions"
       ],
       "variants": [
         {
@@ -8428,7 +8437,8 @@
         "require pull request review",
         "block force push to main",
         "cannot approve my own pr",
-        "merge despite failing checks"
+        "merge despite failing checks",
+        "push rejected protected branch"
       ],
       "variants": [
         {
@@ -9803,7 +9813,8 @@
       "aka": [
         "gitignore not working",
         "ignored file still tracked",
-        "gitignore has no effect"
+        "gitignore has no effect",
+        "apply gitignore to already tracked files"
       ],
       "variants": [
         {
@@ -11459,7 +11470,8 @@
         "git objects explained",
         "blob tree commit",
         "why hashes everywhere",
-        "how does git detect changes"
+        "how does git detect changes",
+        "what is a commit exactly"
       ],
       "variants": [
         {
@@ -11496,7 +11508,8 @@
       "aka": [
         "fast forward merge explained",
         "ff only",
-        "branch simply moved"
+        "branch simply moved",
+        "make ff-only the default"
       ],
       "variants": [
         {
@@ -11698,7 +11711,8 @@
         "pull request explained",
         "pr vs merge",
         "why not push to main directly",
-        "pr updates when i push more commits"
+        "pr updates when i push more commits",
+        "reopen a closed pr"
       ],
       "variants": [
         {
@@ -13698,7 +13712,8 @@
       "aka": [
         "release on tag push",
         "automated release build",
-        "attach binaries in ci"
+        "attach binaries in ci",
+        "create a tag from a workflow"
       ],
       "variants": [
         {
@@ -15342,6 +15357,239 @@
         "git-lfs",
         "create-release",
         "repo-limits"
+      ]
+    },
+    {
+      "id": "what-is-a-repo",
+      "q": "What a repository actually is",
+      "aka": [
+        "repository meaning",
+        "repo explained",
+        "project vs repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init",
+              "n": "A repository is a folder whose full history rides along inside it, in .git. Local means on your machine; remote means a copy on a server like GitHub. They stay in sync only when you push and pull."
+            }
+          ],
+          "undo": "Delete the .git folder and it is a plain folder again"
+        }
+      ],
+      "seealso": [
+        "why-version-control",
+        "what-is-dot-git",
+        "git-vs-github"
+      ]
+    },
+    {
+      "id": "diff-merge-commit",
+      "q": "See what a merge commit changed",
+      "aka": [
+        "git show merge commit empty",
+        "diff of a merge",
+        "merge commit contents"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show -m <merge-hash>",
+              "n": "A merge has two parents, so plain show often prints little. -m diffs against each parent in turn; --first-parent keeps only the view from the branch you merged into."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Only conflict resolutions",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show --cc <merge-hash>",
+              "n": "Shows only hunks that differ from both parents: exactly the hand-resolved parts."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "files-in-commit",
+        "log-merges",
+        "undo-merge"
+      ]
+    },
+    {
+      "id": "branch-in-ci",
+      "q": "Get the branch name inside a workflow",
+      "aka": [
+        "github_ref_name",
+        "branch name in actions",
+        "detached head in ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "$GITHUB_REF_NAME",
+              "n": "The branch or tag that triggered the run; ${{ github.ref_name }} in YAML expressions. git branch --show-current often prints nothing in CI because the runner checks out a detached commit."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "On pull_request events",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "${{ github.head_ref }}",
+              "n": "The PR's source branch; ref_name would give the synthetic merge ref instead."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "actions-env",
+        "pr-vs-push-triggers",
+        "current-branch"
+      ]
+    },
+    {
+      "id": "move-to-new-machine",
+      "q": "Move my repositories to a new computer",
+      "aka": [
+        "new laptop git setup",
+        "transfer repos to new pc",
+        "migrate development machine"
+      ],
+      "variants": [
+        {
+          "when": "The clean way",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo list <user> --limit 200",
+              "n": "Push everything from the old machine, then clone fresh on the new one. Identity, SSH key, and config are the only real setup."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Carrying uncommitted state",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash list && git status",
+              "n": "Stashes and reflogs never leave a machine on their own. Commit or stash-export anything unfinished before the old machine goes dark; copying the whole folder carries everything but also carries clutter."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "clone-all-repos",
+        "first-time-setup",
+        "two-machines"
+      ]
+    },
+    {
+      "id": "debug-workflows",
+      "q": "Debug a failing workflow properly",
+      "aka": [
+        "actions step debug",
+        "workflow fails only in ci",
+        "verbose action logs"
+      ],
+      "variants": [
+        {
+          "when": "Turn on the hidden logs",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh secret set ACTIONS_STEP_DEBUG --body true",
+              "n": "Every step becomes verbose, showing the exact commands and evaluations behind each action."
+            }
+          ],
+          "undo": "gh secret delete ACTIONS_STEP_DEBUG"
+        },
+        {
+          "when": "See what the runner sees",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "run: env | sort",
+              "n": "A throwaway step printing environment and context answers most it-works-locally mysteries. echo '${{ toJSON(github) }}' dumps the event itself."
+            }
+          ],
+          "undo": "Remove the step"
+        }
+      ],
+      "seealso": [
+        "actions-env",
+        "workflow-not-triggering",
+        "actions-locally"
+      ]
+    },
+    {
+      "id": "change-pr-base",
+      "q": "Change the base branch of a pull request",
+      "aka": [
+        "wrong base branch",
+        "retarget pr",
+        "pr against wrong branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Edit button beside the pull request title",
+              "n": "The base dropdown appears next to the title; the diff and mergeability recompute against the new target. Reviews and conversation survive."
+            }
+          ],
+          "undo": "Edit again and switch back"
+        }
+      ],
+      "seealso": [
+        "what-is-a-pr",
+        "rebase-onto",
+        "compare-on-github"
+      ]
+    },
+    {
+      "id": "download-stats",
+      "q": "See how often release files are downloaded",
+      "aka": [
+        "release download count",
+        "asset download stats",
+        "how many people downloaded"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/releases --jq \".[] | {tag: .tag_name, downloads: [.assets[].download_count]}\"",
+              "n": "Per-asset counters the release pages never display. Clones and views live under Insights -> Traffic instead."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "repo-traffic",
+        "create-release",
+        "github-api"
       ]
     }
   ]
