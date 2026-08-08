@@ -24842,6 +24842,538 @@
         "audit-log",
         "branch-protection"
       ]
+    },
+    {
+      "id": "first-pull-request-nerves",
+      "q": "My first pull request to a stranger's project",
+      "aka": [
+        "scared to contribute",
+        "first time contributing anxiety",
+        "will they reject my pr"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "cat CONTRIBUTING.md",
+              "n": "Read it first: most rejections are process mismatches, not code judgements. Start with something small enough that review is quick."
+            },
+            {
+              "c": "gh pr create --fill",
+              "n": "Say what changed and why in two sentences. Silence for a week is normal on volunteer projects and is not a verdict on your work."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "first-contribution",
+        "pr-checklist",
+        "contribute-docs-only"
+      ]
+    },
+    {
+      "id": "maintainer-asked-rebase",
+      "q": "A maintainer asked me to rebase or squash",
+      "aka": [
+        "please rebase your pr",
+        "squash your commits request",
+        "clean up your branch request"
+      ],
+      "variants": [
+        {
+          "when": "Rebase onto their latest",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git fetch upstream && git rebase upstream/main",
+              "n": "Resolve any conflicts as they appear, then git push --force-with-lease to your fork; the pull request updates itself."
+            }
+          ],
+          "undo": "git rebase --abort mid-way, git reset --hard ORIG_HEAD after"
+        },
+        {
+          "when": "Squash to one commit",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git reset --soft upstream/main && git commit",
+              "n": "Everything becomes a single commit with a fresh message. Faster than an interactive rebase when the target is one commit."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "squash-before-merge",
+        "rebase-pull-request-branch",
+        "handle-review-feedback"
+      ]
+    },
+    {
+      "id": "github-down-workaround",
+      "q": "Keep working while GitHub is down",
+      "aka": [
+        "github outage what to do",
+        "cannot push service down",
+        "work offline during outage"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "Git is local, so committing, branching, merging, and reading history all keep working. Only push, pull, and the website need the service."
+            },
+            {
+              "c": "git bundle create backup.bundle --all",
+              "n": "For a long outage, hand work to a colleague as a bundle, or push to a second remote."
+            }
+          ],
+          "undo": "Push normally once service returns"
+        }
+      ],
+      "seealso": [
+        "github-status",
+        "git-bundle",
+        "same-repo-two-remotes"
+      ]
+    },
+    {
+      "id": "restore-deleted-file-web",
+      "q": "Recover a file someone deleted, from the website",
+      "aka": [
+        "restore deleted file on github",
+        "find deleted file online",
+        "undelete file github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.com/<owner>/<repo>/commits/main/<path>",
+              "n": "The path's history still resolves after deletion. Open the last commit before it went, then view the file at that commit and copy or restore it."
+            },
+            {
+              "c": "gh browse --commit <hash>",
+              "n": "Or locate the deleting commit locally and restore from its parent."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "restore-deleted-file",
+        "file-history-on-web",
+        "permalink-lines"
+      ]
+    },
+    {
+      "id": "branch-vs-tag-vs-release",
+      "q": "Branch, tag, or release for a version",
+      "aka": [
+        "how to mark a version",
+        "difference branch tag release",
+        "where does a version live"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v2.1.0",
+              "n": "A tag names one commit permanently: the version itself."
+            },
+            {
+              "c": "git switch -c release/2.1",
+              "n": "A branch is for continuing work on that line, such as patches for 2.1 after 2.2 ships."
+            },
+            {
+              "c": "gh release create v2.1.0",
+              "n": "A release is the page, notes, and downloads wrapped around the tag."
+            }
+          ],
+          "undo": "Each has its own delete command"
+        }
+      ],
+      "seealso": [
+        "tags-vs-releases",
+        "when-to-tag",
+        "hotfix-from-tag"
+      ]
+    },
+    {
+      "id": "clone-taking-forever",
+      "q": "Clone is stuck at resolving deltas",
+      "aka": [
+        "clone hangs resolving deltas",
+        "clone stuck at 99",
+        "slow clone large repo"
+      ],
+      "variants": [
+        {
+          "when": "It is working, just slow",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --filter=blob:none <url>",
+              "n": "Delta resolution is local CPU work on a large history. Skipping old file contents avoids most of it."
+            }
+          ],
+          "undo": "Delete the folder"
+        },
+        {
+          "when": "It really is stuck",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GIT_TRACE=1 git clone <url>",
+              "n": "Shows whether it is transferring or grinding. A shallow clone finishes when a full one will not."
+            }
+          ],
+          "undo": "Delete the partial folder"
+        }
+      ],
+      "seealso": [
+        "resume-clone",
+        "partial-clone",
+        "scalar"
+      ]
+    },
+    {
+      "id": "commit-without-editor",
+      "q": "Commit without an editor opening",
+      "aka": [
+        "commit inline message",
+        "avoid vim on commit",
+        "one line commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"<subject>\"",
+              "n": "The editor opens only when no message is supplied. Repeat -m for extra paragraphs."
+            },
+            {
+              "c": "git commit -F message.txt",
+              "n": "Or read the message from a file, which suits scripts and long bodies."
+            }
+          ],
+          "undo": "git commit --amend"
+        }
+      ],
+      "seealso": [
+        "exit-vim",
+        "commit-messages",
+        "set-editor"
+      ]
+    },
+    {
+      "id": "undo-branch-switch",
+      "q": "Go back to the branch I was just on",
+      "aka": [
+        "previous branch",
+        "undo switch",
+        "return to last branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -",
+              "n": "Returns to the previous branch, and again to toggle back."
+            },
+            {
+              "c": "git reflog | head",
+              "n": "When you switched several times and lost track, the reflog names every position in order."
+            }
+          ],
+          "undo": "git switch - again"
+        }
+      ],
+      "seealso": [
+        "switch-previous",
+        "what-is-reflog",
+        "current-branch"
+      ]
+    },
+    {
+      "id": "see-conflicted-versions",
+      "q": "See both sides of a conflict separately",
+      "aka": [
+        "view their version and mine",
+        "conflict three versions",
+        "base version during conflict"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show :2:<path>",
+              "n": "Your side. :3: is theirs and :1: is the common ancestor, so you can inspect each cleanly instead of reading markers."
+            },
+            {
+              "c": "git checkout --conflict=diff3 <path>",
+              "n": "Rewrites the markers to include the ancestor, which usually makes the right resolution obvious."
+            }
+          ],
+          "undo": "git checkout -m <path> restores the plain conflict"
+        }
+      ],
+      "seealso": [
+        "merge-conflict",
+        "conflict-styles",
+        "merge-take-side"
+      ]
+    },
+    {
+      "id": "repo-with-no-commits",
+      "q": "Work with a repository that has no commits yet",
+      "aka": [
+        "empty repository",
+        "no commits yet",
+        "fresh repo first push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit --allow-empty -m \"Initial commit\"",
+              "n": "Before the first commit there is no HEAD, so log, diff, and branch all complain. One commit makes the repository usable."
+            },
+            {
+              "c": "git push -u origin main",
+              "n": "The branch exists on the remote only once a commit is pushed onto it."
+            }
+          ],
+          "undo": "git update-ref -d HEAD removes the only commit"
+        }
+      ],
+      "seealso": [
+        "first-repo-walkthrough",
+        "empty-commit",
+        "default-branch"
+      ]
+    },
+    {
+      "id": "who-changed-this-line-web",
+      "q": "Blame a line from the GitHub website",
+      "aka": [
+        "blame on github",
+        "who wrote this line online",
+        "git blame in browser"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Blame button on any file view",
+              "n": "Each line shows the commit that last changed it. Press b as a keyboard shortcut."
+            },
+            {
+              "c": "Ignore revisions in .git-blame-ignore-revs",
+              "n": "Add reformatting commits there and both the site and local blame skip past them to the real author."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "blame-line",
+        "blame-ignore-revs",
+        "file-history-on-web"
+      ]
+    },
+    {
+      "id": "pull-request-checks-stuck",
+      "q": "Pull request checks are stuck as expected",
+      "aka": [
+        "expected waiting for status",
+        "check never reports",
+        "pr blocked on pending check"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checks <number>",
+              "n": "A required check that never runs stays pending forever. Usually its workflow was renamed, skipped by a paths filter, or gated behind first-time approval."
+            },
+            {
+              "c": "Ruleset -> Require status checks",
+              "n": "Remove the stale check name, or make the workflow always run and exit early instead of being skipped."
+            }
+          ],
+          "undo": "Re-add the requirement once the workflow is fixed"
+        }
+      ],
+      "seealso": [
+        "github-status-checks-required",
+        "workflow-not-triggering",
+        "approve-fork-runs"
+      ]
+    },
+    {
+      "id": "partial-clone-vs-shallow",
+      "q": "Partial clone or shallow clone",
+      "aka": [
+        "blob:none vs depth 1",
+        "which clone optimization",
+        "filter or depth"
+      ],
+      "variants": [
+        {
+          "when": "You still need history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --filter=blob:none <url>",
+              "n": "Keeps every commit but downloads file contents on demand. log, blame, and bisect all work."
+            }
+          ],
+          "undo": "Delete and reclone"
+        },
+        {
+          "when": "You need only the latest state",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --depth 1 <url>",
+              "n": "Smallest and fastest, but history-dependent commands fail. Right for CI, wrong for daily work."
+            }
+          ],
+          "undo": "git fetch --unshallow"
+        }
+      ],
+      "seealso": [
+        "partial-clone",
+        "shallow-in-ci",
+        "limit-clone-history"
+      ]
+    },
+    {
+      "id": "stop-notifications-for-repo",
+      "q": "Stop notifications from one noisy repository",
+      "aka": [
+        "mute a repository",
+        "too many emails from one repo",
+        "unwatch project"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Watch -> Ignore",
+              "n": "Silences everything from that repository, including mentions."
+            },
+            {
+              "c": "Watch -> Custom -> Releases",
+              "n": "Usually better: keep release news and drop the rest. Being a collaborator subscribes you automatically, which is where most floods start."
+            }
+          ],
+          "undo": "Set Watch back to Participating and mentions"
+        }
+      ],
+      "seealso": [
+        "watch-unwatch",
+        "github-notifications-triage",
+        "mentions"
+      ]
+    },
+    {
+      "id": "cherry-pick-conflict",
+      "q": "A cherry-pick hit a conflict",
+      "aka": [
+        "cherry-pick conflict resolve",
+        "conflict during cherry pick",
+        "cherry pick failed"
+      ],
+      "variants": [
+        {
+          "when": "Work through it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Same conflict machinery as a merge: edit the files, stage them."
+            },
+            {
+              "c": "git cherry-pick --continue",
+              "n": "Completes the pick with the resolution."
+            }
+          ],
+          "undo": "git cherry-pick --abort at any point"
+        },
+        {
+          "when": "It conflicts because context is missing",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cherry-pick <earlier-hash>..<hash>",
+              "n": "A commit that depends on earlier ones conflicts on its own. Pick the range, or backport the whole series."
+            }
+          ],
+          "undo": "git cherry-pick --abort"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "cherry-pick-range",
+        "merge-conflict"
+      ]
+    },
+    {
+      "id": "keep-history-clean-solo",
+      "q": "Keep a tidy history when working alone",
+      "aka": [
+        "clean history solo project",
+        "my history is messy",
+        "fix up my own commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git commit --fixup <hash>",
+              "n": "Commit fixes marked for a specific earlier commit as you work."
+            },
+            {
+              "c": "git rebase -i --autosquash <base>",
+              "n": "Folds every fixup into its target automatically. Safe on unpushed work, and the tidiest habit for solo history."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "fixup-autosquash",
+        "solo-workflow",
+        "squash-vs-fixup"
+      ]
     }
   ]
 }
