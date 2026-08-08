@@ -22469,6 +22469,513 @@
         "clone-all-repos",
         "move-to-new-machine"
       ]
+    },
+    {
+      "id": "daily-git-routine",
+      "q": "The handful of commands I will use every day",
+      "aka": [
+        "everyday git commands",
+        "minimum git to know",
+        "daily workflow commands"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull",
+              "n": "Start from what everyone else has."
+            },
+            {
+              "c": "git switch -c <type>/<topic>",
+              "n": "Work on a branch, not on main."
+            },
+            {
+              "c": "git add -p && git commit",
+              "n": "Review as you stage, so each commit is one idea."
+            },
+            {
+              "c": "git push -u origin HEAD",
+              "n": "Publish and open a pull request. That loop covers most working days."
+            }
+          ],
+          "undo": "Every step above has its own undo elsewhere in this guide"
+        }
+      ],
+      "seealso": [
+        "commit-frequency",
+        "branch-naming",
+        "pr-checklist"
+      ]
+    },
+    {
+      "id": "read-a-diff",
+      "q": "Read a diff properly",
+      "aka": [
+        "understand diff output",
+        "what do the plus and minus mean",
+        "diff hunk header"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff",
+              "n": "Lines with minus are the old version, plus the new. The @@ header gives line numbers on each side, and the a/ and b/ prefixes mean before and after, not folders."
+            },
+            {
+              "c": "git diff --stat",
+              "n": "When the detail is too much, the summary tells you where to look first."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-changed",
+        "better-diffs",
+        "count-changed-files"
+      ]
+    },
+    {
+      "id": "safe-commands-list",
+      "q": "Which Git commands can actually lose work",
+      "aka": [
+        "dangerous git commands",
+        "what is safe to run",
+        "commands that delete data"
+      ],
+      "variants": [
+        {
+          "when": "The short list that can destroy",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --hard",
+              "n": "Discards uncommitted changes with no recovery."
+            },
+            {
+              "c": "git clean -fd",
+              "n": "Deletes untracked files, which Git never had a copy of."
+            },
+            {
+              "c": "git push --force",
+              "n": "Can erase other people's commits from the remote."
+            }
+          ],
+          "undo": "Only the first is partly recoverable, through the reflog"
+        },
+        {
+          "when": "Everything else",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog",
+              "n": "Anything once committed is recoverable for about ninety days. Commit early and the dangerous list shrinks to two."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-reflog",
+        "undo-clean",
+        "force-push-safely"
+      ]
+    },
+    {
+      "id": "github-flow-summary",
+      "q": "The complete pull request lifecycle",
+      "aka": [
+        "from branch to merge",
+        "full pr workflow",
+        "how a change reaches main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c fix/<topic>",
+              "n": "Branch from current main."
+            },
+            {
+              "c": "gh pr create --fill",
+              "n": "Push and propose. CI runs, reviewers comment, you push fixes to the same branch."
+            },
+            {
+              "c": "gh pr merge --squash --delete-branch",
+              "n": "Merge once green and approved, and the branch cleans itself up."
+            }
+          ],
+          "undo": "Revert the merge commit; the branch can be restored from the pull request"
+        }
+      ],
+      "seealso": [
+        "what-is-a-pr",
+        "merge-methods",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "who-to-ask",
+      "q": "Find the right person to ask about some code",
+      "aka": [
+        "who knows this code",
+        "find code owner",
+        "who should i ask"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git shortlog -sn -- <path>",
+              "n": "Ranked by commits to that path: the people who actually know it."
+            },
+            {
+              "c": "git log -1 --format=\"%an %ae %ci\" -- <path>",
+              "n": "Whoever touched it last, and when. Check they are still active before pinging."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "blame-line",
+        "codeowners",
+        "log-by-author"
+      ]
+    },
+    {
+      "id": "commit-message-body",
+      "q": "When a commit needs more than one line",
+      "aka": [
+        "commit body",
+        "multi paragraph commit message",
+        "explain why in commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "Opens the editor. Subject line under about fifty characters, blank line, then the body explaining why the change was needed and what you rejected."
+            },
+            {
+              "c": "git log --format=%B -1",
+              "n": "The body is where future maintainers look when the diff makes no sense on its own."
+            }
+          ],
+          "undo": "git commit --amend before pushing"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "multiline-commit",
+        "commit-template"
+      ]
+    },
+    {
+      "id": "handle-review-feedback",
+      "q": "Respond to review comments well",
+      "aka": [
+        "address pr feedback",
+        "how to reply to reviewer",
+        "push fixes after review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Address review: <what changed>\"",
+              "n": "Separate commits per round keep the reviewer's re-read small. Squash on merge if the history should be clean."
+            },
+            {
+              "c": "gh pr comment --body \"Fixed in <hash>\"",
+              "n": "Reply to each thread rather than pushing silently, and resolve only threads you actually addressed."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "suggest-changes",
+        "squash-before-merge"
+      ]
+    },
+    {
+      "id": "repo-first-hour",
+      "q": "Set up a new repository properly in ten minutes",
+      "aka": [
+        "new repo checklist",
+        "initial repository setup",
+        "start a project right"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --public --gitignore <lang> --license mit --clone",
+              "n": "Ignore rules and license from the first commit, which is much easier than retrofitting."
+            },
+            {
+              "c": "gh repo edit --add-topic <topic> --description \"<one line>\"",
+              "n": "Then a README that explains itself, a ruleset on main, and CI. Ten minutes now saves the repository from looking abandoned later."
+            }
+          ],
+          "undo": "gh repo delete <name>"
+        }
+      ],
+      "seealso": [
+        "professional-repo",
+        "add-license",
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "understand-someone-else-repo",
+      "q": "Get oriented in an unfamiliar codebase",
+      "aka": [
+        "explore new repository",
+        "understand a project quickly",
+        "first look at a codebase"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline -20",
+              "n": "Recent commits show what the team is actually working on, which the README rarely does."
+            },
+            {
+              "c": "git shortlog -sn | head",
+              "n": "Who to ask."
+            },
+            {
+              "c": "git log --format= --name-only -n 200 | sort | uniq -c | sort -rn | head",
+              "n": "The hottest files: usually the heart of the system."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "who-to-ask",
+        "see-history",
+        "first-day-on-team"
+      ]
+    },
+    {
+      "id": "when-to-tag",
+      "q": "When to create a tag",
+      "aka": [
+        "should i tag this",
+        "tag every commit?",
+        "when to version"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v1.2.0 -m \"Release v1.2.0\"",
+              "n": "Tag what someone might need to return to: a release, a deployed build, a demo. Not every commit, and not work in progress."
+            },
+            {
+              "c": "git describe --tags",
+              "n": "Between tags, this names your position relative to the last one, which is enough for most build stamps."
+            }
+          ],
+          "undo": "git tag -d v1.2.0 before pushing"
+        }
+      ],
+      "seealso": [
+        "semantic-versioning",
+        "annotated-tags",
+        "describe-version"
+      ]
+    },
+    {
+      "id": "branch-lifetime",
+      "q": "How long a branch should live",
+      "aka": [
+        "branch age",
+        "when to merge branch",
+        "short lived branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --format=\"%ci\" -1 <branch>",
+              "n": "Days, not weeks. Every day a branch lives, main moves and the merge gets harder, so slice the work rather than extending the branch."
+            },
+            {
+              "c": "git merge main",
+              "n": "When a branch must live longer, sync it into your branch regularly instead of hoping."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "long-lived-branch",
+        "feature-flags",
+        "avoid-conflicts"
+      ]
+    },
+    {
+      "id": "what-goes-in-git",
+      "q": "What belongs in a repository and what does not",
+      "aka": [
+        "should i commit this",
+        "what not to commit",
+        "repository contents"
+      ],
+      "variants": [
+        {
+          "when": "Commit it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add src/ README.md .github/",
+              "n": "Source, tests, docs, configuration, lockfiles, infrastructure definitions: anything needed to rebuild the project."
+            }
+          ],
+          "undo": "git rm --cached <path>"
+        },
+        {
+          "when": "Keep it out",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"dist/\" >> .gitignore",
+              "n": "Build output, dependencies, editor state, credentials, and anything regenerable. Large binaries belong in LFS or releases, not in the tree."
+            }
+          ],
+          "undo": "Remove the ignore line"
+        }
+      ],
+      "seealso": [
+        "ignore-files",
+        "env-files",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "github-vs-alternatives",
+      "q": "GitHub, GitLab, or Bitbucket",
+      "aka": [
+        "compare git hosts",
+        "which git hosting",
+        "gitlab vs github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote -v",
+              "n": "The Git underneath is identical, so the choice is about the platform: GitHub for reach, community, and Actions; GitLab for built-in DevOps and self-hosting; Bitbucket where Atlassian tooling dominates."
+            },
+            {
+              "c": "git remote set-url origin <new-url>",
+              "n": "Moving hosts is one command plus re-creating issues and CI, which is why the choice is reversible."
+            }
+          ],
+          "undo": "Point the remote back"
+        }
+      ],
+      "seealso": [
+        "use-other-hosts",
+        "gitlab-ci-vs-actions",
+        "mirror-migrate"
+      ]
+    },
+    {
+      "id": "learn-git-effectively",
+      "q": "Learn Git without memorizing everything",
+      "aka": [
+        "how to learn git",
+        "git learning path",
+        "stop being scared of git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init ~/sandbox",
+              "n": "Learn the model, not the flags: four places code lives, and branches as movable labels. Everything else follows from that."
+            },
+            {
+              "c": "git status",
+              "n": "Run it constantly. Git tells you what state you are in and usually suggests the next command."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "practice-sandbox",
+        "what-is-staging",
+        "git-help"
+      ]
+    },
+    {
+      "id": "fix-mistake-quickly",
+      "q": "I made a mistake, what do I run",
+      "aka": [
+        "git panic",
+        "undo whatever i did",
+        "emergency git"
+      ],
+      "variants": [
+        {
+          "when": "Before you type anything else",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Names the state you are in, which decides everything else."
+            },
+            {
+              "c": "git reflog",
+              "n": "If a commit vanished, its hash is here. Nothing committed is truly lost for about ninety days."
+            },
+            {
+              "c": "git stash",
+              "n": "When unsure, shelve the working tree first so no fix can destroy it."
+            }
+          ],
+          "undo": "git stash pop restores the shelf"
+        }
+      ],
+      "seealso": [
+        "safe-commands-list",
+        "what-is-reflog",
+        "abort-operation"
+      ]
     }
   ]
 }
