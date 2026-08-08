@@ -3,7 +3,7 @@
   "_purpose": "The complete Git cheatsheet: every command worth knowing, one line each, everywhere Git runs.",
   "_author": "Amey Thakur",
   "_github": "https://github.com/Amey-Thakur",
-  "_tech": "JSON, rendered into cheatsheet.html by build_pages.py; will also feed the printable companion",
+  "_tech": "JSON, rendered into cheatsheet.html by build_pages.py; also feeds the printable PDF and cards",
   "_description": "Grouped by task. danger true marks commands that rewrite history or can destroy work. Not restricted to GitHub: platform section covers every major host and the no-host workflows.",
   "_date": "2026-08-07",
   "updated": "2026-08-07",
