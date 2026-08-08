@@ -32352,6 +32352,498 @@
         "fix-mistake-quickly",
         "understand-git-in-one-page"
       ]
+    },
+    {
+      "id": "read-git-help-output",
+      "q": "Decode a command's help page",
+      "aka": [
+        "understand git man page",
+        "what do the brackets mean",
+        "read command synopsis"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git help switch",
+              "n": "In the synopsis, square brackets mean optional, angle brackets mean you supply a value, and a pipe means choose one."
+            },
+            {
+              "c": "git switch -h",
+              "n": "The short form lists flags without the prose, which is usually what you actually wanted."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-help",
+        "autocorrect",
+        "learn-git-effectively"
+      ]
+    },
+    {
+      "id": "choose-clone-protocol",
+      "q": "Which clone URL to copy from GitHub",
+      "aka": [
+        "https or ssh url",
+        "which clone option",
+        "copy repo url"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://github.com/<owner>/<repo>.git",
+              "n": "HTTPS works everywhere, including behind restrictive networks, and pairs with a credential helper."
+            },
+            {
+              "c": "git clone git@github.com:<owner>/<repo>.git",
+              "n": "SSH avoids credential prompts once a key is set up, and is the better default on your own machine."
+            }
+          ],
+          "undo": "git remote set-url origin <other-url> switches later"
+        }
+      ],
+      "seealso": [
+        "https-vs-ssh",
+        "clone-repo",
+        "stop-asking-for-username"
+      ]
+    },
+    {
+      "id": "verify-a-clone-is-complete",
+      "q": "Check a clone downloaded everything",
+      "aka": [
+        "did my clone finish",
+        "verify repository integrity",
+        "clone looks incomplete"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --full",
+              "n": "Confirms every object the repository references is present and intact."
+            },
+            {
+              "c": "git rev-parse --is-shallow-repository",
+              "n": "true means history was deliberately truncated, which explains a missing past without anything being broken."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "understand-shallow-limitations",
+        "repair-corrupt-repo",
+        "what-happens-on-clone"
+      ]
+    },
+    {
+      "id": "stop-a-running-git-command",
+      "q": "Cancel a Git command safely",
+      "aka": [
+        "ctrl c during git",
+        "interrupt a clone",
+        "stop git mid operation"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ctrl+C",
+              "n": "Safe for reads: clone, fetch, log, and status leave nothing half-written that matters."
+            },
+            {
+              "c": "git status",
+              "n": "After interrupting a merge, rebase, or filter, check the state: those leave a resumable operation you should continue or abort deliberately."
+            }
+          ],
+          "undo": "git merge --abort or git rebase --abort as the state requires"
+        }
+      ],
+      "seealso": [
+        "abort-operation",
+        "resume-interrupted-rebase",
+        "fix-mistake-quickly"
+      ]
+    },
+    {
+      "id": "name-a-remote-well",
+      "q": "Name remotes so you never push to the wrong one",
+      "aka": [
+        "remote naming",
+        "rename a remote",
+        "confusing remote names"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote rename origin fork",
+              "n": "On a fork, calling your copy fork and the original upstream removes the entire class of wrong-remote mistakes."
+            },
+            {
+              "c": "git remote -v",
+              "n": "Read both lines before any push you are unsure about; fetch and push URLs can differ."
+            }
+          ],
+          "undo": "git remote rename fork origin"
+        }
+      ],
+      "seealso": [
+        "stop-pushing-to-wrong-remote",
+        "why-two-remotes-fork",
+        "which-remote-am-i-pushing-to"
+      ]
+    },
+    {
+      "id": "decide-what-to-review-yourself",
+      "q": "Review my own change before asking anyone",
+      "aka": [
+        "self review pull request",
+        "check my own diff",
+        "before requesting review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff main...HEAD",
+              "n": "Read your own diff as a stranger would. Half of review comments are things the author would have caught here."
+            },
+            {
+              "c": "gh pr diff",
+              "n": "After opening it, walk the pull request view once: leftover debugging, stray files, and unclear names all surface there."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pr-checklist",
+        "choose-what-to-review-in-a-diff",
+        "pull-request-size"
+      ]
+    },
+    {
+      "id": "keep-a-fork-long-term",
+      "q": "Maintain a fork you intend to keep",
+      "aka": [
+        "long term fork",
+        "permanent fork maintenance",
+        "living with a fork"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add upstream <original-url>",
+              "n": "Sync on a schedule rather than when it breaks; a fork left for months becomes a rewrite."
+            },
+            {
+              "c": "git switch -c local/<change> upstream/main",
+              "n": "Keep each local change on its own branch off upstream, so rebasing onto new upstream releases stays mechanical."
+            }
+          ],
+          "undo": "Delete the fork"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "why-my-fork-shows-behind",
+        "handle-abandoned-dependency"
+      ]
+    },
+    {
+      "id": "write-a-good-issue-title",
+      "q": "Write an issue title people can scan",
+      "aka": [
+        "issue title conventions",
+        "name a bug report",
+        "good issue subject"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue create --title \"Upload times out on files over 50 MB\"",
+              "n": "State the symptom and its condition. Help, Bug, and Question tell a reader nothing and cannot be searched."
+            }
+          ],
+          "undo": "Edit the title at any time"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "issue-search",
+        "ask-a-good-git-question"
+      ]
+    },
+    {
+      "id": "handle-a-huge-backlog",
+      "q": "Face a repository with hundreds of open issues",
+      "aka": [
+        "overwhelming backlog",
+        "hundreds of issues",
+        "triage a big backlog"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue list --search \"sort:reactions-+1-desc\"",
+              "n": "Let users rank it: the most-wanted items are the honest priorities."
+            },
+            {
+              "c": "gh issue list --search \"updated:<2025-01-01\"",
+              "n": "Then close the untouched tail with a kind note. A backlog nobody reads is worse than a short one."
+            }
+          ],
+          "undo": "Reopen anything closed too eagerly"
+        }
+      ],
+      "seealso": [
+        "stale-issues",
+        "repo-first-issue-triage",
+        "issue-labels"
+      ]
+    },
+    {
+      "id": "protect-my-main-from-myself",
+      "q": "Recover after force pushing my own main",
+      "aka": [
+        "i force pushed main",
+        "broke my own main",
+        "undo my force push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog",
+              "n": "Your clone still holds the pre-push tip; find its hash."
+            },
+            {
+              "c": "git push --force-with-lease origin <hash>:main",
+              "n": "Put the branch back where it was. Then add a ruleset blocking force pushes so it cannot happen twice."
+            }
+          ],
+          "undo": "The reflog holds both positions"
+        }
+      ],
+      "seealso": [
+        "recover-force-push",
+        "prevent-force-push-main",
+        "stop-force-push-habit"
+      ]
+    },
+    {
+      "id": "work-with-slow-reviewers",
+      "q": "My pull request has sat unreviewed for days",
+      "aka": [
+        "nobody reviews my pr",
+        "pr ignored",
+        "chase a review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr edit --add-reviewer <user>",
+              "n": "Ask one named person rather than a team; diffuse requests get diffuse responses."
+            },
+            {
+              "c": "gh pr diff --name-only",
+              "n": "If it is large, offer to split it. Most stalled reviews are stalled because they are daunting, not because nobody cares."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pull-request-size",
+        "pick-what-to-review-first",
+        "handle-review-feedback"
+      ]
+    },
+    {
+      "id": "decide-to-rewrite-history",
+      "q": "Is it worth rewriting this history",
+      "aka": [
+        "should i rewrite history",
+        "clean history worth it",
+        "history surgery decision"
+      ],
+      "variants": [
+        {
+          "when": "The test",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline origin/main..HEAD",
+              "n": "Unpushed and yours alone: rewrite freely, it costs nobody anything."
+            },
+            {
+              "c": "git log --oneline -5 origin/main",
+              "n": "Published and shared: only a leaked secret or a repository-breaking file justifies the disruption. Ugly history is not a reason."
+            }
+          ],
+          "undo": "Depends on the rewrite; the reflog covers local ones"
+        }
+      ],
+      "seealso": [
+        "repo-inherits-bad-history",
+        "clean-history-before-public",
+        "amend-vs-new-commit"
+      ]
+    },
+    {
+      "id": "share-a-single-commit",
+      "q": "Send someone one commit without giving repository access",
+      "aka": [
+        "hand someone a commit",
+        "share a patch",
+        "send code without access"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git format-patch -1 <hash>",
+              "n": "Produces a file carrying the change, its message, and its author."
+            },
+            {
+              "c": "git am <file>.patch",
+              "n": "They apply it with authorship preserved. No account, no remote, no permissions involved."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD on their side"
+        }
+      ],
+      "seealso": [
+        "patches-email",
+        "apply-patch",
+        "share-repo-with-non-github-user"
+      ]
+    },
+    {
+      "id": "understand-two-dots-in-diff",
+      "q": "Why a pull request diff differs from my local diff",
+      "aka": [
+        "pr diff looks different",
+        "github diff vs git diff",
+        "why does the diff disagree"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff main...HEAD",
+              "n": "Three dots compares against the common ancestor, which is what a pull request shows."
+            },
+            {
+              "c": "git diff main..HEAD",
+              "n": "Two dots compares the raw tips, so it also shows what main gained since you branched. That is the difference you are seeing."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dot-dot-notation",
+        "compare-branches",
+        "merge-base"
+      ]
+    },
+    {
+      "id": "keep-credentials-out-of-remote-url",
+      "q": "A token ended up in my remote URL",
+      "aka": [
+        "token in git remote",
+        "credentials in url",
+        "password visible in remote"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote -v",
+              "n": "A URL containing a token is stored in plain text in .git/config and printed by this command."
+            },
+            {
+              "c": "git remote set-url origin https://github.com/<owner>/<repo>.git",
+              "n": "Strip it, let a credential helper hold the secret, and rotate the exposed token."
+            }
+          ],
+          "undo": "Rotation is the fix; the old token must be revoked"
+        }
+      ],
+      "seealso": [
+        "access-tokens",
+        "stop-asking-for-username",
+        "stop-committing-passwords"
+      ]
+    },
+    {
+      "id": "pick-a-license-quickly",
+      "q": "Choose a license without reading all of them",
+      "aka": [
+        "which license should i pick",
+        "mit or apache",
+        "license decision"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --license mit",
+              "n": "MIT for maximum adoption and minimum friction; Apache-2.0 when you want an explicit patent grant."
+            },
+            {
+              "c": "gh repo edit --add-topic <topic>",
+              "n": "GPL when derivatives must stay open. Anything more nuanced is a question for counsel, not a coin toss."
+            }
+          ],
+          "undo": "Licenses can change going forward, never retroactively"
+        }
+      ],
+      "seealso": [
+        "add-license",
+        "change-license-later",
+        "how-open-source-works"
+      ]
     }
   ]
 }
