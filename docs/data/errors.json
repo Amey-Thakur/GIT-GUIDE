@@ -2443,6 +2443,486 @@
         "actions-locally",
         "debug-workflows"
       ]
+    },
+    {
+      "id": "smudge-filter-lfs",
+      "msg": "error: external filter 'git-lfs filter-process' failed  fatal: <file>: smudge filter lfs failed",
+      "why": "Checkout tried to expand an LFS pointer and the LFS binary was missing, unauthenticated, or out of quota.",
+      "fix": [
+        {
+          "c": "git lfs install",
+          "n": "Installs the filters for your user. Missing LFS after a fresh machine setup is the usual cause."
+        },
+        {
+          "c": "git lfs pull",
+          "n": "Fetches the real content once the filter works again."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": [
+        "lfs-migrate",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "process-exit-code-1",
+      "msg": "##[error]Process completed with exit code 1.",
+      "why": "Not a Git problem. A command in the step returned non-zero, and the runner reports the step as failed.",
+      "fix": [
+        {
+          "c": "gh run view --log-failed",
+          "n": "Prints only the failing step's output, where the real error sits above this line."
+        },
+        {
+          "c": "run: set -x",
+          "n": "Add to a shell step to echo each command, which pinpoints which one exited."
+        }
+      ],
+      "intent": "debug-workflows",
+      "seealso": [
+        "github-actions-start",
+        "rerun-checks"
+      ]
+    },
+    {
+      "id": "container-action-linux",
+      "msg": "Error: Container action is only supported on Linux",
+      "why": "A Docker-based action was used in a job running on a Windows or macOS runner.",
+      "fix": [
+        {
+          "c": "runs-on: ubuntu-latest",
+          "n": "Move the job, or that one step, to a Linux runner."
+        },
+        {
+          "c": "runs: using: composite",
+          "n": "If you own the action, a composite or JavaScript action runs on every platform."
+        }
+      ],
+      "intent": "create-github-action",
+      "seealso": [
+        "container-jobs",
+        "actions-matrix"
+      ]
+    },
+    {
+      "id": "pages-deploy-404",
+      "msg": "Error: Failed to create deployment (status: 404) with build version <sha>",
+      "why": "The deploy step ran before Pages was switched to the Actions source, so there is nothing to deploy into.",
+      "fix": [
+        {
+          "c": "Settings -> Pages -> Source: GitHub Actions",
+          "n": "Set this once; the workflow then has a target."
+        },
+        {
+          "c": "permissions: pages: write, id-token: write",
+          "n": "The deploy job needs both, plus an environment: github-pages block."
+        }
+      ],
+      "intent": "github-pages",
+      "seealso": [
+        "pages-not-updating",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "chmod-config-lock",
+      "msg": "error: chmod on .git/config.lock failed: Operation not permitted",
+      "why": "The filesystem will not let Git set permissions: typically a network share, an exFAT drive, or a Windows folder reached from WSL.",
+      "fix": [
+        {
+          "c": "git config core.fileMode false",
+          "n": "Stops Git from tracking permission bits it cannot control."
+        },
+        {
+          "c": "git -C ~/projects/<repo> status",
+          "n": "Better still, keep the repository on the native filesystem of whichever side edits it."
+        }
+      ],
+      "intent": "wsl-git",
+      "seealso": [
+        "filemode",
+        "dubious-ownership"
+      ]
+    },
+    {
+      "id": "ignoring-broken-ref",
+      "msg": "warning: ignoring broken ref refs/remotes/origin/HEAD",
+      "why": "The pointer recording the remote's default branch is empty or malformed, often after the default branch was renamed.",
+      "fix": [
+        {
+          "c": "git remote set-head origin --auto",
+          "n": "Asks the remote what its default branch is and rewrites the pointer."
+        },
+        {
+          "c": "git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main",
+          "n": "Sets it by hand when working offline."
+        }
+      ],
+      "intent": "default-branch",
+      "seealso": [
+        "rename-master-to-main",
+        "what-is-origin"
+      ]
+    },
+    {
+      "id": "kex-exchange-identification",
+      "msg": "kex_exchange_identification: Connection closed by remote host",
+      "why": "The SSH handshake was cut before authentication: usually a firewall, a captive network, or rate limiting on port 22.",
+      "fix": [
+        {
+          "c": "ssh -T -p 443 git@ssh.github.com",
+          "n": "GitHub serves SSH on 443, which corporate networks rarely block."
+        },
+        {
+          "c": "git config --global url.\"https://github.com/\".insteadOf \"git@github.com:\"",
+          "n": "Or fall back to HTTPS on networks that only allow web traffic."
+        }
+      ],
+      "intent": "debug-ssh-key",
+      "seealso": [
+        "ssh-key-github",
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "unprotected-key-file",
+      "msg": "WARNING: UNPROTECTED PRIVATE KEY FILE!  Permissions 0644 for '<path>' are too open.",
+      "why": "SSH refuses to use a private key that other users on the machine can read.",
+      "fix": [
+        {
+          "c": "chmod 600 ~/.ssh/id_ed25519",
+          "n": "Owner-only access, which is what SSH insists on."
+        },
+        {
+          "c": "icacls \"$env:USERPROFILE\\.ssh\\id_ed25519\" /inheritance:r /grant:r \"$env:USERNAME:R\"",
+          "n": "The Windows equivalent when the key was copied from another machine."
+        }
+      ],
+      "intent": "ssh-key-github",
+      "seealso": [
+        "ssh-agent-passphrase",
+        "debug-ssh-key"
+      ]
+    },
+    {
+      "id": "load-key-invalid-format",
+      "msg": "Load key \"<path>\": invalid format",
+      "why": "The key file is damaged, in a format OpenSSH does not read, or you pointed at the public key by mistake.",
+      "fix": [
+        {
+          "c": "ssh-keygen -y -f ~/.ssh/id_ed25519",
+          "n": "Prints the public half if the private key is sound. An error here means the file itself is the problem."
+        },
+        {
+          "c": "ssh-keygen -p -f ~/.ssh/id_rsa -m PEM",
+          "n": "Converts a PuTTY or PEM mismatch to the format OpenSSH expects. A key mangled by copy and paste must be regenerated."
+        }
+      ],
+      "intent": "ssh-key-github",
+      "seealso": [
+        "ssh-agent-passphrase",
+        "debug-ssh-key"
+      ]
+    },
+    {
+      "id": "agent-refused-operation",
+      "msg": "sign_and_send_pubkey: signing failed: agent refused operation",
+      "why": "The agent holds the key but will not sign with it, usually because of a permissions problem on the key or a confused agent session.",
+      "fix": [
+        {
+          "c": "ssh-add -D && ssh-add ~/.ssh/id_ed25519",
+          "n": "Clear the agent and load the key again."
+        },
+        {
+          "c": "chmod 600 ~/.ssh/id_ed25519",
+          "n": "Loose permissions cause this as often as they cause the unprotected-key warning."
+        }
+      ],
+      "intent": "ssh-agent-passphrase",
+      "seealso": [
+        "ssh-key-github",
+        "debug-ssh-key"
+      ]
+    },
+    {
+      "id": "empty-filename-in-tree",
+      "msg": "error: empty filename in tree entry  fatal: unable to read tree <hash>",
+      "why": "A commit object was written with a malformed entry, usually by a third-party tool or a damaged import.",
+      "fix": [
+        {
+          "c": "git fsck --full",
+          "n": "Names the bad object so you know how far back the damage reaches."
+        },
+        {
+          "c": "git clone <url> ../fresh",
+          "n": "If the remote is healthy, recloning beats surgery. Otherwise rewrite past the bad commit with filter-repo."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": [
+        "dangling-objects",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "automatic-merge-failed",
+      "msg": "Automatic merge failed; fix conflicts and then commit the result.",
+      "why": "Both sides changed the same lines, so Git stopped and left the file with both versions marked for you to choose.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Lists every file waiting under Unmerged paths."
+        },
+        {
+          "c": "git add <file> && git commit",
+          "n": "Edit each file to its final form, stage, and commit to complete the merge."
+        }
+      ],
+      "intent": "merge-conflict",
+      "seealso": [
+        "mergetool-vscode",
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "key-no-section",
+      "msg": "error: key does not contain a section: user",
+      "why": "A config key was written without its section, most often user instead of user.name.",
+      "fix": [
+        {
+          "c": "git config --global user.name \"Your Name\"",
+          "n": "Every key is section.key; the dot is not optional."
+        },
+        {
+          "c": "git config --global --list",
+          "n": "Confirms what actually landed in the file."
+        }
+      ],
+      "intent": "show-config",
+      "seealso": [
+        "config-precedence",
+        "first-time-setup"
+      ]
+    },
+    {
+      "id": "local-outside-repo",
+      "msg": "fatal: --local can only be used inside a git repository",
+      "why": "A repository-scoped config command ran in a folder that is not a repository, common in scripts and fresh shells.",
+      "fix": [
+        {
+          "c": "git rev-parse --is-inside-work-tree",
+          "n": "Guard scripts with this before touching local config."
+        },
+        {
+          "c": "git config --global <key> <value>",
+          "n": "Use the global scope when the setting is not tied to one project."
+        }
+      ],
+      "intent": "config-precedence",
+      "seealso": [
+        "repo-root",
+        "show-config"
+      ]
+    },
+    {
+      "id": "gh-pr-already-exists",
+      "msg": "HTTP 422: Validation Failed (a pull request already exists for <owner>:<branch>)",
+      "why": "That branch already has an open pull request against the same base. GitHub allows only one.",
+      "fix": [
+        {
+          "c": "gh pr view --web",
+          "n": "Opens the existing one; new pushes update it automatically."
+        },
+        {
+          "c": "gh pr list --head <branch> --state all",
+          "n": "Finds it when the pull request was opened from a different clone or by someone else."
+        }
+      ],
+      "intent": "create-pr-cli",
+      "seealso": [
+        "what-is-a-pr",
+        "draft-pr"
+      ]
+    },
+    {
+      "id": "npm-git-ls-remote",
+      "msg": "npm ERR! Error while executing: git ls-remote -h -t ssh://git@github.com/<owner>/<repo>.git  npm ERR! exited with error code: 128",
+      "why": "A dependency points at a Git URL and npm shells out to Git, which has no key for that host in this environment.",
+      "fix": [
+        {
+          "c": "ssh -T git@github.com",
+          "n": "Confirms whether Git itself can authenticate; fix that and npm follows."
+        },
+        {
+          "c": "git config --global url.\"https://x-access-token:$TOKEN@github.com/\".insteadOf \"ssh://git@github.com/\"",
+          "n": "In CI, rewrite SSH dependency URLs to token-authenticated HTTPS."
+        }
+      ],
+      "intent": "install-from-git",
+      "seealso": [
+        "clone-private-ci",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "pip-git-not-found",
+      "msg": "ERROR: Cannot find command 'git' - do you have 'git' installed and in your PATH?",
+      "why": "A requirement uses a git+ URL, and the container or runner has no Git binary.",
+      "fix": [
+        {
+          "c": "apt-get update && apt-get install -y git",
+          "n": "Slim Python images ship without Git; install it before pip runs."
+        },
+        {
+          "c": "pip install <package>",
+          "n": "Or depend on the published release instead of a repository, which needs no Git at all."
+        }
+      ],
+      "intent": "install-from-git",
+      "seealso": [
+        "container-jobs",
+        "private-go-modules"
+      ]
+    },
+    {
+      "id": "vscode-configure-user",
+      "msg": "Make sure you configure your 'user.name' and 'user.email' in git.",
+      "why": "VS Code refuses to commit without an identity, and its terminal may not see the shell profile where you set one.",
+      "fix": [
+        {
+          "c": "git config --global user.email \"you@example.com\"",
+          "n": "Set both globally so every editor and terminal agrees."
+        },
+        {
+          "c": "git config --list --show-origin | grep user",
+          "n": "Shows which file the editor is actually reading."
+        }
+      ],
+      "intent": "tell-me-who-you-are",
+      "seealso": [
+        "clone-in-vscode",
+        "name-vs-username"
+      ]
+    },
+    {
+      "id": "nothing-added-untracked",
+      "msg": "nothing added to commit but untracked files present (use \"git add\" to track)",
+      "why": "The files are new, so Git sees them but is not tracking them yet. Commit records only tracked, staged content.",
+      "fix": [
+        {
+          "c": "git add .",
+          "n": "Start tracking everything not ignored, then commit."
+        },
+        {
+          "c": "git status --short",
+          "n": "The ?? rows are the untracked files. If they should never be committed, ignore them instead."
+        }
+      ],
+      "intent": "what-is-staging",
+      "seealso": [
+        "add-a-vs-dot",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "actions-unresolved-action",
+      "msg": "Error: Unable to resolve action `actions/checkout@v9`, repository or version not found",
+      "why": "The action reference names a tag, branch, or repository that does not exist. A typo in the version is the usual cause.",
+      "fix": [
+        {
+          "c": "uses: actions/checkout@v5",
+          "n": "Check the action's releases page for the current major tag."
+        },
+        {
+          "c": "uses: actions/checkout@<full-sha>",
+          "n": "Pinning to a commit is immune to retagging and is the safer habit for third-party actions."
+        }
+      ],
+      "intent": "github-actions-start",
+      "seealso": [
+        "debug-workflows",
+        "create-github-action"
+      ]
+    },
+    {
+      "id": "head-not-ahead-of-base",
+      "msg": "The head commit for this pull_request event is not ahead of the base commit.",
+      "why": "The branch has nothing the base lacks, so the merge-result checkout is empty and the workflow stops.",
+      "fix": [
+        {
+          "c": "git log <base>..HEAD --oneline",
+          "n": "Empty output confirms there is nothing to test."
+        },
+        {
+          "c": "git rebase <base>",
+          "n": "Usually the branch simply needs updating, or the work was already merged."
+        }
+      ],
+      "intent": "pr-vs-push-triggers",
+      "seealso": [
+        "workflow-not-triggering",
+        "fast-forward"
+      ]
+    },
+    {
+      "id": "dependabot-invalid-yml",
+      "msg": "dependabot.yml: The property '#/updates/0' did not contain a required property of 'schedule'",
+      "why": "Every entry under updates needs package-ecosystem, directory, and schedule. One is missing.",
+      "fix": [
+        {
+          "c": "schedule: interval: weekly",
+          "n": "Add the missing block; weekly is the sane default for most repositories."
+        },
+        {
+          "c": "Insights -> Dependency graph -> Dependabot",
+          "n": "Shows the parse error against the file, which is faster than guessing."
+        }
+      ],
+      "intent": "dependabot",
+      "seealso": [
+        "code-scanning",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "could-not-lock-config",
+      "msg": "error: could not lock config file .git/config: File exists",
+      "why": "A stale .git/config.lock is left over from a crashed Git process or an editor holding the file open.",
+      "fix": [
+        {
+          "c": "rm .git/config.lock",
+          "n": "Safe once you are sure no Git command is running."
+        },
+        {
+          "c": "git config --list",
+          "n": "Confirms the config still reads correctly afterwards."
+        }
+      ],
+      "intent": "index-lock",
+      "seealso": [
+        "show-config",
+        "git-guis"
+      ]
+    },
+    {
+      "id": "cannot-open-editor",
+      "msg": "error: cannot run vi: No such file or directory  error: unable to start editor 'vi'",
+      "why": "core.editor points at a program this machine does not have, common in minimal containers.",
+      "fix": [
+        {
+          "c": "git config --global core.editor \"nano\"",
+          "n": "Or code --wait, or notepad on Windows: anything actually installed."
+        },
+        {
+          "c": "git commit -m \"<message>\"",
+          "n": "Passing the message inline skips the editor entirely."
+        }
+      ],
+      "intent": "set-editor",
+      "seealso": [
+        "exit-vim",
+        "commit-messages"
+      ]
     }
   ]
 }

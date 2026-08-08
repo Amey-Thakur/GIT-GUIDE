@@ -1053,6 +1053,126 @@
   <p class="note">The YAML does not parse or breaks the workflow schema. Indentation and a missing colon cause most of it.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#workflow-not-triggering">My workflow did not run</a></p>
 </article>
+<article class="result errcard" id="smudge-filter-lfs">
+  <h2><code class="errmsg">error: external filter &#x27;git-lfs filter-process&#x27; failed  fatal: &lt;file&gt;: smudge filter lfs failed</code><a class="anchor" href="#smudge-filter-lfs" aria-label="Link to this error">#</a></h2>
+  <p class="note">Checkout tried to expand an LFS pointer and the LFS binary was missing, unauthenticated, or out of quota.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="process-exit-code-1">
+  <h2><code class="errmsg">##[error]Process completed with exit code 1.</code><a class="anchor" href="#process-exit-code-1" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not a Git problem. A command in the step returned non-zero, and the runner reports the step as failed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#debug-workflows">Debug a failing workflow properly</a></p>
+</article>
+<article class="result errcard" id="container-action-linux">
+  <h2><code class="errmsg">Error: Container action is only supported on Linux</code><a class="anchor" href="#container-action-linux" aria-label="Link to this error">#</a></h2>
+  <p class="note">A Docker-based action was used in a job running on a Windows or macOS runner.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-github-action">Write my own GitHub Action</a></p>
+</article>
+<article class="result errcard" id="pages-deploy-404">
+  <h2><code class="errmsg">Error: Failed to create deployment (status: 404) with build version &lt;sha&gt;</code><a class="anchor" href="#pages-deploy-404" aria-label="Link to this error">#</a></h2>
+  <p class="note">The deploy step ran before Pages was switched to the Actions source, so there is nothing to deploy into.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-pages">Publish a website from a repository</a></p>
+</article>
+<article class="result errcard" id="chmod-config-lock">
+  <h2><code class="errmsg">error: chmod on .git/config.lock failed: Operation not permitted</code><a class="anchor" href="#chmod-config-lock" aria-label="Link to this error">#</a></h2>
+  <p class="note">The filesystem will not let Git set permissions: typically a network share, an exFAT drive, or a Windows folder reached from WSL.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#wsl-git">Use Git well between Windows and WSL</a></p>
+</article>
+<article class="result errcard" id="ignoring-broken-ref">
+  <h2><code class="errmsg">warning: ignoring broken ref refs/remotes/origin/HEAD</code><a class="anchor" href="#ignoring-broken-ref" aria-label="Link to this error">#</a></h2>
+  <p class="note">The pointer recording the remote&#x27;s default branch is empty or malformed, often after the default branch was renamed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#default-branch">See or change the default branch of a remote</a></p>
+</article>
+<article class="result errcard" id="kex-exchange-identification">
+  <h2><code class="errmsg">kex_exchange_identification: Connection closed by remote host</code><a class="anchor" href="#kex-exchange-identification" aria-label="Link to this error">#</a></h2>
+  <p class="note">The SSH handshake was cut before authentication: usually a firewall, a captive network, or rate limiting on port 22.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#debug-ssh-key">See which SSH key Git is actually using</a></p>
+</article>
+<article class="result errcard" id="unprotected-key-file">
+  <h2><code class="errmsg">WARNING: UNPROTECTED PRIVATE KEY FILE!  Permissions 0644 for &#x27;&lt;path&gt;&#x27; are too open.</code><a class="anchor" href="#unprotected-key-file" aria-label="Link to this error">#</a></h2>
+  <p class="note">SSH refuses to use a private key that other users on the machine can read.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+</article>
+<article class="result errcard" id="load-key-invalid-format">
+  <h2><code class="errmsg">Load key &quot;&lt;path&gt;&quot;: invalid format</code><a class="anchor" href="#load-key-invalid-format" aria-label="Link to this error">#</a></h2>
+  <p class="note">The key file is damaged, in a format OpenSSH does not read, or you pointed at the public key by mistake.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+</article>
+<article class="result errcard" id="agent-refused-operation">
+  <h2><code class="errmsg">sign_and_send_pubkey: signing failed: agent refused operation</code><a class="anchor" href="#agent-refused-operation" aria-label="Link to this error">#</a></h2>
+  <p class="note">The agent holds the key but will not sign with it, usually because of a permissions problem on the key or a confused agent session.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-agent-passphrase">Stop typing my SSH passphrase every time</a></p>
+</article>
+<article class="result errcard" id="empty-filename-in-tree">
+  <h2><code class="errmsg">error: empty filename in tree entry  fatal: unable to read tree &lt;hash&gt;</code><a class="anchor" href="#empty-filename-in-tree" aria-label="Link to this error">#</a></h2>
+  <p class="note">A commit object was written with a malformed entry, usually by a third-party tool or a damaged import.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="automatic-merge-failed">
+  <h2><code class="errmsg">Automatic merge failed; fix conflicts and then commit the result.</code><a class="anchor" href="#automatic-merge-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Both sides changed the same lines, so Git stopped and left the file with both versions marked for you to choose.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="key-no-section">
+  <h2><code class="errmsg">error: key does not contain a section: user</code><a class="anchor" href="#key-no-section" aria-label="Link to this error">#</a></h2>
+  <p class="note">A config key was written without its section, most often user instead of user.name.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#show-config">See every Git setting and where it comes from</a></p>
+</article>
+<article class="result errcard" id="local-outside-repo">
+  <h2><code class="errmsg">fatal: --local can only be used inside a git repository</code><a class="anchor" href="#local-outside-repo" aria-label="Link to this error">#</a></h2>
+  <p class="note">A repository-scoped config command ran in a folder that is not a repository, common in scripts and fresh shells.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#config-precedence">Which config file a setting comes from</a></p>
+</article>
+<article class="result errcard" id="gh-pr-already-exists">
+  <h2><code class="errmsg">HTTP 422: Validation Failed (a pull request already exists for &lt;owner&gt;:&lt;branch&gt;)</code><a class="anchor" href="#gh-pr-already-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">That branch already has an open pull request against the same base. GitHub allows only one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-pr-cli">Create a pull request from the terminal</a></p>
+</article>
+<article class="result errcard" id="npm-git-ls-remote">
+  <h2><code class="errmsg">npm ERR! Error while executing: git ls-remote -h -t ssh://git@github.com/&lt;owner&gt;/&lt;repo&gt;.git  npm ERR! exited with error code: 128</code><a class="anchor" href="#npm-git-ls-remote" aria-label="Link to this error">#</a></h2>
+  <p class="note">A dependency points at a Git URL and npm shells out to Git, which has no key for that host in this environment.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#install-from-git">Install a package straight from a repository</a></p>
+</article>
+<article class="result errcard" id="pip-git-not-found">
+  <h2><code class="errmsg">ERROR: Cannot find command &#x27;git&#x27; - do you have &#x27;git&#x27; installed and in your PATH?</code><a class="anchor" href="#pip-git-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">A requirement uses a git+ URL, and the container or runner has no Git binary.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#install-from-git">Install a package straight from a repository</a></p>
+</article>
+<article class="result errcard" id="vscode-configure-user">
+  <h2><code class="errmsg">Make sure you configure your &#x27;user.name&#x27; and &#x27;user.email&#x27; in git.</code><a class="anchor" href="#vscode-configure-user" aria-label="Link to this error">#</a></h2>
+  <p class="note">VS Code refuses to commit without an identity, and its terminal may not see the shell profile where you set one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tell-me-who-you-are">Fix: Please tell me who you are</a></p>
+</article>
+<article class="result errcard" id="nothing-added-untracked">
+  <h2><code class="errmsg">nothing added to commit but untracked files present (use &quot;git add&quot; to track)</code><a class="anchor" href="#nothing-added-untracked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The files are new, so Git sees them but is not tracking them yet. Commit records only tracked, staged content.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#what-is-staging">What the staging area actually is</a></p>
+</article>
+<article class="result errcard" id="actions-unresolved-action">
+  <h2><code class="errmsg">Error: Unable to resolve action `actions/checkout@v9`, repository or version not found</code><a class="anchor" href="#actions-unresolved-action" aria-label="Link to this error">#</a></h2>
+  <p class="note">The action reference names a tag, branch, or repository that does not exist. A typo in the version is the usual cause.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-actions-start">Run tests automatically on every push</a></p>
+</article>
+<article class="result errcard" id="head-not-ahead-of-base">
+  <h2><code class="errmsg">The head commit for this pull_request event is not ahead of the base commit.</code><a class="anchor" href="#head-not-ahead-of-base" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch has nothing the base lacks, so the merge-result checkout is empty and the workflow stops.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pr-vs-push-triggers">on: push or on: pull_request for CI</a></p>
+</article>
+<article class="result errcard" id="dependabot-invalid-yml">
+  <h2><code class="errmsg">dependabot.yml: The property &#x27;#/updates/0&#x27; did not contain a required property of &#x27;schedule&#x27;</code><a class="anchor" href="#dependabot-invalid-yml" aria-label="Link to this error">#</a></h2>
+  <p class="note">Every entry under updates needs package-ecosystem, directory, and schedule. One is missing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dependabot">Get automatic dependency updates and security alerts</a></p>
+</article>
+<article class="result errcard" id="could-not-lock-config">
+  <h2><code class="errmsg">error: could not lock config file .git/config: File exists</code><a class="anchor" href="#could-not-lock-config" aria-label="Link to this error">#</a></h2>
+  <p class="note">A stale .git/config.lock is left over from a crashed Git process or an editor holding the file open.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+</article>
+<article class="result errcard" id="cannot-open-editor">
+  <h2><code class="errmsg">error: cannot run vi: No such file or directory  error: unable to start editor &#x27;vi&#x27;</code><a class="anchor" href="#cannot-open-editor" aria-label="Link to this error">#</a></h2>
+  <p class="note">core.editor points at a program this machine does not have, common in minimal containers.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#set-editor">Change the editor Git opens</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
