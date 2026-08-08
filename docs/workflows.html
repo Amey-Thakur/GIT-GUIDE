@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
 
@@ -137,15 +137,14 @@
             </g>
           </svg>
         </div>
-        <div class="stepcap" aria-live="polite">
+        <div class="stepfoot"><div class="stepcap" aria-live="polite">
           <code id="d4-cmd"></code>
           <p id="d4-text"></p>
-        </div>
-        <div class="stepper-controls" data-stepper="d4">
+        </div><div class="stepper-controls" data-stepper="d4">
           <button class="wizard-opt" id="d4-prev" type="button">Previous</button>
           <span class="stepdots" id="d4-dots" aria-hidden="true"></span>
           <button class="wizard-opt" id="d4-next" type="button">Next</button>
-        </div>
+        </div></div>
         <p class="note">Releases are tags on main's line. A fix branches from the tag, ships as its own tag, and merges back so main keeps the cure.</p>
         <div class="cmd"><code>git tag -a v2.1.0 -m "&lt;release note&gt;" && git push origin v2.1.0</code><button class="copy" data-cmd="git tag -a v2.1.0 -m &quot;<release note>&quot; && git push origin v2.1.0" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>git switch -c hotfix-2.1.1 v2.1.0</code><button class="copy" data-cmd="git switch -c hotfix-2.1.1 v2.1.0" aria-label="Copy command">Copy</button></div>
