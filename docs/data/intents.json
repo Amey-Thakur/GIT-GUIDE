@@ -18088,6 +18088,394 @@
         "fetch-all",
         "worktrees"
       ]
+    },
+    {
+      "id": "vscode-conflict-editor",
+      "q": "Resolve conflicts in the VS Code merge editor",
+      "aka": [
+        "vscode merge editor",
+        "accept current or incoming",
+        "three way merge vscode"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Resolve in Merge Editor",
+              "n": "The button on a conflicted file. Three panes: your side, theirs, and the result you are building. Accept either, accept both, or edit the result directly, then Complete Merge stages it."
+            }
+          ],
+          "undo": "git checkout -m <file> restores the markers"
+        },
+        {
+          "when": "Prefer the markers",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config merge.conflictStyle zdiff3",
+              "n": "Adds the common ancestor between the two sides, so you can see what each side changed rather than guessing."
+            }
+          ],
+          "undo": "git config --unset merge.conflictStyle"
+        }
+      ],
+      "seealso": [
+        "merge-conflict",
+        "mergetool-vscode",
+        "conflict-styles"
+      ]
+    },
+    {
+      "id": "conflict-styles",
+      "q": "Read conflict markers properly",
+      "aka": [
+        "conflict marker meaning",
+        "diff3 style",
+        "what is the middle section"
+      ],
+      "variants": [
+        {
+          "when": "The anatomy",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "<<<<<<< HEAD",
+              "n": "Everything to the divider is your side. Below it, to the closing marker, is the incoming side, labelled with its branch or commit."
+            },
+            {
+              "c": "git config --global merge.conflictStyle zdiff3",
+              "n": "Adds a third section showing the common ancestor. Knowing what both sides started from turns most guesswork into a decision."
+            }
+          ],
+          "undo": "git config --global --unset merge.conflictStyle"
+        }
+      ],
+      "seealso": [
+        "merge-conflict",
+        "vscode-conflict-editor",
+        "merge-take-side"
+      ]
+    },
+    {
+      "id": "rebase-conflict-sides",
+      "q": "During a rebase, ours and theirs are swapped",
+      "aka": [
+        "rebase ours theirs confusing",
+        "which side is mine in rebase",
+        "rebase conflict direction"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git checkout --ours <file>",
+              "n": "In a rebase, ours is the branch you are replaying onto, and theirs is your own commit being replayed. Backwards from a merge, because Git is applying your work as a patch onto their base."
+            },
+            {
+              "c": "git status",
+              "n": "When in doubt, read the header: it names the commit currently being applied."
+            }
+          ],
+          "undo": "git rebase --abort"
+        }
+      ],
+      "seealso": [
+        "ours-theirs-rebase",
+        "merge-take-side",
+        "interactive-rebase"
+      ]
+    },
+    {
+      "id": "pick-vs-merge",
+      "q": "Cherry-pick or merge for one fix from another branch",
+      "aka": [
+        "cherry pick vs merge",
+        "take one commit or the whole branch",
+        "duplicate commits after merge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cherry-pick <hash>",
+              "n": "Copies the change as a new commit with a new hash. Fine for a hotfix that must land on two branches, but if the source branch merges later, the same change exists twice in history."
+            },
+            {
+              "c": "git merge <branch>",
+              "n": "Brings everything and records the relationship, so nothing is ever applied twice. Prefer merging unless you truly need one commit early."
+            }
+          ],
+          "undo": "git revert the cherry-pick, or reset before pushing"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "hotfix-from-tag",
+        "what-is-merging"
+      ]
+    },
+    {
+      "id": "commit-hash-collision",
+      "q": "Can two commits have the same hash",
+      "aka": [
+        "hash collision git",
+        "are hashes unique",
+        "short hash ambiguous"
+      ],
+      "variants": [
+        {
+          "when": "Practically, no",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse HEAD",
+              "n": "Full hashes are 160 bits; accidental collision is not a risk anyone has to plan for, and Git ships collision detection against the known SHA-1 attack."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Short hashes are another matter",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global core.abbrev 12",
+              "n": "Seven characters do collide in big repositories, and Git errors with ambiguous argument. It lengthens abbreviations automatically as a repo grows; this sets a floor."
+            }
+          ],
+          "undo": "git config --global --unset core.abbrev"
+        }
+      ],
+      "seealso": [
+        "current-commit",
+        "how-git-stores",
+        "sha256-repos"
+      ]
+    },
+    {
+      "id": "gpg-agent-issues",
+      "q": "Signing fails with gpg failed to sign the data",
+      "aka": [
+        "gpg failed to sign the data",
+        "secret key not available",
+        "commit signing broken"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"test\" | gpg --clearsign",
+              "n": "Reproduces the failure outside Git. A passphrase prompt that never appears is the usual cause."
+            },
+            {
+              "c": "export GPG_TTY=$(tty)",
+              "n": "Add it to your shell profile so the agent knows where to prompt. On Windows, confirming user.signingkey matches a key gpg --list-secret-keys shows fixes most of the rest."
+            }
+          ],
+          "undo": "git config --global commit.gpgsign false while you debug"
+        }
+      ],
+      "seealso": [
+        "sign-commits",
+        "signing-choices",
+        "ssh-agent-passphrase"
+      ]
+    },
+    {
+      "id": "line-ending-cleanup",
+      "q": "Fix a repository with mixed line endings",
+      "aka": [
+        "renormalize repository",
+        "whole repo line endings wrong",
+        "crlf mess cleanup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"* text=auto\" > .gitattributes",
+              "n": "Declares the policy in the repository, where it belongs, instead of relying on each developer's config."
+            },
+            {
+              "c": "git add --renormalize . && git commit -m \"Normalize line endings\"",
+              "n": "One commit that touches every affected file. Merge open branches first: this diff conflicts with everything."
+            }
+          ],
+          "undo": "git revert the normalization commit"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "gitattributes",
+        "phantom-modifications"
+      ]
+    },
+    {
+      "id": "ci-git-identity",
+      "q": "CI commit fails: please tell me who you are",
+      "aka": [
+        "set git identity in ci",
+        "committer identity unknown actions",
+        "bot commits from workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config user.name \"github-actions[bot]\"",
+              "n": "Runners have no identity of their own."
+            },
+            {
+              "c": "git config user.email \"41898282+github-actions[bot]@users.noreply.github.com\"",
+              "n": "That address is the official Actions bot, so commits show its avatar rather than a broken one."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "tell-me-who-you-are",
+        "gh-in-workflows",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "large-diff-not-shown",
+      "q": "GitHub says the diff is too large to display",
+      "aka": [
+        "load diff button",
+        "diff suppressed",
+        "large diffs not rendered"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number>",
+              "n": "The web view hides individual files past a size threshold and stops rendering entirely on very large pull requests. The terminal has no such limit."
+            },
+            {
+              "c": "gh pr checkout <number> && git diff main...HEAD -- <path>",
+              "n": "Read it file by file locally. A diff too big to render is usually also too big to review well: splitting it is the real fix."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-large-pr",
+        "pr-checklist",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "submodule-detached",
+      "q": "Submodule is always in detached HEAD",
+      "aka": [
+        "submodule detached head",
+        "submodule not on a branch",
+        "commits inside submodule lost"
+      ],
+      "variants": [
+        {
+          "when": "Why it happens",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule update",
+              "n": "A submodule is pinned to an exact commit, not a branch, so checking one out lands on that commit with no branch attached. That is correct behavior, not a fault."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "To work inside one",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git -C <path> switch main",
+              "n": "Attach to a branch first, commit and push from inside the submodule, then commit the new pointer in the parent repository."
+            }
+          ],
+          "undo": "git -C <path> switch --detach <pinned-hash>"
+        }
+      ],
+      "seealso": [
+        "submodule-update",
+        "detached-head",
+        "submodule-branch"
+      ]
+    },
+    {
+      "id": "empty-folder-tracked",
+      "q": "Git will not track my empty folder",
+      "aka": [
+        "empty directory not committed",
+        "gitkeep",
+        "folder missing after clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "touch logs/.gitkeep && git add logs/.gitkeep",
+              "n": "Git records files, not folders, so an empty one cannot exist in a commit. A placeholder file creates the folder on clone. .gitkeep is convention, not a Git feature: any filename works."
+            }
+          ],
+          "undo": "git rm logs/.gitkeep"
+        }
+      ],
+      "seealso": [
+        "empty-directory",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "branch-vs-tag-choice",
+      "q": "Should this be a branch or a tag",
+      "aka": [
+        "branch or tag for release",
+        "tag vs branch decision",
+        "mark a version"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v2.1.0 -m \"Release v2.1.0\"",
+              "n": "A tag is a permanent marker on one commit: use it for anything you want to point back to forever."
+            },
+            {
+              "c": "git switch -c release/2.1",
+              "n": "A branch moves as work continues: use it when patches will keep landing on that line. Releases usually need both, a branch to maintain and a tag per shipped version."
+            }
+          ],
+          "undo": "git tag -d, or git branch -d"
+        }
+      ],
+      "seealso": [
+        "tag-vs-branch",
+        "annotated-tags",
+        "hotfix-from-tag"
+      ]
     }
   ]
 }
