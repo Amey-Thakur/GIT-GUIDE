@@ -19101,6 +19101,330 @@
         "upstream-downstream",
         "how-git-stores"
       ]
+    },
+    {
+      "id": "unity-git",
+      "q": "Use Git with a Unity project",
+      "aka": [
+        "unity gitignore",
+        "unity meta files git",
+        "unity scene conflicts"
+      ],
+      "variants": [
+        {
+          "when": "Set it up right",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Unity.gitignore",
+              "n": "Library, Temp, and Build stay out; .meta files must always be committed, or Unity loses every asset reference."
+            },
+            {
+              "c": "git lfs track \"*.psd\" \"*.fbx\" \"*.png\"",
+              "n": "Art assets belong in LFS from the first commit, not after the repository is already heavy."
+            }
+          ],
+          "undo": "Remove the tracking lines"
+        },
+        {
+          "when": "Scenes and prefabs conflict",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Editor -> Project Settings -> Asset Serialization -> Force Text",
+              "n": "Text serialization at least makes conflicts readable. Unity's Smart Merge tool, wired as a mergetool, resolves most of them."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "git-lfs",
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "notebooks-clean",
+      "q": "Stop Jupyter notebooks from polluting diffs",
+      "aka": [
+        "nbstripout",
+        "notebook output in git",
+        "clean ipynb diffs"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "pip install nbstripout && nbstripout --install",
+              "n": "Installs a filter that strips outputs and execution counts on commit, so diffs show code changes only. Your local notebook keeps its outputs."
+            }
+          ],
+          "undo": "nbstripout --uninstall"
+        },
+        {
+          "when": "Review them properly",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "nbdime config-git --enable",
+              "n": "nbdiff renders notebook diffs cell by cell instead of as JSON noise."
+            }
+          ],
+          "undo": "nbdime config-git --disable"
+        }
+      ],
+      "seealso": [
+        "notebooks-in-git",
+        "textconv",
+        "gitattributes"
+      ]
+    },
+    {
+      "id": "terraform-state-git",
+      "q": "Never commit Terraform state",
+      "aka": [
+        "terraform state in git",
+        "tfstate gitignore",
+        "infrastructure code repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf \"*.tfstate\\n*.tfstate.*\\n.terraform/\\n\" >> .gitignore",
+              "n": "State files hold secrets in plain text and cannot merge; two people applying from Git-tracked state corrupt each other's infrastructure."
+            },
+            {
+              "c": "terraform { backend \"s3\" { } }",
+              "n": "A remote backend with locking is the answer state needs. Git versions the configuration; the backend versions the state."
+            }
+          ],
+          "undo": "Remove the ignore lines"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "when-not-to-git",
+        "remove-secret-from-history"
+      ]
+    },
+    {
+      "id": "wordpress-git",
+      "q": "Version a WordPress site sensibly",
+      "aka": [
+        "wordpress in git",
+        "git for wp themes",
+        "cms version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init wp-content/themes/<your-theme>",
+              "n": "Version what you write: your theme and custom plugins. Core, uploads, and the database do not belong in Git; core is a dependency and the database is live state."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "when-not-to-git",
+        "deploy-ssh-server",
+        "ignore-files"
+      ]
+    },
+    {
+      "id": "android-studio-git",
+      "q": "Git settings for an Android or Gradle project",
+      "aka": [
+        "android gitignore",
+        "gradle files in git",
+        "local.properties committed"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Android.gitignore",
+              "n": "Keeps build, .gradle, and local.properties out; the last holds machine-specific SDK paths that break everyone else's build."
+            },
+            {
+              "c": "git add gradle/wrapper/ gradlew gradlew.bat",
+              "n": "Commit the wrapper: it pins the Gradle version so every machine and CI runner builds identically."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "commit-vscode-folder",
+        "commit-lockfile"
+      ]
+    },
+    {
+      "id": "dotnet-git",
+      "q": "Git settings for a .NET or Visual Studio project",
+      "aka": [
+        "visual studio gitignore",
+        "bin obj in git",
+        "dotnet repository setup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "dotnet new gitignore",
+              "n": "Writes the official .NET ignore file: bin, obj, .vs, and user-specific .suo and .user files stay out."
+            },
+            {
+              "c": "echo \"*.sln merge=union\" >> .gitattributes",
+              "n": "Solution files conflict constantly on projects added in parallel; union merging removes most of that friction."
+            }
+          ],
+          "undo": "Remove the lines"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "merge-union",
+        "line-endings"
+      ]
+    },
+    {
+      "id": "design-files-git",
+      "q": "Version design files with the code",
+      "aka": [
+        "figma in git",
+        "psd version control",
+        "designers and git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git lfs track \"*.sketch\" \"*.psd\"",
+              "n": "Binary design sources belong in LFS: versioned, but not bloating every clone. They cannot merge, so agree who owns a file before editing."
+            },
+            {
+              "c": "Export to SVG for anything reviewed",
+              "n": "SVG and other text formats diff and render in pull requests, which is what makes design review possible in the repository at all. Figma and similar tools keep their own history; link to it rather than mirroring it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "big-files-where",
+        "binary-conflict",
+        "git-for-non-code"
+      ]
+    },
+    {
+      "id": "docs-as-code",
+      "q": "Run documentation like code",
+      "aka": [
+        "docs as code",
+        "mkdocs on pages",
+        "documentation site from repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "mkdocs.yml",
+              "n": "Markdown in docs/, reviewed through pull requests alongside the code that changed. MkDocs, Docusaurus, and Sphinx all build from it."
+            },
+            {
+              "c": "Settings -> Pages -> Source: GitHub Actions",
+              "n": "A workflow builds and deploys on every merge, so published documentation can never drift from main."
+            }
+          ],
+          "undo": "Settings -> Pages -> Source: None"
+        }
+      ],
+      "seealso": [
+        "docs-home",
+        "github-pages",
+        "spa-on-pages"
+      ]
+    },
+    {
+      "id": "data-science-repo",
+      "q": "Structure a data science repository",
+      "aka": [
+        "ml project structure",
+        "data science git layout",
+        "reproducible research repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf \"data/\\nmodels/\\n*.ipynb_checkpoints\\n\" >> .gitignore",
+              "n": "Code, notebooks, and configuration in Git. Data and model weights out, tracked by DVC or object storage with a pointer committed."
+            },
+            {
+              "c": "nbstripout --install",
+              "n": "Keeps notebook diffs reviewable. Pin dependencies in a lockfile so a result from six months ago can be reproduced at all."
+            }
+          ],
+          "undo": "Remove the lines"
+        }
+      ],
+      "seealso": [
+        "dvc",
+        "notebooks-clean",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "school-project-git",
+      "q": "Use Git for a group assignment",
+      "aka": [
+        "git for students group project",
+        "team homework repository",
+        "avoid losing coursework"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <course>-<project> --private --clone",
+              "n": "Private, one repository, everyone as a collaborator. Add each member so contributions are attributed individually, which matters when marks are."
+            },
+            {
+              "c": "git switch -c <name>/<section>",
+              "n": "One branch per person or section, merged through pull requests. It costs an hour to learn and saves the night before the deadline."
+            }
+          ],
+          "undo": "gh repo delete"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "github-education",
+        "first-day-on-team"
+      ]
     }
   ]
 }
