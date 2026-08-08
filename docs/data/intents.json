@@ -2376,7 +2376,8 @@
         "master to main",
         "rename default branch",
         "init.defaultBranch main",
-        "main vs master difference"
+        "main vs master difference",
+        "change default branch on github"
       ],
       "variants": [
         {
@@ -2803,7 +2804,8 @@
         "origin branch deleted but still shows",
         "stale remote branches",
         "prune local tracking branches deleted on remote",
-        "unable to update local ref"
+        "unable to update local ref",
+        "upstream is gone"
       ],
       "variants": [
         {
@@ -4369,7 +4371,8 @@
         "conventional commits",
         "commit style",
         "gitmoji",
-        "see diff while writing the message"
+        "see diff while writing the message",
+        "wrap the body at 72 characters"
       ],
       "variants": [
         {
@@ -4401,7 +4404,8 @@
         "git hooks",
         "run tests before push",
         "husky hooks",
-        "run formatter before commit"
+        "run formatter before commit",
+        "pre-push hook"
       ],
       "variants": [
         {
@@ -6270,7 +6274,8 @@
       "aka": [
         "profile page github",
         "readme on my profile",
-        "personal github page"
+        "personal github page",
+        "profile readme not showing"
       ],
       "variants": [
         {
@@ -7739,7 +7744,8 @@
         "who wrote this line",
         "annotate file",
         "when was this line changed",
-        "blame before a specific commit"
+        "blame before a specific commit",
+        "blame view on github"
       ],
       "variants": [
         {
@@ -8981,7 +8987,8 @@
         "git log author filter",
         "commits by user",
         "who contributed most",
-        "lines changed by author"
+        "lines changed by author",
+        "filter commits by author on github"
       ],
       "variants": [
         {
@@ -9396,7 +9403,8 @@
       "aka": [
         "git init --bare",
         "repo without working tree",
-        "what servers host"
+        "what servers host",
+        "bare vs mirror clone"
       ],
       "variants": [
         {
@@ -11424,7 +11432,8 @@
       "aka": [
         "git objects explained",
         "blob tree commit",
-        "why hashes everywhere"
+        "why hashes everywhere",
+        "how does git detect changes"
       ],
       "variants": [
         {
@@ -12984,7 +12993,8 @@
       "aka": [
         "github action not triggering",
         "workflow skipped",
-        "on push not working"
+        "on push not working",
+        "run ci only for a changed folder"
       ],
       "variants": [
         {
@@ -13805,7 +13815,8 @@
       "aka": [
         "why version control",
         "do i need git",
-        "point of git"
+        "point of git",
+        "git vs dropbox"
       ],
       "variants": [
         {
@@ -14686,6 +14697,178 @@
         "readme-structure",
         "repo-wiki",
         "github-pages"
+      ]
+    },
+    {
+      "id": "dotfiles-repo",
+      "q": "Version my dotfiles with Git",
+      "aka": [
+        "dotfiles repository",
+        "track home directory configs",
+        "sync shell config"
+      ],
+      "variants": [
+        {
+          "when": "The bare-repo trick",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init --bare ~/.dotfiles",
+              "n": "Then alias config to git --git-dir=$HOME/.dotfiles --work-tree=$HOME and set status.showUntrackedFiles no for it. Your home directory becomes the working tree; config add .bashrc, config push, no symlinks anywhere."
+            }
+          ],
+          "undo": "Delete ~/.dotfiles and the alias; your files never moved"
+        },
+        {
+          "when": "The plain-repo way",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init ~/dotfiles",
+              "n": "Keep the files in one folder and symlink them into place, by hand or with GNU stow. Easier to reason about, one extra layer."
+            }
+          ],
+          "undo": "Delete the folder and the links"
+        }
+      ],
+      "seealso": [
+        "bare-repo",
+        "two-machines",
+        "global-gitignore"
+      ]
+    },
+    {
+      "id": "create-repo-cli",
+      "q": "Create a repository from the terminal",
+      "aka": [
+        "gh repo create",
+        "new repo without browser",
+        "publish current folder"
+      ],
+      "variants": [
+        {
+          "when": "From the current project",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --private --source . --push",
+              "n": "Creates the repository, wires origin, and pushes what you have, in one command."
+            }
+          ],
+          "undo": "gh repo delete <name> and git remote remove origin"
+        },
+        {
+          "when": "Empty, to clone later",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --public --clone",
+              "n": "Add --gitignore and --license to start it furnished."
+            }
+          ],
+          "undo": "gh repo delete <name>"
+        }
+      ],
+      "seealso": [
+        "upload-existing-project",
+        "gh-cli-setup",
+        "gitignore-templates"
+      ]
+    },
+    {
+      "id": "my-prs-everywhere",
+      "q": "Everything waiting on me, across all repositories",
+      "aka": [
+        "my open prs",
+        "review requested list",
+        "cross repo dashboard"
+      ],
+      "variants": [
+        {
+          "when": "What I owe others",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search prs --review-requested=@me --state open",
+              "n": "Every pull request waiting for your review, in any repository."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "What others owe me",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search prs --author=@me --state open",
+              "n": "Your open pull requests everywhere. github.com/pulls shows both as a page."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "issue-search",
+        "review-pr",
+        "gh-cli-setup"
+      ]
+    },
+    {
+      "id": "self-hosted-runner",
+      "q": "Run workflows on my own machine",
+      "aka": [
+        "self-hosted runner",
+        "gpu ci runner",
+        "actions on private server"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Actions -> Runners -> New self-hosted runner",
+              "n": "A small agent on your hardware; jobs with runs-on: self-hosted land there. For GPUs, big memory, or reaching machines GitHub cannot. Never attach one to a public repository: pull requests would run stranger's code on your box."
+            }
+          ],
+          "undo": "Remove the runner in the same page"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-billing",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "latest-release-api",
+      "q": "Get the latest release version in a script",
+      "aka": [
+        "latest release api",
+        "check newest version",
+        "update checker"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh release view --json tagName -q .tagName",
+              "n": "The newest non-draft, non-prerelease tag."
+            },
+            {
+              "c": "curl -s https://api.github.com/repos/<owner>/<repo>/releases/latest | jq -r .tag_name",
+              "n": "The same without gh, for installers and CI."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "create-release",
+        "github-api",
+        "download-release"
       ]
     }
   ]
