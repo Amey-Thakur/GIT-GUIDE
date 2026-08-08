@@ -2923,6 +2923,306 @@
         "exit-vim",
         "commit-messages"
       ]
+    },
+    {
+      "id": "cannot-delete-checked-out",
+      "msg": "error: Cannot delete branch 'main' checked out at '<path>'",
+      "why": "Git refuses to delete the branch you are standing on, or one checked out in another worktree.",
+      "fix": [
+        {
+          "c": "git switch <other-branch>",
+          "n": "Step off it first, then delete."
+        },
+        {
+          "c": "git worktree list",
+          "n": "If another worktree holds it, that is the one to move or remove."
+        }
+      ],
+      "intent": "delete-branch",
+      "seealso": [
+        "worktrees",
+        "see-if-branch-is-safe-to-delete"
+      ]
+    },
+    {
+      "id": "fatal-not-something-we-can-merge",
+      "msg": "fatal: <name> - not something we can merge",
+      "why": "The branch name does not resolve: a typo, or a remote branch you have not fetched.",
+      "fix": [
+        {
+          "c": "git fetch --all",
+          "n": "Bring remote branches down before merging them."
+        },
+        {
+          "c": "git merge origin/<name>",
+          "n": "Merging a remote branch needs the remote prefix, not the bare name."
+        }
+      ],
+      "intent": "merge-branch",
+      "seealso": [
+        "checkout-remote-branch",
+        "see-all-remote-branches"
+      ]
+    },
+    {
+      "id": "cannot-merge-binary",
+      "msg": "warning: Cannot merge binary files: <file> (HEAD vs. <branch>)",
+      "why": "Binary files cannot be merged line by line, so Git leaves one side in place and asks you to choose.",
+      "fix": [
+        {
+          "c": "git checkout --ours <file>",
+          "n": "Keep yours, or --theirs for the incoming version."
+        },
+        {
+          "c": "git add <file>",
+          "n": "Staging the chosen version resolves it."
+        }
+      ],
+      "intent": "binary-conflict",
+      "seealso": [
+        "merge-take-side",
+        "git-lfs"
+      ]
+    },
+    {
+      "id": "lfs-locked-file",
+      "msg": "Unable to push: file is locked by another user",
+      "why": "Git LFS file locking is enabled and someone else holds the lock on that path.",
+      "fix": [
+        {
+          "c": "git lfs locks",
+          "n": "Shows who holds it and since when."
+        },
+        {
+          "c": "git lfs unlock <path>",
+          "n": "Only your own locks, unless you have force rights on the repository."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": [
+        "design-files-git",
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "remote-tag-clobber",
+      "msg": "! [rejected] v1.0 -> v1.0 (would clobber existing tag)",
+      "why": "A fetch would move a tag you already have, which Git refuses without permission.",
+      "fix": [
+        {
+          "c": "git fetch --tags --force",
+          "n": "Accept the remote's version of the tags."
+        },
+        {
+          "c": "git tag -d v1.0 && git fetch --tags",
+          "n": "Or delete the local one first if you would rather look before overwriting."
+        }
+      ],
+      "intent": "fetch-tags",
+      "seealso": [
+        "undo-published-tag",
+        "delete-a-tag-everywhere"
+      ]
+    },
+    {
+      "id": "gh-scope-missing",
+      "msg": "gh: this API operation needs the \"read:org\" scope",
+      "why": "The stored token lacks a scope the command needs.",
+      "fix": [
+        {
+          "c": "gh auth refresh -s read:org",
+          "n": "Adds the scope to the existing login without starting over."
+        },
+        {
+          "c": "gh auth status",
+          "n": "Lists the scopes the current token carries."
+        }
+      ],
+      "intent": "gh-cli-setup",
+      "seealso": [
+        "access-tokens",
+        "read-github-permissions"
+      ]
+    },
+    {
+      "id": "cache-service-unavailable",
+      "msg": "Warning: Failed to restore: Cache service responded with 503",
+      "why": "The Actions cache backend was briefly unavailable. The job continues without a cache.",
+      "fix": [
+        {
+          "c": "gh run rerun --failed",
+          "n": "Transient by nature; a rerun almost always restores it."
+        },
+        {
+          "c": "continue-on-error: true",
+          "n": "Cache steps should never fail a build, so let them warn rather than stop."
+        }
+      ],
+      "intent": "actions-cache",
+      "seealso": [
+        "work-with-flaky-tests",
+        "rerun-checks"
+      ]
+    },
+    {
+      "id": "pages-build-failure-email",
+      "msg": "Page build failed: Your site is having problems building",
+      "why": "The Pages build errored, usually a Jekyll parse failure or an unsupported plugin.",
+      "fix": [
+        {
+          "c": "touch .nojekyll",
+          "n": "If the site is plain files, disabling Jekyll removes the whole class of failure."
+        },
+        {
+          "c": "gh run list --workflow pages.yml",
+          "n": "With the Actions source, the run log names the failing step precisely."
+        }
+      ],
+      "intent": "pages-not-updating",
+      "seealso": [
+        "nojekyll",
+        "github-pages"
+      ]
+    },
+    {
+      "id": "cname-already-taken",
+      "msg": "The custom domain <domain> is already taken",
+      "why": "Another GitHub repository or account already claims that domain.",
+      "fix": [
+        {
+          "c": "Settings -> Pages -> Custom domain",
+          "n": "Remove it from the old repository first; a domain can serve one Pages site at a time."
+        },
+        {
+          "c": "dig +short <domain>",
+          "n": "Confirm the DNS record points where you expect before retrying."
+        }
+      ],
+      "intent": "pages-custom-domain",
+      "seealso": [
+        "github-pages",
+        "spa-on-pages"
+      ]
+    },
+    {
+      "id": "branch-name-invalid",
+      "msg": "fatal: 'feature branch' is not a valid branch name",
+      "why": "Branch names cannot contain spaces, and reject .., ~, ^, :, and trailing dots.",
+      "fix": [
+        {
+          "c": "git switch -c feature-branch",
+          "n": "Hyphens or slashes instead of spaces."
+        },
+        {
+          "c": "git check-ref-format --branch <name>",
+          "n": "Validates a name before you use it in a script."
+        }
+      ],
+      "intent": "branch-naming",
+      "seealso": [
+        "rename-branch",
+        "create-branch"
+      ]
+    },
+    {
+      "id": "credential-helper-conflict",
+      "msg": "warning: more than one credential helper configured",
+      "why": "Several helpers are set across config levels, and they can answer with different accounts.",
+      "fix": [
+        {
+          "c": "git config --show-origin --get-all credential.helper",
+          "n": "Lists every helper and the file that set it."
+        },
+        {
+          "c": "git config --global --unset-all credential.helper",
+          "n": "Clear them, then set exactly one."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": [
+        "config-precedence",
+        "two-github-accounts"
+      ]
+    },
+    {
+      "id": "wrong-account-pushing",
+      "msg": "remote: Permission to <owner>/<repo>.git denied to <other-username>.",
+      "why": "Git authenticated as a different account than the one with access: usually a cached credential.",
+      "fix": [
+        {
+          "c": "gh auth status",
+          "n": "Shows which account is active for this host."
+        },
+        {
+          "c": "git credential-manager erase",
+          "n": "Clear the stored credential and sign in as the right account."
+        }
+      ],
+      "intent": "two-github-accounts",
+      "seealso": [
+        "gh-auth-switch",
+        "https-two-accounts"
+      ]
+    },
+    {
+      "id": "ssh-wrong-key-identity",
+      "msg": "Hi <other-user>! You've successfully authenticated, but GitHub does not provide shell access.",
+      "why": "Not an error, but the name is the wrong account: SSH offered a different key than you intended.",
+      "fix": [
+        {
+          "c": "ssh -T git@github.com -v",
+          "n": "The verbose output names which key file was accepted."
+        },
+        {
+          "c": "git config core.sshCommand \"ssh -i ~/.ssh/<right-key> -o IdentitiesOnly=yes\"",
+          "n": "Pin the key per repository so the right identity is used."
+        }
+      ],
+      "intent": "ssh-key-per-command",
+      "seealso": [
+        "debug-ssh-key",
+        "two-github-accounts"
+      ]
+    },
+    {
+      "id": "rebase-todo-empty",
+      "msg": "Nothing to do  (interactive rebase exited immediately)",
+      "why": "The instruction list was saved empty or every line was commented out, so the rebase had nothing to run.",
+      "fix": [
+        {
+          "c": "git rebase -i <base>",
+          "n": "Start again and leave the pick lines in place."
+        },
+        {
+          "c": "git reflog",
+          "n": "An emptied list can drop commits; the reflog has the pre-rebase tip if so."
+        }
+      ],
+      "intent": "interactive-rebase",
+      "seealso": [
+        "stop-editor-on-rebase",
+        "restore-after-bad-rebase"
+      ]
+    },
+    {
+      "id": "cherry-pick-in-progress",
+      "msg": "error: a cherry-pick or revert is already in progress  hint: try \"git cherry-pick (--continue | --abort | --quit)\"",
+      "why": "An earlier pick stopped on a conflict and was never finished.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Shows what is unresolved from the previous attempt."
+        },
+        {
+          "c": "git cherry-pick --abort",
+          "n": "Or --continue once staged, or --quit to leave the changes and forget the operation."
+        }
+      ],
+      "intent": "cherry-pick-conflict",
+      "seealso": [
+        "abort-operation",
+        "cherry-pick"
+      ]
     }
   ]
 }

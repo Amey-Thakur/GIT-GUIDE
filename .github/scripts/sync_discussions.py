@@ -9,6 +9,7 @@ Date: 2026-08-07
 """
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -100,6 +101,18 @@ def error_answer(err):
     return "\n".join(lines)
 
 
+def title_exists(title):
+    """Ask the server about one exact title, cheaply, right before creating it."""
+    safe = title.replace(chr(92), " ").replace('"', " ")
+    data = gql(
+        'query{search(query:"repo:%s/%s in:title \\"%s\\"",type:DISCUSSION,first:20){nodes{... on Discussion{title}}}}'
+        % (OWNER, REPO, safe)
+    )
+    if not data:
+        return False
+    return any(n.get("title") == title for n in data["data"]["search"]["nodes"])
+
+
 def desired_threads():
     intents = json.loads((ROOT / "docs" / "data" / "intents.json").read_text(encoding="utf-8"))["intents"]
     errors = json.loads((ROOT / "docs" / "data" / "errors.json").read_text(encoding="utf-8"))["errors"]
@@ -113,8 +126,6 @@ def desired_threads():
         )
         desired.append((i["q"], body, intent_answer(i)))
     for e in errors:
-        if e.get("intent"):
-            continue
         body = (
             "Git printed this error. What does it mean and what is the fix?\n\n"
             f"Answered below. Live version with copy buttons: {SITE}errors.html#{e['id']}"
@@ -149,6 +160,12 @@ def main():
         print(f"[repair {n}/{len(unanswered)}] {title}")
 
     for n, (title, body, answer_md) in enumerate(missing, 1):
+        # Re-check immediately before creating. A concurrent run may have created
+        # this thread since the listing above, and creating it twice is the one
+        # mistake this script cannot undo.
+        if title_exists(title):
+            print(f"[{n}/{len(missing)}] already created elsewhere, skipped: {title}")
+            continue
         created = gql(
             "mutation($r:ID!,$c:ID!,$t:String!,$b:String!){createDiscussion(input:{repositoryId:$r,categoryId:$c,title:$t,body:$b}){discussion{id}}}",
             r=repo_id, c=category_id, t=title, b=body,
@@ -161,4 +178,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    lock = Path(__file__).with_suffix(".lock")
+    try:
+        # Exclusive create: a second run fails here instead of racing the first
+        # and creating every missing thread twice.
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        raise SystemExit(
+            f"another sync is running (lock: {lock}). Wait for it, or delete the lock if it crashed."
+        )
+    os.write(fd, str(os.getpid()).encode())
+    os.close(fd)
+    try:
+        main()
+    finally:
+        lock.unlink(missing_ok=True)

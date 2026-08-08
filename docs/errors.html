@@ -1173,6 +1173,81 @@
   <p class="note">core.editor points at a program this machine does not have, common in minimal containers.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#set-editor">Change the editor Git opens</a></p>
 </article>
+<article class="result errcard" id="cannot-delete-checked-out">
+  <h2><code class="errmsg">error: Cannot delete branch &#x27;main&#x27; checked out at &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#cannot-delete-checked-out" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git refuses to delete the branch you are standing on, or one checked out in another worktree.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#delete-branch">Delete a branch, locally and on the remote</a></p>
+</article>
+<article class="result errcard" id="fatal-not-something-we-can-merge">
+  <h2><code class="errmsg">fatal: &lt;name&gt; - not something we can merge</code><a class="anchor" href="#fatal-not-something-we-can-merge" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch name does not resolve: a typo, or a remote branch you have not fetched.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-branch">Merge my branch into main</a></p>
+</article>
+<article class="result errcard" id="cannot-merge-binary">
+  <h2><code class="errmsg">warning: Cannot merge binary files: &lt;file&gt; (HEAD vs. &lt;branch&gt;)</code><a class="anchor" href="#cannot-merge-binary" aria-label="Link to this error">#</a></h2>
+  <p class="note">Binary files cannot be merged line by line, so Git leaves one side in place and asks you to choose.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#binary-conflict">Resolve a conflict in a binary file</a></p>
+</article>
+<article class="result errcard" id="lfs-locked-file">
+  <h2><code class="errmsg">Unable to push: file is locked by another user</code><a class="anchor" href="#lfs-locked-file" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git LFS file locking is enabled and someone else holds the lock on that path.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="remote-tag-clobber">
+  <h2><code class="errmsg">! [rejected] v1.0 -&gt; v1.0 (would clobber existing tag)</code><a class="anchor" href="#remote-tag-clobber" aria-label="Link to this error">#</a></h2>
+  <p class="note">A fetch would move a tag you already have, which Git refuses without permission.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#fetch-tags">A tag exists on the remote but not here</a></p>
+</article>
+<article class="result errcard" id="gh-scope-missing">
+  <h2><code class="errmsg">gh: this API operation needs the &quot;read:org&quot; scope</code><a class="anchor" href="#gh-scope-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The stored token lacks a scope the command needs.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-cli-setup">Install and sign in to GitHub CLI</a></p>
+</article>
+<article class="result errcard" id="cache-service-unavailable">
+  <h2><code class="errmsg">Warning: Failed to restore: Cache service responded with 503</code><a class="anchor" href="#cache-service-unavailable" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Actions cache backend was briefly unavailable. The job continues without a cache.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-cache">Make CI faster by caching dependencies</a></p>
+</article>
+<article class="result errcard" id="pages-build-failure-email">
+  <h2><code class="errmsg">Page build failed: Your site is having problems building</code><a class="anchor" href="#pages-build-failure-email" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Pages build errored, usually a Jekyll parse failure or an unsupported plugin.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pages-not-updating">Pages site not showing my latest push</a></p>
+</article>
+<article class="result errcard" id="cname-already-taken">
+  <h2><code class="errmsg">The custom domain &lt;domain&gt; is already taken</code><a class="anchor" href="#cname-already-taken" aria-label="Link to this error">#</a></h2>
+  <p class="note">Another GitHub repository or account already claims that domain.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pages-custom-domain">Put my Pages site on my own domain</a></p>
+</article>
+<article class="result errcard" id="branch-name-invalid">
+  <h2><code class="errmsg">fatal: &#x27;feature branch&#x27; is not a valid branch name</code><a class="anchor" href="#branch-name-invalid" aria-label="Link to this error">#</a></h2>
+  <p class="note">Branch names cannot contain spaces, and reject .., ~, ^, :, and trailing dots.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#branch-naming">Name branches well</a></p>
+</article>
+<article class="result errcard" id="credential-helper-conflict">
+  <h2><code class="errmsg">warning: more than one credential helper configured</code><a class="anchor" href="#credential-helper-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">Several helpers are set across config levels, and they can answer with different accounts.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="wrong-account-pushing">
+  <h2><code class="errmsg">remote: Permission to &lt;owner&gt;/&lt;repo&gt;.git denied to &lt;other-username&gt;.</code><a class="anchor" href="#wrong-account-pushing" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git authenticated as a different account than the one with access: usually a cached credential.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#two-github-accounts">Use two GitHub accounts on one machine</a></p>
+</article>
+<article class="result errcard" id="ssh-wrong-key-identity">
+  <h2><code class="errmsg">Hi &lt;other-user&gt;! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</code><a class="anchor" href="#ssh-wrong-key-identity" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error, but the name is the wrong account: SSH offered a different key than you intended.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-per-command">Use a specific SSH key for one repository or command</a></p>
+</article>
+<article class="result errcard" id="rebase-todo-empty">
+  <h2><code class="errmsg">Nothing to do  (interactive rebase exited immediately)</code><a class="anchor" href="#rebase-todo-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">The instruction list was saved empty or every line was commented out, so the rebase had nothing to run.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#interactive-rebase">Rewrite my last few commits (interactive rebase)</a></p>
+</article>
+<article class="result errcard" id="cherry-pick-in-progress">
+  <h2><code class="errmsg">error: a cherry-pick or revert is already in progress  hint: try &quot;git cherry-pick (--continue | --abort | --quit)&quot;</code><a class="anchor" href="#cherry-pick-in-progress" aria-label="Link to this error">#</a></h2>
+  <p class="note">An earlier pick stopped on a conflict and was never finished.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cherry-pick-conflict">A cherry-pick hit a conflict</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
