@@ -20720,6 +20720,590 @@
         "gitignore-not-working",
         "shrink-repo"
       ]
+    },
+    {
+      "id": "cherry-pick-vs-rebase",
+      "q": "Cherry-pick or rebase to move work",
+      "aka": [
+        "difference cherry-pick rebase",
+        "copy commits vs move commits",
+        "which one moves my work"
+      ],
+      "variants": [
+        {
+          "when": "A few specific commits",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cherry-pick <hash>",
+              "n": "Copies chosen commits and leaves the originals where they are, so the change exists twice. Right for backporting one fix."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "A whole branch onto a new base",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase main",
+              "n": "Moves every commit of the branch, rewriting them once. Right for keeping a feature current."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "rebase-onto-main",
+        "merge-vs-rebase"
+      ]
+    },
+    {
+      "id": "pull-force-overwrite",
+      "q": "Throw away local commits and take the remote exactly",
+      "aka": [
+        "throw away my commits",
+        "discard local commits and take remote",
+        "make local match origin exactly"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git fetch origin",
+              "n": "Get their state first."
+            },
+            {
+              "c": "git reset --hard origin/main",
+              "n": "Your branch becomes theirs. Local commits not pushed anywhere are lost to everything except the reflog."
+            },
+            {
+              "c": "git clean -fd",
+              "n": "Only if you also want untracked files gone; this part has no undo."
+            }
+          ],
+          "undo": "git reset --hard HEAD@{1} for the commits; nothing for cleaned files"
+        }
+      ],
+      "seealso": [
+        "reset-to-remote",
+        "overwrite-local",
+        "undo-clean"
+      ]
+    },
+    {
+      "id": "case-only-rename-windows",
+      "q": "Rename a file to different capitalisation",
+      "aka": [
+        "change file case",
+        "readme to README",
+        "case sensitivity rename"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git mv --force readme.md README.md",
+              "n": "On Windows and macOS the filesystem sees both names as the same file, so Git needs telling explicitly."
+            },
+            {
+              "c": "git config core.ignorecase false",
+              "n": "Only for repositories that must stay case-exact; it can surface confusing duplicates otherwise."
+            }
+          ],
+          "undo": "git mv --force README.md readme.md"
+        }
+      ],
+      "seealso": [
+        "case-rename",
+        "rename-file",
+        "filemode"
+      ]
+    },
+    {
+      "id": "which-commits-in-release",
+      "q": "List what shipped in a release",
+      "aka": [
+        "commits in this version",
+        "what changed since last tag",
+        "release contents"
+      ],
+      "variants": [
+        {
+          "when": "Between two tags",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log v1.4.0..v1.5.0 --oneline --no-merges",
+              "n": "Exactly what the release added."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Is my fix in it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag --contains <hash>",
+              "n": "Every release that includes that commit, which answers the support question directly."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "log-between-tags",
+        "generate-changelog",
+        "branch-contains"
+      ]
+    },
+    {
+      "id": "github-cli-vs-git",
+      "q": "When to use gh instead of git",
+      "aka": [
+        "gh vs git difference",
+        "do i need github cli",
+        "two command line tools"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit",
+              "n": "git moves commits, branches, and history: everything that exists in the repository itself."
+            },
+            {
+              "c": "gh pr create",
+              "n": "gh drives the things that exist only on GitHub: pull requests, issues, releases, workflows, and the API. Neither replaces the other."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "git-vs-github",
+        "what-is-a-pr"
+      ]
+    },
+    {
+      "id": "keep-fork-private",
+      "q": "Work privately on a public project",
+      "aka": [
+        "private fork",
+        "private copy of public repo",
+        "secret work on open source"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --bare <public-url>",
+              "n": "Forks of public repositories are always public, so mirror instead of forking."
+            },
+            {
+              "c": "git push --mirror <private-repo-url>",
+              "n": "Push into a private repository you created empty. Pull upstream updates by adding it as a second remote."
+            }
+          ],
+          "undo": "Delete the private repository"
+        }
+      ],
+      "seealso": [
+        "detach-fork",
+        "make-repo-private",
+        "mirror-migrate"
+      ]
+    },
+    {
+      "id": "remove-remote-branch-only",
+      "q": "Delete a branch on the server but keep mine",
+      "aka": [
+        "delete remote branch only",
+        "remove branch from github not locally",
+        "clean server branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push origin --delete <branch>",
+              "n": "Removes it from the remote. Your local branch and its commits stay untouched."
+            },
+            {
+              "c": "git branch --unset-upstream",
+              "n": "Optional, so Git stops reporting the branch as gone."
+            }
+          ],
+          "undo": "git push -u origin <branch> puts it back"
+        }
+      ],
+      "seealso": [
+        "delete-branch",
+        "delete-gone-branches",
+        "archive-branch"
+      ]
+    },
+    {
+      "id": "date-of-a-commit",
+      "q": "Find when a commit or file version was made",
+      "aka": [
+        "commit date",
+        "when was this committed",
+        "timestamp of change"
+      ],
+      "variants": [
+        {
+          "when": "One commit",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git show -s --format=\"%ci %an %s\" <hash>",
+              "n": "Date, author, and subject in one line."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "A file's last change",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -1 --format=\"%ci\" -- <path>",
+              "n": "When that file was last touched, which the filesystem timestamp cannot tell you after a clone."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "commit-dates",
+        "file-history",
+        "file-as-of-date"
+      ]
+    },
+    {
+      "id": "two-people-same-machine",
+      "q": "Share one computer between two Git identities",
+      "aka": [
+        "shared machine git users",
+        "pair programming identity",
+        "switch git user quickly"
+      ],
+      "variants": [
+        {
+          "when": "Per repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config user.email \"them@example.com\"",
+              "n": "Local config beats global, so each clone can carry its own identity."
+            }
+          ],
+          "undo": "git config --unset user.email"
+        },
+        {
+          "when": "Pairing on one commit",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"<message>\" -m \"Co-authored-by: Name <email>\"",
+              "n": "Both people get credit on the same commit without switching anything."
+            }
+          ],
+          "undo": "git commit --amend before pushing"
+        }
+      ],
+      "seealso": [
+        "multiple-identities",
+        "co-authors",
+        "commit-as-other"
+      ]
+    },
+    {
+      "id": "protect-main-solo",
+      "q": "Protect main when I am the only maintainer",
+      "aka": [
+        "branch protection alone",
+        "stop myself pushing to main",
+        "solo safety net"
+      ],
+      "variants": [
+        {
+          "when": "On GitHub",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Rules -> Rulesets",
+              "n": "Require a pull request and leave the bypass list empty so the rule binds you too. Free on public repositories."
+            }
+          ],
+          "undo": "Delete the ruleset"
+        },
+        {
+          "when": "Locally, as a reminder",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '#!/bin/sh\\n[ \"$(git branch --show-current)\" = main ] && echo \"Use a branch\" && exit 1\\nexit 0\\n' > .git/hooks/pre-commit",
+              "n": "A hook that stops the habit before it starts. Make it executable with chmod +x."
+            }
+          ],
+          "undo": "Delete the hook file"
+        }
+      ],
+      "seealso": [
+        "protect-main-locally",
+        "branch-protection",
+        "solo-workflow"
+      ]
+    },
+    {
+      "id": "clone-specific-folder",
+      "q": "Download only one folder of a repository",
+      "aka": [
+        "clone single directory",
+        "sparse checkout one folder",
+        "get part of a repo"
+      ],
+      "variants": [
+        {
+          "when": "Keep it a working repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --filter=blob:none --sparse <url>",
+              "n": "Downloads almost nothing up front."
+            },
+            {
+              "c": "git sparse-checkout set <folder>",
+              "n": "Only that path appears on disk; commits and pulls still work normally."
+            }
+          ],
+          "undo": "git sparse-checkout disable"
+        },
+        {
+          "when": "Just the files, once",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo clone <owner>/<repo> -- --depth 1",
+              "n": "Or download the ZIP from the site when history is irrelevant."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "sparse-checkout",
+        "partial-clone",
+        "download-single-file"
+      ]
+    },
+    {
+      "id": "why-is-clone-so-big",
+      "q": "The clone is far larger than the files",
+      "aka": [
+        "repo bigger than working tree",
+        "git folder huge",
+        "why is .git so large"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git count-objects -vH",
+              "n": "History holds every version ever committed, so a repository with churned binaries dwarfs its checkout."
+            },
+            {
+              "c": "git clone --filter=blob:none <url>",
+              "n": "Skips old file contents until needed, which fixes the symptom without rewriting anything."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "find-large-files-history",
+        "shrink-repo",
+        "scalar"
+      ]
+    },
+    {
+      "id": "squash-before-merge",
+      "q": "Clean up my branch before asking for review",
+      "aka": [
+        "tidy commits before pr",
+        "squash wip commits",
+        "polish branch history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i main",
+              "n": "Fold the wip commits into meaningful ones, reword messages, drop dead ends. Safe while the branch is yours alone."
+            },
+            {
+              "c": "git push --force-with-lease",
+              "n": "Updates the branch and refuses if someone else pushed meanwhile."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD, then force-push again"
+        }
+      ],
+      "seealso": [
+        "interactive-rebase",
+        "force-push-safely",
+        "pr-checklist"
+      ]
+    },
+    {
+      "id": "what-runs-on-my-machine",
+      "q": "Know what Git does automatically behind my back",
+      "aka": [
+        "git background tasks",
+        "does git run on its own",
+        "automatic gc"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --get gc.auto",
+              "n": "Git repacks loose objects opportunistically after some commands. That is the only routine background work in a default install."
+            },
+            {
+              "c": "git maintenance register",
+              "n": "Scheduled upkeep is opt-in, not default. Nothing phones home, and nothing pushes on your behalf."
+            }
+          ],
+          "undo": "git maintenance unregister"
+        }
+      ],
+      "seealso": [
+        "git-maintenance",
+        "slow-git",
+        "dangling-objects"
+      ]
+    },
+    {
+      "id": "undo-file-rename",
+      "q": "Undo a rename before committing",
+      "aka": [
+        "revert git mv",
+        "take back a rename",
+        "restore old filename"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git mv <new> <old>",
+              "n": "Renaming back is the cleanest undo; Git records the net effect as nothing."
+            },
+            {
+              "c": "git restore --staged --worktree <old> <new>",
+              "n": "Or reset both paths to the last commit if you also edited the contents."
+            }
+          ],
+          "undo": "Rename again"
+        }
+      ],
+      "seealso": [
+        "rename-file",
+        "rename-detection",
+        "undo-git-add"
+      ]
+    },
+    {
+      "id": "github-notifications-triage",
+      "q": "Get my GitHub notifications under control",
+      "aka": [
+        "too many github notifications",
+        "notification inbox workflow",
+        "stop email flood"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.com/notifications",
+              "n": "The inbox has filters: is:unread reason:mention cuts to what actually needs you. Done clears an item; Unsubscribe stops the thread."
+            },
+            {
+              "c": "Settings -> Notifications",
+              "n": "Send most things to the web inbox and keep email for mentions and reviews only."
+            }
+          ],
+          "undo": "Adjust the settings back"
+        }
+      ],
+      "seealso": [
+        "watch-unwatch",
+        "mentions",
+        "my-prs-everywhere"
+      ]
+    },
+    {
+      "id": "verify-download-integrity",
+      "q": "Check a downloaded release is genuine",
+      "aka": [
+        "verify release checksum",
+        "is this binary authentic",
+        "release signature check"
+      ],
+      "variants": [
+        {
+          "when": "Checksums",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "sha256sum -c checksums.txt",
+              "n": "Confirms the file is the one the maintainer built, provided the checksum file itself came from the release page."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Attestations",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh attestation verify <file> --repo <owner>/<repo>",
+              "n": "Proves the artifact was built by that repository's workflow, which a checksum alone cannot."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "download-release",
+        "npm-publish-ci",
+        "create-release"
+      ]
     }
   ]
 }
