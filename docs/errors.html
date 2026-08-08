@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/errors.html">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -338,6 +338,16 @@
   <div class="cmd"><code>git config --global credential.helper manager</code><button class="copy" data-cmd="git config --global credential.helper manager" aria-label="Copy command">Copy</button></div>
   <p class="note">On your own machine, store credentials once so Git never needs to ask.</p>
   <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
+</article>
+<article class="result errcard" id="early-eof">
+  <h2><code class="errmsg">fatal: early EOF (the remote end hung up unexpectedly)</code><a class="anchor" href="#early-eof" aria-label="Link to this error">#</a></h2>
+  <p class="note">A large clone or fetch died mid-transfer: unstable connection, proxy timeout, or a server cutting long downloads.</p>
+  <div class="cmd"><code>git clone --depth 1 &lt;url&gt;</code><button class="copy" data-cmd="git clone --depth 1 &lt;url&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">A shallow clone transfers a fraction of the data and almost always survives.</p>
+  <div class="cmd"><code>git fetch --unshallow</code><button class="copy" data-cmd="git fetch --unshallow" aria-label="Copy command">Copy</button></div>
+  <p class="note">Then deepen to full history in resumable steps once inside.</p>
+  <p class="seealso">See also: <a href="index.html#clone-repo">Clone a repository</a></p>
+  <p class="seealso">See also: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
 </article>
 <!-- errors:end -->
       </div>

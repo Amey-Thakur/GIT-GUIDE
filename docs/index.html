@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -71,16 +71,22 @@
     <section class="hero">
       <div class="wrap">
         <h1>Every Git and GitHub answer in one place.</h1>
-        <p class="lede">Type what you want to do. Get the exact commands, what each one does, how dangerous it is, and how to undo it.</p>
+        <p class="lede">Type what you want to do, or paste the error Git just printed. Exact commands, a danger level for each, and its undo.</p>
+        <p class="stats" aria-label="What is inside">
+          <span><strong id="stat-a">...</strong> answers</span>
+          <span><strong id="stat-e">...</strong> errors decoded</span>
+          <span>an undo for everything</span>
+          <span>works offline</span>
+        </p>
       </div>
     </section>
 
     <section class="finder" aria-label="Search">
       <div class="wrap">
         <div class="searchbox">
-          <input id="q" type="text" enterkeyhint="search" placeholder="undo the last commit, delete a branch, fix a conflict..."
+          <input id="q" type="text" enterkeyhint="search" placeholder="undo the last commit... or paste: fatal: not a git repository"
                  autocomplete="off" autocapitalize="off" spellcheck="false" autofocus
-                 aria-label="Search Git questions">
+                 aria-label="Search Git questions or paste an error">
           <span class="hint" aria-hidden="true">/</span>
         </div>
         <div class="chips" role="list" aria-label="Most asked">
@@ -90,6 +96,7 @@
           <button class="chip" type="button">resolve a merge conflict</button>
           <button class="chip" type="button">committed a secret</button>
           <button class="chip" type="button">sync a fork</button>
+          <button class="chip lucky" type="button" id="lucky">surprise me</button>
         </div>
         <div id="results" class="results" aria-live="polite"></div>
       </div>

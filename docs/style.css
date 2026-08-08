@@ -200,6 +200,20 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   max-width: 40rem;
 }
 
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 1.1rem 0 0;
+}
+
+.stats strong { color: var(--ink); }
+
+.chip.lucky { border-style: dashed; color: var(--muted); }
+.chip.lucky:hover { color: var(--accent); }
+
 /* Finder */
 
 .finder { padding: 1.5rem 0 0.5rem; }

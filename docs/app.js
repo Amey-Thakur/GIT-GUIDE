@@ -27,9 +27,23 @@
     DATA = loaded[0].intents;
     ERRORS = loaded[1].errors;
     renderIndex();
+    var statA = document.getElementById("stat-a");
+    var statE = document.getElementById("stat-e");
+    if (statA) statA.textContent = String(DATA.length);
+    if (statE) statE.textContent = String(ERRORS.length);
     var initial = decodeURIComponent(location.hash.replace("#", ""));
     if (initial) showById(initial);
   });
+
+  /* The depth showcase: one click, one expert answer most people have never met. */
+  var EXPERT = ["worktrees", "rerere", "bisect", "fixup-autosquash", "range-diff", "git-bundle", "sparse-checkout", "blame-ignore-revs", "rebase-exec", "stash-branch", "two-github-accounts", "patches-email", "recover-dropped-stash", "add-patch"];
+  var lucky = document.getElementById("lucky");
+  if (lucky) {
+    lucky.addEventListener("click", function () {
+      if (!DATA) return;
+      location.hash = EXPERT[Math.floor(Math.random() * EXPERT.length)];
+    });
+  }
 
   function norm(s) { return s.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim(); }
 

@@ -392,6 +392,17 @@
       ],
       "intent": null,
       "seealso": ["stop-password-prompts"]
+    },
+    {
+      "id": "early-eof",
+      "msg": "fatal: early EOF (the remote end hung up unexpectedly)",
+      "why": "A large clone or fetch died mid-transfer: unstable connection, proxy timeout, or a server cutting long downloads.",
+      "fix": [
+        { "c": "git clone --depth 1 <url>", "n": "A shallow clone transfers a fraction of the data and almost always survives." },
+        { "c": "git fetch --unshallow", "n": "Then deepen to full history in resumable steps once inside." }
+      ],
+      "intent": null,
+      "seealso": ["clone-repo", "sparse-checkout"]
     }
   ]
 }

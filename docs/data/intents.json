@@ -2597,6 +2597,231 @@
         }
       ],
       "seealso": ["git-lfs", "shrink-repo"]
+    },
+    {
+      "id": "undo-push",
+      "q": "Undo a push",
+      "aka": ["remove pushed commit", "undo git push", "delete commit from remote", "pushed by mistake"],
+      "variants": [
+        {
+          "when": "Teammates may already have it",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git revert <hash>", "n": "A new commit cancels the pushed one; nothing breaks for anyone." },
+            { "c": "git push", "n": "" }
+          ],
+          "undo": "git revert the revert commit"
+        },
+        {
+          "when": "Your own branch, nobody builds on it",
+          "danger": "history",
+          "cmds": [
+            { "c": "git reset --hard <last-good-hash>", "n": "" },
+            { "c": "git push --force-with-lease", "n": "The remote branch now ends at the good commit. If a secret went up, deleting the commit is not enough: rotate it." }
+          ],
+          "undo": "git reflog still holds the removed tip"
+        }
+      ],
+      "seealso": ["undo-last-commit", "remove-secret-from-history", "force-push-safely"]
+    },
+    {
+      "id": "undo-amend",
+      "q": "Undo an amend",
+      "aka": ["recover before amend", "amend was wrong", "restore original commit after amend"],
+      "variants": [
+        {
+          "when": "Right after it",
+          "danger": "safe",
+          "cmds": [{ "c": "git reset --soft HEAD@{1}", "n": "HEAD@{1} is the commit as it was before the amend. Your working tree is untouched." }],
+          "undo": "git reflog lists both versions; reset to either"
+        }
+      ],
+      "seealso": ["add-to-last-commit", "recover-lost-commit"]
+    },
+    {
+      "id": "remove-file-from-last-commit",
+      "q": "Remove one file from the last commit",
+      "aka": ["exclude file from commit", "committed wrong file", "take file out of commit"],
+      "variants": [
+        {
+          "when": "Keep the edits, remove them from the commit",
+          "danger": "history",
+          "cmds": [
+            { "c": "git reset HEAD~1 -- <file>", "n": "The file's change leaves the staging area; everything else stays committed-ready." },
+            { "c": "git commit --amend --no-edit", "n": "The commit no longer contains that file's change; the edit waits in your working tree. If pushed: force-with-lease." }
+          ],
+          "undo": "git reflog has the original commit"
+        }
+      ],
+      "seealso": ["add-to-last-commit", "undo-git-add"]
+    },
+    {
+      "id": "preview-push",
+      "q": "See what will be pushed before pushing",
+      "aka": ["what will push send", "review outgoing commits", "diff local vs remote"],
+      "variants": [
+        {
+          "when": "The commits going up",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git fetch", "n": "" },
+            { "c": "git log origin/<branch>..HEAD --oneline", "n": "Exactly the commits push will send. git diff --stat origin/<branch>..HEAD shows the files they touch." }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "One file against the remote version",
+          "danger": "safe",
+          "cmds": [{ "c": "git diff origin/<branch> -- <file>", "n": "" }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["ahead-behind", "compare-branches"]
+    },
+    {
+      "id": "clone-branch",
+      "q": "Clone only one branch, or the repo at a specific commit",
+      "aka": ["clone specific branch", "clone single branch", "checkout repo at commit", "clone old version"],
+      "variants": [
+        {
+          "when": "One branch only",
+          "danger": "safe",
+          "cmds": [{ "c": "git clone -b <branch> --single-branch <url>", "n": "Smaller and faster; other branches can be fetched later with git fetch origin <name>." }],
+          "undo": "Delete the folder"
+        },
+        {
+          "when": "The project as it was at a commit",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git clone <url> && cd <repo>", "n": "" },
+            { "c": "git switch --detach <hash>", "n": "You now stand on that exact snapshot. A tag works in place of the hash." }
+          ],
+          "undo": "git switch - returns to the branch"
+        }
+      ],
+      "seealso": ["clone-repo", "checkout-tag"]
+    },
+    {
+      "id": "ls-remote",
+      "q": "List a remote's branches without cloning",
+      "aka": ["see branches before clone", "check repo access", "ls-remote"],
+      "variants": [
+        {
+          "when": "Peek, or test your access",
+          "danger": "safe",
+          "cmds": [{ "c": "git ls-remote --heads <url>", "n": "Every branch with its tip hash, no clone involved. An authentication error here means your access is the problem, not your repository." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["clone-branch", "permission-denied-publickey"]
+    },
+    {
+      "id": "stash-one-file",
+      "q": "Stash only one file",
+      "aka": ["partial stash", "stash single file", "stash some changes"],
+      "variants": [
+        {
+          "when": "Named paths",
+          "danger": "safe",
+          "cmds": [{ "c": "git stash push -m \"<label>\" <file>", "n": "Only those paths are shelved; everything else stays in your tree." }],
+          "undo": "git stash pop"
+        },
+        {
+          "when": "Pick change by change",
+          "danger": "safe",
+          "cmds": [{ "c": "git stash push -p", "n": "The same y, n, s keys as git add -p, deciding what gets shelved." }],
+          "undo": "git stash pop"
+        }
+      ],
+      "seealso": ["stash", "add-patch"]
+    },
+    {
+      "id": "tag-vs-branch",
+      "q": "Tag or branch, which and when",
+      "aka": ["difference tag branch", "should i tag or branch"],
+      "variants": [
+        {
+          "when": "The one-line distinction",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git tag -a v1.0.0 -m \"<note>\"", "n": "A tag is frozen: it marks one commit forever. Releases, milestones, anything you point back to." },
+            { "c": "git switch -c <branch>", "n": "A branch moves: it follows new commits. Work in progress, lines of development." }
+          ],
+          "undo": "git tag -d or git branch -d, respectively"
+        }
+      ],
+      "seealso": ["tag-release", "create-branch"]
+    },
+    {
+      "id": "fork-vs-branch",
+      "q": "Fork or branch, which and when",
+      "aka": ["difference fork branch", "should i fork or branch", "contribute without access"],
+      "variants": [
+        {
+          "when": "Decided by one question: can you push to the repo?",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git switch -c <branch>", "n": "Yes: branch inside it. Your team's normal flow." },
+            { "c": "gh repo fork <owner>/<repo> --clone", "n": "No: fork it to your account, work there, and offer the change back as a pull request. All of open source runs this way." }
+          ],
+          "undo": "Delete the branch or the fork; the original never changed"
+        }
+      ],
+      "seealso": ["create-branch", "sync-fork"]
+    },
+    {
+      "id": "merge-squash",
+      "q": "Merge a branch as one single commit",
+      "aka": ["squash merge", "merge without merge commit", "collapse branch into one commit"],
+      "variants": [
+        {
+          "when": "Local squash merge",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git merge --squash <branch>", "n": "Stages the branch's combined result without committing or linking history." },
+            { "c": "git commit -m \"<one message for the whole feature>\"", "n": "Note: Git will not count the branch as merged afterwards; delete it with git branch -D." }
+          ],
+          "undo": "git reset --hard HEAD~1 before pushing"
+        }
+      ],
+      "seealso": ["squash-commits", "no-ff-merge"]
+    },
+    {
+      "id": "download-single-file",
+      "q": "Download one file from a repository, no clone",
+      "aka": ["get single file github", "raw file download", "curl file from repo"],
+      "variants": [
+        {
+          "when": "From GitHub",
+          "danger": "safe",
+          "cmds": [{ "c": "curl -LO https://raw.githubusercontent.com/<user>/<repo>/main/<path>", "n": "The Raw button on any file view gives this URL. GitLab and Bitbucket have the same button." }],
+          "undo": "Delete the file"
+        },
+        {
+          "when": "From a repo you already have, at any version",
+          "danger": "safe",
+          "cmds": [{ "c": "git show <ref>:<path> > <file>", "n": "Any branch, tag, or hash as the ref." }],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": ["restore-file", "sparse-checkout"]
+    },
+    {
+      "id": "rename-repo",
+      "q": "Rename a repository",
+      "aka": ["change repo name", "rename project github"],
+      "variants": [
+        {
+          "when": "On GitHub, then locally",
+          "danger": "safe",
+          "cmds": [
+            { "c": "gh repo rename <new-name>", "n": "Or in the repository's Settings. GitHub redirects the old URL, but redirects are not forever:" },
+            { "c": "git remote set-url origin git@github.com:<user>/<new-name>.git", "n": "Update every clone, and any CI or badge that names the old URL." }
+          ],
+          "undo": "Rename it back the same way"
+        }
+      ],
+      "seealso": ["change-remote-url"]
     }
   ]
 }
