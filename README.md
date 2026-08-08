@@ -88,6 +88,16 @@ The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms
 
 <br>
 
+## Take it with you
+
+**[The companion (PDF)](docs/assets/git-guide-companion.pdf)**: the model, the commands, and the rescues as a twelve-page booklet. One click on the site's [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) page, alongside the printable cards below. Every image is generated from the repository's live data.
+
+[<img src="docs/assets/poster.png" alt="Git Guide poster: the eight doors and the three danger levels">](docs/assets/poster.png)
+
+[The cheat card](docs/assets/cheatsheet-card.png) puts the daily commands on one printable page.
+
+<br>
+
 ## How it is built
 
 Plain HTML, CSS, and vanilla JavaScript; no framework, no build step for the site itself. Every answer lives in JSON under [docs/data](docs/data), a [small script](.github/scripts/build_pages.py) renders the static pages from it, and [CI](.github/workflows/checks.yml) fails any commit where a page disagrees with its data, an id collides, a cross-reference dangles, or house style slips.

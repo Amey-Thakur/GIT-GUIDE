@@ -70,22 +70,29 @@ def footer(y, width, provenance):
 
 
 def social_card(intents, errors):
-    stats = (
-        f'<tspan fill="{ACCENT}" font-weight="700">{len(intents)}</tspan> answers'
-        f'<tspan fill="{MUTED}">   ·   </tspan>'
-        f'<tspan fill="{ACCENT}" font-weight="700">{len(errors)}</tspan> errors decoded'
-        f'<tspan fill="{MUTED}">   ·   </tspan>an undo for everything'
-        f'<tspan fill="{MUTED}">   ·   </tspan>works offline'
-    )
+    code_bg = "#23211d"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="{FONT}">
   <rect width="1280" height="640" fill="{PAPER}"/>
-  {git_logo(80, 72, 104)}
-  <text x="212" y="152" font-size="86" font-weight="700" fill="{INK}">Git Guide<tspan fill="{ACCENT}">.</tspan></text>
-  <text x="82" y="286" font-size="44" font-weight="600" fill="{INK}">Every Git and GitHub answer in one place.</text>
-  <text x="82" y="348" font-size="30" fill="{MUTED}">Type what you want to do, or paste the error Git printed.</text>
-  <text x="82" y="392" font-size="30" fill="{MUTED}">Exact commands, a danger level for each, and its undo.</text>
-  <text x="82" y="472" font-size="28" fill="{INK}">{stats}</text>
-  {footer(524, 1280, "GIT-GUIDE")}
+  {git_logo(80, 66, 92)}
+  <text x="196" y="138" font-size="76" font-weight="700" fill="{INK}">Git Guide<tspan fill="{ACCENT}">.</tspan></text>
+  <text x="82" y="268" font-size="42" font-weight="600" fill="{INK}">Every Git and GitHub</text>
+  <text x="82" y="324" font-size="42" font-weight="600" fill="{INK}">answer in one place.</text>
+  <text x="82" y="392" font-size="25" fill="{MUTED}">Ask, or paste the error Git printed.</text>
+  <text x="82" y="446" font-size="23" fill="{INK}">an undo for everything<tspan fill="{MUTED}">  ·  </tspan>works offline<tspan fill="{MUTED}">  ·  </tspan>no trackers<tspan fill="{MUTED}">  ·  </tspan><tspan fill="{ACCENT}" font-weight="700">MIT</tspan></text>
+  <rect x="690" y="182" width="510" height="66" rx="14" fill="{CARD}" stroke="{ACCENT}" stroke-width="2"/>
+  <text x="716" y="224" font-size="25" fill="{INK}">undo the last commit</text>
+  <rect x="1140" y="200" width="36" height="32" rx="6" fill="none" stroke="{LINE}" stroke-width="1.5"/>
+  <text x="1158" y="223" font-size="19" fill="{MUTED}" text-anchor="middle" font-family="Consolas, monospace">/</text>
+  <rect x="690" y="270" width="510" height="196" rx="14" fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>
+  <text x="716" y="312" font-size="20" font-weight="600" fill="{INK}">Keep the work, remove only the commit</text>
+  <rect x="1116" y="292" width="62" height="28" rx="5" fill="none" stroke="{SAFE}" stroke-width="1.6"/>
+  <text x="1147" y="311" font-size="13" font-weight="700" fill="{SAFE}" text-anchor="middle">SAFE</text>
+  <rect x="716" y="334" width="458" height="56" rx="10" fill="{code_bg}"/>
+  <text x="740" y="370" font-size="23" fill="{INK}" font-family="Consolas, monospace">git reset --soft HEAD~1</text>
+  <rect x="1092" y="346" width="66" height="32" rx="6" fill="none" stroke="{LINE}" stroke-width="1.5"/>
+  <text x="1125" y="367" font-size="15" fill="{MUTED}" text-anchor="middle">Copy</text>
+  <text x="716" y="432" font-size="18" fill="{MUTED}"><tspan font-weight="700" fill="{INK}">Undo:</tspan> git reset --soft HEAD@{{1}}</text>
+  {footer(524, 1280, "Open source on GitHub")}
 </svg>'''
 
 
@@ -95,7 +102,7 @@ def poster(intents, errors):
         ("Start", "Zero to first push, six steps"),
         ("Learn", "What each command moves"),
         ("Fix", "Questions to the way out"),
-        ("Errors", f"{len(errors)} messages decoded"),
+        ("Errors", "Git's messages, decoded"),
         ("GitHub", "First repo to protection"),
         ("Workflows", "Solo, fork, trunk, release"),
         ("Cheatsheet", "All commands, one line each"),
@@ -110,16 +117,17 @@ def poster(intents, errors):
             f'<text x="{x + 24}" y="{y + 92}" font-size="18.5" fill="{MUTED}">{escape(desc)}</text>'
         )
     legend = ""
-    for i, (label, color) in enumerate([("Safe", SAFE), ("Rewrites history", HISTORY), ("Destructive", DANGER)]):
-        x = 80 + i * 250
+    x = 80
+    for label, color in [("Safe", SAFE), ("Rewrites history", HISTORY), ("Destructive", DANGER)]:
+        w = 54 + len(label) * 11
         legend += (
-            f'<rect x="{x}" y="692" width="{54 + len(label) * 11}" height="36" rx="6" fill="none" stroke="{color}" stroke-width="1.8"/>'
-            f'<text x="{x + 27 + len(label) * 5.5}" y="716" font-size="18" font-weight="600" fill="{color}" text-anchor="middle">{escape(label.upper())}</text>'
+            f'<rect x="{x}" y="692" width="{w}" height="36" rx="6" fill="none" stroke="{color}" stroke-width="1.8"/>'
+            f'<text x="{x + w / 2}" y="716" font-size="18" font-weight="600" fill="{color}" text-anchor="middle">{escape(label.upper())}</text>'
         )
+        x += w + 24
     stats = (
-        f'<tspan fill="{ACCENT}" font-weight="700">{len(intents)}</tspan> answers'
-        f'<tspan fill="{MUTED}">  ·  </tspan><tspan fill="{ACCENT}" font-weight="700">{len(errors)}</tspan> errors decoded'
-        f'<tspan fill="{MUTED}">  ·  </tspan>works offline<tspan fill="{MUTED}">  ·  </tspan>no trackers<tspan fill="{MUTED}">  ·  </tspan>MIT'
+        f'an undo for everything<tspan fill="{MUTED}">  ·  </tspan>works offline'
+        f'<tspan fill="{MUTED}">  ·  </tspan>no trackers<tspan fill="{MUTED}">  ·  </tspan>MIT'
     )
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" font-family="{FONT}">
   <rect width="1400" height="900" fill="{PAPER}"/>
