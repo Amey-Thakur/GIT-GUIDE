@@ -19779,6 +19779,318 @@
         "config-precedence",
         "two-github-accounts"
       ]
+    },
+    {
+      "id": "actions-conditionals",
+      "q": "Run a step only sometimes",
+      "aka": [
+        "if condition in workflow",
+        "skip step conditionally",
+        "run only on main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "if: github.ref == 'refs/heads/main'",
+              "n": "On a step or a job. Expressions read the event context, so branch, actor, and event type are all available."
+            },
+            {
+              "c": "if: always()",
+              "n": "By default a failed step cancels the rest; always() runs cleanup regardless, and failure() runs only when something broke."
+            }
+          ],
+          "undo": "Remove the condition"
+        }
+      ],
+      "seealso": [
+        "actions-env",
+        "branch-in-ci",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "actions-context-injection",
+      "q": "Never paste untrusted input into a run block",
+      "aka": [
+        "script injection actions",
+        "pr title in run command",
+        "actions security expressions"
+      ],
+      "variants": [
+        {
+          "when": "The danger",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "run: echo \"${{ github.event.pull_request.title }}\"",
+              "n": "Expressions are substituted as text before the shell runs, so a title containing shell syntax executes on your runner. Titles, branch names, and issue bodies are all attacker-controlled."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The fix",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "env: TITLE: ${{ github.event.pull_request.title }}",
+              "n": "Pass through an environment variable and reference \"$TITLE\" in the script. The shell then treats it as data, never as code."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "workflow-permissions",
+        "pr-vs-push-triggers",
+        "actions-env"
+      ]
+    },
+    {
+      "id": "third-party-action-safety",
+      "q": "Pin third-party actions safely",
+      "aka": [
+        "pin action to sha",
+        "is this action safe",
+        "supply chain actions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/checkout@8f4b7f8",
+              "n": "A tag can be moved by its owner; a full commit SHA cannot. Pinning by SHA means the code you reviewed is the code that runs."
+            },
+            {
+              "c": "Settings -> Actions -> Allow specified actions",
+              "n": "Restrict which actions may run at all. Dependabot updates SHA pins for you, so pinning does not mean freezing forever."
+            }
+          ],
+          "undo": "Loosen the policy or repoint the pin"
+        }
+      ],
+      "seealso": [
+        "workflow-permissions",
+        "dependabot",
+        "create-github-action"
+      ]
+    },
+    {
+      "id": "artifact-attestations",
+      "q": "Prove a build artifact came from your repository",
+      "aka": [
+        "build provenance",
+        "artifact attestation",
+        "verify release binary"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/attest-build-provenance@v1",
+              "n": "Signs a statement binding the artifact to the exact workflow, commit, and repository, backed by Sigstore. The job needs id-token: write and attestations: write."
+            },
+            {
+              "c": "gh attestation verify <file> --repo <owner>/<repo>",
+              "n": "Anyone can check a downloaded binary against that claim."
+            }
+          ],
+          "undo": "Attestations cannot be unpublished; issue a new release"
+        }
+      ],
+      "seealso": [
+        "oidc-deploys",
+        "release-workflow",
+        "sbom-export"
+      ]
+    },
+    {
+      "id": "packages-registry",
+      "q": "Publish packages to GitHub Packages",
+      "aka": [
+        "github packages npm",
+        "maven package github",
+        "private package registry"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npm publish --registry=https://npm.pkg.github.com",
+              "n": "Scoped to your org, authenticated with a token or the workflow's GITHUB_TOKEN. npm, Maven, NuGet, RubyGems, and containers are all supported."
+            },
+            {
+              "c": "packages: write",
+              "n": "The permission a workflow needs to publish. Package visibility follows the repository it is linked to."
+            }
+          ],
+          "undo": "Delete the package version under Packages"
+        }
+      ],
+      "seealso": [
+        "ghcr",
+        "npm-publish-ci",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "notification-inbox",
+      "q": "Tame the GitHub notification inbox",
+      "aka": [
+        "github notifications inbox",
+        "too many notifications",
+        "triage notifications"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.com/notifications",
+              "n": "An inbox, not a feed: filter with is:unread reason:mention, then Done to archive. reason: values like review-requested, author, and team-mention separate what needs you from what merely happened."
+            }
+          ],
+          "undo": "Undone items return from the Done view"
+        }
+      ],
+      "seealso": [
+        "watch-unwatch",
+        "mentions",
+        "my-prs-everywhere"
+      ]
+    },
+    {
+      "id": "pages-limits",
+      "q": "What GitHub Pages will and will not do",
+      "aka": [
+        "pages limitations",
+        "can pages run php",
+        "pages build limits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Pages",
+              "n": "Static files only: no server-side code, no databases. Soft limits of 1 GB per site, 100 GB bandwidth a month, and ten builds an hour. HTTPS is automatic, including on custom domains."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "When you need more",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Serverless functions on another host",
+              "n": "Keep the static site on Pages and call an API elsewhere, or move the whole site to a platform with functions."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "spa-on-pages",
+        "pages-custom-domain"
+      ]
+    },
+    {
+      "id": "private-pages",
+      "q": "Publish a Pages site only my team can see",
+      "aka": [
+        "private github pages",
+        "internal documentation site",
+        "restrict pages access"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Pages -> Private visibility",
+              "n": "Available on GitHub Enterprise Cloud: visitors must be signed in with repository access. On other plans a Pages site from a private repository is still published publicly, which surprises people badly."
+            }
+          ],
+          "undo": "Switch visibility back to public"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "repo-visibility-who-sees",
+        "pages-limits"
+      ]
+    },
+    {
+      "id": "github-cli-config",
+      "q": "Make gh fit your habits",
+      "aka": [
+        "gh config set",
+        "gh default editor",
+        "gh aliases"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh config set editor \"code --wait\"",
+              "n": "Used whenever gh opens an editor. gh config set git_protocol ssh makes every clone use SSH."
+            },
+            {
+              "c": "gh alias set prs \"pr list --author @me\"",
+              "n": "Aliases for the commands you type daily; they accept arguments and shell expansion."
+            }
+          ],
+          "undo": "gh alias delete prs, or set the config back"
+        }
+      ],
+      "seealso": [
+        "gh-cli-setup",
+        "git-aliases",
+        "gh-extensions"
+      ]
+    },
+    {
+      "id": "repo-insights",
+      "q": "Read a repository's Insights honestly",
+      "aka": [
+        "insights tab",
+        "commit activity graph",
+        "code frequency"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Insights -> Contributors",
+              "n": "Commit counts and code frequency show rhythm, not merit: a refactor moves thousands of lines, a critical fix moves one. Read Traffic and Community for adoption and health, Dependency graph for risk."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "repo-traffic",
+        "network-graph",
+        "log-by-author"
+      ]
     }
   ]
 }
