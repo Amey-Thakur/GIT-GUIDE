@@ -53,12 +53,12 @@ AVATAR = base64.b64encode((DOCS / "assets" / "amey.jpg").read_bytes()).decode()
 FOOT = f'''<div class="pfoot">
   <img src="data:image/jpeg;base64,{AVATAR}" alt="">
   <div class="pfn"><b>Amey Thakur</b><a href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a></div>
-  <div class="pft"><svg width="14" height="14" viewBox="0 0 24 24" fill="{MUTED}"><path d="{GH}"/></svg><span>{TAGLINE}</span></div>
+  <div class="pft"><svg width="18" height="18" viewBox="0 0 24 24" fill="{MUTED}"><path d="{GH}"/></svg><span>{TAGLINE}</span></div>
 </div>'''
 
 
 def page(body, title=""):
-    head = (f'<div class="phead">{logo(20)}<span>Git Guide<i>.</i></span><em>{escape(title)}</em></div>'
+    head = (f'<div class="phead">{logo(27)}<span>Git Guide<i>.</i></span><em>{escape(title)}</em></div>'
             if title else "")
     return f'<section class="page">{head}{body}{FOOT}</section>'
 
@@ -82,7 +82,7 @@ def pair_page(a, b, title):
 def cover():
     return page(f'''
 <div class="cover">
-  {logo(110)}
+  {logo(160)}
   <h1>Git Guide<i>.</i></h1>
   <p class="tag">{TAGLINE}</p>
   <p class="tag2">Ask in plain language, or paste the error Git printed.<br>
@@ -127,9 +127,9 @@ def model():
            + arrow(192, 248, 80, "add") + arrow(432, 488, 80, "commit") + arrow(672, 728, 80, "push")
            + arrow(728, 672, 130, "fetch", above=False)
            + arrow(248, 192, 155, "restore", above=False)
-           + f'<path d="M580,186 C580,236 110,236 110,190" fill="none" stroke="{ACCENT}" stroke-width="2.2"/>'
+           + f'<path d="M580,186 C580,244 110,244 110,190" fill="none" stroke="{ACCENT}" stroke-width="2.2"/>'
            + f'<polygon points="110,184 105,194 115,194" fill="{ACCENT}"/>'
-           + f'<text x="345" y="222" font-size="11.5" fill="{ACCENT}" text-anchor="middle" font-family="Consolas,monospace">merge / pull</text>')
+           + f'<text x="345" y="212" font-size="12.5" fill="{ACCENT}" text-anchor="middle" font-family="Consolas,monospace">merge / pull</text>')
     return page(f'''
 <h2>Where your code lives</h2>
 <svg viewBox="0 0 920 246" class="diag">{svg}</svg>
@@ -272,35 +272,35 @@ CSS = f'''
 * {{ margin: 0; box-sizing: border-box; }}
 @page {{ size: A4 landscape; margin: 0; }}
 body {{ font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: {PAPER}; color: {INK}; }}
-.page {{ width: 297mm; height: 210mm; padding: 12mm 18mm 26mm; position: relative; page-break-after: always; overflow: hidden; }}
+.page {{ width: 297mm; height: 210mm; padding: 12mm 18mm 30mm; position: relative; page-break-after: always; overflow: hidden; }}
 .pfoot {{ position: absolute; left: 18mm; right: 18mm; bottom: 6.5mm; display: flex; align-items: center; gap: 3.5mm;
   border-top: 0.4mm solid {LINE}; padding-top: 3mm; }}
-.pfoot img {{ width: 8.5mm; height: 8.5mm; border-radius: 2mm; }}
-.pfn b {{ display: block; font-size: 9pt; }}
-.pfn a {{ font-size: 8pt; color: {MUTED}; text-decoration: none; }}
-.pft {{ margin-left: auto; display: flex; align-items: center; gap: 2.5mm; color: {MUTED}; font-size: 8.5pt; }}
+.pfoot img {{ width: 11mm; height: 11mm; border-radius: 2.5mm; }}
+.pfn b {{ display: block; font-size: 11pt; }}
+.pfn a {{ font-size: 9.5pt; color: {MUTED}; text-decoration: none; }}
+.pft {{ margin-left: auto; display: flex; align-items: center; gap: 3mm; color: {MUTED}; font-size: 10.5pt; }}
 .phead {{ display: flex; align-items: center; gap: 7px; margin-bottom: 7mm; }}
-.phead span {{ font-weight: 700; font-size: 12.5pt; }}
-.phead em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 10pt; }}
+.phead span {{ font-weight: 700; font-size: 15.5pt; }}
+.phead em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 12pt; }}
 i {{ color: {ACCENT}; font-style: normal; }}
 h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; padding-left: 4mm; }}
 .h2gap {{ margin-top: 7mm; }}
 .cover {{ display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }}
-.cover h1 {{ font-size: 46pt; margin-top: 7mm; }}
-.cover .tag {{ font-size: 15pt; font-weight: 600; margin-top: 5mm; }}
-.cover .tag2 {{ color: {MUTED}; font-size: 11.5pt; line-height: 1.65; margin-top: 5mm; }}
-.cover .qual {{ font-size: 10.5pt; margin-top: 7mm; }}
+.cover h1 {{ font-size: 64pt; margin-top: 10mm; }}
+.cover .tag {{ font-size: 20pt; font-weight: 600; margin-top: 8mm; }}
+.cover .tag2 {{ color: {MUTED}; font-size: 14.5pt; line-height: 1.7; margin-top: 8mm; }}
+.cover .qual {{ font-size: 13pt; margin-top: 10mm; }}
 .cover .qual b {{ color: {MUTED}; font-weight: 400; padding: 0 2mm; }}
-.prose {{ max-width: 205mm; }}
-.prose p {{ font-size: 13.5pt; line-height: 1.85; margin-bottom: 6mm; }}
-.prose .sign {{ color: {ACCENT}; font-weight: 700; font-size: 13pt; }}
+.prose {{ max-width: 235mm; }}
+.prose p {{ font-size: 16pt; line-height: 1.9; margin-bottom: 7.5mm; }}
+.prose .sign {{ color: {ACCENT}; font-weight: 700; font-size: 16pt; }}
 .diag {{ width: 100%; max-height: 96mm; margin-bottom: 7mm; }}
 .defs {{ display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 12mm; }}
 .defs div {{ font-size: 12pt; color: {MUTED}; line-height: 1.6; }}
 .defs b {{ color: {INK}; font-family: Consolas, monospace; }}
 .note {{ color: {MUTED}; font-size: 10.5pt; margin-bottom: 4mm; }}
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
-.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.2mm 0; }}
+.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.9mm 0; }}
 .list code {{ font-family: Consolas, monospace; font-size: 10.5pt; display: block; overflow-wrap: anywhere; }}
 .list code.danger {{ color: {DANGER}; }}
 .list span {{ font-size: 9.5pt; color: {MUTED}; display: block; margin-top: 1mm; }}
