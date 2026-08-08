@@ -689,6 +689,13 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
 
 .cs-toc a:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
 
+/* Section headings carry the accent bar, the house motif */
+
+.cs-section h2, .chapter h2, .diagram-section h2, .browse h2 {
+  border-left: 4px solid var(--accent);
+  padding-left: 0.8rem;
+}
+
 /* Chapter definition rows: term above, description beneath */
 
 .chapter .cs-row { display: block; }
