@@ -30114,6 +30114,458 @@
         "default-branch",
         "what-does-origin-head-mean"
       ]
+    },
+    {
+      "id": "push-tags-automatically",
+      "q": "Push tags along with commits every time",
+      "aka": [
+        "follow-tags",
+        "forget to push tags",
+        "push commits and tags in one go"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global push.followTags true",
+              "n": "Annotated tags reachable from what you push now travel with it, which is nearly always what you meant."
+            },
+            {
+              "c": "git push --follow-tags",
+              "n": "The one-off form. Lightweight tags are deliberately excluded, since those are usually private bookmarks."
+            }
+          ],
+          "undo": "git config --global --unset push.followTags"
+        }
+      ],
+      "seealso": [
+        "tags-not-showing-on-github",
+        "tag-release",
+        "annotated-tags"
+      ]
+    },
+    {
+      "id": "remove-from-staging-not-disk",
+      "q": "Take a file out of the commit without deleting it",
+      "aka": [
+        "unstage but keep file",
+        "remove from commit keep on disk",
+        "exclude file from this commit"
+      ],
+      "variants": [
+        {
+          "when": "Before committing",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --staged <path>",
+              "n": "Leaves the file untouched on disk and out of the next commit."
+            }
+          ],
+          "undo": "git add <path>"
+        },
+        {
+          "when": "After committing, not pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reset --soft HEAD~1 && git restore --staged <path>",
+              "n": "Uncommit, drop that path from the staging area, and commit the rest."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "undo-git-add",
+        "remove-file-from-last-commit",
+        "commit-only-part-of-file"
+      ]
+    },
+    {
+      "id": "log-only-my-branch",
+      "q": "See only my branch's commits, not everything",
+      "aka": [
+        "log without main commits",
+        "just my commits on this branch",
+        "filter out base branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log main..HEAD --oneline",
+              "n": "Only what this branch adds on top of main, which is exactly what a reviewer will see."
+            },
+            {
+              "c": "git log --first-parent --oneline",
+              "n": "On main itself, this hides commits that arrived inside merges and shows the release-level story."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dot-dot-notation",
+        "first-parent-log",
+        "list-unpushed"
+      ]
+    },
+    {
+      "id": "detect-whitespace-damage",
+      "q": "Catch trailing whitespace before it lands",
+      "aka": [
+        "whitespace errors in diff",
+        "trailing spaces committed",
+        "check whitespace"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --check",
+              "n": "Reports trailing whitespace and space-before-tab in what you are about to commit. Exits non-zero, so it works as a hook."
+            },
+            {
+              "c": "git apply --whitespace=fix <patch>",
+              "n": "When applying someone else's patch, this cleans the damage rather than importing it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "hooks",
+        "diff-ignore-whitespace",
+        "stop-file-being-normalized"
+      ]
+    },
+    {
+      "id": "repo-with-no-default-branch",
+      "q": "The repository has no default branch set",
+      "aka": [
+        "no default branch",
+        "repository has no main",
+        "default branch missing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push -u origin main",
+              "n": "A repository with no commits has no default branch yet; the first pushed branch becomes it."
+            },
+            {
+              "c": "Settings -> General -> Default branch",
+              "n": "With several branches and none marked default, set it explicitly or clones will not know what to check out."
+            }
+          ],
+          "undo": "Change the setting again"
+        }
+      ],
+      "seealso": [
+        "default-branch",
+        "repo-with-no-commits",
+        "what-does-origin-head-mean"
+      ]
+    },
+    {
+      "id": "two-people-same-file",
+      "q": "Two people editing the same file all day",
+      "aka": [
+        "constant conflicts on one file",
+        "we keep editing the same file",
+        "file always conflicts"
+      ],
+      "variants": [
+        {
+          "when": "Reduce the collisions",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull --rebase",
+              "n": "Sync hourly rather than daily: small overlaps resolve trivially, whole-day divergence does not."
+            },
+            {
+              "c": "git config rerere.enabled true",
+              "n": "And let Git replay resolutions it has already seen."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Fix the cause",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git mv <big-file> <split-parts>",
+              "n": "A file two people must edit constantly is usually doing too many jobs. Splitting it removes the conflict permanently."
+            }
+          ],
+          "undo": "Move it back"
+        }
+      ],
+      "seealso": [
+        "avoid-conflicts",
+        "which-files-conflict-often",
+        "shared-branch-etiquette"
+      ]
+    },
+    {
+      "id": "resume-interrupted-rebase",
+      "q": "I closed the terminal during a rebase",
+      "aka": [
+        "rebase interrupted",
+        "left a rebase half done",
+        "rebase in progress after restart"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Git keeps the rebase state on disk, so it survives a closed terminal or a reboot and tells you exactly where it stopped."
+            },
+            {
+              "c": "git rebase --continue",
+              "n": "Pick up where you left off, or git rebase --abort to return to the starting point cleanly."
+            }
+          ],
+          "undo": "git rebase --abort"
+        }
+      ],
+      "seealso": [
+        "restore-after-bad-rebase",
+        "abort-operation",
+        "interactive-rebase"
+      ]
+    },
+    {
+      "id": "see-who-forked-me",
+      "q": "See who forked or copied my project",
+      "aka": [
+        "who forked my repo",
+        "list forks",
+        "find copies of my project"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/forks --jq \".[] | {who: .owner.login, pushed: .pushed_at}\"",
+              "n": "Forks with their last activity, which separates active derivatives from abandoned copies."
+            },
+            {
+              "c": "Insights -> Network",
+              "n": "Shows which forks carry commits you do not have, occasionally worth pulling back."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "network-graph",
+        "repo-traffic",
+        "how-open-source-works"
+      ]
+    },
+    {
+      "id": "squash-commits-from-web",
+      "q": "Clean up a branch without the terminal",
+      "aka": [
+        "squash on github website",
+        "tidy commits in browser",
+        "no terminal history cleanup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr merge --squash",
+              "n": "Squash on merge does the cleanup for you, which is why most teams never rewrite branches by hand at all."
+            },
+            {
+              "c": "Edit the squash commit message before confirming",
+              "n": "The merge dialog lets you rewrite the combined message, which is where the quality actually comes from."
+            }
+          ],
+          "undo": "git revert the squashed commit"
+        }
+      ],
+      "seealso": [
+        "merge-methods",
+        "squash-before-merge",
+        "no-terminal-github"
+      ]
+    },
+    {
+      "id": "github-cli-json-output",
+      "q": "Get machine-readable output from gh",
+      "aka": [
+        "gh json output",
+        "script gh commands",
+        "parse gh results"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr list --json number,title,author --jq \".[] | [.number, .title] | @tsv\"",
+              "n": "Ask for the fields you need and filter in the same call. Far steadier than parsing the human-readable table."
+            },
+            {
+              "c": "gh pr list --json 2>&1 | head",
+              "n": "Passing an empty --json lists every field the command can return."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "gh-api-pagination",
+        "minimal-git-for-scripts"
+      ]
+    },
+    {
+      "id": "protect-a-file-from-edits",
+      "q": "Warn people before they edit a fragile file",
+      "aka": [
+        "protect a specific file",
+        "stop edits to config",
+        "fragile file warning"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"/migrations/ @org/data\" >> .github/CODEOWNERS",
+              "n": "Ownership plus a required-review rule is the only enforcement Git and GitHub actually offer for a path."
+            },
+            {
+              "c": "printf '#!/bin/sh\\ngit diff --cached --name-only | grep -q \"^schema.sql$\" && echo \"schema.sql changed: confirm with the data team\"\\nexit 0\\n' > .git/hooks/pre-commit",
+              "n": "A local hook can warn without blocking, which is often the right amount of friction."
+            }
+          ],
+          "undo": "Remove the rule or hook"
+        }
+      ],
+      "seealso": [
+        "limit-who-can-push-paths",
+        "codeowners",
+        "hooks"
+      ]
+    },
+    {
+      "id": "find-orphaned-work",
+      "q": "Find commits not on any branch",
+      "aka": [
+        "orphaned commits",
+        "commits with no branch",
+        "work i forgot about"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --lost-found",
+              "n": "Lists dangling commits: leftovers of resets, deleted branches, and abandoned rebases. Often exactly the work you thought was gone."
+            },
+            {
+              "c": "git log --oneline --walk-reflogs --all",
+              "n": "The reflog view is friendlier: it shows where each was and when, so you can recognise the one you want."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dangling-objects",
+        "recover-lost-commit",
+        "see-everything-i-did-today"
+      ]
+    },
+    {
+      "id": "stop-tracking-then-restore",
+      "q": "Untrack a file then change my mind",
+      "aka": [
+        "undo git rm --cached",
+        "re-track a file",
+        "put file back under version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add <path>",
+              "n": "The file is still on disk, so adding it re-tracks it. If it is now ignored, git add -f overrides the rule."
+            },
+            {
+              "c": "git check-ignore -v <path>",
+              "n": "Check whether an ignore rule is the reason plain add appears to do nothing."
+            }
+          ],
+          "undo": "git rm --cached <path>"
+        }
+      ],
+      "seealso": [
+        "untrack-file",
+        "stop-tracking-folder",
+        "gitignore-not-working"
+      ]
+    },
+    {
+      "id": "repo-with-huge-history",
+      "q": "A repository with a hundred thousand commits",
+      "aka": [
+        "very long history",
+        "huge commit count",
+        "enormous repository history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit-graph write --reachable",
+              "n": "Precomputes commit relationships, which is what makes log and blame fast on enormous histories."
+            },
+            {
+              "c": "git maintenance start",
+              "n": "Then let scheduled maintenance keep it current. Depth of history costs far less than size of files."
+            }
+          ],
+          "undo": "git maintenance unregister"
+        }
+      ],
+      "seealso": [
+        "commit-graph-file",
+        "git-maintenance",
+        "why-status-is-slow"
+      ]
     }
   ]
 }
