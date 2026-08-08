@@ -76,7 +76,8 @@
         "unstage a file",
         "git restore --staged",
         "two ways to unstage",
-        "remove files from staging area"
+        "remove files from staging area",
+        "discard staged changes completely"
       ],
       "variants": [
         {
@@ -1419,7 +1420,8 @@
         "staged vs unstaged",
         "git diff --cached",
         "see staged changes",
-        "diff of file in staging area"
+        "diff of file in staging area",
+        "diff --stat summary"
       ],
       "variants": [
         {
@@ -2165,7 +2167,8 @@
         "lf will be replaced by crlf",
         "crlf warning",
         "line endings windows",
-        "autocrlf"
+        "autocrlf",
+        "renormalize line endings"
       ],
       "variants": [
         {
@@ -2347,7 +2350,8 @@
       "aka": [
         "change default branch",
         "master to main",
-        "rename default branch"
+        "rename default branch",
+        "init.defaultBranch main"
       ],
       "variants": [
         {
@@ -2611,7 +2615,8 @@
         "commits in branch not in main",
         "compare file between branches",
         "diff between two branches",
-        "see differences between branches"
+        "see differences between branches",
+        "files different between branches"
       ],
       "variants": [
         {
@@ -3158,7 +3163,8 @@
         "stash contents",
         "stash show",
         "what did i stash",
-        "compare stash to working tree"
+        "compare stash to working tree",
+        "apply specific stash"
       ],
       "variants": [
         {
@@ -3823,7 +3829,8 @@
       "aka": [
         "repo too big",
         "reduce git size",
-        "biggest files in history"
+        "biggest files in history",
+        "repository size"
       ],
       "variants": [
         {
@@ -5072,7 +5079,8 @@
         "partial stash",
         "stash single file",
         "stash some changes",
-        "stash only one file out of many changed"
+        "stash only one file out of many changed",
+        "stash hunks interactively"
       ],
       "variants": [
         {
@@ -6467,7 +6475,8 @@
       "aka": [
         "show all tags",
         "tags sorted",
-        "fetch tags from remote"
+        "fetch tags from remote",
+        "show tag messages"
       ],
       "variants": [
         {
@@ -9446,7 +9455,8 @@
       "aka": [
         "open github issue",
         "write bug report",
-        "file an issue"
+        "file an issue",
+        "assign issue"
       ],
       "variants": [
         {
@@ -10175,6 +10185,604 @@
       "seealso": [
         "gh-cli-setup",
         "edit-on-github"
+      ]
+    },
+    {
+      "id": "branch-upstream",
+      "q": "See or change which remote branch mine tracks",
+      "aka": [
+        "git branch -vv",
+        "tracking branch",
+        "set upstream of existing branch"
+      ],
+      "variants": [
+        {
+          "when": "See it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch -vv",
+              "n": "Every local branch with its upstream in brackets and how far ahead or behind it is."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Change it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch -u origin/<branch>",
+              "n": "The current branch now tracks that one. push and pull stop needing arguments."
+            }
+          ],
+          "undo": "git branch --unset-upstream"
+        }
+      ],
+      "seealso": [
+        "auto-setup-remote",
+        "ahead-behind"
+      ]
+    },
+    {
+      "id": "repo-root",
+      "q": "Find the top of the repository from anywhere",
+      "aka": [
+        "git root directory",
+        "cd to repo root",
+        "show toplevel"
+      ],
+      "variants": [
+        {
+          "when": "Print it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse --show-toplevel",
+              "n": "The absolute path of the repository root, from however deep you are."
+            },
+            {
+              "c": "cd \"$(git rev-parse --show-toplevel)\"",
+              "n": "Jump straight there."
+            }
+          ],
+          "undo": "cd - returns"
+        }
+      ],
+      "seealso": [
+        "what-is-dot-git",
+        "move-repo-folder"
+      ]
+    },
+    {
+      "id": "inside-repo",
+      "q": "Check whether I am inside a repository",
+      "aka": [
+        "am i in a git repo",
+        "script check for git",
+        "detect repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse --is-inside-work-tree",
+              "n": "Prints true, or errors. The standard guard at the top of any script that assumes a repo."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "repo-root",
+        "undo-git-init"
+      ]
+    },
+    {
+      "id": "unicode-filenames",
+      "q": "Show non-ASCII file names readably",
+      "aka": [
+        "filenames show as octal escapes",
+        "quotepath",
+        "unicode file names in git status"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global core.quotepath false",
+              "n": "status and log print names in your language instead of \\303\\244 escape strings."
+            }
+          ],
+          "undo": "git config --global --unset core.quotepath"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "filename-too-long"
+      ]
+    },
+    {
+      "id": "ssh-agent-passphrase",
+      "q": "Stop typing my SSH passphrase every time",
+      "aka": [
+        "ssh key asks passphrase repeatedly",
+        "ssh-agent setup",
+        "remember passphrase"
+      ],
+      "variants": [
+        {
+          "when": "Windows",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service",
+              "n": "Run once in an elevated PowerShell. The agent service survives reboots."
+            },
+            {
+              "c": "ssh-add ~/.ssh/id_ed25519",
+              "n": "Type the passphrase one last time."
+            }
+          ],
+          "undo": "ssh-add -d ~/.ssh/id_ed25519"
+        },
+        {
+          "when": "macOS and Linux",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "eval \"$(ssh-agent -s)\" && ssh-add ~/.ssh/id_ed25519",
+              "n": "On macOS, ssh-add --apple-use-keychain stores it permanently. Linux desktops usually keep an agent running for you."
+            }
+          ],
+          "undo": "ssh-add -D forgets all loaded keys"
+        }
+      ],
+      "seealso": [
+        "ssh-key-github",
+        "debug-ssh-key"
+      ]
+    },
+    {
+      "id": "signoff",
+      "q": "What Signed-off-by means and when to add it",
+      "aka": [
+        "git commit -s",
+        "dco sign off",
+        "signed-off-by line"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -s",
+              "n": "Appends Signed-off-by with your name and email: a Developer Certificate of Origin statement that you may submit this code. Projects like the Linux kernel require it. It is not a cryptographic signature."
+            }
+          ],
+          "undo": "git commit --amend to edit the message"
+        }
+      ],
+      "seealso": [
+        "sign-commits",
+        "commit-messages"
+      ]
+    },
+    {
+      "id": "permalink-lines",
+      "q": "Link to exact lines of code on GitHub",
+      "aka": [
+        "link to specific line",
+        "permanent code link",
+        "share code location"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Click a line number, shift-click another, press y",
+              "n": "The y key swaps the branch in the URL for the commit hash, so the link still points at the same lines after the file changes. Copy permalink in the ... menu does the same."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "download-single-file",
+        "github-shortcuts"
+      ]
+    },
+    {
+      "id": "github-shortcuts",
+      "q": "Navigate GitHub at keyboard speed",
+      "aka": [
+        "github keyboard shortcuts",
+        "quick file finder",
+        "github.dev editor"
+      ],
+      "variants": [
+        {
+          "when": "The ones worth learning",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "t",
+              "n": "Fuzzy file finder from any repository page."
+            },
+            {
+              "c": ".",
+              "n": "Opens the repo in github.dev, a browser VS Code, editable without cloning."
+            },
+            {
+              "c": "?",
+              "n": "The full shortcut list for whatever page you are on."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "permalink-lines",
+        "codespaces",
+        "edit-on-github"
+      ]
+    },
+    {
+      "id": "compare-on-github",
+      "q": "Compare branches or tags on GitHub",
+      "aka": [
+        "github compare view",
+        "diff two tags online",
+        "compare url"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "https://github.com/<owner>/<repo>/compare/v1.0.0...main",
+              "n": "Any two branches, tags, or commits around the three dots. The page shows commits and the full diff, and can open a pull request from it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "compare-branches",
+        "dot-dot-notation",
+        "log-between-tags"
+      ]
+    },
+    {
+      "id": "repo-traffic",
+      "q": "See who visits and clones my repository",
+      "aka": [
+        "repo traffic",
+        "views and clones",
+        "referral sources"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Insights -> Traffic",
+              "n": "Views, unique visitors, clones, and referrers for the last 14 days. Owners only. For longer history, record it on a schedule with gh api."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "repo-topics"
+      ]
+    },
+    {
+      "id": "scheduled-workflow",
+      "q": "Run a workflow on a schedule",
+      "aka": [
+        "github actions cron",
+        "nightly build",
+        "scheduled job"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: schedule: - cron: \"17 3 * * *\"",
+              "n": "UTC, five fields, runs on the default branch. Avoid minute 0; everyone schedules on the hour and runs get delayed. Schedules pause after 60 days without repo activity."
+            }
+          ],
+          "undo": "Remove the schedule block"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "manual-workflow"
+      ]
+    },
+    {
+      "id": "manual-workflow",
+      "q": "Run a workflow by pressing a button",
+      "aka": [
+        "workflow_dispatch",
+        "run workflow manually",
+        "trigger action by hand"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: workflow_dispatch",
+              "n": "Adds a Run workflow button on the Actions tab. Inputs can be declared and filled in the dialog."
+            },
+            {
+              "c": "gh workflow run ci.yml",
+              "n": "The same button from the terminal."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "scheduled-workflow"
+      ]
+    },
+    {
+      "id": "rerun-checks",
+      "q": "Re-run failed workflow checks",
+      "aka": [
+        "re-run failed jobs",
+        "flaky ci retry",
+        "restart github action"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run rerun --failed",
+              "n": "Re-runs only the jobs that failed in the latest run. On the site: the Re-run jobs button on the run page."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "auto-merge"
+      ]
+    },
+    {
+      "id": "add-license",
+      "q": "Add a license so people can actually use my code",
+      "aka": [
+        "choose a license",
+        "no license meaning",
+        "add mit license"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Add file -> Create new file -> LICENSE",
+              "n": "Naming it LICENSE opens a template picker. No license means all rights reserved: nobody may legally use, copy, or modify the code. MIT is the permissive default; choosealicense.com compares the rest."
+            }
+          ],
+          "undo": "Licenses grant rights you cannot retract for already-published versions; change it only going forward"
+        }
+      ],
+      "seealso": [
+        "contributing-file",
+        "citation-file"
+      ]
+    },
+    {
+      "id": "citation-file",
+      "q": "Tell people how to cite my repository",
+      "aka": [
+        "citation.cff",
+        "cite this repository",
+        "academic citation for code"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "CITATION.cff",
+              "n": "A small YAML file with title, authors, and version. GitHub adds a Cite this repository button that exports BibTeX and APA."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "add-license",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "contributing-file",
+      "q": "Set expectations for contributors",
+      "aka": [
+        "contributing.md",
+        "code of conduct",
+        "contribution guidelines"
+      ],
+      "variants": [
+        {
+          "when": "The how",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "CONTRIBUTING.md",
+              "n": "Linked automatically above every new issue and pull request. Setup steps, test commands, and what a good pull request looks like."
+            }
+          ],
+          "undo": "Delete the file"
+        },
+        {
+          "when": "The tone",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "CODE_OF_CONDUCT.md",
+              "n": "Insert template offers Contributor Covenant. GitHub surfaces it in the repository sidebar."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "issue-templates",
+        "first-contribution",
+        "add-license"
+      ]
+    },
+    {
+      "id": "readme-images",
+      "q": "Make README images show correctly",
+      "aka": [
+        "readme image not showing",
+        "image broken on github",
+        "dark mode logo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "![diagram](docs/assets/diagram.png)",
+              "n": "Relative paths from the repository root travel with forks and clones. Absolute raw URLs break when branches rename."
+            }
+          ],
+          "undo": "Delete the line"
+        },
+        {
+          "when": "One image per theme",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "<picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"logo-dark.png\"><img src=\"logo-light.png\"></picture>",
+              "n": "GitHub renders the right one for the viewer's theme."
+            }
+          ],
+          "undo": "Delete the block"
+        }
+      ],
+      "seealso": [
+        "readme-badges",
+        "social-preview"
+      ]
+    },
+    {
+      "id": "transfer-issue",
+      "q": "Move an issue to another repository",
+      "aka": [
+        "transfer issue",
+        "issue in wrong repo",
+        "move issue between repos"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue transfer <number> <owner>/<target-repo>",
+              "n": "Both repos must be yours or your organization's. Labels that do not exist in the target are dropped; a redirect stays behind."
+            }
+          ],
+          "undo": "Transfer it back"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "transfer-repo"
+      ]
+    },
+    {
+      "id": "pages-custom-domain",
+      "q": "Put my Pages site on my own domain",
+      "aka": [
+        "github pages custom domain",
+        "cname record",
+        "www domain for pages"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Pages -> Custom domain",
+              "n": "Enter the domain, then at your DNS provider point a CNAME record at <user>.github.io. Wait for the check, then tick Enforce HTTPS."
+            }
+          ],
+          "undo": "Clear the field; the github.io address keeps working throughout"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "repo-topics"
+      ]
+    },
+    {
+      "id": "org-vs-personal",
+      "q": "Personal account or organization for my project",
+      "aka": [
+        "create github organization",
+        "move project to org",
+        "team account"
+      ],
+      "variants": [
+        {
+          "when": "When an organization earns its keep",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "github.com/organizations/plan",
+              "n": "Teams, shared ownership, and fine-grained roles. Right when more than two people maintain the project or the project should outlive your account."
+            }
+          ],
+          "undo": "Repositories can transfer back to a personal account"
+        },
+        {
+          "when": "Until then",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators -> Add people",
+              "n": "Collaborators on a personal repository cover most small projects with none of the admin surface."
+            }
+          ],
+          "undo": "Remove collaborators"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "transfer-repo"
       ]
     }
   ]
