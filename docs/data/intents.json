@@ -2860,7 +2860,8 @@
       "aka": [
         "which commit broke it",
         "binary search bug",
-        "regression hunt"
+        "regression hunt",
+        "bisect run with a script"
       ],
       "variants": [
         {
@@ -3823,7 +3824,8 @@
         "remove env from history",
         "leaked api key",
         "purge file from repo",
-        "remove file from entire history"
+        "remove file from entire history",
+        "filter-branch replacement"
       ],
       "variants": [
         {
@@ -7995,7 +7997,8 @@
       "aka": [
         "git tag -a vs plain",
         "tag types",
-        "which tag for releases"
+        "which tag for releases",
+        "signed tags"
       ],
       "variants": [
         {
@@ -9715,7 +9718,8 @@
         "edit commit history",
         "reorder commits",
         "drop a commit",
-        "edit an old commit"
+        "edit an old commit",
+        "reorder last two commits"
       ],
       "variants": [
         {
@@ -13414,7 +13418,8 @@
       "aka": [
         "file from yesterday",
         "restore file as of last week",
-        "version by date"
+        "version by date",
+        "whole repository as of a date"
       ],
       "variants": [
         {
@@ -13619,6 +13624,215 @@
         "review-pr",
         "pr-checklist",
         "maintainer-edits"
+      ]
+    },
+    {
+      "id": "release-workflow",
+      "q": "Build and publish a release when I push a tag",
+      "aka": [
+        "release on tag push",
+        "automated release build",
+        "attach binaries in ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: push: tags: [\"v*\"]",
+              "n": "The workflow fires only for version tags."
+            },
+            {
+              "c": "gh release create \"$GITHUB_REF_NAME\" dist/* --generate-notes",
+              "n": "As the final step: the release appears with notes and the build artifacts attached, minutes after git push origin v2.1.0."
+            }
+          ],
+          "undo": "gh release delete <tag>"
+        }
+      ],
+      "seealso": [
+        "create-release",
+        "github-actions-start",
+        "tags-vs-releases"
+      ]
+    },
+    {
+      "id": "ghcr",
+      "q": "Publish a container image next to the code",
+      "aka": [
+        "ghcr.io push",
+        "github container registry",
+        "docker image on github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo $GH_TOKEN | docker login ghcr.io -u <user> --password-stdin",
+              "n": "A token with write:packages scope signs you in."
+            },
+            {
+              "c": "docker push ghcr.io/<user>/<image>:1.0",
+              "n": "The image lists under your packages. A LABEL org.opencontainers.image.source=<repo-url> in the Dockerfile links it to the repository."
+            }
+          ],
+          "undo": "Delete the package version under Packages"
+        }
+      ],
+      "seealso": [
+        "access-tokens",
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "job-summary",
+      "q": "Print a report on the workflow run page",
+      "aka": [
+        "github step summary",
+        "markdown output from ci",
+        "test results summary"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"### 42 tests passed\" >> \"$GITHUB_STEP_SUMMARY\"",
+              "n": "Markdown written there renders on the run's summary page: tables, links, even small images. Far more readable than scrolling raw logs."
+            }
+          ],
+          "undo": "Remove the step"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-env"
+      ]
+    },
+    {
+      "id": "find-projects-to-contribute",
+      "q": "Find a project worth contributing to",
+      "aka": [
+        "good first issue",
+        "start contributing to open source",
+        "beginner friendly issues"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "label:\"good first issue\" language:python no:assignee is:open",
+              "n": "In global issue search. Pick a project you already use; caring about the fix beats any label."
+            },
+            {
+              "c": "gh search issues --label \"good first issue\" --language python --state open",
+              "n": "The same hunt from the terminal."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "first-contribution",
+        "issue-search",
+        "fork-vs-clone"
+      ]
+    },
+    {
+      "id": "readme-structure",
+      "q": "Write a README that earns the repository users",
+      "aka": [
+        "what to put in readme",
+        "readme sections",
+        "good readme structure"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "README.md",
+              "n": "In order: one sentence saying what it is, a screenshot or example proving it, install, minimal usage, then everything else. Visitors decide in seconds; the README's first screen is the whole pitch."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-images",
+        "readme-badges",
+        "repo-topics"
+      ]
+    },
+    {
+      "id": "why-version-control",
+      "q": "Why use Git at all",
+      "aka": [
+        "why version control",
+        "do i need git",
+        "point of git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init",
+              "n": "Every version of everything, forever, with who and why attached. Undo for whole projects, fearless experiments on branches, and collaboration without mailing zip files. The cost is a dozen commands; the payoff is never losing work again."
+            }
+          ],
+          "undo": "Delete the .git folder if you truly want out"
+        }
+      ],
+      "seealso": [
+        "git-vs-github",
+        "first-time-setup",
+        "what-is-staging"
+      ]
+    },
+    {
+      "id": "better-diffs",
+      "q": "Make diffs dramatically easier to read",
+      "aka": [
+        "delta pager",
+        "side by side diff terminal",
+        "prettier git diff"
+      ],
+      "variants": [
+        {
+          "when": "Install a diff pager",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "winget install dandavison.delta",
+              "n": "Then set core.pager to delta in config. Syntax highlighting, side-by-side, word-level emphasis: every diff, log, and blame gets it."
+            }
+          ],
+          "undo": "git config --global --unset core.pager"
+        },
+        {
+          "when": "Built-in improvements",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --color-moved",
+              "n": "Moved lines render in their own color instead of masquerading as delete plus add. diff.colorMoved default makes it permanent."
+            }
+          ],
+          "undo": "git config --global --unset diff.colorMoved"
+        }
+      ],
+      "seealso": [
+        "diff-word",
+        "difftool-vscode"
       ]
     }
   ]
