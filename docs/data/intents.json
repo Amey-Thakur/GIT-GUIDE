@@ -20091,6 +20091,635 @@
         "network-graph",
         "log-by-author"
       ]
+    },
+    {
+      "id": "revert-vs-checkout-file",
+      "q": "Undo edits to one file without touching the rest",
+      "aka": [
+        "reset a single file",
+        "undo changes in one file only",
+        "discard changes to specific file"
+      ],
+      "variants": [
+        {
+          "when": "Uncommitted edits",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git restore <path>",
+              "n": "Rewrites the file from the last commit. The edits are not in Git, so they are gone."
+            }
+          ],
+          "undo": "None, unless your editor's local history has it"
+        },
+        {
+          "when": "Staged as well",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git restore --staged --worktree <path>",
+              "n": "Clears it from the staging area and the working tree in one move."
+            }
+          ],
+          "undo": "None for the working copy"
+        }
+      ],
+      "seealso": [
+        "restore-file",
+        "undo-clean",
+        "what-is-staging"
+      ]
+    },
+    {
+      "id": "see-remote-file",
+      "q": "Read a file on the remote without pulling",
+      "aka": [
+        "view file on origin",
+        "check remote version of file",
+        "see what changed upstream"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch origin",
+              "n": "Downloads the remote state without touching your branch or files."
+            },
+            {
+              "c": "git show origin/main:<path>",
+              "n": "Prints their version. Diff it against yours with git diff HEAD origin/main -- <path>."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pull-single-file",
+        "show-old-version",
+        "preview-pull"
+      ]
+    },
+    {
+      "id": "who-can-merge",
+      "q": "Find out who is allowed to merge my pull request",
+      "aka": [
+        "who reviews this code",
+        "required reviewers",
+        "who owns this file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr view --json reviewRequests,reviewDecision",
+              "n": "Shows who was asked and where the decision stands."
+            },
+            {
+              "c": "cat .github/CODEOWNERS",
+              "n": "Path patterns decide who is requested automatically, and rulesets can make their approval mandatory."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "codeowners",
+        "branch-protection",
+        "review-pr"
+      ]
+    },
+    {
+      "id": "empty-branch",
+      "q": "Start a branch with no files at all",
+      "aka": [
+        "orphan branch empty",
+        "branch with no history",
+        "clean slate branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch --orphan <name>",
+              "n": "A branch with no parent commit. Your files carry over staged, so clear them if you want a true blank start."
+            },
+            {
+              "c": "git rm -rf .",
+              "n": "Empties the tree. Common for a docs-only or gh-pages branch that shares no history with the code."
+            }
+          ],
+          "undo": "git switch - returns; delete the orphan with git branch -D"
+        }
+      ],
+      "seealso": [
+        "switch-orphan",
+        "github-pages",
+        "fresh-history"
+      ]
+    },
+    {
+      "id": "tag-checkout-warning",
+      "q": "Work on a tag without the detached-HEAD warning",
+      "aka": [
+        "checkout tag and edit",
+        "commit on a tag",
+        "fix at a released version"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c fix/2.1.1 v2.1.0",
+              "n": "Tags are read-only points, so commits need a branch. Creating one from the tag is the whole answer."
+            }
+          ],
+          "undo": "git switch - and delete the branch"
+        }
+      ],
+      "seealso": [
+        "checkout-tag",
+        "hotfix-from-tag",
+        "detached-head"
+      ]
+    },
+    {
+      "id": "count-changed-files",
+      "q": "Count how many files a change touches",
+      "aka": [
+        "how many files changed",
+        "diff file count",
+        "size of a pull request"
+      ],
+      "variants": [
+        {
+          "when": "Between commits",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --shortstat main..HEAD",
+              "n": "Files changed, insertions, deletions, one line."
+            },
+            {
+              "c": "git diff --name-only main..HEAD | wc -l",
+              "n": "Just the count, for scripts and pull-request size checks."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "lines-changed",
+        "compare-branches",
+        "review-large-pr"
+      ]
+    },
+    {
+      "id": "restore-whole-folder",
+      "q": "Restore an entire folder from another commit",
+      "aka": [
+        "revert a directory",
+        "bring back a folder",
+        "restore folder from old commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --source <hash> -- <folder>/",
+              "n": "Every file under that path returns to how the commit had it. Deletions inside the folder are restored too."
+            },
+            {
+              "c": "git status",
+              "n": "Review before committing; this can be a large change."
+            }
+          ],
+          "undo": "git restore --source HEAD -- <folder>/ before committing"
+        }
+      ],
+      "seealso": [
+        "restore-file",
+        "show-old-version",
+        "copy-file-from-branch"
+      ]
+    },
+    {
+      "id": "who-deleted-branch",
+      "q": "Find out who deleted a branch and when",
+      "aka": [
+        "branch disappeared",
+        "who removed the branch",
+        "branch deletion history"
+      ],
+      "variants": [
+        {
+          "when": "On GitHub",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/events --jq '.[] | select(.type==\"DeleteEvent\") | {who: .actor.login, ref: .payload.ref, when: .created_at}'",
+              "n": "Recent deletions with the actor. Organizations keep this far longer in the audit log."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog --date=iso | grep <branch>",
+              "n": "Your own machine's record of when it went, and the hash to restore it from."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "recover-deleted-branch",
+        "audit-log",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "limit-clone-history",
+      "q": "Clone with only the last few months of history",
+      "aka": [
+        "shallow since date",
+        "clone recent history only",
+        "limit history by date"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --shallow-since=\"6 months ago\" <url>",
+              "n": "Everything newer, nothing older. Better than --depth when you care about a time window rather than a commit count."
+            }
+          ],
+          "undo": "git fetch --unshallow"
+        }
+      ],
+      "seealso": [
+        "partial-clone",
+        "resume-clone",
+        "shallow-in-ci"
+      ]
+    },
+    {
+      "id": "see-what-pull-will-do",
+      "q": "See exactly what a pull would change before running it",
+      "aka": [
+        "dry run pull",
+        "what will pull bring",
+        "check incoming changes"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch origin",
+              "n": "Nothing in your working tree moves."
+            },
+            {
+              "c": "git diff HEAD origin/main --stat",
+              "n": "The full shape of what is coming. git log HEAD..origin/main lists the commits behind it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "preview-pull",
+        "pull-vs-fetch",
+        "ahead-behind"
+      ]
+    },
+    {
+      "id": "protect-secrets-in-pr",
+      "q": "A contributor's pull request contains a secret",
+      "aka": [
+        "secret in someone else pr",
+        "contributor leaked key",
+        "credential in pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Rotate the credential first",
+              "n": "Assume it is compromised the moment it was pushed anywhere public. Everything else is secondary."
+            },
+            {
+              "c": "gh pr close <number>",
+              "n": "Close rather than merge, and ask for a fresh branch. Merging then reverting leaves the secret in history forever."
+            }
+          ],
+          "undo": "Nothing to undo; rotation is the fix"
+        }
+      ],
+      "seealso": [
+        "remove-secret-from-history",
+        "code-scanning",
+        "secret-scan-local"
+      ]
+    },
+    {
+      "id": "list-branch-authors",
+      "q": "See who owns each branch and how stale it is",
+      "aka": [
+        "branch last commit date",
+        "stale branch report",
+        "who created this branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git for-each-ref --sort=-committerdate refs/remotes --format=\"%(committerdate:short) %(authorname) %(refname:short)\"",
+              "n": "Every remote branch, newest first, with its last author. The cleanup list writes itself."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "delete-gone-branches",
+        "prune-remote-branches",
+        "archive-branch"
+      ]
+    },
+    {
+      "id": "undo-add-all",
+      "q": "I ran git add on everything by mistake",
+      "aka": [
+        "unstage everything",
+        "undo git add .",
+        "clear the staging area"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --staged .",
+              "n": "Everything returns to unstaged. Your edits are untouched: only the staging area changes."
+            },
+            {
+              "c": "git restore --staged <path>",
+              "n": "Or unstage selectively and keep the rest ready to commit."
+            }
+          ],
+          "undo": "git add . stages it again"
+        }
+      ],
+      "seealso": [
+        "undo-git-add",
+        "what-is-staging",
+        "add-patch"
+      ]
+    },
+    {
+      "id": "same-repo-two-remotes",
+      "q": "Keep a repository on GitHub and another host at once",
+      "aka": [
+        "push to github and gitlab",
+        "two remotes one repo",
+        "mirror to second host"
+      ],
+      "variants": [
+        {
+          "when": "Push to both with one command",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote set-url --add --push origin <second-url>",
+              "n": "Adds a second push destination to origin. Repeat for the first URL, since adding one replaces the default."
+            },
+            {
+              "c": "git remote -v",
+              "n": "Confirms both push lines are present before you rely on it."
+            }
+          ],
+          "undo": "git remote set-url --delete --push origin <url>"
+        }
+      ],
+      "seealso": [
+        "push-two-remotes",
+        "mirror-migrate",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "find-large-files-history",
+      "q": "Find which files bloated the repository",
+      "aka": [
+        "biggest objects in history",
+        "what is making my repo large",
+        "largest blobs"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-list --objects --all --missing=allow-any | git cat-file --batch-check=\"%(objecttype) %(objectname) %(objectsize) %(rest)\" | awk '$1==\"blob\"' | sort -k3 -n -r | head -20",
+              "n": "The twenty largest blobs ever committed, with their paths. Run it in Git Bash on Windows."
+            },
+            {
+              "c": "git count-objects -vH",
+              "n": "The total, so you know whether the top offenders explain the size."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "shrink-repo",
+        "big-files-where",
+        "remove-big-file-unpushed"
+      ]
+    },
+    {
+      "id": "why-commit-signed-locally",
+      "q": "My commit shows Verified on GitHub but not locally",
+      "aka": [
+        "verified badge but local says no signature",
+        "local verification fails",
+        "signature check differs"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --show-signature -1",
+              "n": "GitHub checks against keys registered on the author's account. Your machine checks against your own allowed-signers file, which is usually empty."
+            },
+            {
+              "c": "git config --global gpg.ssh.allowedSignersFile ~/.git-allowed-signers",
+              "n": "Add the signer lines you trust and local verification starts matching."
+            }
+          ],
+          "undo": "Unset the config value"
+        }
+      ],
+      "seealso": [
+        "verify-signatures",
+        "signing-choices",
+        "sign-commits"
+      ]
+    },
+    {
+      "id": "pr-from-fork-branch",
+      "q": "Open a pull request from my fork to the original",
+      "aka": [
+        "pr from fork",
+        "contribute back upstream",
+        "cross repository pull request"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push -u origin <branch>",
+              "n": "Push to your fork, which is the only place you can write."
+            },
+            {
+              "c": "gh pr create --repo <upstream-owner>/<repo> --head <your-user>:<branch>",
+              "n": "Names the upstream repository as the target and your fork branch as the source."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "fork-vs-clone",
+        "first-contribution",
+        "sync-fork"
+      ]
+    },
+    {
+      "id": "commit-only-part-of-file",
+      "q": "Commit some lines of a file and leave the rest",
+      "aka": [
+        "stage part of a file",
+        "split changes in one file",
+        "partial staging"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add -p <file>",
+              "n": "Walks the file hunk by hunk: y to stage, n to skip, s to split smaller, e to edit the hunk by hand."
+            },
+            {
+              "c": "git diff --staged",
+              "n": "Confirm exactly what the commit will contain before making it."
+            }
+          ],
+          "undo": "git restore --staged <file>"
+        }
+      ],
+      "seealso": [
+        "add-patch",
+        "commit-frequency",
+        "split-commit"
+      ]
+    },
+    {
+      "id": "rewrite-author-email-safely",
+      "q": "Fix a wrong email across many commits",
+      "aka": [
+        "wrong email in history",
+        "bulk fix author email",
+        "commits not linked to account"
+      ],
+      "variants": [
+        {
+          "when": "Unpushed history",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i --exec \"git commit --amend --reset-author --no-edit\" <base>",
+              "n": "Rewrites each commit with your current identity. Set user.email correctly first."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Already published",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Add the old address to your GitHub account",
+              "n": "Under Settings -> Emails. The commits link to you retroactively with no rewriting, which is almost always the better trade."
+            }
+          ],
+          "undo": "Remove the address again"
+        }
+      ],
+      "seealso": [
+        "change-commit-author",
+        "contributions-graph",
+        "mailmap"
+      ]
+    },
+    {
+      "id": "stop-tracking-folder",
+      "q": "Stop tracking a folder that should never have been committed",
+      "aka": [
+        "remove node_modules from repo",
+        "untrack a directory",
+        "committed build output"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"node_modules/\" >> .gitignore",
+              "n": "Ignore it first, or it comes straight back."
+            },
+            {
+              "c": "git rm -r --cached node_modules && git commit -m \"Stop tracking build output\"",
+              "n": "Removes it from the repository going forward; the folder stays on disk. History still holds the old copies, which only a rewrite removes."
+            }
+          ],
+          "undo": "git revert the commit re-adds the tracking"
+        }
+      ],
+      "seealso": [
+        "untrack-file",
+        "gitignore-not-working",
+        "shrink-repo"
+      ]
     }
   ]
 }
