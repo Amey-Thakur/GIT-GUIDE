@@ -7836,6 +7836,673 @@
       "seealso": [
         "clean-history-before-public"
       ]
+    },
+    {
+      "id": "add-nothing-specified",
+      "msg": "Nothing specified, nothing added.  hint: Maybe you wanted to say 'git add .'?",
+      "why": "git add ran with no paths, so it had nothing to stage.",
+      "fix": [
+        {
+          "c": "git add .",
+          "n": "Stages everything under the current directory."
+        },
+        {
+          "c": "git add -p",
+          "n": "Or stage selectively, hunk by hunk."
+        }
+      ],
+      "intent": "understand-git-add-dot",
+      "seealso": [
+        "add-a-vs-dot"
+      ]
+    },
+    {
+      "id": "commit-only-untracked",
+      "msg": "no changes added to commit  Untracked files: <file>",
+      "why": "Untracked files are never committed implicitly, not even with commit -a.",
+      "fix": [
+        {
+          "c": "git add <file>",
+          "n": "Track it first."
+        },
+        {
+          "c": "git commit -am \"<message>\"",
+          "n": "The -a flag covers tracked modifications only, which is the trap here."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "commit-a"
+      ]
+    },
+    {
+      "id": "amend-no-commits",
+      "msg": "fatal: You have nothing to amend.",
+      "why": "There is no previous commit on this branch to amend.",
+      "fix": [
+        {
+          "c": "git commit -m \"Initial commit\"",
+          "n": "Make the first commit; amend needs one to modify."
+        },
+        {
+          "c": "git log --oneline -1",
+          "n": "Confirms whether the branch has any history at all."
+        }
+      ],
+      "intent": "repo-with-no-commits",
+      "seealso": [
+        "amend-vs-new-commit"
+      ]
+    },
+    {
+      "id": "reset-no-commits",
+      "msg": "fatal: Failed to resolve 'HEAD' as a valid ref.",
+      "why": "The branch has no commits, so HEAD points at nothing to reset to.",
+      "fix": [
+        {
+          "c": "git rm --cached <file>",
+          "n": "Unstage without needing HEAD when the repository is empty."
+        },
+        {
+          "c": "git commit --allow-empty -m \"Initial commit\"",
+          "n": "Or create the first commit so HEAD exists."
+        }
+      ],
+      "intent": "repo-with-no-commits",
+      "seealso": [
+        "undo-git-add"
+      ]
+    },
+    {
+      "id": "show-ambiguous-object",
+      "msg": "error: short object ID <hash> is ambiguous",
+      "why": "The abbreviated hash matches more than one object.",
+      "fix": [
+        {
+          "c": "git rev-parse --disambiguate=<hash>",
+          "n": "Lists every object with that prefix."
+        },
+        {
+          "c": "git show <longer-hash>",
+          "n": "Use more characters; seven is no longer always enough in large repositories."
+        }
+      ],
+      "intent": "current-commit",
+      "seealso": [
+        "understand-git-object-ids"
+      ]
+    },
+    {
+      "id": "worktree-branch-missing",
+      "msg": "fatal: invalid reference: <branch>",
+      "why": "The branch named for the new worktree does not exist.",
+      "fix": [
+        {
+          "c": "git worktree add -b <branch> ../<path>",
+          "n": "Create the branch as part of adding the worktree."
+        },
+        {
+          "c": "git branch -a",
+          "n": "Or fetch the branch first if it lives on the remote."
+        }
+      ],
+      "intent": "worktrees",
+      "seealso": []
+    },
+    {
+      "id": "cherry-pick-root-commit",
+      "msg": "fatal: <hash>: cannot cherry-pick a root commit without --allow-empty",
+      "why": "The commit has no parent, so there is no diff to apply.",
+      "fix": [
+        {
+          "c": "git cherry-pick --allow-empty <hash>",
+          "n": "Records it even though it introduces nothing here."
+        },
+        {
+          "c": "git merge --allow-unrelated-histories <branch>",
+          "n": "Merging is usually what you meant when joining separate histories."
+        }
+      ],
+      "intent": "repo-has-two-histories",
+      "seealso": [
+        "cherry-pick"
+      ]
+    },
+    {
+      "id": "rebase-empty-commit",
+      "msg": "warning: skipped previously applied commit <hash>",
+      "why": "The commit's change is already present upstream, so the rebase dropped it.",
+      "fix": [
+        {
+          "c": "git rebase --no-reapply-cherry-picks",
+          "n": "Keeps the duplicates if you genuinely want them replayed."
+        },
+        {
+          "c": "git log --oneline main..HEAD",
+          "n": "Confirms which of your commits still add something."
+        }
+      ],
+      "intent": "cherry-pick-shows-no-changes",
+      "seealso": [
+        "rebase-onto-main"
+      ]
+    },
+    {
+      "id": "merge-strategy-unknown",
+      "msg": "fatal: Could not find merge strategy '<name>'.",
+      "why": "The strategy name is misspelled or unavailable in this Git version.",
+      "fix": [
+        {
+          "c": "git merge -s ort <branch>",
+          "n": "ort is the modern default strategy."
+        },
+        {
+          "c": "git merge -X theirs <branch>",
+          "n": "Strategy options use -X; the strategy itself uses -s."
+        }
+      ],
+      "intent": "merge-take-side",
+      "seealso": [
+        "merge-strategies"
+      ]
+    },
+    {
+      "id": "apply-context-lines",
+      "msg": "error: while searching for:  error: patch fragment without header at line <n>",
+      "why": "The patch file is truncated or was mangled by copy and paste.",
+      "fix": [
+        {
+          "c": "git apply --check <patch>",
+          "n": "Validates the file without touching the tree."
+        },
+        {
+          "c": "git format-patch -1 <hash>",
+          "n": "Regenerate the patch rather than repairing pasted text."
+        }
+      ],
+      "intent": "apply-patch",
+      "seealso": []
+    },
+    {
+      "id": "send-email-smtp-auth",
+      "msg": "5.7.8 Username and Password not accepted",
+      "why": "The SMTP server rejected the credentials, commonly because an app password is required.",
+      "fix": [
+        {
+          "c": "git config --global sendemail.smtpUser <address>",
+          "n": "Set the account explicitly."
+        },
+        {
+          "c": "Use an app password",
+          "n": "Most providers refuse ordinary account passwords for SMTP."
+        }
+      ],
+      "intent": "patches-email",
+      "seealso": []
+    },
+    {
+      "id": "notes-merge-conflict",
+      "msg": "Automatic notes merge failed. Fix conflicts in .git/NOTES_MERGE_WORKTREE",
+      "why": "Two sides added notes to the same object.",
+      "fix": [
+        {
+          "c": "git notes merge --commit",
+          "n": "Finish after resolving the files in that worktree."
+        },
+        {
+          "c": "git notes merge --abort",
+          "n": "Or back out and keep your local notes."
+        }
+      ],
+      "intent": "git-notes",
+      "seealso": [
+        "merge-conflict"
+      ]
+    },
+    {
+      "id": "replace-ref-confusion",
+      "msg": "warning: object <hash> is replaced by <other>",
+      "why": "A replace ref is rewriting history on the fly, which can be baffling if you did not create it.",
+      "fix": [
+        {
+          "c": "git replace -l",
+          "n": "Lists active replacements."
+        },
+        {
+          "c": "git replace -d <hash>",
+          "n": "Remove it, or pass --no-replace-objects to ignore replacements for one command."
+        }
+      ],
+      "intent": "how-git-stores",
+      "seealso": [
+        "understand-git-object-ids"
+      ]
+    },
+    {
+      "id": "instaweb-no-server",
+      "msg": "fatal: No web server found",
+      "why": "git instaweb needs a local web server it could not locate.",
+      "fix": [
+        {
+          "c": "git instaweb --httpd=python",
+          "n": "Use a server that exists on the machine."
+        },
+        {
+          "c": "git log --oneline --graph --all",
+          "n": "The terminal history view needs nothing extra."
+        }
+      ],
+      "intent": "history-visualization",
+      "seealso": [
+        "pretty-log"
+      ]
+    },
+    {
+      "id": "archive-remote-not-allowed",
+      "msg": "fatal: operation not supported by protocol  (git archive --remote)",
+      "why": "The server does not allow remote archiving.",
+      "fix": [
+        {
+          "c": "git clone --depth 1 <url> && git archive HEAD",
+          "n": "Clone shallowly, then archive locally."
+        },
+        {
+          "c": "Download the ZIP from the repository page",
+          "n": "GitHub offers the same result through the web interface."
+        }
+      ],
+      "intent": "archive-export",
+      "seealso": [
+        "clone-vs-zip"
+      ]
+    },
+    {
+      "id": "http-push-not-supported",
+      "msg": "fatal: remote error: You can't push to git://github.com/<owner>/<repo>.git",
+      "why": "The git protocol is read-only; pushes need HTTPS or SSH.",
+      "fix": [
+        {
+          "c": "git remote set-url origin git@github.com:<owner>/<repo>.git",
+          "n": "Switch to a writable protocol."
+        },
+        {
+          "c": "git remote -v",
+          "n": "Confirms both fetch and push URLs were updated."
+        }
+      ],
+      "intent": "change-remote-url",
+      "seealso": [
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "dumb-http-not-supported",
+      "msg": "fatal: repository '<url>' not found  (plain file server)",
+      "why": "The URL serves files but is not a Git endpoint.",
+      "fix": [
+        {
+          "c": "git clone <url>/.git",
+          "n": "Some plain servers work when you point at the .git directory."
+        },
+        {
+          "c": "Use a real Git host",
+          "n": "Dumb HTTP is slow, fragile, and unsupported for pushing."
+        }
+      ],
+      "intent": "use-other-hosts",
+      "seealso": []
+    },
+    {
+      "id": "credential-cache-daemon",
+      "msg": "fatal: unable to connect to cache daemon",
+      "why": "The credential cache helper is configured but its daemon is not running.",
+      "fix": [
+        {
+          "c": "git config --global credential.helper store",
+          "n": "Switch to a helper that needs no daemon."
+        },
+        {
+          "c": "git credential-cache exit",
+          "n": "Or reset the daemon and let it restart."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "keychain-locked-mac",
+      "msg": "error: storing password in keychain failed",
+      "why": "The macOS keychain is locked or denied access to Git.",
+      "fix": [
+        {
+          "c": "security unlock-keychain",
+          "n": "Unlock it, then retry the operation."
+        },
+        {
+          "c": "git config --global credential.helper osxkeychain",
+          "n": "Confirms Git is using the keychain helper at all."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "wincred-token-stale",
+      "msg": "remote: Invalid username or password.  (after rotating a token)",
+      "why": "The credential store still holds the previous token.",
+      "fix": [
+        {
+          "c": "git credential-manager erase",
+          "n": "Clears the stored entry so the next push prompts."
+        },
+        {
+          "c": "Control Panel -> Credential Manager",
+          "n": "Delete the git:https://github.com entry by hand if needed."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "submodule-absorb-gitdirs",
+      "msg": "warning: <path> is a git repository, but not a submodule",
+      "why": "A nested repository exists where a submodule is expected.",
+      "fix": [
+        {
+          "c": "git submodule absorbgitdirs",
+          "n": "Moves the inner .git into the parent's modules folder."
+        },
+        {
+          "c": "git submodule add <url> <path>",
+          "n": "Or register it properly as a submodule."
+        }
+      ],
+      "intent": "nested-repo",
+      "seealso": []
+    },
+    {
+      "id": "lfs-hook-missing",
+      "msg": "This repository is configured for Git LFS but 'git-lfs' was not found on your path",
+      "why": "A clone carries LFS configuration on a machine where LFS is missing.",
+      "fix": [
+        {
+          "c": "git lfs install",
+          "n": "Installs the hooks and filters for your user."
+        },
+        {
+          "c": "git lfs pull",
+          "n": "Then fetch the real file contents."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": []
+    },
+    {
+      "id": "lfs-migrate-uncommitted",
+      "msg": "Error: working copy must not be dirty",
+      "why": "LFS migration rewrites history and refuses to run over uncommitted work.",
+      "fix": [
+        {
+          "c": "git stash push -u",
+          "n": "Shelve everything first."
+        },
+        {
+          "c": "git lfs migrate import --include=\"*.zip\"",
+          "n": "Then migrate on a clean tree."
+        }
+      ],
+      "intent": "lfs-migrate",
+      "seealso": []
+    },
+    {
+      "id": "filter-repo-mailmap",
+      "msg": "Error: Could not parse mailmap line",
+      "why": "The mailmap file used during a rewrite has a malformed entry.",
+      "fix": [
+        {
+          "c": "Proper Name <proper@email> <old@email>",
+          "n": "Each line follows this shape exactly."
+        },
+        {
+          "c": "git check-mailmap \"<name> <email>\"",
+          "n": "Tests a single entry before running the rewrite."
+        }
+      ],
+      "intent": "mailmap",
+      "seealso": [
+        "rewrite-author-email-safely"
+      ]
+    },
+    {
+      "id": "gc-during-operation",
+      "msg": "fatal: gc is already running  (during a fetch)",
+      "why": "Background maintenance is holding the repository while another command wants it.",
+      "fix": [
+        {
+          "c": "git config --global gc.auto 0",
+          "n": "Disables automatic gc when it keeps colliding with scripts."
+        },
+        {
+          "c": "git maintenance start",
+          "n": "Or move maintenance to a schedule so it never runs mid-command."
+        }
+      ],
+      "intent": "git-maintenance",
+      "seealso": []
+    },
+    {
+      "id": "commit-graph-stale",
+      "msg": "warning: commit-graph has incorrect fanout value",
+      "why": "The cached graph disagrees with the objects, usually after an interrupted write.",
+      "fix": [
+        {
+          "c": "rm .git/objects/info/commit-graph",
+          "n": "Safe to delete: it is a cache."
+        },
+        {
+          "c": "git commit-graph write --reachable",
+          "n": "Rebuild it cleanly."
+        }
+      ],
+      "intent": "commit-graph-file",
+      "seealso": []
+    },
+    {
+      "id": "multi-pack-index-corrupt",
+      "msg": "error: multi-pack-index checksum does not match",
+      "why": "The multi-pack index is damaged and must be regenerated.",
+      "fix": [
+        {
+          "c": "rm .git/objects/pack/multi-pack-index",
+          "n": "Another cache, safe to remove."
+        },
+        {
+          "c": "git multi-pack-index write",
+          "n": "Rebuild it, or let maintenance do so on schedule."
+        }
+      ],
+      "intent": "git-maintenance",
+      "seealso": [
+        "repack-aggressive"
+      ]
+    },
+    {
+      "id": "fsmonitor-not-supported",
+      "msg": "warning: core.fsmonitor is set but the daemon is unavailable",
+      "why": "The filesystem monitor is enabled but cannot run in this environment.",
+      "fix": [
+        {
+          "c": "git config core.fsmonitor false",
+          "n": "Turn it off where it is unsupported, such as some network shares."
+        },
+        {
+          "c": "git fsmonitor--daemon status",
+          "n": "Reports whether the daemon is healthy."
+        }
+      ],
+      "intent": "why-status-is-slow",
+      "seealso": [
+        "slow-git"
+      ]
+    },
+    {
+      "id": "untracked-cache-unsupported",
+      "msg": "warning: untracked cache is disabled on this system or location",
+      "why": "The filesystem does not report directory changes reliably enough to cache them.",
+      "fix": [
+        {
+          "c": "git config core.untrackedCache false",
+          "n": "Stop asking for it on that filesystem."
+        },
+        {
+          "c": "git update-index --test-untracked-cache",
+          "n": "Tests whether the location supports it at all."
+        }
+      ],
+      "intent": "why-status-is-slow",
+      "seealso": []
+    },
+    {
+      "id": "gitignore-trailing-space",
+      "msg": "The pattern does not match because of a trailing space",
+      "why": "Trailing spaces are significant in .gitignore unless escaped.",
+      "fix": [
+        {
+          "c": "git check-ignore -v <path>",
+          "n": "Shows whether any rule matches at all."
+        },
+        {
+          "c": "sed -i 's/[[:space:]]*$//' .gitignore",
+          "n": "Strip trailing whitespace from the file."
+        }
+      ],
+      "intent": "gitignore-patterns",
+      "seealso": [
+        "gitignore-not-working"
+      ]
+    },
+    {
+      "id": "gitattributes-not-applied",
+      "msg": "The attribute has no effect on files already committed",
+      "why": "Attribute changes apply on the next checkout or after renormalising.",
+      "fix": [
+        {
+          "c": "git add --renormalize .",
+          "n": "Rewrites stored content under the new attributes."
+        },
+        {
+          "c": "git check-attr -a <path>",
+          "n": "Shows which attributes actually apply to a path."
+        }
+      ],
+      "intent": "gitattributes",
+      "seealso": [
+        "repo-with-mixed-line-endings"
+      ]
+    },
+    {
+      "id": "text-file-busy",
+      "msg": "error: unable to write file <path>: Text file busy",
+      "why": "The file is currently executing, so it cannot be replaced.",
+      "fix": [
+        {
+          "c": "Stop the running program",
+          "n": "Then retry the checkout."
+        },
+        {
+          "c": "git status",
+          "n": "Confirms which paths could not be written."
+        }
+      ],
+      "intent": null,
+      "seealso": []
+    },
+    {
+      "id": "disk-quota-exceeded",
+      "msg": "error: unable to write sha1 file: Disk quota exceeded",
+      "why": "The account or volume ran out of space mid-operation.",
+      "fix": [
+        {
+          "c": "df -h .",
+          "n": "Confirms the space situation."
+        },
+        {
+          "c": "git gc --prune=now",
+          "n": "Reclaims space inside the repository once there is room to work."
+        }
+      ],
+      "intent": "shrink-repo",
+      "seealso": []
+    },
+    {
+      "id": "readonly-filesystem",
+      "msg": "error: unable to create directory for <path>: Read-only file system",
+      "why": "The checkout location cannot be written to.",
+      "fix": [
+        {
+          "c": "mount | grep <path>",
+          "n": "Confirms the mount is read-only."
+        },
+        {
+          "c": "git clone <url> ~/writable-path",
+          "n": "Work somewhere writable instead."
+        }
+      ],
+      "intent": null,
+      "seealso": []
+    },
+    {
+      "id": "case-only-rename-lost",
+      "msg": "The rename was not recorded because only the case changed",
+      "why": "A case-insensitive filesystem reports no change, so Git records nothing.",
+      "fix": [
+        {
+          "c": "git mv --force <old> <new>",
+          "n": "Tells Git explicitly, which records the rename."
+        },
+        {
+          "c": "git config core.ignorecase false",
+          "n": "Only on repositories that must stay case-exact."
+        }
+      ],
+      "intent": "case-only-rename-windows",
+      "seealso": []
+    },
+    {
+      "id": "init-existing-repo",
+      "msg": "Reinitialized existing Git repository in <path>",
+      "why": "Not an error: git init ran where a repository already exists and only refreshed it.",
+      "fix": [
+        {
+          "c": "git log --oneline -1",
+          "n": "Your history is intact; nothing was reset."
+        },
+        {
+          "c": "git rev-parse --show-toplevel",
+          "n": "Confirms which repository you are actually in."
+        }
+      ],
+      "intent": "init-vs-clone",
+      "seealso": [
+        "undo-git-init"
+      ]
+    },
+    {
+      "id": "git-dir-env-confusion",
+      "msg": "fatal: not a git repository: '<path>'  (GIT_DIR is set)",
+      "why": "A stale GIT_DIR or GIT_WORK_TREE variable is pointing Git somewhere else.",
+      "fix": [
+        {
+          "c": "env | grep GIT_",
+          "n": "Shows the variables in force for this shell."
+        },
+        {
+          "c": "unset GIT_DIR GIT_WORK_TREE",
+          "n": "Clear them, then run the command again."
+        }
+      ],
+      "intent": "minimal-git-for-scripts",
+      "seealso": []
     }
   ]
 }

@@ -2470,6 +2470,201 @@
   <p class="note">A force-push after a rewrite leaves everyone else on incompatible history.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#decide-to-rewrite-history">Is it worth rewriting this history</a></p>
 </article>
+<article class="result errcard" id="add-nothing-specified">
+  <h2><code class="errmsg">Nothing specified, nothing added.  hint: Maybe you wanted to say &#x27;git add .&#x27;?</code><a class="anchor" href="#add-nothing-specified" aria-label="Link to this error">#</a></h2>
+  <p class="note">git add ran with no paths, so it had nothing to stage.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#understand-git-add-dot">What git add . actually stages</a></p>
+</article>
+<article class="result errcard" id="commit-only-untracked">
+  <h2><code class="errmsg">no changes added to commit  Untracked files: &lt;file&gt;</code><a class="anchor" href="#commit-only-untracked" aria-label="Link to this error">#</a></h2>
+  <p class="note">Untracked files are never committed implicitly, not even with commit -a.</p>
+  <div class="cmd"><code>git add &lt;file&gt;</code><button class="copy" data-cmd="git add &lt;file&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Track it first.</p>
+  <div class="cmd"><code>git commit -am &quot;&lt;message&gt;&quot;</code><button class="copy" data-cmd="git commit -am &quot;&lt;message&gt;&quot;" aria-label="Copy command">Copy</button></div>
+  <p class="note">The -a flag covers tracked modifications only, which is the trap here.</p>
+  <p class="seealso">See also: <a href="index.html#commit-a">What git commit -a actually stages</a></p>
+</article>
+<article class="result errcard" id="amend-no-commits">
+  <h2><code class="errmsg">fatal: You have nothing to amend.</code><a class="anchor" href="#amend-no-commits" aria-label="Link to this error">#</a></h2>
+  <p class="note">There is no previous commit on this branch to amend.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-with-no-commits">Work with a repository that has no commits yet</a></p>
+</article>
+<article class="result errcard" id="reset-no-commits">
+  <h2><code class="errmsg">fatal: Failed to resolve &#x27;HEAD&#x27; as a valid ref.</code><a class="anchor" href="#reset-no-commits" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch has no commits, so HEAD points at nothing to reset to.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-with-no-commits">Work with a repository that has no commits yet</a></p>
+</article>
+<article class="result errcard" id="show-ambiguous-object">
+  <h2><code class="errmsg">error: short object ID &lt;hash&gt; is ambiguous</code><a class="anchor" href="#show-ambiguous-object" aria-label="Link to this error">#</a></h2>
+  <p class="note">The abbreviated hash matches more than one object.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#current-commit">Get the current commit hash</a></p>
+</article>
+<article class="result errcard" id="worktree-branch-missing">
+  <h2><code class="errmsg">fatal: invalid reference: &lt;branch&gt;</code><a class="anchor" href="#worktree-branch-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch named for the new worktree does not exist.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#worktrees">Work on two branches at once (worktrees)</a></p>
+</article>
+<article class="result errcard" id="cherry-pick-root-commit">
+  <h2><code class="errmsg">fatal: &lt;hash&gt;: cannot cherry-pick a root commit without --allow-empty</code><a class="anchor" href="#cherry-pick-root-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit has no parent, so there is no diff to apply.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-has-two-histories">The repository seems to have two separate histories</a></p>
+</article>
+<article class="result errcard" id="rebase-empty-commit">
+  <h2><code class="errmsg">warning: skipped previously applied commit &lt;hash&gt;</code><a class="anchor" href="#rebase-empty-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit&#x27;s change is already present upstream, so the rebase dropped it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cherry-pick-shows-no-changes">Cherry-pick applied but produced nothing</a></p>
+</article>
+<article class="result errcard" id="merge-strategy-unknown">
+  <h2><code class="errmsg">fatal: Could not find merge strategy &#x27;&lt;name&gt;&#x27;.</code><a class="anchor" href="#merge-strategy-unknown" aria-label="Link to this error">#</a></h2>
+  <p class="note">The strategy name is misspelled or unavailable in this Git version.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-take-side">Resolve every conflict by preferring one side</a></p>
+</article>
+<article class="result errcard" id="apply-context-lines">
+  <h2><code class="errmsg">error: while searching for:  error: patch fragment without header at line &lt;n&gt;</code><a class="anchor" href="#apply-context-lines" aria-label="Link to this error">#</a></h2>
+  <p class="note">The patch file is truncated or was mangled by copy and paste.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#apply-patch">Apply a patch or diff file</a></p>
+</article>
+<article class="result errcard" id="send-email-smtp-auth">
+  <h2><code class="errmsg">5.7.8 Username and Password not accepted</code><a class="anchor" href="#send-email-smtp-auth" aria-label="Link to this error">#</a></h2>
+  <p class="note">The SMTP server rejected the credentials, commonly because an app password is required.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#patches-email">Share commits as patch files, no host needed</a></p>
+</article>
+<article class="result errcard" id="notes-merge-conflict">
+  <h2><code class="errmsg">Automatic notes merge failed. Fix conflicts in .git/NOTES_MERGE_WORKTREE</code><a class="anchor" href="#notes-merge-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">Two sides added notes to the same object.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-notes">Attach notes to commits without changing them</a></p>
+</article>
+<article class="result errcard" id="replace-ref-confusion">
+  <h2><code class="errmsg">warning: object &lt;hash&gt; is replaced by &lt;other&gt;</code><a class="anchor" href="#replace-ref-confusion" aria-label="Link to this error">#</a></h2>
+  <p class="note">A replace ref is rewriting history on the fly, which can be baffling if you did not create it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#how-git-stores">How Git stores your project</a></p>
+</article>
+<article class="result errcard" id="instaweb-no-server">
+  <h2><code class="errmsg">fatal: No web server found</code><a class="anchor" href="#instaweb-no-server" aria-label="Link to this error">#</a></h2>
+  <p class="note">git instaweb needs a local web server it could not locate.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#history-visualization">Turn the history into a picture</a></p>
+</article>
+<article class="result errcard" id="archive-remote-not-allowed">
+  <h2><code class="errmsg">fatal: operation not supported by protocol  (git archive --remote)</code><a class="anchor" href="#archive-remote-not-allowed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server does not allow remote archiving.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#archive-export">Export the project as a zip without the .git folder</a></p>
+</article>
+<article class="result errcard" id="http-push-not-supported">
+  <h2><code class="errmsg">fatal: remote error: You can&#x27;t push to git://github.com/&lt;owner&gt;/&lt;repo&gt;.git</code><a class="anchor" href="#http-push-not-supported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The git protocol is read-only; pushes need HTTPS or SSH.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#change-remote-url">Change the remote URL</a></p>
+</article>
+<article class="result errcard" id="dumb-http-not-supported">
+  <h2><code class="errmsg">fatal: repository &#x27;&lt;url&gt;&#x27; not found  (plain file server)</code><a class="anchor" href="#dumb-http-not-supported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The URL serves files but is not a Git endpoint.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#use-other-hosts">Use Git with GitLab, Bitbucket, or AWS CodeCommit</a></p>
+</article>
+<article class="result errcard" id="credential-cache-daemon">
+  <h2><code class="errmsg">fatal: unable to connect to cache daemon</code><a class="anchor" href="#credential-cache-daemon" aria-label="Link to this error">#</a></h2>
+  <p class="note">The credential cache helper is configured but its daemon is not running.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="keychain-locked-mac">
+  <h2><code class="errmsg">error: storing password in keychain failed</code><a class="anchor" href="#keychain-locked-mac" aria-label="Link to this error">#</a></h2>
+  <p class="note">The macOS keychain is locked or denied access to Git.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="wincred-token-stale">
+  <h2><code class="errmsg">remote: Invalid username or password.  (after rotating a token)</code><a class="anchor" href="#wincred-token-stale" aria-label="Link to this error">#</a></h2>
+  <p class="note">The credential store still holds the previous token.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="submodule-absorb-gitdirs">
+  <h2><code class="errmsg">warning: &lt;path&gt; is a git repository, but not a submodule</code><a class="anchor" href="#submodule-absorb-gitdirs" aria-label="Link to this error">#</a></h2>
+  <p class="note">A nested repository exists where a submodule is expected.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#nested-repo">Fix an accidental repository inside a repository</a></p>
+</article>
+<article class="result errcard" id="lfs-hook-missing">
+  <h2><code class="errmsg">This repository is configured for Git LFS but &#x27;git-lfs&#x27; was not found on your path</code><a class="anchor" href="#lfs-hook-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">A clone carries LFS configuration on a machine where LFS is missing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="lfs-migrate-uncommitted">
+  <h2><code class="errmsg">Error: working copy must not be dirty</code><a class="anchor" href="#lfs-migrate-uncommitted" aria-label="Link to this error">#</a></h2>
+  <p class="note">LFS migration rewrites history and refuses to run over uncommitted work.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#lfs-migrate">Move existing large files into LFS</a></p>
+</article>
+<article class="result errcard" id="filter-repo-mailmap">
+  <h2><code class="errmsg">Error: Could not parse mailmap line</code><a class="anchor" href="#filter-repo-mailmap" aria-label="Link to this error">#</a></h2>
+  <p class="note">The mailmap file used during a rewrite has a malformed entry.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#mailmap">Fix wrong names in history without rewriting it</a></p>
+</article>
+<article class="result errcard" id="gc-during-operation">
+  <h2><code class="errmsg">fatal: gc is already running  (during a fetch)</code><a class="anchor" href="#gc-during-operation" aria-label="Link to this error">#</a></h2>
+  <p class="note">Background maintenance is holding the repository while another command wants it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-maintenance">Keep a big repository fast</a></p>
+</article>
+<article class="result errcard" id="commit-graph-stale">
+  <h2><code class="errmsg">warning: commit-graph has incorrect fanout value</code><a class="anchor" href="#commit-graph-stale" aria-label="Link to this error">#</a></h2>
+  <p class="note">The cached graph disagrees with the objects, usually after an interrupted write.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-graph-file">Speed up log and blame on a big repository</a></p>
+</article>
+<article class="result errcard" id="multi-pack-index-corrupt">
+  <h2><code class="errmsg">error: multi-pack-index checksum does not match</code><a class="anchor" href="#multi-pack-index-corrupt" aria-label="Link to this error">#</a></h2>
+  <p class="note">The multi-pack index is damaged and must be regenerated.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-maintenance">Keep a big repository fast</a></p>
+</article>
+<article class="result errcard" id="fsmonitor-not-supported">
+  <h2><code class="errmsg">warning: core.fsmonitor is set but the daemon is unavailable</code><a class="anchor" href="#fsmonitor-not-supported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The filesystem monitor is enabled but cannot run in this environment.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#why-status-is-slow">git status takes seconds to run</a></p>
+</article>
+<article class="result errcard" id="untracked-cache-unsupported">
+  <h2><code class="errmsg">warning: untracked cache is disabled on this system or location</code><a class="anchor" href="#untracked-cache-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The filesystem does not report directory changes reliably enough to cache them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#why-status-is-slow">git status takes seconds to run</a></p>
+</article>
+<article class="result errcard" id="gitignore-trailing-space">
+  <h2><code class="errmsg">The pattern does not match because of a trailing space</code><a class="anchor" href="#gitignore-trailing-space" aria-label="Link to this error">#</a></h2>
+  <p class="note">Trailing spaces are significant in .gitignore unless escaped.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitignore-patterns">The .gitignore pattern rules</a></p>
+</article>
+<article class="result errcard" id="gitattributes-not-applied">
+  <h2><code class="errmsg">The attribute has no effect on files already committed</code><a class="anchor" href="#gitattributes-not-applied" aria-label="Link to this error">#</a></h2>
+  <p class="note">Attribute changes apply on the next checkout or after renormalising.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitattributes">What .gitattributes controls</a></p>
+</article>
+<article class="result errcard" id="text-file-busy">
+  <h2><code class="errmsg">error: unable to write file &lt;path&gt;: Text file busy</code><a class="anchor" href="#text-file-busy" aria-label="Link to this error">#</a></h2>
+  <p class="note">The file is currently executing, so it cannot be replaced.</p>
+  <div class="cmd"><code>Stop the running program</code><button class="copy" data-cmd="Stop the running program" aria-label="Copy command">Copy</button></div>
+  <p class="note">Then retry the checkout.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirms which paths could not be written.</p>
+</article>
+<article class="result errcard" id="disk-quota-exceeded">
+  <h2><code class="errmsg">error: unable to write sha1 file: Disk quota exceeded</code><a class="anchor" href="#disk-quota-exceeded" aria-label="Link to this error">#</a></h2>
+  <p class="note">The account or volume ran out of space mid-operation.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#shrink-repo">Find what makes the repository huge and shrink it</a></p>
+</article>
+<article class="result errcard" id="readonly-filesystem">
+  <h2><code class="errmsg">error: unable to create directory for &lt;path&gt;: Read-only file system</code><a class="anchor" href="#readonly-filesystem" aria-label="Link to this error">#</a></h2>
+  <p class="note">The checkout location cannot be written to.</p>
+  <div class="cmd"><code>mount | grep &lt;path&gt;</code><button class="copy" data-cmd="mount | grep &lt;path&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirms the mount is read-only.</p>
+  <div class="cmd"><code>git clone &lt;url&gt; ~/writable-path</code><button class="copy" data-cmd="git clone &lt;url&gt; ~/writable-path" aria-label="Copy command">Copy</button></div>
+  <p class="note">Work somewhere writable instead.</p>
+</article>
+<article class="result errcard" id="case-only-rename-lost">
+  <h2><code class="errmsg">The rename was not recorded because only the case changed</code><a class="anchor" href="#case-only-rename-lost" aria-label="Link to this error">#</a></h2>
+  <p class="note">A case-insensitive filesystem reports no change, so Git records nothing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#case-only-rename-windows">Rename a file to different capitalisation</a></p>
+</article>
+<article class="result errcard" id="init-existing-repo">
+  <h2><code class="errmsg">Reinitialized existing Git repository in &lt;path&gt;</code><a class="anchor" href="#init-existing-repo" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error: git init ran where a repository already exists and only refreshed it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#init-vs-clone">init or clone, which starts my project</a></p>
+</article>
+<article class="result errcard" id="git-dir-env-confusion">
+  <h2><code class="errmsg">fatal: not a git repository: &#x27;&lt;path&gt;&#x27;  (GIT_DIR is set)</code><a class="anchor" href="#git-dir-env-confusion" aria-label="Link to this error">#</a></h2>
+  <p class="note">A stale GIT_DIR or GIT_WORK_TREE variable is pointing Git somewhere else.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#minimal-git-for-scripts">Use Git safely inside a script</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
