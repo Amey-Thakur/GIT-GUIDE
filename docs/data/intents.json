@@ -32051,6 +32051,721 @@
         "see-someone-elses-branch",
         "co-authors"
       ]
+    },
+    {
+      "id": "repo-first-issue-triage",
+      "q": "Triage a backlog of issues nobody has read",
+      "aka": [
+        "first pass on issue backlog",
+        "untriaged issues",
+        "sort through old issues"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue list --search \"no:label sort:created-asc\"",
+              "n": "Unlabelled and oldest first. Each issue needs one of three outcomes: labelled and kept, answered and closed, or closed as not planned."
+            },
+            {
+              "c": "gh issue edit <number> --add-label needs-repro",
+              "n": "Anything without reproduction steps gets one question and a label, so the next reader knows where it stands."
+            }
+          ],
+          "undo": "Reopen or relabel"
+        }
+      ],
+      "seealso": [
+        "stale-issues",
+        "issue-labels",
+        "issue-search"
+      ]
+    },
+    {
+      "id": "read-a-workflow-file",
+      "q": "Read someone else's workflow file",
+      "aka": [
+        "understand a github action yaml",
+        "what does this workflow do",
+        "decode workflow file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "cat .github/workflows/ci.yml",
+              "n": "Read it in three passes: on: for when it fires, jobs: for what runs in parallel, and needs: for the order between them. Steps come last."
+            },
+            {
+              "c": "gh run view --log",
+              "n": "Then read one actual run. Seeing the expanded values beats reasoning about expressions."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "debug-workflows",
+        "actions-env"
+      ]
+    },
+    {
+      "id": "commit-secrets-by-mistake-public",
+      "q": "I pushed a secret to a public repository",
+      "aka": [
+        "leaked api key on github",
+        "secret in public repo",
+        "exposed credentials pushed"
+      ],
+      "variants": [
+        {
+          "when": "In this order, immediately",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Rotate the credential now",
+              "n": "Assume it is compromised: public repositories are scraped within minutes. Rotation is the only step that actually protects you."
+            },
+            {
+              "c": "git filter-repo --path <file> --invert-paths",
+              "n": "Then purge it from history and force-push. Forks and caches may still hold it, which is why rotation came first."
+            },
+            {
+              "c": "Settings -> Advanced Security -> Push protection",
+              "n": "Finally, turn on push protection so the next one is blocked before it lands."
+            }
+          ],
+          "undo": "Nothing undoes a disclosure; only rotation resolves it"
+        }
+      ],
+      "seealso": [
+        "remove-secret-from-history",
+        "gitignore-for-secrets",
+        "detect-secrets-in-history"
+      ]
+    },
+    {
+      "id": "understand-what-ci-runs",
+      "q": "Know exactly what CI will run before pushing",
+      "aka": [
+        "what will ci do",
+        "predict workflow runs",
+        "which workflows trigger"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh workflow list",
+              "n": "Every workflow and whether it is active. Read each on: block against the branch and paths you are about to push."
+            },
+            {
+              "c": "act -n",
+              "n": "Or dry-run locally with act, which lists the jobs a given event would start without running them."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "workflow-not-triggering",
+        "actions-locally",
+        "pr-vs-push-triggers"
+      ]
+    },
+    {
+      "id": "make-a-repo-easy-to-search",
+      "q": "Make my repository easy to find and search",
+      "aka": [
+        "repository discoverability",
+        "help people find my code",
+        "seo for repositories"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo edit --description \"<one clear sentence>\" --add-topic <topic>",
+              "n": "Description and topics are what GitHub search actually ranks. A repository with neither is invisible to browsing."
+            },
+            {
+              "c": "git add README.md",
+              "n": "Then a README whose first line names the problem it solves in the words people would search for, not internal codenames."
+            }
+          ],
+          "undo": "Edit them again"
+        }
+      ],
+      "seealso": [
+        "repo-topics",
+        "readme-structure",
+        "github-search-syntax"
+      ]
+    },
+    {
+      "id": "track-work-across-repos",
+      "q": "Track one piece of work spanning several repositories",
+      "aka": [
+        "cross repo change",
+        "one feature many repos",
+        "coordinate prs across repositories"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c feat/<same-name>",
+              "n": "Use the same branch name everywhere so the set is obvious, and link each pull request to the others in its description."
+            },
+            {
+              "c": "Projects -> New project",
+              "n": "A project board across repositories is the only view that shows the whole change at once. Merge order still needs saying out loud."
+            }
+          ],
+          "undo": "Close the extra pull requests"
+        }
+      ],
+      "seealso": [
+        "project-boards",
+        "monorepo",
+        "stacked-prs"
+      ]
+    },
+    {
+      "id": "why-my-changes-vanished",
+      "q": "My changes disappeared and I do not know why",
+      "aka": [
+        "where did my code go",
+        "my edits are gone",
+        "changes lost mysteriously"
+      ],
+      "variants": [
+        {
+          "when": "Work through it in order",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status && git stash list",
+              "n": "First: are you on the branch you think, and did a stash swallow the work. Those two cover most cases."
+            },
+            {
+              "c": "git reflog",
+              "n": "Second: if it was ever committed, the reflog has it. Nothing committed is truly lost for about ninety days."
+            },
+            {
+              "c": "git fsck --lost-found",
+              "n": "Third: dangling objects catch staged-then-reset work. Only never-staged edits are genuinely unrecoverable."
+            }
+          ],
+          "undo": "Depends which step finds it"
+        }
+      ],
+      "seealso": [
+        "recover-anything",
+        "find-orphaned-work",
+        "fix-mistake-quickly"
+      ]
+    },
+    {
+      "id": "decide-when-to-branch-from-main",
+      "q": "Branch from main or from another branch",
+      "aka": [
+        "what should i branch from",
+        "base branch choice",
+        "branch off feature or main"
+      ],
+      "variants": [
+        {
+          "when": "Default: main",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c <topic> main",
+              "n": "Independent work belongs on current main, so it can merge whenever it is ready regardless of what else happens."
+            }
+          ],
+          "undo": "git branch -D <topic>"
+        },
+        {
+          "when": "From another branch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c <topic> <other-branch>",
+              "n": "Only when your work genuinely cannot exist without theirs. You inherit their review outcome, which is a real cost."
+            }
+          ],
+          "undo": "git rebase --onto main <other-branch> <topic>"
+        }
+      ],
+      "seealso": [
+        "branch-from-commit",
+        "stacked-prs",
+        "parallel-review-and-work"
+      ]
+    },
+    {
+      "id": "repo-checkup-quarterly",
+      "q": "Give a repository a regular checkup",
+      "aka": [
+        "repository maintenance routine",
+        "periodic repo review",
+        "keep a project healthy"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo view --json description,licenseInfo,repositoryTopics,pushedAt",
+              "n": "Metadata first: description, license, topics, and whether the README still describes what the project does."
+            },
+            {
+              "c": "git fetch --prune && git branch -r",
+              "n": "Then branch cleanup, stale issues, dependency alerts, and one honest look at whether the setup instructions still work."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "maintenance-checklist",
+        "what-to-do-with-old-branches",
+        "repo-checklist-before-sharing"
+      ]
+    },
+    {
+      "id": "understand-git-in-one-page",
+      "q": "Git explained in one page",
+      "aka": [
+        "git in a nutshell",
+        "the whole model briefly",
+        "git summary"
+      ],
+      "variants": [
+        {
+          "when": "The whole model",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add && git commit",
+              "n": "Files move from the working tree, to the staging area, into a commit: a permanent snapshot chained to its parent."
+            },
+            {
+              "c": "git switch -c <name>",
+              "n": "A branch is a movable label on one commit. Merging combines two lines; rebasing replays one on top of another."
+            },
+            {
+              "c": "git push && git pull",
+              "n": "Every clone holds the full history. Push and pull are the only steps that touch the network, and the reflog can undo nearly everything else."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "why-version-control",
+        "what-is-a-branch",
+        "learn-git-effectively"
+      ]
+    },
+    {
+      "id": "ask-a-good-git-question",
+      "q": "Ask a Git question people can answer",
+      "aka": [
+        "how to ask for git help",
+        "get better answers",
+        "describe my git problem"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status && git log --oneline -5",
+              "n": "Paste both, plus the exact command you ran and its exact error. Those four things answer most questions before anyone replies."
+            },
+            {
+              "c": "git log --graph --oneline --all -20",
+              "n": "For anything involving branches, the graph shows in one glance what a paragraph of description cannot."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "when-to-ask-for-help",
+        "why-did-git-do-that",
+        "discussions-vs-issues"
+      ]
+    },
+    {
+      "id": "see-branch-of-a-tag",
+      "q": "Work out which branch a tag was cut from",
+      "aka": [
+        "what branch was this release from",
+        "tag origin branch",
+        "which line produced this tag"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch --contains <tag>",
+              "n": "Every branch whose history includes the tagged commit. Add -a to include remote branches."
+            },
+            {
+              "c": "git log --oneline --graph --decorate <tag>~5..<tag>",
+              "n": "Tags record a commit, not a branch, so containment plus the local graph is the closest honest answer."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "branch-contains",
+        "see-what-a-tag-points-at",
+        "which-commits-in-release"
+      ]
+    },
+    {
+      "id": "stop-untracked-files-piling-up",
+      "q": "Untracked files keep accumulating in my working tree",
+      "aka": [
+        "lots of untracked files",
+        "working tree full of junk",
+        "clutter in git status"
+      ],
+      "variants": [
+        {
+          "when": "See what is there",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status --short --untracked-files=all",
+              "n": "The full list. Anything generated belongs in .gitignore; anything scratch belongs outside the repository."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Clear it out",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git clean -n -d",
+              "n": "Always rehearse first. Git holds no copy of untracked files, so the real run has no undo."
+            }
+          ],
+          "undo": "None"
+        }
+      ],
+      "seealso": [
+        "remove-untracked",
+        "ignore-files",
+        "undo-clean"
+      ]
+    },
+    {
+      "id": "decide-merge-or-rebase-today",
+      "q": "Merge or rebase, decided in one line",
+      "aka": [
+        "merge or rebase quick answer",
+        "which should i use today",
+        "settle merge vs rebase"
+      ],
+      "variants": [
+        {
+          "when": "The rule",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rebase main",
+              "n": "Rebase what is yours alone and unpublished, to keep the line straight."
+            },
+            {
+              "c": "git merge main",
+              "n": "Merge anything shared, or anything already reviewed. Rewriting commits other people hold is the only genuine mistake in this debate."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "merge-vs-rebase",
+        "shared-branch-etiquette",
+        "rebase-pull-request-branch"
+      ]
+    },
+    {
+      "id": "repo-for-teaching-material",
+      "q": "Structure a repository of course material",
+      "aka": [
+        "course repository layout",
+        "teaching materials in git",
+        "lecture notes repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c 2026-spring",
+              "n": "A branch or tag per cohort keeps each run's material intact while main carries the current version."
+            },
+            {
+              "c": "git tag -a week-01 -m \"Week 1 material\"",
+              "n": "Tag each session so students can check out exactly what was covered, and keep solutions in a separate private repository."
+            }
+          ],
+          "undo": "Delete the branch or tag"
+        }
+      ],
+      "seealso": [
+        "teach-git-to-class",
+        "school-project-git",
+        "branch-vs-tag-vs-release"
+      ]
+    },
+    {
+      "id": "understand-remote-tracking-prune",
+      "q": "What pruning actually deletes",
+      "aka": [
+        "is prune safe",
+        "what does prune remove",
+        "will prune delete my work"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote prune origin --dry-run",
+              "n": "Only remote-tracking references, which are a cache of what the server had. No commit, branch, or file of yours is touched."
+            },
+            {
+              "c": "git fetch --prune",
+              "n": "Safe enough to enable permanently with fetch.prune true. A local branch whose upstream vanished stays, marked gone."
+            }
+          ],
+          "undo": "Another fetch restores anything still on the server"
+        }
+      ],
+      "seealso": [
+        "prune-remote-branches",
+        "delete-gone-branches",
+        "local-branch-out-of-sync"
+      ]
+    },
+    {
+      "id": "repo-with-strict-review-culture",
+      "q": "Introduce code review without slowing everyone down",
+      "aka": [
+        "start doing code review",
+        "review culture",
+        "make reviews faster"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Required approvals: 1",
+              "n": "One approval, small pull requests, and a same-day expectation. Two reviewers and large diffs are what make review feel like a tax."
+            },
+            {
+              "c": "gh pr merge --auto --squash",
+              "n": "Auto-merge removes the second wait: once approved and green, it lands without anyone watching."
+            }
+          ],
+          "undo": "Adjust the ruleset"
+        }
+      ],
+      "seealso": [
+        "pull-request-size",
+        "auto-merge",
+        "pick-what-to-review-first"
+      ]
+    },
+    {
+      "id": "find-why-a-line-exists",
+      "q": "Understand why a strange line of code exists",
+      "aka": [
+        "why is this code here",
+        "archaeology on a line",
+        "reason behind this code"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -L <start>,<end>:<path>",
+              "n": "The full history of those lines, patch by patch, which shows how the oddity arrived rather than just who touched it last."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/commits/<hash>/pulls",
+              "n": "Then find the pull request behind the commit: the discussion usually holds the reason the commit message omitted."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "function-history",
+        "pr-for-commit",
+        "blame-line"
+      ]
+    },
+    {
+      "id": "handle-repo-with-no-readme",
+      "q": "Find your way around an undocumented project",
+      "aka": [
+        "no readme what now",
+        "undocumented project",
+        "figure out an undocumented repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline -30",
+              "n": "Recent commits and the CI workflow together tell you how the project is built and run, which is usually what a README would have said."
+            },
+            {
+              "c": "cat .github/workflows/*.yml",
+              "n": "The workflow is executable documentation: whatever it installs and runs is the real setup procedure."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "understand-someone-else-repo",
+        "read-a-workflow-file",
+        "repo-onboarding-doc"
+      ]
+    },
+    {
+      "id": "protect-work-on-a-shared-laptop",
+      "q": "Use Git safely on a machine I share",
+      "aka": [
+        "shared computer git",
+        "borrowed laptop git",
+        "public machine version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --local user.email \"<you>\"",
+              "n": "Set identity per repository rather than globally, so your commits are never attributed to whoever used the machine last."
+            },
+            {
+              "c": "gh auth logout && git credential-manager erase",
+              "n": "When finished, remove stored credentials and any SSH key you added. A cached token on a shared machine is an open door."
+            }
+          ],
+          "undo": "Sign in again on your own machine"
+        }
+      ],
+      "seealso": [
+        "two-people-same-machine",
+        "access-tokens",
+        "stop-asking-for-username"
+      ]
+    },
+    {
+      "id": "repo-that-others-depend-on",
+      "q": "Maintain a repository other projects depend on",
+      "aka": [
+        "library maintainer responsibilities",
+        "people depend on my code",
+        "downstream consumers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v2.0.0 -m \"Release v2.0.0\"",
+              "n": "Version honestly: a breaking change is a major version, whatever the pressure to avoid one. Downstream builds depend on that promise."
+            },
+            {
+              "c": "gh release create v2.0.0 --generate-notes",
+              "n": "Publish notes that name every breaking change and its migration. Silence here costs your users far more time than it saves you."
+            }
+          ],
+          "undo": "Yank or deprecate the release"
+        }
+      ],
+      "seealso": [
+        "semantic-versioning",
+        "keep-changelog-updated",
+        "security-advisories"
+      ]
+    },
+    {
+      "id": "git-guide-itself",
+      "q": "Use this guide well",
+      "aka": [
+        "how to use git guide",
+        "find answers here",
+        "navigate this guide"
+      ],
+      "variants": [
+        {
+          "when": "When you know what you want",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Type it in plain words, on the Finder page",
+              "n": "Search matches the way people actually phrase things, so undo the last commit finds the answer without knowing the command."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "When something already went wrong",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Paste the exact error, on the Errors page",
+              "n": "Every decoded error explains why it happened and what to run. Each answer also carries its own undo, so nothing here is a one-way door."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "ask-a-good-git-question",
+        "fix-mistake-quickly",
+        "understand-git-in-one-page"
+      ]
     }
   ]
 }
