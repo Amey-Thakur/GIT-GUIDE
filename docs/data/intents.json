@@ -30945,6 +30945,385 @@
         "what-is-head",
         "branch-from-commit"
       ]
+    },
+    {
+      "id": "see-commits-not-in-release",
+      "q": "Find work that never made it into a release",
+      "aka": [
+        "unreleased commits",
+        "what is waiting to ship",
+        "commits since last tag"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log $(git describe --tags --abbrev=0)..HEAD --oneline",
+              "n": "Everything on this branch since the most recent tag: the contents of your next release."
+            },
+            {
+              "c": "git log --oneline --no-merges $(git describe --tags --abbrev=0)..HEAD",
+              "n": "Dropping merges makes it read like a changelog draft."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "which-commits-in-release",
+        "generate-changelog",
+        "describe-version"
+      ]
+    },
+    {
+      "id": "prevent-accidental-public",
+      "q": "Stop myself publishing a private repository by mistake",
+      "aka": [
+        "accidentally made repo public",
+        "prevent public repos",
+        "lock visibility"
+      ],
+      "variants": [
+        {
+          "when": "In an organization",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Organization -> Settings -> Member privileges -> Repository visibility change",
+              "n": "Restrict who may flip a repository to public. The single most effective guard against an accidental disclosure."
+            }
+          ],
+          "undo": "Re-enable the permission"
+        },
+        {
+          "when": "Personal account",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gitleaks git .",
+              "n": "No such control exists for personal repositories, so the protection is a habit: scan history for secrets before every visibility change."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "make-repo-private",
+        "clean-history-before-public",
+        "org-base-permissions"
+      ]
+    },
+    {
+      "id": "who-can-delete-my-repo",
+      "q": "Who can delete or transfer my repository",
+      "aka": [
+        "can collaborators delete repo",
+        "who has destructive access",
+        "repository deletion permission"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/collaborators --jq \".[] | {who: .login, admin: .permissions.admin}\"",
+              "n": "Only admins can delete, transfer, or change visibility. Push access alone cannot destroy the repository."
+            },
+            {
+              "c": "Organization -> Settings -> Member privileges",
+              "n": "In an organization, owners can too, and deletion rights can be restricted org-wide."
+            }
+          ],
+          "undo": "Lower the permission level"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "read-github-permissions",
+        "delete-remote-repo-mistake"
+      ]
+    },
+    {
+      "id": "undo-a-published-revert",
+      "q": "Bring back a change after reverting it",
+      "aka": [
+        "reapply reverted work",
+        "undo my revert",
+        "the revert was wrong"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <revert-hash>",
+              "n": "Reverting the revert restores the change as new history, which is safe on any shared branch."
+            },
+            {
+              "c": "git cherry-pick <original-hash>",
+              "n": "Equivalent when you would rather reapply the original commit itself, message and all."
+            }
+          ],
+          "undo": "Revert again"
+        }
+      ],
+      "seealso": [
+        "undo-revert",
+        "recover-after-bad-merge-push",
+        "partial-revert"
+      ]
+    },
+    {
+      "id": "which-remote-am-i-pushing-to",
+      "q": "Confirm where a push will actually go",
+      "aka": [
+        "where does push go",
+        "check push destination",
+        "which url will receive my push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote -v",
+              "n": "Fetch and push URLs can differ, and a fork's origin is not the upstream project."
+            },
+            {
+              "c": "git push --dry-run",
+              "n": "Reports exactly what would be sent and where, changing nothing. Worth a habit before any push you are unsure about."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "stop-pushing-to-wrong-remote",
+        "preview-push",
+        "two-remotes-different-auth"
+      ]
+    },
+    {
+      "id": "repo-with-mixed-line-endings",
+      "q": "A repository already full of mixed line endings",
+      "aka": [
+        "repo has crlf and lf mixed",
+        "normalize existing files",
+        "clean up line endings retroactively"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '* text=auto\\n' >> .gitattributes && git add --renormalize .",
+              "n": "Rewrites the stored form of every text file to LF in one commit. Announce it: everyone should commit or stash first."
+            },
+            {
+              "c": "git diff --cached --stat",
+              "n": "Review the size of the change before committing; it touches nearly everything, so do it alone, not inside a feature."
+            }
+          ],
+          "undo": "git revert the normalisation commit"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "stop-file-being-normalized",
+        "why-diff-shows-whole-file"
+      ]
+    },
+    {
+      "id": "keep-secrets-per-environment",
+      "q": "Different credentials for staging and production",
+      "aka": [
+        "environment specific secrets",
+        "separate keys per environment",
+        "scope secrets to environment"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Environments -> production -> Add secret",
+              "n": "Environment secrets override repository ones for jobs naming that environment, so the same variable name resolves differently per target."
+            },
+            {
+              "c": "environment: production",
+              "n": "Pair it with required reviewers so nothing reaches production credentials without a human."
+            }
+          ],
+          "undo": "Delete the environment secret"
+        }
+      ],
+      "seealso": [
+        "deploy-environments",
+        "actions-secrets",
+        "one-repo-many-deploy-targets"
+      ]
+    },
+    {
+      "id": "understand-shallow-limitations",
+      "q": "What breaks in a shallow clone",
+      "aka": [
+        "shallow clone limitations",
+        "commands that fail on shallow",
+        "depth 1 problems"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse --is-shallow-repository",
+              "n": "Anything needing history fails or misleads: blame, bisect, describe, merge-base, and log beyond the fetched depth."
+            },
+            {
+              "c": "git fetch --unshallow",
+              "n": "Deepen when a job needs history. In CI, fetch-depth 0 is the usual fix for a changelog or version step that misbehaves."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "shallow-in-ci",
+        "partial-clone-vs-shallow",
+        "stop-large-clone-in-ci"
+      ]
+    },
+    {
+      "id": "stop-tracking-large-history-file",
+      "q": "A file that changes every commit is bloating history",
+      "aka": [
+        "file churns every commit",
+        "generated file in every diff",
+        "constantly changing file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline -- <path> | wc -l",
+              "n": "A file with thousands of revisions is usually generated, a log, or a timestamped artifact. None belong in history."
+            },
+            {
+              "c": "echo \"<path>\" >> .gitignore && git rm --cached <path>",
+              "n": "Stop tracking it going forward. Purging the old copies needs a history rewrite, which is only worth it if the repository is genuinely painful."
+            }
+          ],
+          "undo": "git revert the commit"
+        }
+      ],
+      "seealso": [
+        "find-large-files-history",
+        "commit-generated-code",
+        "repo-size-limit-hit"
+      ]
+    },
+    {
+      "id": "check-out-a-pull-request-diff-only",
+      "q": "Read a pull request without checking it out",
+      "aka": [
+        "view pr diff locally",
+        "read pull request offline",
+        "pr patch file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number>",
+              "n": "The whole patch in your terminal, with no branch created and nothing touched on disk."
+            },
+            {
+              "c": "curl -L https://github.com/<owner>/<repo>/pull/<number>.patch",
+              "n": "Any pull request has .diff and .patch URLs, which suits reading on a machine without gh."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "large-diff-review-tools",
+        "apply-patch"
+      ]
+    },
+    {
+      "id": "repo-that-others-fork-often",
+      "q": "Design a repository people will fork",
+      "aka": [
+        "fork friendly repo",
+        "make my template easy to fork",
+        "repo meant to be copied"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Template repository",
+              "n": "If people copy rather than contribute, a template is honest: their copy starts clean with no fork relationship."
+            },
+            {
+              "c": "git grep -n \"<your-username>\"",
+              "n": "Then remove anything hardcoded to you: usernames, URLs, secrets names, and Pages paths. Every one of those is a bug in someone else's copy."
+            }
+          ],
+          "undo": "Untick the template setting"
+        }
+      ],
+      "seealso": [
+        "template-repo",
+        "repo-templates-vs-forks",
+        "professional-repo"
+      ]
+    },
+    {
+      "id": "branch-protection-for-forks",
+      "q": "Rules do not seem to apply to forks",
+      "aka": [
+        "protect forks",
+        "fork ignores my rules",
+        "rules on forked repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/rulesets",
+              "n": "Rules are per repository. A fork is a separate repository whose owner sets their own, so nothing you configure travels with it."
+            },
+            {
+              "c": "Ruleset -> Require status checks",
+              "n": "Your protection applies at the point their work enters your repository: the pull request. That is the only gate you control."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "check-a-pr-is-safe",
+        "approve-fork-runs"
+      ]
     }
   ]
 }
