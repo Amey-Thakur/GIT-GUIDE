@@ -933,6 +933,126 @@
   <p class="note">Another Git process holds the reference, or a stale lock file was left behind by one that crashed.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
 </article>
+<article class="result errcard" id="cherry-pick-empty">
+  <h2><code class="errmsg">The previous cherry-pick is now empty, possibly due to conflict resolution.</code><a class="anchor" href="#cherry-pick-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">Every change in that commit already exists on this branch, so applying it produces nothing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cherry-pick">Copy a commit from another branch (cherry-pick)</a></p>
+</article>
+<article class="result errcard" id="nothing-to-commit-rebase">
+  <h2><code class="errmsg">No changes - did you forget to use &#x27;git add&#x27;?</code><a class="anchor" href="#nothing-to-commit-rebase" aria-label="Link to this error">#</a></h2>
+  <p class="note">A rebase or cherry-pick paused for you to resolve something, and you ran continue without staging the result.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#interactive-rebase">Rewrite my last few commits (interactive rebase)</a></p>
+</article>
+<article class="result errcard" id="waiting-for-editor">
+  <h2><code class="errmsg">hint: Waiting for your editor to close the file...</code><a class="anchor" href="#waiting-for-editor" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git opened your configured editor for a commit message and is paused until that program exits. Nothing is stuck.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#set-editor">Change the editor Git opens</a></p>
+</article>
+<article class="result errcard" id="modified-content-submodule">
+  <h2><code class="errmsg">modified: &lt;path&gt; (modified content, untracked content)</code><a class="anchor" href="#modified-content-submodule" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error. The submodule folder contains uncommitted or untracked work of its own.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-update">Update submodules to their latest commits</a></p>
+</article>
+<article class="result errcard" id="working-tree-clean-but-diff">
+  <h2><code class="errmsg">warning: unable to access &#x27;/root/.gitconfig&#x27;: Permission denied</code><a class="anchor" href="#working-tree-clean-but-diff" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git is running as a user whose home directory it cannot read, common inside containers and CI.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+</article>
+<article class="result errcard" id="empty-ident-name">
+  <h2><code class="errmsg">fatal: empty ident name (for &lt;you@example.com&gt;) not allowed</code><a class="anchor" href="#empty-ident-name" aria-label="Link to this error">#</a></h2>
+  <p class="note">user.name is set to an empty string, so Git cannot build a valid author line.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tell-me-who-you-are">Fix: Please tell me who you are</a></p>
+</article>
+<article class="result errcard" id="redirecting-to-https">
+  <h2><code class="errmsg">warning: redirecting to https://github.com/&lt;owner&gt;/&lt;repo&gt;.git/</code><a class="anchor" href="#redirecting-to-https" aria-label="Link to this error">#</a></h2>
+  <p class="note">The remote URL still uses http, or omits the .git suffix, so the server redirects every request.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#change-remote-url">Change the remote URL</a></p>
+</article>
+<article class="result errcard" id="packfile-corrupt">
+  <h2><code class="errmsg">fatal: packed object &lt;hash&gt; (stored in .git/objects/pack/...) is corrupt</code><a class="anchor" href="#packfile-corrupt" aria-label="Link to this error">#</a></h2>
+  <p class="note">A pack file was damaged, usually by disk trouble, an interrupted transfer, or a sync client.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="gc-not-successful">
+  <h2><code class="errmsg">warning: The last gc run reported the following. Please correct the root cause and remove .git/gc.log</code><a class="anchor" href="#gc-not-successful" aria-label="Link to this error">#</a></h2>
+  <p class="note">Background maintenance failed, often because too many unreachable objects are held by the reflog or another process was running.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gc-safety">Is git gc ever going to delete my work</a></p>
+</article>
+<article class="result errcard" id="warning-clock-skew">
+  <h2><code class="errmsg">warning: Clock skew detected. Your build may be incomplete.</code><a class="anchor" href="#warning-clock-skew" aria-label="Link to this error">#</a></h2>
+  <p class="note">Commit timestamps sit in the future relative to this machine, usually a wrong system clock or files restored from another timezone.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-dates">Author date and commit date are different things</a></p>
+</article>
+<article class="result errcard" id="fatal-invalid-refspec">
+  <h2><code class="errmsg">fatal: Invalid refspec &#x27;&lt;value&gt;&#x27;</code><a class="anchor" href="#fatal-invalid-refspec" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch or refspec argument is malformed, often an empty variable in a script or a stray colon.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#push-to-different-name">Push my branch under a different name on the remote</a></p>
+</article>
+<article class="result errcard" id="ref-not-a-tree">
+  <h2><code class="errmsg">fatal: reference is not a tree: &lt;hash&gt;</code><a class="anchor" href="#ref-not-a-tree" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit you named does not exist in this clone, commonly after a force push removed it or in a shallow clone that never had it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#shallow-in-ci">Shallow clones in CI, and getting full history back</a></p>
+</article>
+<article class="result errcard" id="submodule-url-not-found">
+  <h2><code class="errmsg">fatal: repository &#x27;&lt;url&gt;&#x27; does not exist  (during submodule update)</code><a class="anchor" href="#submodule-url-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The URL in .gitmodules points somewhere that moved, was renamed, or is private to you.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-url">Change a submodule&#x27;s URL</a></p>
+</article>
+<article class="result errcard" id="cannot-squash-without-previous">
+  <h2><code class="errmsg">error: cannot &#x27;squash&#x27; without a previous commit</code><a class="anchor" href="#cannot-squash-without-previous" aria-label="Link to this error">#</a></h2>
+  <p class="note">The first line of an interactive rebase list is marked squash or fixup, and there is nothing above it to fold into.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#interactive-rebase">Rewrite my last few commits (interactive rebase)</a></p>
+</article>
+<article class="result errcard" id="invalid-line-todo">
+  <h2><code class="errmsg">error: invalid line 1: pcik &lt;hash&gt;</code><a class="anchor" href="#invalid-line-todo" aria-label="Link to this error">#</a></h2>
+  <p class="note">A typo in the interactive rebase instruction list. Git refuses to guess at an unknown command word.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#interactive-rebase">Rewrite my last few commits (interactive rebase)</a></p>
+</article>
+<article class="result errcard" id="unshallow-complete-repo">
+  <h2><code class="errmsg">fatal: --unshallow on a complete repository does not make sense</code><a class="anchor" href="#unshallow-complete-repo" aria-label="Link to this error">#</a></h2>
+  <p class="note">This clone already has full history, so there is nothing to deepen. Usually a CI script assumes a shallow checkout that was not shallow.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#shallow-in-ci">Shallow clones in CI, and getting full history back</a></p>
+</article>
+<article class="result errcard" id="deleted-by-us">
+  <h2><code class="errmsg">CONFLICT (rename/delete): &lt;file&gt; renamed in HEAD but deleted in &lt;branch&gt;</code><a class="anchor" href="#deleted-by-us" aria-label="Link to this error">#</a></h2>
+  <p class="note">One side renamed a file while the other removed it, so Git cannot tell whether the result should exist.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="ssh-signing-key-not-allowed">
+  <h2><code class="errmsg">error: Could not verify signature. No principal matched.</code><a class="anchor" href="#ssh-signing-key-not-allowed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit is signed with an SSH key that is not listed in the allowed-signers file, so Git cannot vouch for who made it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#verify-signatures">Check which commits are signed</a></p>
+</article>
+<article class="result errcard" id="remote-rejected-tag-exists">
+  <h2><code class="errmsg">! [rejected] v1.0.0 -&gt; v1.0.0 (already exists)</code><a class="anchor" href="#remote-rejected-tag-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">That tag is already on the remote, and Git will not silently move a published tag.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tag-release">Tag a release and push the tag</a></p>
+</article>
+<article class="result errcard" id="cannot-rewrite-branches-unstaged">
+  <h2><code class="errmsg">Cannot rewrite branches: You have unstaged changes.</code><a class="anchor" href="#cannot-rewrite-branches-unstaged" aria-label="Link to this error">#</a></h2>
+  <p class="note">History-rewriting tools refuse to run against a dirty working tree, because the rewrite would fight your edits.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#filter-repo-paths">Keep only some folders in the history</a></p>
+</article>
+<article class="result errcard" id="expected-flush-after-ref">
+  <h2><code class="errmsg">fatal: expected flush after ref listing</code><a class="anchor" href="#expected-flush-after-ref" aria-label="Link to this error">#</a></h2>
+  <p class="note">Something other than Git answered the connection: a proxy, a captive portal, or a server error page.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="gh-pr-no-commits">
+  <h2><code class="errmsg">pull request create failed: GraphQL: No commits between main and feature</code><a class="anchor" href="#gh-pr-no-commits" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch has nothing the base does not already have, so there is nothing to review.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-pr-cli">Create a pull request from the terminal</a></p>
+</article>
+<article class="result errcard" id="gh-must-be-in-repo">
+  <h2><code class="errmsg">gh: could not determine base repository</code><a class="anchor" href="#gh-must-be-in-repo" aria-label="Link to this error">#</a></h2>
+  <p class="note">gh works out the repository from the folder&#x27;s remotes, and this folder has none it recognizes.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-cli-setup">Install and sign in to GitHub CLI</a></p>
+</article>
+<article class="result errcard" id="actions-startup-failure">
+  <h2><code class="errmsg">Invalid workflow file: .github/workflows/ci.yml#L12</code><a class="anchor" href="#actions-startup-failure" aria-label="Link to this error">#</a></h2>
+  <p class="note">The YAML does not parse or breaks the workflow schema. Indentation and a missing colon cause most of it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#workflow-not-triggering">My workflow did not run</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

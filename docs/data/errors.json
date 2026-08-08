@@ -1963,6 +1963,486 @@
         "unlink-of-file-failed",
         "repair-corrupt-repo"
       ]
+    },
+    {
+      "id": "cherry-pick-empty",
+      "msg": "The previous cherry-pick is now empty, possibly due to conflict resolution.",
+      "why": "Every change in that commit already exists on this branch, so applying it produces nothing.",
+      "fix": [
+        {
+          "c": "git cherry-pick --skip",
+          "n": "Skip it and continue: the change is already here, which is usually the whole story."
+        },
+        {
+          "c": "git cherry-pick --allow-empty",
+          "n": "Only if you deliberately want an empty commit recorded for traceability."
+        }
+      ],
+      "intent": "cherry-pick",
+      "seealso": [
+        "empty-commit",
+        "pick-vs-merge"
+      ]
+    },
+    {
+      "id": "nothing-to-commit-rebase",
+      "msg": "No changes - did you forget to use 'git add'?",
+      "why": "A rebase or cherry-pick paused for you to resolve something, and you ran continue without staging the result.",
+      "fix": [
+        {
+          "c": "git add <file>",
+          "n": "Stage the resolved files, then run the continue command again."
+        },
+        {
+          "c": "git rebase --skip",
+          "n": "If the commit really has nothing left to apply, skipping it is correct."
+        }
+      ],
+      "intent": "interactive-rebase",
+      "seealso": [
+        "merge-conflict",
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "waiting-for-editor",
+      "msg": "hint: Waiting for your editor to close the file...",
+      "why": "Git opened your configured editor for a commit message and is paused until that program exits. Nothing is stuck.",
+      "fix": [
+        {
+          "c": ":wq",
+          "n": "In Vim, or Ctrl+X then Y in nano. In VS Code, close the tab: the --wait flag is what tells Git you are done."
+        },
+        {
+          "c": "git config --global core.editor \"code --wait\"",
+          "n": "Without --wait the editor returns instantly and Git takes an empty message."
+        }
+      ],
+      "intent": "set-editor",
+      "seealso": [
+        "exit-vim",
+        "commit-messages"
+      ]
+    },
+    {
+      "id": "modified-content-submodule",
+      "msg": "modified: <path> (modified content, untracked content)",
+      "why": "Not an error. The submodule folder contains uncommitted or untracked work of its own.",
+      "fix": [
+        {
+          "c": "git -C <path> status",
+          "n": "Shows what changed inside. Commit and push it there, then commit the pointer in the parent."
+        },
+        {
+          "c": "git config --global diff.ignoreSubmodules dirty",
+          "n": "Hides this noise when submodule scratch work is expected."
+        }
+      ],
+      "intent": "submodule-update",
+      "seealso": [
+        "submodule-detached",
+        "nested-repo"
+      ]
+    },
+    {
+      "id": "working-tree-clean-but-diff",
+      "msg": "warning: unable to access '/root/.gitconfig': Permission denied",
+      "why": "Git is running as a user whose home directory it cannot read, common inside containers and CI.",
+      "fix": [
+        {
+          "c": "HOME=/tmp git status",
+          "n": "Point HOME somewhere writable for the command."
+        },
+        {
+          "c": "git config --global --add safe.directory '*'",
+          "n": "In a disposable container image, where ownership checks add nothing."
+        }
+      ],
+      "intent": "dubious-ownership",
+      "seealso": [
+        "wsl-git",
+        "ci-git-identity"
+      ]
+    },
+    {
+      "id": "empty-ident-name",
+      "msg": "fatal: empty ident name (for <you@example.com>) not allowed",
+      "why": "user.name is set to an empty string, so Git cannot build a valid author line.",
+      "fix": [
+        {
+          "c": "git config --global user.name \"Your Name\"",
+          "n": "Any non-empty display name resolves it."
+        },
+        {
+          "c": "git config --list --show-origin | grep user.",
+          "n": "Finds which config file set the blank value."
+        }
+      ],
+      "intent": "tell-me-who-you-are",
+      "seealso": [
+        "name-vs-username",
+        "config-precedence"
+      ]
+    },
+    {
+      "id": "redirecting-to-https",
+      "msg": "warning: redirecting to https://github.com/<owner>/<repo>.git/",
+      "why": "The remote URL still uses http, or omits the .git suffix, so the server redirects every request.",
+      "fix": [
+        {
+          "c": "git remote set-url origin https://github.com/<owner>/<repo>.git",
+          "n": "Store the final URL and the warning stops."
+        },
+        {
+          "c": "git remote -v",
+          "n": "Check both fetch and push URLs; often only one was updated."
+        }
+      ],
+      "intent": "change-remote-url",
+      "seealso": [
+        "find-remote-url",
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "packfile-corrupt",
+      "msg": "fatal: packed object <hash> (stored in .git/objects/pack/...) is corrupt",
+      "why": "A pack file was damaged, usually by disk trouble, an interrupted transfer, or a sync client.",
+      "fix": [
+        {
+          "c": "git fsck --full",
+          "n": "Confirms the extent of the damage before you touch anything."
+        },
+        {
+          "c": "git clone <url> ../fresh",
+          "n": "Recloning from a healthy remote is faster and safer than repacking around corruption."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": [
+        "git-in-synced-folder",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "gc-not-successful",
+      "msg": "warning: The last gc run reported the following. Please correct the root cause and remove .git/gc.log",
+      "why": "Background maintenance failed, often because too many unreachable objects are held by the reflog or another process was running.",
+      "fix": [
+        {
+          "c": "git gc --prune=now",
+          "n": "Run it in the foreground to see the real error rather than the summary."
+        },
+        {
+          "c": "rm .git/gc.log",
+          "n": "Delete the log after fixing the cause, or the warning repeats on every command."
+        }
+      ],
+      "intent": "gc-safety",
+      "seealso": [
+        "git-maintenance",
+        "dangling-objects"
+      ]
+    },
+    {
+      "id": "warning-clock-skew",
+      "msg": "warning: Clock skew detected. Your build may be incomplete.",
+      "why": "Commit timestamps sit in the future relative to this machine, usually a wrong system clock or files restored from another timezone.",
+      "fix": [
+        {
+          "c": "w32tm /resync",
+          "n": "Resynchronize the system clock on Windows; timedatectl set-ntp true on Linux."
+        },
+        {
+          "c": "git log --pretty=fuller -3",
+          "n": "Confirms whether the offending timestamps are in the history or on your machine."
+        }
+      ],
+      "intent": "commit-dates",
+      "seealso": [
+        "change-commit-date",
+        "how-git-stores"
+      ]
+    },
+    {
+      "id": "fatal-invalid-refspec",
+      "msg": "fatal: Invalid refspec '<value>'",
+      "why": "The branch or refspec argument is malformed, often an empty variable in a script or a stray colon.",
+      "fix": [
+        {
+          "c": "git push origin HEAD:refs/heads/<branch>",
+          "n": "Spell the destination out fully so nothing is ambiguous."
+        },
+        {
+          "c": "echo \"$BRANCH\"",
+          "n": "In CI, an empty variable is the usual culprit; print it before using it."
+        }
+      ],
+      "intent": "push-to-different-name",
+      "seealso": [
+        "branch-in-ci",
+        "src-refspec-error"
+      ]
+    },
+    {
+      "id": "ref-not-a-tree",
+      "msg": "fatal: reference is not a tree: <hash>",
+      "why": "The commit you named does not exist in this clone, commonly after a force push removed it or in a shallow clone that never had it.",
+      "fix": [
+        {
+          "c": "git fetch --unshallow",
+          "n": "A shallow clone lacks most history; this brings the rest."
+        },
+        {
+          "c": "git fetch origin <hash>",
+          "n": "GitHub allows fetching a specific commit directly, which recovers references lost to a force push."
+        }
+      ],
+      "intent": "shallow-in-ci",
+      "seealso": [
+        "recover-force-push",
+        "partial-clone"
+      ]
+    },
+    {
+      "id": "submodule-url-not-found",
+      "msg": "fatal: repository '<url>' does not exist  (during submodule update)",
+      "why": "The URL in .gitmodules points somewhere that moved, was renamed, or is private to you.",
+      "fix": [
+        {
+          "c": "git config --file .gitmodules --get-regexp url",
+          "n": "Shows every submodule URL as recorded."
+        },
+        {
+          "c": "git submodule sync --recursive",
+          "n": "After fixing .gitmodules, sync copies the new URL into .git/config where updates actually read it."
+        }
+      ],
+      "intent": "submodule-url",
+      "seealso": [
+        "submodule-update",
+        "change-remote-url"
+      ]
+    },
+    {
+      "id": "cannot-squash-without-previous",
+      "msg": "error: cannot 'squash' without a previous commit",
+      "why": "The first line of an interactive rebase list is marked squash or fixup, and there is nothing above it to fold into.",
+      "fix": [
+        {
+          "c": "git rebase --edit-todo",
+          "n": "Reopen the list and make the top line pick."
+        },
+        {
+          "c": "git rebase -i HEAD~<n+1>",
+          "n": "Or start one commit earlier so a parent exists to squash into."
+        }
+      ],
+      "intent": "interactive-rebase",
+      "seealso": [
+        "squash-vs-fixup",
+        "squash-commits"
+      ]
+    },
+    {
+      "id": "invalid-line-todo",
+      "msg": "error: invalid line 1: pcik <hash>",
+      "why": "A typo in the interactive rebase instruction list. Git refuses to guess at an unknown command word.",
+      "fix": [
+        {
+          "c": "git rebase --edit-todo",
+          "n": "Reopens the editor so you can correct the word."
+        },
+        {
+          "c": "git rebase --abort",
+          "n": "Or back out entirely and start again."
+        }
+      ],
+      "intent": "interactive-rebase",
+      "seealso": [
+        "exit-vim",
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "unshallow-complete-repo",
+      "msg": "fatal: --unshallow on a complete repository does not make sense",
+      "why": "This clone already has full history, so there is nothing to deepen. Usually a CI script assumes a shallow checkout that was not shallow.",
+      "fix": [
+        {
+          "c": "git rev-parse --is-shallow-repository",
+          "n": "Prints true or false, so the script can decide instead of guessing."
+        },
+        {
+          "c": "git fetch --depth=2147483647",
+          "n": "Deepens when shallow and stays quiet when not, which suits unconditional scripts."
+        }
+      ],
+      "intent": "shallow-in-ci",
+      "seealso": [
+        "partial-clone",
+        "three-dot-in-ci"
+      ]
+    },
+    {
+      "id": "deleted-by-us",
+      "msg": "CONFLICT (rename/delete): <file> renamed in HEAD but deleted in <branch>",
+      "why": "One side renamed a file while the other removed it, so Git cannot tell whether the result should exist.",
+      "fix": [
+        {
+          "c": "git log --follow --oneline -- <file>",
+          "n": "Shows both stories before you choose."
+        },
+        {
+          "c": "git rm <file>",
+          "n": "To accept the deletion, or git add <file> to keep the renamed version. Either way, staging is what resolves it."
+        }
+      ],
+      "intent": "merge-conflict",
+      "seealso": [
+        "rename-detection",
+        "conflict-styles"
+      ]
+    },
+    {
+      "id": "ssh-signing-key-not-allowed",
+      "msg": "error: Could not verify signature. No principal matched.",
+      "why": "The commit is signed with an SSH key that is not listed in the allowed-signers file, so Git cannot vouch for who made it.",
+      "fix": [
+        {
+          "c": "git config --global gpg.ssh.allowedSignersFile ~/.git-allowed-signers",
+          "n": "Create the file with lines of the form: email ssh-ed25519 AAAA..."
+        },
+        {
+          "c": "git log --show-signature -1",
+          "n": "Verifies the fix. GitHub verifies against keys on the account, so a badge there does not mean local verification is configured."
+        }
+      ],
+      "intent": "verify-signatures",
+      "seealso": [
+        "signing-choices",
+        "sign-commits"
+      ]
+    },
+    {
+      "id": "remote-rejected-tag-exists",
+      "msg": "! [rejected] v1.0.0 -> v1.0.0 (already exists)",
+      "why": "That tag is already on the remote, and Git will not silently move a published tag.",
+      "fix": [
+        {
+          "c": "git tag -d v1.0.0 && git fetch --tags",
+          "n": "Usually you have a stale local tag; take the remote's version as truth."
+        },
+        {
+          "c": "git push --force origin v1.0.0",
+          "n": "Only when you genuinely must move a published tag, and only after telling anyone who may have pulled it."
+        }
+      ],
+      "intent": "tag-release",
+      "seealso": [
+        "move-tag",
+        "tags-vs-releases"
+      ]
+    },
+    {
+      "id": "cannot-rewrite-branches-unstaged",
+      "msg": "Cannot rewrite branches: You have unstaged changes.",
+      "why": "History-rewriting tools refuse to run against a dirty working tree, because the rewrite would fight your edits.",
+      "fix": [
+        {
+          "c": "git stash push -u",
+          "n": "Shelve everything, including untracked files, then rewrite."
+        },
+        {
+          "c": "git status --short",
+          "n": "Confirm the tree is clean before starting; rewrites are hard enough without surprises."
+        }
+      ],
+      "intent": "filter-repo-paths",
+      "seealso": [
+        "remove-secret-from-history",
+        "stash"
+      ]
+    },
+    {
+      "id": "expected-flush-after-ref",
+      "msg": "fatal: expected flush after ref listing",
+      "why": "Something other than Git answered the connection: a proxy, a captive portal, or a server error page.",
+      "fix": [
+        {
+          "c": "GIT_CURL_VERBOSE=1 git ls-remote origin",
+          "n": "Shows the real response, which is usually an HTML login page."
+        },
+        {
+          "c": "git config --global --unset http.proxy",
+          "n": "Clear a stale proxy setting, or set the correct one for your network."
+        }
+      ],
+      "intent": "proxy-setup",
+      "seealso": [
+        "github-status",
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "gh-pr-no-commits",
+      "msg": "pull request create failed: GraphQL: No commits between main and feature",
+      "why": "The branch has nothing the base does not already have, so there is nothing to review.",
+      "fix": [
+        {
+          "c": "git log main..HEAD --oneline",
+          "n": "Empty output confirms it. Your commits may be unpushed, or on a different branch."
+        },
+        {
+          "c": "git push -u origin HEAD",
+          "n": "Push the branch first; a pull request compares what the remote has, not your local tree."
+        }
+      ],
+      "intent": "create-pr-cli",
+      "seealso": [
+        "list-unpushed",
+        "what-is-a-pr"
+      ]
+    },
+    {
+      "id": "gh-must-be-in-repo",
+      "msg": "gh: could not determine base repository",
+      "why": "gh works out the repository from the folder's remotes, and this folder has none it recognizes.",
+      "fix": [
+        {
+          "c": "gh repo set-default <owner>/<repo>",
+          "n": "Pins which repository this folder targets, needed when several remotes exist."
+        },
+        {
+          "c": "gh pr list --repo <owner>/<repo>",
+          "n": "Or name the repository per command, which works from anywhere."
+        }
+      ],
+      "intent": "gh-cli-setup",
+      "seealso": [
+        "what-is-origin",
+        "gh-auth-switch"
+      ]
+    },
+    {
+      "id": "actions-startup-failure",
+      "msg": "Invalid workflow file: .github/workflows/ci.yml#L12",
+      "why": "The YAML does not parse or breaks the workflow schema. Indentation and a missing colon cause most of it.",
+      "fix": [
+        {
+          "c": "gh workflow view ci.yml",
+          "n": "Startup failures appear on the Actions tab with the offending line number."
+        },
+        {
+          "c": "act -n",
+          "n": "Or lint locally before pushing; a YAML extension in your editor catches most of these as you type."
+        }
+      ],
+      "intent": "workflow-not-triggering",
+      "seealso": [
+        "actions-locally",
+        "debug-workflows"
+      ]
     }
   ]
 }
