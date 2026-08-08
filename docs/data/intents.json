@@ -29635,6 +29635,485 @@
         "repo-traffic",
         "generate-changelog"
       ]
+    },
+    {
+      "id": "first-week-with-git",
+      "q": "What to learn in my first week with Git",
+      "aka": [
+        "git learning order",
+        "week one git",
+        "minimum viable git knowledge"
+      ],
+      "variants": [
+        {
+          "when": "Day one to three",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status",
+              "n": "Status, add, commit, and log. Nothing else. Get comfortable making and reading commits before anything can go wrong."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Day four to seven",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c <name>",
+              "n": "Branching, pushing, and pull requests. Add reflog last, as the safety net that makes experimentation safe."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "learn-git-effectively",
+        "daily-git-routine",
+        "practice-sandbox"
+      ]
+    },
+    {
+      "id": "what-to-do-before-vacation",
+      "q": "Leave my work in a safe state before time off",
+      "aka": [
+        "before annual leave git",
+        "hand over unfinished work",
+        "going away checklist"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push -u origin HEAD",
+              "n": "Push every branch, even unfinished ones. Nothing useful should exist only on your machine while you are away."
+            },
+            {
+              "c": "gh pr create --draft",
+              "n": "Open drafts with a note on where you got to, so a colleague can pick it up without archaeology."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "protect-against-lost-work",
+        "share-a-branch-privately",
+        "handover-project"
+      ]
+    },
+    {
+      "id": "catch-up-after-time-off",
+      "q": "Catch up after two weeks away",
+      "aka": [
+        "back from leave",
+        "what did i miss",
+        "returning to a project"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --all --prune && git log --oneline --since=\"2 weeks ago\" --all",
+              "n": "Everything that landed, across branches, in one list."
+            },
+            {
+              "c": "gh pr list --state merged --limit 30",
+              "n": "Merged pull requests read better than raw commits, and their descriptions explain intent."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "see-changes-since-i-last-looked",
+        "repo-activity-summary",
+        "local-branch-out-of-sync"
+      ]
+    },
+    {
+      "id": "when-to-ask-for-help",
+      "q": "When to stop fighting Git and ask",
+      "aka": [
+        "stuck with git",
+        "when to give up on a git problem",
+        "ask for help git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash push -u && git status",
+              "n": "Before asking, freeze the state so nothing changes while you explain it. Half of Git problems are solved by describing them precisely."
+            },
+            {
+              "c": "git clone <url> ../fresh",
+              "n": "When a repository is genuinely tangled and the work is pushed, a fresh clone costs minutes and beats an hour of surgery."
+            }
+          ],
+          "undo": "git stash pop"
+        }
+      ],
+      "seealso": [
+        "fix-mistake-quickly",
+        "recover-anything",
+        "why-did-git-do-that"
+      ]
+    },
+    {
+      "id": "repo-for-a-hackathon",
+      "q": "Set up a repository for a hackathon",
+      "aka": [
+        "hackathon git setup",
+        "fast team repo",
+        "weekend project repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --public --clone",
+              "n": "Skip ceremony: no rulesets, no required reviews. Everyone pushes to main and communicates out loud."
+            },
+            {
+              "c": "git pull --rebase",
+              "n": "The one discipline worth keeping is pulling before pushing, which prevents the classic hackathon force-push disaster."
+            }
+          ],
+          "undo": "Add protection later if the project survives"
+        }
+      ],
+      "seealso": [
+        "school-project-git",
+        "solo-workflow",
+        "repo-first-hour"
+      ]
+    },
+    {
+      "id": "convince-team-to-use-git",
+      "q": "Move a team off shared folders onto Git",
+      "aka": [
+        "team not using version control",
+        "migrate from zip files",
+        "persuade team to adopt git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init && git add . && git commit -m \"Import current state\"",
+              "n": "Start with the code as it is today. Nobody adopts a tool while also being told their history was wrong."
+            },
+            {
+              "c": "gh repo create <name> --private --source . --push",
+              "n": "Then teach the smallest loop that works: pull, edit, commit, push. Branches and reviews come once the habit exists."
+            }
+          ],
+          "undo": "The folder keeps working exactly as before"
+        }
+      ],
+      "seealso": [
+        "teach-git-to-class",
+        "upload-existing-project",
+        "why-version-control"
+      ]
+    },
+    {
+      "id": "what-good-history-looks-like",
+      "q": "What a good commit history looks like",
+      "aka": [
+        "good git history example",
+        "readable history",
+        "history quality"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline -20",
+              "n": "Each line should say what changed and why it was needed. If a stranger cannot follow the story, the history is decoration rather than documentation."
+            },
+            {
+              "c": "git bisect start",
+              "n": "The practical test: can you bisect it. That requires every commit to build and to contain one idea."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "commit-frequency",
+        "keep-history-clean-solo"
+      ]
+    },
+    {
+      "id": "repo-that-outlives-me",
+      "q": "Set a project up to outlive my involvement",
+      "aka": [
+        "project sustainability",
+        "what if i stop maintaining",
+        "future proof my repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add README.md CONTRIBUTING.md LICENSE",
+              "n": "A permissive license, documented setup, and a build anyone can run are what let others continue. Undocumented knowledge dies with your interest."
+            },
+            {
+              "c": "Settings -> Collaborators",
+              "n": "Grant a second person merge rights while you still care, and say plainly in the README what the project's status is."
+            }
+          ],
+          "undo": "Archive the repository if nobody takes it on"
+        }
+      ],
+      "seealso": [
+        "multiple-maintainers",
+        "archive-repo",
+        "handover-project"
+      ]
+    },
+    {
+      "id": "minimal-git-for-scripts",
+      "q": "Use Git safely inside a script",
+      "aka": [
+        "git in bash script",
+        "automate git commands",
+        "scripting with git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-parse --is-inside-work-tree",
+              "n": "Guard first, so the script never operates on the wrong folder."
+            },
+            {
+              "c": "git -c advice.detachedHead=false switch --detach <hash>",
+              "n": "Silence interactive advice, use plumbing output like --porcelain, and never assume a branch name."
+            }
+          ],
+          "undo": "Depends on the script"
+        }
+      ],
+      "seealso": [
+        "plumbing-vs-porcelain",
+        "inside-repo",
+        "one-off-alias"
+      ]
+    },
+    {
+      "id": "honest-readme-badges",
+      "q": "Keep badges honest",
+      "aka": [
+        "badge shows passing but broken",
+        "misleading badges",
+        "stale build badge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg?branch=main)",
+              "n": "Pin the branch, or the badge reports whatever ran last, including a branch nobody uses."
+            },
+            {
+              "c": "gh run list --workflow ci.yml --limit 1",
+              "n": "A badge that never goes red is usually measuring nothing. Check what the workflow actually asserts."
+            }
+          ],
+          "undo": "Remove the badge"
+        }
+      ],
+      "seealso": [
+        "readme-badges",
+        "github-status-checks-required",
+        "add-tests-to-old-project"
+      ]
+    },
+    {
+      "id": "decide-repo-visibility",
+      "q": "Public or private for a new project",
+      "aka": [
+        "should my repo be public",
+        "open source or private",
+        "visibility decision"
+      ],
+      "variants": [
+        {
+          "when": "Start private",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --private",
+              "n": "Private costs nothing and can be opened later. Going the other way loses stars, forks, and any secret already published."
+            }
+          ],
+          "undo": "Change visibility when ready"
+        },
+        {
+          "when": "Start public",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <name> --public --license mit",
+              "n": "When the work is meant to be found, cited, or contributed to. Add the license from the first commit or nobody may legally use it."
+            }
+          ],
+          "undo": "Going private later drops stars and detaches forks"
+        }
+      ],
+      "seealso": [
+        "make-repo-private",
+        "clean-history-before-public",
+        "add-license"
+      ]
+    },
+    {
+      "id": "stop-force-push-habit",
+      "q": "Break the habit of force pushing",
+      "aka": [
+        "i force push too much",
+        "force push reflex",
+        "stop rewriting history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global alias.pushf \"push --force-with-lease --force-if-includes\"",
+              "n": "If you must force, make the safe form the easy one, so the dangerous form takes deliberate effort."
+            },
+            {
+              "c": "git revert <hash>",
+              "n": "On anything shared, the honest fix is a new commit. Force pushing is for your own unpublished branches and almost nothing else."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "check-before-force-push",
+        "force-push-safely",
+        "shared-branch-etiquette"
+      ]
+    },
+    {
+      "id": "see-everything-i-did-today",
+      "q": "Reconstruct everything I did today",
+      "aka": [
+        "what did i do today git",
+        "my day in commits",
+        "recover my train of thought"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog --date=relative | head -40",
+              "n": "Every checkout, commit, rebase, and reset in order, including work on branches you have since left."
+            },
+            {
+              "c": "git log --all --since=midnight --author=\"$(git config user.name)\" --oneline",
+              "n": "The committed subset, across every branch, for a standup or a timesheet."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "standup-log",
+        "what-is-reflog",
+        "repo-activity-summary"
+      ]
+    },
+    {
+      "id": "pick-what-to-review-first",
+      "q": "Decide which pull requests to review first",
+      "aka": [
+        "review queue priority",
+        "which pr to review",
+        "reviewer triage"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh search prs --review-requested=@me --state open --sort created --order asc",
+              "n": "Oldest first stops anyone being blocked for days. Small pull requests before large ones keeps the queue moving."
+            },
+            {
+              "c": "gh pr list --search \"is:open draft:false\"",
+              "n": "Skip drafts: they are not asking for your time yet."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "my-prs-everywhere",
+        "review-pr",
+        "pull-request-size"
+      ]
+    },
+    {
+      "id": "what-breaks-when-renaming-default",
+      "q": "What breaks when I rename the default branch",
+      "aka": [
+        "rename master to main consequences",
+        "what happens when renaming default branch",
+        "risks of renaming main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Branches -> Rename",
+              "n": "GitHub retargets open pull requests and redirects most links. What it cannot fix is anything outside the repository."
+            },
+            {
+              "c": "git branch -m master main && git fetch --prune",
+              "n": "Then update CI configuration, deploy hooks, badge URLs, submodule branches, and every clone. Those are what actually break."
+            }
+          ],
+          "undo": "Rename back and repeat the updates"
+        }
+      ],
+      "seealso": [
+        "rename-master-to-main",
+        "default-branch",
+        "what-does-origin-head-mean"
+      ]
     }
   ]
 }
