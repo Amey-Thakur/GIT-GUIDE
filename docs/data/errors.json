@@ -114,7 +114,16 @@
       "id": "fetch-first",
       "msg": "! [rejected] main -> main (fetch first)",
       "why": "Same cause as non-fast-forward: someone pushed before you.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git pull --rebase",
+          "n": "Bring their commits down and replay yours on top."
+        },
+        {
+          "c": "git push",
+          "n": "The push succeeds once your branch contains what the remote has."
+        }
+      ],
       "intent": "force-push-safely",
       "seealso": []
     },
@@ -162,7 +171,20 @@
       "id": "merge-conflict-marker",
       "msg": "CONFLICT (content): Merge conflict in <file>",
       "why": "Both sides changed the same lines; Git needs a human decision.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Lists every file waiting under Unmerged paths."
+        },
+        {
+          "c": "git add <file>",
+          "n": "Edit each file to its final form, delete the markers, then stage it."
+        },
+        {
+          "c": "git commit",
+          "n": "Completes the merge. During a rebase, run git rebase --continue instead."
+        }
+      ],
       "intent": "merge-conflict",
       "seealso": []
     },
@@ -203,7 +225,16 @@
       "id": "detached-head-msg",
       "msg": "You are in 'detached HEAD' state.",
       "why": "Not an error. You checked out a commit or tag directly, so you stand on a snapshot instead of a branch.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git switch -c <name>",
+          "n": "Keep any commits made here by giving them a branch."
+        },
+        {
+          "c": "git switch -",
+          "n": "Or return to where you were; nothing has been changed."
+        }
+      ],
       "intent": "detached-head",
       "seealso": []
     },
@@ -231,7 +262,16 @@
       "id": "cannot-pull-unstaged",
       "msg": "error: cannot pull with rebase: You have unstaged changes",
       "why": "A rebase must start from a clean tree, and yours has edits.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git pull --rebase --autostash",
+          "n": "Shelves your edits, rebases, and restores them in one step."
+        },
+        {
+          "c": "git config --global rebase.autoStash true",
+          "n": "Makes that the default so the error stops recurring."
+        }
+      ],
       "intent": "autostash",
       "seealso": []
     },
@@ -288,7 +328,16 @@
       "id": "gh001-large-files",
       "msg": "remote: error: GH001: Large files detected.",
       "why": "GitHub refuses files over 100 MB in normal Git storage.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git lfs migrate import --include=\"<pattern>\"",
+          "n": "Moves the offending files to LFS across history."
+        },
+        {
+          "c": "git filter-repo --path <file> --invert-paths",
+          "n": "Or remove them from history entirely, then force-push."
+        }
+      ],
       "intent": "big-files-where",
       "seealso": []
     },
@@ -326,7 +375,16 @@
       "id": "lf-crlf-warning",
       "msg": "warning: LF will be replaced by CRLF the next time Git touches it",
       "why": "Windows line endings meeting Unix line endings. Harmless, but configure it once and it goes quiet.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "printf '* text=auto\\n' >> .gitattributes",
+          "n": "A committed policy beats per-developer settings."
+        },
+        {
+          "c": "git add --renormalize .",
+          "n": "Applies it to files already in the repository, in one commit."
+        }
+      ],
       "intent": "line-endings",
       "seealso": []
     },
@@ -616,7 +674,16 @@
       "id": "unmerged-files",
       "msg": "error: Pulling is not possible because you have unmerged files.",
       "why": "An earlier merge stopped at conflicts and is still waiting for you to finish it.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Shows which paths are still unresolved."
+        },
+        {
+          "c": "git add <file> && git commit",
+          "n": "Finish the merge, or git merge --abort to back out and pull afresh."
+        }
+      ],
       "intent": "merge-conflict",
       "seealso": []
     },
@@ -717,7 +784,16 @@
       "id": "not-on-branch-pull",
       "msg": "You are not currently on a branch.",
       "why": "Pull needs a branch to update, and you stand on a detached commit.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git switch <branch>",
+          "n": "Stand on a branch; pull needs one to update."
+        },
+        {
+          "c": "git switch -c <name>",
+          "n": "If you made commits while detached, name them first or the reflog is all that holds them."
+        }
+      ],
       "intent": "detached-head",
       "seealso": []
     },
@@ -725,7 +801,16 @@
       "id": "failed-to-push-some-refs",
       "msg": "error: failed to push some refs to '<url>'",
       "why": "The wrapper line under most push rejections; the real reason is the line above it, usually non-fast-forward.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git push 2>&1 | head -5",
+          "n": "Read the line above this one: it carries the actual reason."
+        },
+        {
+          "c": "git pull --rebase && git push",
+          "n": "The commonest cause by far is that the remote moved on."
+        }
+      ],
       "intent": "force-push-safely",
       "seealso": []
     },
@@ -886,7 +971,16 @@
       "id": "resolve-index-first",
       "msg": "error: You need to resolve your current index first",
       "why": "A merge stopped at conflicts, and Git will not move on until you finish or abandon it.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Names the unresolved paths blocking everything else."
+        },
+        {
+          "c": "git merge --abort",
+          "n": "Back out entirely, or stage the resolutions and commit to finish."
+        }
+      ],
       "intent": "merge-conflict",
       "seealso": []
     },
@@ -1426,7 +1520,16 @@
       "id": "lf-would-be-replaced",
       "msg": "fatal: LF would be replaced by CRLF in <file>",
       "why": "The strict form of the line-ending check: safecrlf is set to refuse converting changes instead of warning.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git config core.safecrlf warn",
+          "n": "Warn instead of refusing the operation."
+        },
+        {
+          "c": "printf '* text=auto\\n' >> .gitattributes",
+          "n": "Set the policy in the repository so the question stops arising."
+        }
+      ],
       "intent": "line-endings",
       "seealso": []
     },
@@ -1454,7 +1557,16 @@
       "id": "unsafe-repository",
       "msg": "fatal: unsafe repository ('<path>' is owned by someone else)",
       "why": "The older phrasing of the ownership guard, same cause as dubious ownership.",
-      "fix": [],
+      "fix": [
+        {
+          "c": "git config --global --add safe.directory <path>",
+          "n": "Marks the folder as trusted for your user."
+        },
+        {
+          "c": "takeown /f <path> /r",
+          "n": "On Windows, taking ownership back is the durable fix when the files are genuinely yours."
+        }
+      ],
       "intent": "protect-work-on-a-shared-laptop",
       "seealso": []
     },
