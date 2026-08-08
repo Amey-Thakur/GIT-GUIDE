@@ -6196,7 +6196,8 @@
       "aka": [
         "change file in browser",
         "edit readme on github",
-        "web editor github"
+        "web editor github",
+        "rename file on github"
       ],
       "variants": [
         {
@@ -6679,7 +6680,8 @@
       "aka": [
         "which gitignore rule",
         "file not added ignored",
-        "debug gitignore"
+        "debug gitignore",
+        "list all ignored files"
       ],
       "variants": [
         {
@@ -7683,7 +7685,8 @@
         "git blame",
         "who wrote this line",
         "annotate file",
-        "when was this line changed"
+        "when was this line changed",
+        "blame before a specific commit"
       ],
       "variants": [
         {
@@ -8478,7 +8481,8 @@
       "aka": [
         "approve pr",
         "request changes",
-        "code review on github"
+        "code review on github",
+        "see pr diff in terminal"
       ],
       "variants": [
         {
@@ -9469,7 +9473,8 @@
         "write bug report",
         "file an issue",
         "assign issue",
-        "pin an issue"
+        "pin an issue",
+        "close as not planned"
       ],
       "variants": [
         {
@@ -9793,7 +9798,8 @@
       "aka": [
         "add topics",
         "repo tags on github",
-        "improve repo discovery"
+        "improve repo discovery",
+        "repository description"
       ],
       "variants": [
         {
@@ -11825,6 +11831,525 @@
       "seealso": [
         "github-actions-start",
         "workflow-permissions"
+      ]
+    },
+    {
+      "id": "branch-from-commit",
+      "q": "Create a branch from a specific commit",
+      "aka": [
+        "branch off old commit",
+        "start branch at hash",
+        "branch from tag"
+      ],
+      "variants": [
+        {
+          "when": "Create and switch",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c <name> <hash>",
+              "n": "The new branch starts at that commit. A tag name works in place of the hash."
+            }
+          ],
+          "undo": "git switch - then git branch -D <name>"
+        },
+        {
+          "when": "Create without switching",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch <name> <hash>",
+              "n": "The label appears; you stay where you are."
+            }
+          ],
+          "undo": "git branch -D <name>"
+        }
+      ],
+      "seealso": [
+        "create-branch",
+        "checkout-tag"
+      ]
+    },
+    {
+      "id": "switch-with-changes",
+      "q": "Switch branches without losing uncommitted work",
+      "aka": [
+        "change branch keep changes",
+        "checkout with modified files",
+        "take changes to another branch"
+      ],
+      "variants": [
+        {
+          "when": "Usually it just works",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch <branch>",
+              "n": "Uncommitted changes ride along untouched when the branches do not disagree about those files. Git refuses, rather than destroys, when they do."
+            }
+          ],
+          "undo": "git switch - returns with the same changes"
+        },
+        {
+          "when": "Git refused",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash push -m \"crossing branches\"",
+              "n": "Shelve, switch, git stash pop on the other side."
+            }
+          ],
+          "undo": "git stash pop restores the shelf"
+        }
+      ],
+      "seealso": [
+        "stash",
+        "move-changes-to-branch"
+      ]
+    },
+    {
+      "id": "status-codes",
+      "q": "Read the short status codes",
+      "aka": [
+        "git status -s meaning",
+        "what does m and d mean",
+        "two columns in status"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status -s",
+              "n": "Two columns per file: staged state, then working-tree state. M modified, A added, D deleted, R renamed, ?? untracked, UU conflicted. MM means modified, staged, then modified again."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-changed",
+        "what-is-staging"
+      ]
+    },
+    {
+      "id": "clone-into-folder",
+      "q": "Clone into a folder with a different name",
+      "aka": [
+        "clone to specific directory",
+        "rename repo on clone",
+        "clone here"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url> <folder>",
+              "n": "The last argument names the folder. A dot clones into the current directory if it is empty."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "clone-repo",
+        "clone-into-existing"
+      ]
+    },
+    {
+      "id": "update-many-repos",
+      "q": "Pull every repository I have cloned",
+      "aka": [
+        "update all repos at once",
+        "pull all projects",
+        "bulk git pull"
+      ],
+      "variants": [
+        {
+          "when": "Everything under one folder",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "for d in */.git; do git -C \"${d%/.git}\" pull --ff-only; done",
+              "n": "--ff-only skips anything that would need a merge, so nothing surprising happens unattended. Run it in Git Bash on Windows."
+            }
+          ],
+          "undo": "Per repo: git reset --hard HEAD@{1} via the reflog"
+        }
+      ],
+      "seealso": [
+        "pull-vs-fetch",
+        "fetch-all"
+      ]
+    },
+    {
+      "id": "branch-in-prompt",
+      "q": "Show the current branch in my terminal prompt",
+      "aka": [
+        "branch in shell prompt",
+        "ps1 git branch",
+        "prompt shows repo state"
+      ],
+      "variants": [
+        {
+          "when": "Windows PowerShell",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Install-Module posh-git -Scope CurrentUser",
+              "n": "Then Add-PoshGitToProfile once. Branch and status appear in every repo."
+            }
+          ],
+          "undo": "Uninstall-Module posh-git"
+        },
+        {
+          "when": "Bash and zsh",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "source ~/git-prompt.sh",
+              "n": "Git ships git-prompt.sh; add \\$(__git_ps1) to PS1 in your shell profile. Frameworks like oh-my-zsh and starship do this out of the box."
+            }
+          ],
+          "undo": "Remove the lines from the profile"
+        }
+      ],
+      "seealso": [
+        "git-bash",
+        "tab-completion"
+      ]
+    },
+    {
+      "id": "tab-completion",
+      "q": "Tab-complete git commands and branch names",
+      "aka": [
+        "git autocomplete",
+        "completion for branches",
+        "git tab key"
+      ],
+      "variants": [
+        {
+          "when": "Usually already there",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git chec<Tab>",
+              "n": "Git Bash, most Linux shells, and posh-git complete commands, branches, and remotes out of the box. If nothing happens, the completion script is not loaded."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Load it in bash",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "source /usr/share/bash-completion/completions/git",
+              "n": "Add to ~/.bashrc. On macOS with Homebrew: brew install bash-completion."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "branch-in-prompt",
+        "git-aliases"
+      ]
+    },
+    {
+      "id": "plumbing-vs-porcelain",
+      "q": "Which git commands are safe to script against",
+      "aka": [
+        "plumbing vs porcelain",
+        "stable output for scripts",
+        "parse git output"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status --porcelain",
+              "n": "Porcelain commands like status and log format output for humans and may change between versions. For scripts, use the stable forms: status --porcelain, rev-parse, for-each-ref, ls-files."
+            },
+            {
+              "c": "git for-each-ref --format=\"%(refname:short)\" refs/heads",
+              "n": "Branch names with no decoration, guaranteed parseable."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "inside-repo",
+        "repo-root"
+      ]
+    },
+    {
+      "id": "dangling-objects",
+      "q": "What dangling commits and blobs are",
+      "aka": [
+        "dangling commit fsck",
+        "unreachable objects warning",
+        "git fsck output"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --dangling",
+              "n": "Objects no branch or tag can reach: leftovers of resets, amends, and dropped stashes. Harmless; gc prunes them once the reflog lets go. Right after data loss, they are treasure: inspect one with git show."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-reflog",
+        "recover-lost-commit",
+        "git-maintenance"
+      ]
+    },
+    {
+      "id": "suggest-changes",
+      "q": "Suggest an exact edit in a review",
+      "aka": [
+        "suggested changes",
+        "suggestion block",
+        "commit reviewer suggestion"
+      ],
+      "variants": [
+        {
+          "when": "As the reviewer",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "```suggestion",
+              "n": "In a review comment on a line, the suggestion button, or this fence typed by hand, proposes replacement text the author can apply with one click."
+            }
+          ],
+          "undo": "Delete the comment"
+        },
+        {
+          "when": "As the author",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Commit suggestion",
+              "n": "Applies it as a commit, credited to both of you. Batch several with Add to batch to keep history tidy."
+            }
+          ],
+          "undo": "git revert the suggestion commit"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "co-authors"
+      ]
+    },
+    {
+      "id": "resolve-conflicts-online",
+      "q": "Resolve pull request conflicts in the browser",
+      "aka": [
+        "resolve conflicts button",
+        "conflict editor github",
+        "fix conflicts without terminal"
+      ],
+      "variants": [
+        {
+          "when": "Small text conflicts",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Resolve conflicts button on the pull request",
+              "n": "An editor with the conflict markers inline. Delete the markers, keep the right lines, Mark as resolved. It merges the base branch into yours."
+            }
+          ],
+          "undo": "git reset --hard HEAD~1 on the branch, before pushing further work"
+        },
+        {
+          "when": "Anything bigger",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number> && git merge main",
+              "n": "Real conflicts deserve a real editor and a test run before pushing the resolution."
+            }
+          ],
+          "undo": "git merge --abort"
+        }
+      ],
+      "seealso": [
+        "merge-conflict",
+        "mergetool-vscode"
+      ]
+    },
+    {
+      "id": "co-authors",
+      "q": "Credit more than one author on a commit",
+      "aka": [
+        "co-authored-by",
+        "pair programming commit",
+        "shared commit credit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Co-authored-by: Name <email>",
+              "n": "On its own line at the end of the commit message, after a blank line. GitHub shows both avatars and counts the contribution for both, if the email matches their account."
+            }
+          ],
+          "undo": "git commit --amend to edit the message before pushing"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "github-markdown",
+      "q": "Use the Markdown GitHub actually renders",
+      "aka": [
+        "github flavored markdown",
+        "mermaid diagrams readme",
+        "collapsible section markdown"
+      ],
+      "variants": [
+        {
+          "when": "Beyond the basics",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "- [ ] task list item",
+              "n": "Checkboxes that toggle live in issues and pull requests."
+            },
+            {
+              "c": "> [!WARNING]",
+              "n": "Alert blocks: NOTE, TIP, IMPORTANT, WARNING, CAUTION render as colored callouts."
+            },
+            {
+              "c": "<details><summary>More</summary></details>",
+              "n": "Collapsible sections keep long READMEs scannable."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Diagrams from text",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "```mermaid",
+              "n": "Flowcharts, sequence diagrams, and Gantt charts rendered from a fenced block. No image files to keep in sync."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-images",
+        "readme-badges"
+      ]
+    },
+    {
+      "id": "community-health-defaults",
+      "q": "Share templates and policies across all my repositories",
+      "aka": [
+        "default community health files",
+        ".github repository",
+        "org wide templates"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Create a repository named .github",
+              "n": "CONTRIBUTING.md, issue templates, FUNDING.yml, and CODE_OF_CONDUCT.md placed there apply to every repository of yours that lacks its own. Fix once, inherited everywhere."
+            }
+          ],
+          "undo": "Any repository overrides by adding its own file"
+        }
+      ],
+      "seealso": [
+        "contributing-file",
+        "issue-templates",
+        "sponsors"
+      ]
+    },
+    {
+      "id": "upload-via-web",
+      "q": "Add or delete files without touching a terminal",
+      "aka": [
+        "upload files to github",
+        "drag and drop repo",
+        "delete file on github"
+      ],
+      "variants": [
+        {
+          "when": "Add",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Add file -> Upload files",
+              "n": "Drag files or folders onto the page; GitHub makes the commit. Up to 100 files at a time, 25 MB each."
+            }
+          ],
+          "undo": "Revert the commit from the history page"
+        },
+        {
+          "when": "Delete",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Open the file -> trash icon",
+              "n": "The ... menu also deletes whole directories. Every action is an ordinary commit, fully undoable."
+            }
+          ],
+          "undo": "Revert the commit from the history page"
+        }
+      ],
+      "seealso": [
+        "edit-on-github",
+        "upload-existing-project"
+      ]
+    },
+    {
+      "id": "pr-checklist",
+      "q": "Open pull requests that get merged quickly",
+      "aka": [
+        "good pull request",
+        "pr best practices",
+        "why is my pr ignored"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr create --fill",
+              "n": "Small diff, one purpose, a title that states the change, a body that states the why, tests green before asking for eyes. Reviewers merge what they can hold in their head."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "what-is-a-pr",
+        "commit-frequency",
+        "review-pr"
       ]
     }
   ]
