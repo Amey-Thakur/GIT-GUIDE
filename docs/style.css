@@ -204,7 +204,6 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
 .stats {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 0.4rem 1.5rem;
   color: var(--muted);
   font-size: 0.95rem;
@@ -212,6 +211,8 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
 }
 
 .stats strong { color: var(--ink); }
+
+.chip.active { border-color: var(--accent); color: var(--accent); }
 
 .chip.lucky { border-style: dashed; color: var(--muted); }
 .chip.lucky:hover { color: var(--accent); }
@@ -517,6 +518,7 @@ a.footer-tag:hover { color: var(--accent); text-decoration: none; }
 .ztitle { font-size: 15px; font-weight: 600; fill: var(--ink); }
 .zsub { font-size: 12px; fill: var(--muted); }
 .zone rect { stroke: var(--line); stroke-width: 1.5; transition: stroke 0.25s; }
+.zone, .arrow { cursor: pointer; }
 .zone.on rect { stroke: var(--accent); }
 .zone.on .ztitle { fill: var(--accent); }
 .zfile { fill: var(--code-bg); stroke: var(--line); }

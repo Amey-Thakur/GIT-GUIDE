@@ -15,6 +15,7 @@
 
   function initStepper(cfg) {
     var i = 0;
+    var api = null;
     var prev = document.getElementById(cfg.prefix + "-prev");
     var next = document.getElementById(cfg.prefix + "-next");
     var dots = document.getElementById(cfg.prefix + "-dots");
@@ -54,6 +55,7 @@
     prev.addEventListener("click", function () { if (i > 0) { i -= 1; apply(); } });
     next.addEventListener("click", function () { if (i < cfg.steps.length - 1) { i += 1; apply(); } });
     apply();
+    api = { goto: function (n) { if (n >= 0 && n < cfg.steps.length) { i = n; apply(); } } };
 
     if (!first) {
       first = cfg.prefix;
@@ -65,6 +67,7 @@
         if (btn && !btn.disabled) btn.click();
       });
     }
+    return api;
   }
 
   window.GGStepper = initStepper;

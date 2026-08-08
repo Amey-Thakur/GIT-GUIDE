@@ -43,6 +43,14 @@
     ]
   };
 
-  window.GGStepper(D1);
+  var d1 = window.GGStepper(D1);
   window.GGStepper(D2);
+
+  /* Click any zone or arrow to jump straight to its step. */
+  var JUMP = { "z-wt": 0, "a-add": 1, "z-stage": 1, "a-commit": 2, "z-local": 2,
+               "a-push": 3, "z-remote": 3, "a-fetch": 4, "a-merge": 5, "a-restore": 6 };
+  Object.keys(JUMP).forEach(function (id) {
+    var e = document.getElementById(id);
+    if (e && d1) e.addEventListener("click", function () { d1.goto(JUMP[id]); });
+  });
 })();

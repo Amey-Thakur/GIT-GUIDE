@@ -26,6 +26,14 @@
     });
   });
 
+  document.querySelectorAll(".chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      input.value = chip.textContent;
+      input.dispatchEvent(new Event("input"));
+      input.focus();
+    });
+  });
+
   document.addEventListener("keydown", function (e) {
     if (e.key === "/" && document.activeElement !== input) {
       e.preventDefault();
