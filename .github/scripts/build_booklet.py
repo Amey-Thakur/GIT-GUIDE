@@ -35,10 +35,14 @@ GH = ("M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-
     "222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z")
 
 
+DANGER_WORD = {"safe": "Safe", "history": "Rewrites history", "destructive": "Can lose work"}
+
+
 def data():
     sheet = json.loads((DOCS / "data" / "cheatsheet.json").read_text(encoding="utf-8"))["sections"]
     errs = json.loads((DOCS / "data" / "errors.json").read_text(encoding="utf-8"))["errors"]
-    return sheet, errs
+    ints = json.loads((DOCS / "data" / "intents.json").read_text(encoding="utf-8"))["intents"]
+    return sheet, errs, ints
 
 
 def logo(size):
@@ -95,9 +99,9 @@ def foreword():
     return page('''
 <div class="prose">
 <h2>A note from Amey</h2>
-<p>Git carries nearly every codebase on earth, and almost everyone who uses it learned it by accident: a command from a teammate, a midnight search, a ritual repeated without understanding.</p>
+<p>Git carries nearly every codebase on earth, and almost everyone learned it by accident: a command from a teammate, a midnight search, a ritual repeated without understanding.</p>
 <p>Git Guide exists to end that way of learning. Ask in plain language, or paste the error Git printed, and get the exact commands with the two things most resources never give: how dangerous each one is, and how to take it back.</p>
-<p>These pages hold the whole of it: the model that replaces memorizing, every command section, every error decoded, and the chapters on GitHub and on how teams work. The living version, searchable and always current, waits at <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a>.</p>
+<p>These pages are the portable half: the model, the full command reference, an undo for every situation, and the errors you will meet. The other half is a search box, where a thousand answers and five hundred decoded errors wait at <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a>.</p>
 <p class="sign">Amey</p>
 </div>''', "Foreword")
 
@@ -334,12 +338,149 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .bignote {{ font-size: 12.5pt; }}
 .legend {{ display: flex; align-items: center; gap: 6mm; margin: 0 0 9mm; }}
 .legend span {{ border: 0.55mm solid; border-radius: 2mm; padding: 2.2mm 5mm; font-weight: 700; font-size: 11pt; }}
+
+.undos {{ display: grid; gap: 2.2mm; margin-top: 3mm; }}
+.undo {{ display: grid; grid-template-columns: 52mm 1fr 26mm; align-items: center; gap: 4mm;
+        border-bottom: 0.3mm solid {LINE}; padding-bottom: 2.2mm; }}
+.undo strong {{ font-size: 11pt; }}
+.undo code {{ font-family: Consolas, monospace; font-size: 10.2pt; color: {ACCENT}; overflow-wrap: anywhere; }}
+.undo em {{ font-style: normal; font-size: 9pt; text-align: right; }}
+.d-safe {{ color: #3fb950; }}
+.d-history {{ color: #d29922; }}
+.d-destructive {{ color: {DANGER}; }}
+.errs b {{ display: block; font-family: Consolas, monospace; font-size: 9.6pt; color: {ACCENT};
+          font-weight: 400; margin-top: 1mm; overflow-wrap: anywhere; }}
+.safeties {{ display: grid; gap: 4mm; margin-top: 4mm; }}
+.safety {{ border-left: 1.2mm solid; padding-left: 5mm; }}
+.safety strong {{ display: block; font-size: 13pt; }}
+.safety span {{ display: block; color: {MUTED}; font-size: 10.5pt; margin: 1mm 0 1.5mm; }}
+.safety code {{ font-family: Consolas, monospace; font-size: 10pt; color: {INK}; }}
 .legend em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 11pt; }}
 '''
 
 
+UNDO_PICKS = [
+    ("undo-last-commit", "Committed too early"),
+    ("undo-git-add", "Staged the wrong file"),
+    ("discard-changes", "Want the file back as committed"),
+    ("add-to-last-commit", "Forgot a file in the last commit"),
+    ("edit-commit-message", "Wrong commit message"),
+    ("undo-amend", "Amended and regretted it"),
+    ("undo-merge", "Merged the wrong branch"),
+    ("undo-rebase", "Rebase went wrong"),
+    ("undo-push", "Pushed something you should not have"),
+    ("undo-pull", "Pull brought in a mess"),
+    ("revert-to-commit", "Need the project back at an old commit"),
+    ("restore-file", "One file should go back in time"),
+    ("recover-lost-commit", "A commit vanished"),
+    ("recover-deleted-branch", "Deleted a branch by mistake"),
+    ("move-commits-to-branch", "Committed on the wrong branch"),
+    ("remove-file-from-last-commit", "A file must leave the last commit"),
+    ("stash", "Need a clean tree for five minutes"),
+    ("undo-git-init", "Made a repository by accident"),
+]
+
+ERROR_PICKS = [
+    "not-a-git-repository", "publickey-denied", "authentication-failed",
+    "non-fast-forward-rejected", "fetch-first", "merge-conflict-marker",
+    "index-lock-exists", "detached-head-msg", "diverged-msg", "src-refspec",
+    "unrelated-histories", "dubious-ownership-msg", "file-size-limit-exact",
+    "could-not-read-username", "no-upstream", "nothing-to-commit",
+    "cannot-pull-unstaged", "remote-hung-up", "repository-not-found",
+    "host-key-verification", "lf-crlf-warning", "filename-too-long-msg",
+    "everything-up-to-date-msg", "resolve-index-first",
+]
+
+
+def undo_pages(intents):
+    by = {i["id"]: i for i in intents}
+    rows = []
+    for iid, situation in UNDO_PICKS:
+        i = by.get(iid)
+        if not i:
+            continue
+        v = i["variants"][0]
+        rows.append((situation, v["cmds"][0]["c"], v["danger"]))
+    out = []
+    per = 9
+    for n in range(0, len(rows), per):
+        items = "".join(
+            f'<div class="undo"><strong>{escape(sit)}</strong>'
+            f'<code>{escape(cmd)}</code>'
+            f'<em class="d-{dang}">{DANGER_WORD[dang]}</em></div>'
+            for sit, cmd, dang in rows[n:n + per])
+        head = ('<h2>Undo anything</h2><p class="note">The situation, the command, and how much it costs. '
+                'Green is safe, amber rewrites history, red can lose work.</p>') if n == 0 else '<h2>Undo anything, continued</h2>'
+        out.append(page(f'{head}<div class="undos">{items}</div>', "Undo"))
+    return out
+
+
+def recovery_page():
+    steps = [
+        ("1", "git status", "Name the state you are in. Half of all panics end here."),
+        ("2", "git stash push -u", "Freeze everything before trying anything, so no fix can destroy more."),
+        ("3", "git reflog", "Every position HEAD has held, kept about ninety days. Anything ever committed is here."),
+        ("4", "git branch rescue <hash>", "Found it? Name it immediately. A named commit cannot be garbage collected."),
+        ("5", "git fsck --lost-found", "For work that was staged but never committed: it survives as a dangling object."),
+        ("6", "Editor local history", "Never staged, never committed? Git never saw it. Your editor may have."),
+    ]
+    items = "".join(
+        f'<div class="step"><b>{n}</b><div><strong>{escape(c)}</strong><span>{escape(d)}</span></div></div>'
+        for n, c, d in steps)
+    return page(f'<h2>I lost work: the order to try</h2>'
+                f'<p class="note">Work down this list. Stop at the step that finds it.</p>'
+                f'<div class="steps">{items}</div>'
+                f'<p class="rules"><b>The habit that makes this unnecessary.</b> Commit early and often, and push daily. '
+                f'The reflog protects anything committed; nothing protects work that was never committed.</p>', "Recovery")
+
+
+def essential_errors(errs):
+    by = {e["id"]: e for e in errs}
+    picks = [by[i] for i in ERROR_PICKS if i in by]
+    out = []
+    per = 8
+    for n in range(0, len(picks), per):
+        part = picks[n:n + per]
+        half = (len(part) + 1) // 2
+
+        def colerr(items):
+            return ('<div class="errs">' + "".join(
+                f'<div><code>{escape(e["msg"][:96])}</code>'
+                f'<p>{escape(e["why"])}</p>'
+                f'<b>{escape(e["fix"][0]["c"])}</b></div>' for e in items) + '</div>')
+
+        head = ('<h2>The errors you will actually meet</h2>'
+                '<p class="note">The message, the cause, the first command. '
+                'All 500 decoded errors are searchable '
+                '<a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/errors.html">on the site</a>.</p>') if n == 0 \
+            else '<h2>Errors, continued</h2>'
+        out.append(page(f'{head}<div class="cols"><div>{colerr(part[:half])}</div>'
+                        f'<div>{colerr(part[half:])}</div></div>', "Errors"))
+    return out
+
+
+def safety_page():
+    rows = [
+        ("Safe", "Nothing is lost, and most of it is reversible in a keystroke",
+         "status · log · diff · fetch · switch · stash · revert · tag"),
+        ("Rewrites history", "The content survives, but commits change identity. Fine alone, rude on a shared branch",
+         "rebase · commit --amend · reset --soft · filter-repo · push --force-with-lease"),
+        ("Can lose work", "Git may hold no copy afterwards. Rehearse first, and know the undo before you press enter",
+         "reset --hard · clean -fd · push --force · branch -D · checkout -- <file>"),
+    ]
+    items = "".join(
+        f'<div class="safety d-{k}"><strong>{escape(t)}</strong><span>{escape(d)}</span><code>{escape(c)}</code></div>'
+        for k, (t, d, c) in zip(("safe", "history", "destructive"), rows))
+    return page(f'<h2>How much does this command cost</h2>'
+                f'<p class="note">Every answer in this guide carries one of these three marks, and its own undo.</p>'
+                f'<div class="safeties">{items}</div>'
+                f'<p class="rules"><b>Two commands hold nothing back.</b> git clean deletes files Git never tracked, '
+                f'and git reset --hard discards edits that were never committed. Everything else, the reflog can usually reach.</p>',
+                "Danger")
+
+
 def main():
-    sheet, errs = data()
+    sheet, errs, ints = data()
     by = {s["title"]: s for s in sheet}
     pairs = [
         ("Setup and identity", "Start a project", "Setup"),
@@ -354,7 +495,9 @@ def main():
     pages = [cover(), foreword(), model(), graph(), start()]
     pages += [pair_page(by[a], by[b], t) for a, b, t in pairs]
     pages += [workflows(), github_page()]
-    pages += error_pages(errs)
+    pages += undo_pages(ints)
+    pages += [recovery_page(), safety_page()]
+    pages += essential_errors(errs)
     pages += [closing()]
     HTML.write_text(
         f'<!doctype html><html><head><meta charset="utf-8"><title>Git Guide</title><style>{CSS}</style></head><body>'
