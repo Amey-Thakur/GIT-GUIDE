@@ -813,6 +813,126 @@
   <p class="seealso">See also: <a href="index.html#stop-password-prompts">Stop Git asking for my password every time</a></p>
   <p class="seealso">See also: <a href="index.html#fork-vs-branch">Fork or branch, which and when</a></p>
 </article>
+<article class="result errcard" id="partial-commit-during-merge">
+  <h2><code class="errmsg">fatal: cannot do a partial commit during a merge.</code><a class="anchor" href="#partial-commit-during-merge" aria-label="Link to this error">#</a></h2>
+  <p class="note">You named specific paths while a merge is in progress. A merge commit must record the whole resolved state, not a slice of it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="not-concluded-merge">
+  <h2><code class="errmsg">fatal: You have not concluded your merge (MERGE_HEAD exists).</code><a class="anchor" href="#not-concluded-merge" aria-label="Link to this error">#</a></h2>
+  <p class="note">A previous merge stopped with conflicts and was never finished or aborted. Git will not start anything new on top of it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#abort-operation">Cancel whatever Git is in the middle of</a></p>
+</article>
+<article class="result errcard" id="entry-not-uptodate">
+  <h2><code class="errmsg">error: Entry &#x27;&lt;file&gt;&#x27; not uptodate. Cannot merge.</code><a class="anchor" href="#entry-not-uptodate" aria-label="Link to this error">#</a></h2>
+  <p class="note">That file has uncommitted edits, and the merge needs to change it. Git refuses rather than overwrite them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#overwrite-local">Force pull: make my copy exactly match the remote</a></p>
+</article>
+<article class="result errcard" id="exiting-unresolved-conflict">
+  <h2><code class="errmsg">fatal: Exiting because of an unresolved conflict.</code><a class="anchor" href="#exiting-unresolved-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">A command that needed a clean tree found conflict markers still in place from an earlier operation.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-conflict">Resolve a merge conflict</a></p>
+</article>
+<article class="result errcard" id="refname-ambiguous">
+  <h2><code class="errmsg">warning: refname &#x27;main&#x27; is ambiguous.</code><a class="anchor" href="#refname-ambiguous" aria-label="Link to this error">#</a></h2>
+  <p class="note">A branch and a tag share the same name, so Git cannot tell which one you mean.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#branch-vs-tag-choice">Should this be a branch or a tag</a></p>
+</article>
+<article class="result errcard" id="not-a-git-command">
+  <h2><code class="errmsg">git: &#x27;comit&#x27; is not a git command. See &#x27;git --help&#x27;.</code><a class="anchor" href="#not-a-git-command" aria-label="Link to this error">#</a></h2>
+  <p class="note">A typo, or a subcommand that comes from a tool you have not installed, like lfs or filter-repo.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#autocorrect">Let Git fix mistyped commands</a></p>
+</article>
+<article class="result errcard" id="protocol-not-supported">
+  <h2><code class="errmsg">fatal: protocol &#x27;https&#x27; is not supported</code><a class="anchor" href="#protocol-not-supported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The URL carries an invisible character, almost always from copying a link out of a web page or chat.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#clone-repo">Clone a repository</a></p>
+</article>
+<article class="result errcard" id="unable-find-remote-helper">
+  <h2><code class="errmsg">fatal: Unable to find remote helper for &#x27;https&#x27;</code><a class="anchor" href="#unable-find-remote-helper" aria-label="Link to this error">#</a></h2>
+  <p class="note">This Git build has no HTTPS transport, typically a minimal install or one missing its curl support.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="leaving-commits-behind">
+  <h2><code class="errmsg">Warning: you are leaving 2 commits behind, not connected to any of your branches:</code><a class="anchor" href="#leaving-commits-behind" aria-label="Link to this error">#</a></h2>
+  <p class="note">You committed while in detached HEAD and are now switching away. Those commits have no branch pointing at them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#detached-head">Fix a detached HEAD</a></p>
+</article>
+<article class="result errcard" id="needed-single-revision">
+  <h2><code class="errmsg">fatal: Needed a single revision</code><a class="anchor" href="#needed-single-revision" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git could not resolve the reference you gave, commonly a stash entry, branch, or hash that does not exist.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stash-inspect">See what is inside a stash before applying it</a></p>
+</article>
+<article class="result errcard" id="object-file-empty">
+  <h2><code class="errmsg">error: object file .git/objects/ab/cdef... is empty</code><a class="anchor" href="#object-file-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">An object was truncated, usually by a crash, a full disk, or a sync service writing inside .git.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="transport-file-not-allowed">
+  <h2><code class="errmsg">fatal: transport &#x27;file&#x27; not allowed</code><a class="anchor" href="#transport-file-not-allowed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git blocks submodules and clones from local file paths by default, a hardening change after a security advisory.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-update">Update submodules to their latest commits</a></p>
+</article>
+<article class="result errcard" id="pack-exceeds-max">
+  <h2><code class="errmsg">remote: fatal: pack exceeds maximum allowed size</code><a class="anchor" href="#pack-exceeds-max" aria-label="Link to this error">#</a></h2>
+  <p class="note">The push bundles more data than the server accepts in one go, which GitHub caps at 2 GB.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#push-large-repo">Push a big repository over HTTPS without it dying</a></p>
+</article>
+<article class="result errcard" id="out-of-memory-pack">
+  <h2><code class="errmsg">fatal: Out of memory, malloc failed (tried to allocate ... bytes)</code><a class="anchor" href="#out-of-memory-pack" aria-label="Link to this error">#</a></h2>
+  <p class="note">Packing a large repository exceeded available memory, often on a small CI runner or container.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#slow-git">Git is slow in a big repository</a></p>
+</article>
+<article class="result errcard" id="unable-create-symlink">
+  <h2><code class="errmsg">error: unable to create symlink &lt;path&gt;: Function not implemented</code><a class="anchor" href="#unable-create-symlink" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository contains symbolic links and this system will not create them, typically Windows without permission or a filesystem that lacks support.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#symlinks">How Git handles symbolic links</a></p>
+</article>
+<article class="result errcard" id="unable-rmdir">
+  <h2><code class="errmsg">warning: unable to rmdir &#x27;&lt;path&gt;&#x27;: Directory not empty</code><a class="anchor" href="#unable-rmdir" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git removed everything it tracked in that folder, but something untracked remains, most often a leftover submodule or build output.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#remove-submodule">Remove a submodule</a></p>
+</article>
+<article class="result errcard" id="lfs-not-pointers">
+  <h2><code class="errmsg">Encountered 1 file(s) that should have been pointers, but weren&#x27;t:</code><a class="anchor" href="#lfs-not-pointers" aria-label="Link to this error">#</a></h2>
+  <p class="note">Files matching an LFS rule were committed as ordinary blobs, usually because they went in before LFS was installed or tracked.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="lfs-over-quota">
+  <h2><code class="errmsg">batch response: This repository is over its data quota.</code><a class="anchor" href="#lfs-over-quota" aria-label="Link to this error">#</a></h2>
+  <p class="note">LFS storage or bandwidth for the account is exhausted. Bandwidth is consumed by every clone and fetch of LFS content, not only by uploads.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-lfs">Track large files properly (Git LFS)</a></p>
+</article>
+<article class="result errcard" id="gh-not-found-404">
+  <h2><code class="errmsg">gh: Not Found (HTTP 404)</code><a class="anchor" href="#gh-not-found-404" aria-label="Link to this error">#</a></h2>
+  <p class="note">The resource does not exist, or your token cannot see it. Private repositories return 404 rather than 403 so their existence stays hidden.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-cli-setup">Install and sign in to GitHub CLI</a></p>
+</article>
+<article class="result errcard" id="gh-token-required">
+  <h2><code class="errmsg">gh: To use GitHub CLI in a GitHub Actions workflow, set the GH_TOKEN environment variable.</code><a class="anchor" href="#gh-token-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">gh is installed on the runner but has no credentials; workflows do not inherit a login.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-in-workflows">Use gh inside a workflow</a></p>
+</article>
+<article class="result errcard" id="gh007-private-email">
+  <h2><code class="errmsg">remote: error: GH007: Your push would publish a private email address.</code><a class="anchor" href="#gh007-private-email" aria-label="Link to this error">#</a></h2>
+  <p class="note">Your commits carry a real address while your account has email privacy enabled, so GitHub blocks the push.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#private-email">Keep your email private in commits</a></p>
+</article>
+<article class="result errcard" id="actions-git-exit-128">
+  <h2><code class="errmsg">The process &#x27;/usr/bin/git&#x27; failed with exit code 128</code><a class="anchor" href="#actions-git-exit-128" aria-label="Link to this error">#</a></h2>
+  <p class="note">A Git command inside the workflow failed and Actions reports only the exit code. The cause is nearly always credentials or a missing ref.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#debug-workflows">Debug a failing workflow properly</a></p>
+</article>
+<article class="result errcard" id="actions-input-required">
+  <h2><code class="errmsg">Error: Input required and not supplied: token</code><a class="anchor" href="#actions-input-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">An action expected an input that resolved to an empty string, usually a secret that does not exist under that name.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-secrets">Give a workflow a secret without committing it</a></p>
+</article>
+<article class="result errcard" id="update-ref-failed">
+  <h2><code class="errmsg">fatal: update_ref failed for ref &#x27;refs/heads/main&#x27;: cannot lock ref</code><a class="anchor" href="#update-ref-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Another Git process holds the reference, or a stale lock file was left behind by one that crashed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

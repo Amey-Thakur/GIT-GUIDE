@@ -13,22 +13,39 @@
       "msg": "fatal: not a git repository (or any of the parent directories): .git",
       "why": "This folder, and none above it, contains a .git directory. You are outside the project.",
       "fix": [
-        { "c": "cd <project-folder>", "n": "Nine times out of ten you are simply in the wrong directory." },
-        { "c": "git init", "n": "Only if this folder truly should become a new repository." }
+        {
+          "c": "cd <project-folder>",
+          "n": "Nine times out of ten you are simply in the wrong directory."
+        },
+        {
+          "c": "git init",
+          "n": "Only if this folder truly should become a new repository."
+        }
       ],
       "intent": null,
-      "seealso": ["upload-existing-project"]
+      "seealso": [
+        "upload-existing-project"
+      ]
     },
     {
       "id": "repository-not-found",
       "msg": "remote: Repository not found.",
       "why": "The URL has a typo, the repository is private and you lack access, or you are authenticated as the wrong account.",
       "fix": [
-        { "c": "git remote -v", "n": "Check the exact owner and name. Case matters on some hosts." },
-        { "c": "gh auth status", "n": "Confirm which account you are signed in as; private repositories 404 instead of revealing they exist." }
+        {
+          "c": "git remote -v",
+          "n": "Check the exact owner and name. Case matters on some hosts."
+        },
+        {
+          "c": "gh auth status",
+          "n": "Confirm which account you are signed in as; private repositories 404 instead of revealing they exist."
+        }
       ],
       "intent": null,
-      "seealso": ["change-remote-url", "stop-password-prompts"]
+      "seealso": [
+        "change-remote-url",
+        "stop-password-prompts"
+      ]
     },
     {
       "id": "publickey-denied",
@@ -43,11 +60,20 @@
       "msg": "fatal: Authentication failed for 'https://github.com/...'",
       "why": "The credential your machine sent is wrong, expired, or a password where a token is required.",
       "fix": [
-        { "c": "gh auth login", "n": "The quickest reset on GitHub: sign in through the browser and git is fixed too." },
-        { "c": "git config --global credential.helper manager", "n": "Then push again; the credential manager prompts fresh. GitHub removed password authentication in August 2021, so a real password can never work." }
+        {
+          "c": "gh auth login",
+          "n": "The quickest reset on GitHub: sign in through the browser and git is fixed too."
+        },
+        {
+          "c": "git config --global credential.helper manager",
+          "n": "Then push again; the credential manager prompts fresh. GitHub removed password authentication in August 2021, so a real password can never work."
+        }
       ],
       "intent": null,
-      "seealso": ["stop-password-prompts", "https-vs-ssh"]
+      "seealso": [
+        "stop-password-prompts",
+        "https-vs-ssh"
+      ]
     },
     {
       "id": "non-fast-forward-rejected",
@@ -94,18 +120,30 @@
       "msg": "error: Your local changes to the following files would be overwritten by merge",
       "why": "The operation needs to rewrite files you have edited but not committed. Git refuses to destroy them silently.",
       "fix": [
-        { "c": "git stash -u", "n": "Set your edits aside, run the merge or switch again, then git stash pop." },
-        { "c": "git restore <file>", "n": "Or discard the edits if they were disposable. This loses them." }
+        {
+          "c": "git stash -u",
+          "n": "Set your edits aside, run the merge or switch again, then git stash pop."
+        },
+        {
+          "c": "git restore <file>",
+          "n": "Or discard the edits if they were disposable. This loses them."
+        }
       ],
       "intent": null,
-      "seealso": ["stash", "discard-changes"]
+      "seealso": [
+        "stash",
+        "discard-changes"
+      ]
     },
     {
       "id": "no-upstream",
       "msg": "fatal: The current branch has no upstream branch",
       "why": "This local branch has never been connected to a remote branch, so plain git push does not know where to go.",
       "fix": [
-        { "c": "git push -u origin <branch>", "n": "Once. From then on plain git push and git pull work." }
+        {
+          "c": "git push -u origin <branch>",
+          "n": "Once. From then on plain git push and git pull work."
+        }
       ],
       "intent": "push-new-branch",
       "seealso": []
@@ -139,8 +177,14 @@
       "msg": "fatal: unable to access '...': Could not resolve host: github.com",
       "why": "A network problem, not a Git problem: no internet, VPN or proxy in the way, or DNS down.",
       "fix": [
-        { "c": "ping github.com", "n": "If this fails, fix the network first." },
-        { "c": "git config --global --unset http.proxy", "n": "A stale proxy setting from an old network is a classic cause; check with git config --get http.proxy" }
+        {
+          "c": "ping github.com",
+          "n": "If this fails, fix the network first."
+        },
+        {
+          "c": "git config --global --unset http.proxy",
+          "n": "A stale proxy setting from an old network is a classic cause; check with git config --get http.proxy"
+        }
       ],
       "intent": null,
       "seealso": []
@@ -150,7 +194,10 @@
       "msg": "fatal: unable to access '...': SSL certificate problem",
       "why": "Something intercepts HTTPS, usually a corporate proxy with its own certificate that Git does not trust yet.",
       "fix": [
-        { "c": "git config --global http.sslCAInfo <path-to-company-ca.pem>", "n": "Point Git at your company's CA bundle; IT provides the file. Never solve this with sslVerify false outside a throwaway test." }
+        {
+          "c": "git config --global http.sslCAInfo <path-to-company-ca.pem>",
+          "n": "Point Git at your company's CA bundle; IT provides the file. Never solve this with sslVerify false outside a throwaway test."
+        }
       ],
       "intent": null,
       "seealso": []
@@ -160,11 +207,19 @@
       "msg": "error: RPC failed; HTTP 408 curl 22 (or 400, or curl 55)",
       "why": "A large push choked, often against a proxy or server limit on request size.",
       "fix": [
-        { "c": "git config http.postBuffer 157286400", "n": "Raises the HTTP buffer to 150 MB for this repository." },
-        { "c": "git push origin <branch> --no-thin", "n": "If it persists, push over SSH instead; SSH has no such limit." }
+        {
+          "c": "git config http.postBuffer 157286400",
+          "n": "Raises the HTTP buffer to 150 MB for this repository."
+        },
+        {
+          "c": "git push origin <branch> --no-thin",
+          "n": "If it persists, push over SSH instead; SSH has no such limit."
+        }
       ],
       "intent": null,
-      "seealso": ["file-too-large"]
+      "seealso": [
+        "file-too-large"
+      ]
     },
     {
       "id": "gh001-large-files",
@@ -203,30 +258,53 @@
       "msg": "error: pathspec '<name>' did not match any file(s) known to git",
       "why": "The file or branch name does not exist as typed: a typo, wrong case, or a branch you have not fetched.",
       "fix": [
-        { "c": "git status", "n": "See the real file names Git knows." },
-        { "c": "git fetch && git branch -a", "n": "If it was a branch name, confirm it exists on the remote and fetch first." }
+        {
+          "c": "git status",
+          "n": "See the real file names Git knows."
+        },
+        {
+          "c": "git fetch && git branch -a",
+          "n": "If it was a branch name, confirm it exists on the remote and fetch first."
+        }
       ],
       "intent": null,
-      "seealso": ["checkout-remote-branch"]
+      "seealso": [
+        "checkout-remote-branch"
+      ]
     },
     {
       "id": "branch-already-exists",
       "msg": "fatal: a branch named '<name>' already exists",
       "why": "You are creating a branch whose name is taken.",
       "fix": [
-        { "c": "git switch <name>", "n": "If you meant to continue on it." },
-        { "c": "git branch -D <name> && git switch -c <name>", "n": "If the old one is disposable and you want a fresh start here. -D discards its unmerged commits." }
+        {
+          "c": "git switch <name>",
+          "n": "If you meant to continue on it."
+        },
+        {
+          "c": "git branch -D <name> && git switch -c <name>",
+          "n": "If the old one is disposable and you want a fresh start here. -D discards its unmerged commits."
+        }
       ],
       "intent": null,
-      "seealso": ["create-branch", "delete-branch"]
+      "seealso": [
+        "create-branch",
+        "delete-branch"
+      ]
     },
     {
       "id": "not-fully-merged",
       "msg": "error: the branch '<name>' is not fully merged",
       "why": "git branch -d protects commits that exist nowhere else. This is the guardrail working.",
       "fix": [
-        { "c": "git log --oneline main..<name>", "n": "See exactly what would be lost." },
-        { "c": "git branch -D <name>", "n": "Delete anyway, once you are sure. The reflog can still rescue it for about 90 days." }
+        {
+          "c": "git log --oneline main..<name>",
+          "n": "See exactly what would be lost."
+        },
+        {
+          "c": "git branch -D <name>",
+          "n": "Delete anyway, once you are sure. The reflog can still rescue it for about 90 days."
+        }
       ],
       "intent": "delete-branch",
       "seealso": []
@@ -236,18 +314,29 @@
       "msg": "fatal: destination path '<folder>' already exists and is not an empty directory",
       "why": "git clone creates the folder, and a folder with that name is already there.",
       "fix": [
-        { "c": "git clone <url> <other-name>", "n": "Clone into a different folder name." },
-        { "c": "rm -rf <folder> && git clone <url>", "n": "Or remove the old folder first, if it is disposable." }
+        {
+          "c": "git clone <url> <other-name>",
+          "n": "Clone into a different folder name."
+        },
+        {
+          "c": "rm -rf <folder> && git clone <url>",
+          "n": "Or remove the old folder first, if it is disposable."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-repo"]
+      "seealso": [
+        "clone-repo"
+      ]
     },
     {
       "id": "remote-already-exists",
       "msg": "error: remote origin already exists",
       "why": "You are adding a remote named origin to a repository that already has one.",
       "fix": [
-        { "c": "git remote set-url origin <url>", "n": "Change the existing one instead of adding." }
+        {
+          "c": "git remote set-url origin <url>",
+          "n": "Change the existing one instead of adding."
+        }
       ],
       "intent": "change-remote-url",
       "seealso": []
@@ -257,11 +346,20 @@
       "msg": "fatal: 'origin' does not appear to be a git repository",
       "why": "You pushed or pulled against a remote name that is not configured here.",
       "fix": [
-        { "c": "git remote -v", "n": "Empty output means no remote yet:" },
-        { "c": "git remote add origin <url>", "n": "" }
+        {
+          "c": "git remote -v",
+          "n": "Empty output means no remote yet:"
+        },
+        {
+          "c": "git remote add origin <url>",
+          "n": ""
+        }
       ],
       "intent": null,
-      "seealso": ["upload-existing-project", "find-remote-url"]
+      "seealso": [
+        "upload-existing-project",
+        "find-remote-url"
+      ]
     },
     {
       "id": "diverged-msg",
@@ -276,21 +374,34 @@
       "msg": "Your branch is ahead of 'origin/main' by N commits",
       "why": "Not an error. You have local commits the remote lacks; push when ready.",
       "fix": [
-        { "c": "git push", "n": "That is the whole fix. git log origin/main..HEAD --oneline shows what will go up." }
+        {
+          "c": "git push",
+          "n": "That is the whole fix. git log origin/main..HEAD --oneline shows what will go up."
+        }
       ],
       "intent": null,
-      "seealso": ["ahead-behind"]
+      "seealso": [
+        "ahead-behind"
+      ]
     },
     {
       "id": "bad-object",
       "msg": "fatal: bad object HEAD (or: loose object is corrupt)",
       "why": "The object database is damaged, usually a crash, a full disk, or a synced-folder service fighting over .git.",
       "fix": [
-        { "c": "git fsck --full", "n": "Survey the damage." },
-        { "c": "git clone <url> ../<repo>-fresh", "n": "With a remote, the honest repair: clone fresh, copy over your uncommitted work. Keeping a repository inside OneDrive or Dropbox is the classic cause; exclude .git from syncing." }
+        {
+          "c": "git fsck --full",
+          "n": "Survey the damage."
+        },
+        {
+          "c": "git clone <url> ../<repo>-fresh",
+          "n": "With a remote, the honest repair: clone fresh, copy over your uncommitted work. Keeping a repository inside OneDrive or Dropbox is the classic cause; exclude .git from syncing."
+        }
       ],
       "intent": null,
-      "seealso": ["recover-lost-commit"]
+      "seealso": [
+        "recover-lost-commit"
+      ]
     },
     {
       "id": "filename-too-long-msg",
@@ -305,17 +416,25 @@
       "msg": "error: invalid path '<name>'",
       "why": "The repository contains a file name Windows forbids: reserved names like aux or con, or characters like colon and question mark, committed from Linux or macOS.",
       "fix": [
-        { "c": "git clone --no-checkout <url> && cd <repo> && git sparse-checkout set --no-cone '/*' '!<bad-path>'", "n": "Clone without touching disk, exclude the offending path, then git checkout. The lasting fix is renaming the file on a non-Windows machine." }
+        {
+          "c": "git clone --no-checkout <url> && cd <repo> && git sparse-checkout set --no-cone '/*' '!<bad-path>'",
+          "n": "Clone without touching disk, exclude the offending path, then git checkout. The lasting fix is renaming the file on a non-Windows machine."
+        }
       ],
       "intent": null,
-      "seealso": ["sparse-checkout"]
+      "seealso": [
+        "sparse-checkout"
+      ]
     },
     {
       "id": "cloned-empty",
       "msg": "warning: You appear to have cloned an empty repository.",
       "why": "Not an error. The remote exists but has no commits yet.",
       "fix": [
-        { "c": "git add . && git commit -m \"Initial commit\" && git push -u origin main", "n": "You make the first commit; the warning never returns." }
+        {
+          "c": "git add . && git commit -m \"Initial commit\" && git push -u origin main",
+          "n": "You make the first commit; the warning never returns."
+        }
       ],
       "intent": "upload-existing-project",
       "seealso": []
@@ -325,18 +444,29 @@
       "msg": "fatal: this operation must be run in a work tree",
       "why": "You are inside the .git folder itself, or in a bare repository that has no working files by design.",
       "fix": [
-        { "c": "cd ..", "n": "If you wandered into .git, step out." },
-        { "c": "git clone <bare-repo-path> <folder>", "n": "A bare repo (server-side storage) is worked on by cloning it, never directly." }
+        {
+          "c": "cd ..",
+          "n": "If you wandered into .git, step out."
+        },
+        {
+          "c": "git clone <bare-repo-path> <folder>",
+          "n": "A bare repo (server-side storage) is worked on by cloning it, never directly."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-repo"]
+      "seealso": [
+        "clone-repo"
+      ]
     },
     {
       "id": "tag-already-exists",
       "msg": "fatal: tag '<name>' already exists",
       "why": "Tags are unique names; this one is taken.",
       "fix": [
-        { "c": "git tag -f <name>", "n": "Move it here, if the old placement was a mistake. If it was pushed, teammates keep the old one until they force-fetch tags." }
+        {
+          "c": "git tag -f <name>",
+          "n": "Move it here, if the old placement was a mistake. If it was pushed, teammates keep the old one until they force-fetch tags."
+        }
       ],
       "intent": "delete-tag",
       "seealso": []
@@ -346,8 +476,14 @@
       "msg": "error: cannot spawn .git/hooks/pre-commit: No such file or directory",
       "why": "A hook script is missing, not executable, or has Windows line endings breaking its shebang line.",
       "fix": [
-        { "c": "chmod +x .git/hooks/pre-commit", "n": "Executable bit first." },
-        { "c": "git commit --no-verify -m \"<message>\"", "n": "Bypass once while you repair the hook. If the script starts with #!/bin/sh, make sure the file is saved with LF endings." }
+        {
+          "c": "chmod +x .git/hooks/pre-commit",
+          "n": "Executable bit first."
+        },
+        {
+          "c": "git commit --no-verify -m \"<message>\"",
+          "n": "Bypass once while you repair the hook. If the script starts with #!/bin/sh, make sure the file is saved with LF endings."
+        }
       ],
       "intent": "hooks",
       "seealso": []
@@ -357,8 +493,14 @@
       "msg": "error: gpg failed to sign the data",
       "why": "Signing is switched on but the signing setup is incomplete or the key is unavailable.",
       "fix": [
-        { "c": "git config --global gpg.format ssh", "n": "The simplest working setup signs with your SSH key; see the signing answer for the full three lines." },
-        { "c": "git config --global commit.gpgsign false", "n": "Or switch signing off if you never asked for it; some tools enable it silently." }
+        {
+          "c": "git config --global gpg.format ssh",
+          "n": "The simplest working setup signs with your SSH key; see the signing answer for the full three lines."
+        },
+        {
+          "c": "git config --global commit.gpgsign false",
+          "n": "Or switch signing off if you never asked for it; some tools enable it silently."
+        }
       ],
       "intent": "sign-commits",
       "seealso": []
@@ -376,65 +518,114 @@
       "msg": "hint: You have divergent branches and need to specify how to reconcile them.",
       "why": "Newer Git asks you to choose a pull strategy once instead of silently merging.",
       "fix": [
-        { "c": "git config --global pull.rebase true", "n": "The usual right answer: remote commits land, yours replay on top, history stays straight." },
-        { "c": "git config --global pull.ff only", "n": "The strict alternative: pull succeeds only when nothing diverged, and asks you to decide otherwise." }
+        {
+          "c": "git config --global pull.rebase true",
+          "n": "The usual right answer: remote commits land, yours replay on top, history stays straight."
+        },
+        {
+          "c": "git config --global pull.ff only",
+          "n": "The strict alternative: pull succeeds only when nothing diverged, and asks you to decide otherwise."
+        }
       ],
       "intent": null,
-      "seealso": ["diverged-branches", "update-branch"]
+      "seealso": [
+        "diverged-branches",
+        "update-branch"
+      ]
     },
     {
       "id": "could-not-read-username",
       "msg": "fatal: could not read Username for 'https://github.com': No such device or address",
       "why": "Git wanted to ask for credentials but no terminal was attached, the classic CI and script failure.",
       "fix": [
-        { "c": "git remote set-url origin https://x-access-token:${TOKEN}@github.com/<owner>/<repo>.git", "n": "In CI, inject a token; in GitHub Actions, actions/checkout handles this for you." },
-        { "c": "git config --global credential.helper manager", "n": "On your own machine, store credentials once so Git never needs to ask." }
+        {
+          "c": "git remote set-url origin https://x-access-token:${TOKEN}@github.com/<owner>/<repo>.git",
+          "n": "In CI, inject a token; in GitHub Actions, actions/checkout handles this for you."
+        },
+        {
+          "c": "git config --global credential.helper manager",
+          "n": "On your own machine, store credentials once so Git never needs to ask."
+        }
       ],
       "intent": null,
-      "seealso": ["stop-password-prompts"]
+      "seealso": [
+        "stop-password-prompts"
+      ]
     },
     {
       "id": "early-eof",
       "msg": "fatal: early EOF (the remote end hung up unexpectedly)",
       "why": "A large clone or fetch died mid-transfer: unstable connection, proxy timeout, or a server cutting long downloads.",
       "fix": [
-        { "c": "git clone --depth 1 <url>", "n": "A shallow clone transfers a fraction of the data and almost always survives." },
-        { "c": "git fetch --unshallow", "n": "Then deepen to full history in resumable steps once inside." }
+        {
+          "c": "git clone --depth 1 <url>",
+          "n": "A shallow clone transfers a fraction of the data and almost always survives."
+        },
+        {
+          "c": "git fetch --unshallow",
+          "n": "Then deepen to full history in resumable steps once inside."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-repo", "sparse-checkout"]
+      "seealso": [
+        "clone-repo",
+        "sparse-checkout"
+      ]
     },
     {
       "id": "xcrun-macos",
       "msg": "xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools)",
       "why": "A macOS update removed the command line tools, and git on a Mac lives inside them.",
       "fix": [
-        { "c": "xcode-select --install", "n": "Reinstalls the tools; git returns with them. This repeats after most major macOS upgrades." }
+        {
+          "c": "xcode-select --install",
+          "n": "Reinstalls the tools; git returns with them. This repeats after most major macOS upgrades."
+        }
       ],
       "intent": null,
-      "seealso": ["update-git"]
+      "seealso": [
+        "update-git"
+      ]
     },
     {
       "id": "auth-agent",
       "msg": "Could not open a connection to your authentication agent.",
       "why": "ssh-add needs the ssh-agent process, and none is running in this shell.",
       "fix": [
-        { "c": "eval \"$(ssh-agent -s)\" && ssh-add", "n": "Starts the agent and loads your key, macOS and Linux." },
-        { "c": "Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent", "n": "Windows PowerShell, once as administrator; the agent then starts with the system." }
+        {
+          "c": "eval \"$(ssh-agent -s)\" && ssh-add",
+          "n": "Starts the agent and loads your key, macOS and Linux."
+        },
+        {
+          "c": "Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent",
+          "n": "Windows PowerShell, once as administrator; the agent then starts with the system."
+        }
       ],
       "intent": null,
-      "seealso": ["ssh-key-github", "permission-denied-publickey"]
+      "seealso": [
+        "ssh-key-github",
+        "permission-denied-publickey"
+      ]
     },
     {
       "id": "not-possible-fast-forward",
       "msg": "fatal: Not possible to fast-forward, aborting.",
       "why": "Your pull is set to fast-forward only, and the branches have diverged, so a decision is needed.",
       "fix": [
-        { "c": "git pull --rebase", "n": "The usual answer: remote commits land, yours replay on top." },
-        { "c": "git pull --no-ff", "n": "Or take a merge commit this once. The strict setting did its job: it made the divergence visible instead of merging silently." }
+        {
+          "c": "git pull --rebase",
+          "n": "The usual answer: remote commits land, yours replay on top."
+        },
+        {
+          "c": "git pull --no-ff",
+          "n": "Or take a merge commit this once. The strict setting did its job: it made the divergence visible instead of merging silently."
+        }
       ],
       "intent": null,
-      "seealso": ["diverged-branches", "update-branch"]
+      "seealso": [
+        "diverged-branches",
+        "update-branch"
+      ]
     },
     {
       "id": "not-on-branch-pull",
@@ -457,94 +648,153 @@
       "msg": "fatal: could not create work tree dir '<name>': Permission denied",
       "why": "You are cloning into a folder your user cannot write to.",
       "fix": [
-        { "c": "cd ~ && git clone <url>", "n": "Clone somewhere you own. System folders and other users' paths need rights you should rarely grant to Git." }
+        {
+          "c": "cd ~ && git clone <url>",
+          "n": "Clone somewhere you own. System folders and other users' paths need rights you should rarely grant to Git."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-repo"]
+      "seealso": [
+        "clone-repo"
+      ]
     },
     {
       "id": "insufficient-object-permission",
       "msg": "error: insufficient permission for adding an object to repository database .git/objects",
       "why": "Files inside .git belong to another user, typically after running Git with sudo once or sharing a repo folder.",
       "fix": [
-        { "c": "sudo chown -R $(whoami) .git", "n": "Return the repository to your user, then never run Git with sudo again." }
+        {
+          "c": "sudo chown -R $(whoami) .git",
+          "n": "Return the repository to your user, then never run Git with sudo again."
+        }
       ],
       "intent": null,
-      "seealso": ["dubious-ownership"]
+      "seealso": [
+        "dubious-ownership"
+      ]
     },
     {
       "id": "cannot-lock-ref-stale",
       "msg": "error: cannot lock ref 'refs/remotes/origin/<branch>': unable to resolve reference",
       "why": "A stale or corrupted remote-tracking reference, often after an interrupted fetch.",
       "fix": [
-        { "c": "git update-ref -d refs/remotes/origin/<branch>", "n": "Delete the broken reference." },
-        { "c": "git fetch --prune", "n": "Rebuilds it cleanly from the remote." }
+        {
+          "c": "git update-ref -d refs/remotes/origin/<branch>",
+          "n": "Delete the broken reference."
+        },
+        {
+          "c": "git fetch --prune",
+          "n": "Rebuilds it cleanly from the remote."
+        }
       ],
       "intent": null,
-      "seealso": ["prune-remote-branches"]
+      "seealso": [
+        "prune-remote-branches"
+      ]
     },
     {
       "id": "cannot-lock-ref-hierarchy",
       "msg": "error: cannot lock ref 'refs/heads/<x>/<y>': 'refs/heads/<x>' exists",
       "why": "Branch names are paths: a branch named x blocks any branch named x/y, and the reverse.",
       "fix": [
-        { "c": "git branch -m <x> <x>-old", "n": "Rename or delete the conflicting branch; then create the nested name. Agree on a naming scheme (feature/..., fix/...) before the team collides again." }
+        {
+          "c": "git branch -m <x> <x>-old",
+          "n": "Rename or delete the conflicting branch; then create the nested name. Agree on a naming scheme (feature/..., fix/...) before the team collides again."
+        }
       ],
       "intent": null,
-      "seealso": ["rename-branch", "delete-branch"]
+      "seealso": [
+        "rename-branch",
+        "delete-branch"
+      ]
     },
     {
       "id": "bad-revision-head",
       "msg": "fatal: bad revision 'HEAD'",
       "why": "The repository has no commits yet, so HEAD points at nothing.",
       "fix": [
-        { "c": "git add . && git commit -m \"Initial commit\"", "n": "The first commit brings HEAD to life; every log and diff command works after it." }
+        {
+          "c": "git add . && git commit -m \"Initial commit\"",
+          "n": "The first commit brings HEAD to life; every log and diff command works after it."
+        }
       ],
       "intent": null,
-      "seealso": ["upload-existing-project"]
+      "seealso": [
+        "upload-existing-project"
+      ]
     },
     {
       "id": "ambiguous-argument-head",
       "msg": "fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.",
       "why": "Same family: an empty repository, or a name Git cannot tell apart from a file.",
       "fix": [
-        { "c": "git log --oneline", "n": "Empty repo? Commit first. Otherwise separate revisions from paths with a double dash:" },
-        { "c": "git log -- <file>", "n": "Everything after -- is a path, never a revision." }
+        {
+          "c": "git log --oneline",
+          "n": "Empty repo? Commit first. Otherwise separate revisions from paths with a double dash:"
+        },
+        {
+          "c": "git log -- <file>",
+          "n": "Everything after -- is a path, never a revision."
+        }
       ],
       "intent": null,
-      "seealso": ["see-history"]
+      "seealso": [
+        "see-history"
+      ]
     },
     {
       "id": "untracked-would-be-overwritten",
       "msg": "error: The following untracked working tree files would be overwritten by checkout",
       "why": "The branch you are switching to tracks files that exist here untracked; Git refuses to destroy them silently.",
       "fix": [
-        { "c": "mkdir -p ../backup && mv <file> ../backup/", "n": "Move them aside if they matter, then switch." },
-        { "c": "git clean -nd", "n": "Or preview and delete them if disposable: -fd deletes what -nd lists." }
+        {
+          "c": "mkdir -p ../backup && mv <file> ../backup/",
+          "n": "Move them aside if they matter, then switch."
+        },
+        {
+          "c": "git clean -nd",
+          "n": "Or preview and delete them if disposable: -fd deletes what -nd lists."
+        }
       ],
       "intent": null,
-      "seealso": ["remove-untracked", "stash"]
+      "seealso": [
+        "remove-untracked",
+        "stash"
+      ]
     },
     {
       "id": "unable-to-unlink",
       "msg": "error: unable to unlink old '<file>': Permission denied",
       "why": "Something holds the file open: an editor, a running process, or an antivirus scan, most often on Windows.",
       "fix": [
-        { "c": "<close the app using the file, then retry>", "n": "IDEs and dev servers are the usual holders. Persistent cases are the antivirus; exclude the repository folder from real-time scanning." }
+        {
+          "c": "<close the app using the file, then retry>",
+          "n": "IDEs and dev servers are the usual holders. Persistent cases are the antivirus; exclude the repository folder from real-time scanning."
+        }
       ],
       "intent": null,
-      "seealso": ["index-lock"]
+      "seealso": [
+        "index-lock"
+      ]
     },
     {
       "id": "already-checked-out",
       "msg": "fatal: '<branch>' is already checked out at '<path>'",
       "why": "Worktrees guarantee one checkout per branch, and that branch lives in another folder.",
       "fix": [
-        { "c": "git worktree list", "n": "See where. Work there, or check out a different branch here." },
-        { "c": "git worktree remove <path>", "n": "Or retire that worktree if it is finished." }
+        {
+          "c": "git worktree list",
+          "n": "See where. Work there, or check out a different branch here."
+        },
+        {
+          "c": "git worktree remove <path>",
+          "n": "Or retire that worktree if it is finished."
+        }
       ],
       "intent": null,
-      "seealso": ["worktrees"]
+      "seealso": [
+        "worktrees"
+      ]
     },
     {
       "id": "resolve-index-first",
@@ -559,334 +809,524 @@
       "msg": "error: commit <hash> is a merge but no -m option was given.",
       "why": "Reverting a merge needs to know which parent line survives.",
       "fix": [
-        { "c": "git revert -m 1 <hash>", "n": "-m 1 keeps the branch the merge landed on, which is almost always what you mean." }
+        {
+          "c": "git revert -m 1 <hash>",
+          "n": "-m 1 keeps the branch the merge landed on, which is almost always what you mean."
+        }
       ],
       "intent": null,
-      "seealso": ["undo-merge"]
+      "seealso": [
+        "undo-merge"
+      ]
     },
     {
       "id": "bad-config-line",
       "msg": "fatal: bad config line <n> in file <path>",
       "why": "A typo in a config file: an unclosed quote, a stray character, or a section header gone wrong.",
       "fix": [
-        { "c": "git config --global --edit", "n": "Opens the file at fault in your editor; the message names the exact line to repair." }
+        {
+          "c": "git config --global --edit",
+          "n": "Opens the file at fault in your editor; the message names the exact line to repair."
+        }
       ],
       "intent": null,
-      "seealso": ["show-config"]
+      "seealso": [
+        "show-config"
+      ]
     },
     {
       "id": "no-tracking-information",
       "msg": "There is no tracking information for the current branch.",
       "why": "Pull does not know which remote branch feeds this one.",
       "fix": [
-        { "c": "git branch -u origin/<branch>", "n": "Link them once; plain git pull works from then on." }
+        {
+          "c": "git branch -u origin/<branch>",
+          "n": "Link them once; plain git pull works from then on."
+        }
       ],
       "intent": null,
-      "seealso": ["push-new-branch", "auto-setup-remote"]
+      "seealso": [
+        "push-new-branch",
+        "auto-setup-remote"
+      ]
     },
     {
       "id": "couldnt-find-remote-ref",
       "msg": "fatal: couldn't find remote ref <branch>",
       "why": "No branch by that name exists on the remote: a typo, a deleted branch, or main versus master.",
       "fix": [
-        { "c": "git ls-remote --heads origin", "n": "The authoritative list of what the remote actually has." }
+        {
+          "c": "git ls-remote --heads origin",
+          "n": "The authoritative list of what the remote actually has."
+        }
       ],
       "intent": null,
-      "seealso": ["ls-remote", "default-branch"]
+      "seealso": [
+        "ls-remote",
+        "default-branch"
+      ]
     },
     {
       "id": "host-key-verification",
       "msg": "Host key verification failed.",
       "why": "SSH does not yet trust this server's fingerprint, or the stored one no longer matches.",
       "fix": [
-        { "c": "ssh -T git@github.com", "n": "Run interactively once and answer yes to store the fingerprint. In CI, pre-seed known_hosts instead of disabling checking." }
+        {
+          "c": "ssh -T git@github.com",
+          "n": "Run interactively once and answer yes to store the fingerprint. In CI, pre-seed known_hosts instead of disabling checking."
+        }
       ],
       "intent": null,
-      "seealso": ["ssh-key-github", "permission-denied-publickey"]
+      "seealso": [
+        "ssh-key-github",
+        "permission-denied-publickey"
+      ]
     },
     {
       "id": "ssh-port-22-timeout",
       "msg": "ssh: connect to host github.com port 22: Connection timed out",
       "why": "The network blocks port 22, the classic corporate and campus firewall move.",
       "fix": [
-        { "c": "printf \"Host github.com\\n  HostName ssh.github.com\\n  Port 443\\n\" >> ~/.ssh/config", "n": "GitHub speaks SSH on port 443 too; this tunnels past most firewalls. Or use HTTPS remotes on that network." }
+        {
+          "c": "printf \"Host github.com\\n  HostName ssh.github.com\\n  Port 443\\n\" >> ~/.ssh/config",
+          "n": "GitHub speaks SSH on port 443 too; this tunnels past most firewalls. Or use HTTPS remotes on that network."
+        }
       ],
       "intent": null,
-      "seealso": ["https-vs-ssh", "proxy-setup"]
+      "seealso": [
+        "https-vs-ssh",
+        "proxy-setup"
+      ]
     },
     {
       "id": "http2-stream-error",
       "msg": "error: RPC failed; curl 92 HTTP/2 stream 0 was not closed cleanly",
       "why": "A proxy or middlebox mishandling HTTP/2 during a large transfer.",
       "fix": [
-        { "c": "git config --global http.version HTTP/1.1", "n": "Falls back to HTTP/1.1, which the middlebox understands. Retry the push or clone after." }
+        {
+          "c": "git config --global http.version HTTP/1.1",
+          "n": "Falls back to HTTP/1.1, which the middlebox understands. Retry the push or clone after."
+        }
       ],
       "intent": null,
-      "seealso": ["proxy-setup"]
+      "seealso": [
+        "proxy-setup"
+      ]
     },
     {
       "id": "remote-hung-up",
       "msg": "fatal: the remote end hung up unexpectedly",
       "why": "The connection died mid-transfer, usually a large push meeting a server or proxy limit.",
       "fix": [
-        { "c": "git config http.postBuffer 157286400", "n": "Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely." }
+        {
+          "c": "git config http.postBuffer 157286400",
+          "n": "Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely."
+        }
       ],
       "intent": null,
-      "seealso": ["file-too-large"]
+      "seealso": [
+        "file-too-large"
+      ]
     },
     {
       "id": "embedded-repository",
       "msg": "warning: adding embedded git repository: <folder>",
       "why": "You added a folder that is itself a Git repository; it would be recorded as an empty pointer, confusing every clone.",
       "fix": [
-        { "c": "git rm --cached <folder>", "n": "Undo the add. Then either delete that folder's inner .git to absorb the files, or make it a real submodule on purpose." }
+        {
+          "c": "git rm --cached <folder>",
+          "n": "Undo the add. Then either delete that folder's inner .git to absorb the files, or make it a real submodule on purpose."
+        }
       ],
       "intent": null,
-      "seealso": ["submodule-add", "untrack-file"]
+      "seealso": [
+        "submodule-add",
+        "untrack-file"
+      ]
     },
     {
       "id": "unpopulated-submodule",
       "msg": "fatal: in unpopulated submodule '<path>'",
       "why": "You are standing inside a submodule folder that was never initialized, an empty shell.",
       "fix": [
-        { "c": "cd .. && git submodule update --init --recursive", "n": "Fill the shell from the repository root, then return." }
+        {
+          "c": "cd .. && git submodule update --init --recursive",
+          "n": "Fill the shell from the repository root, then return."
+        }
       ],
       "intent": null,
-      "seealso": ["submodule-add"]
+      "seealso": [
+        "submodule-add"
+      ]
     },
     {
       "id": "no-submodule-mapping",
       "msg": "fatal: no submodule mapping found in .gitmodules for path '<path>'",
       "why": "A submodule folder is recorded in the index but missing from .gitmodules, a half-removed submodule.",
       "fix": [
-        { "c": "git rm --cached <path>", "n": "Finish the removal and commit; or restore the entry in .gitmodules if it should live." }
+        {
+          "c": "git rm --cached <path>",
+          "n": "Finish the removal and commit; or restore the entry in .gitmodules if it should live."
+        }
       ],
       "intent": null,
-      "seealso": ["remove-submodule"]
+      "seealso": [
+        "remove-submodule"
+      ]
     },
     {
       "id": "could-not-apply",
       "msg": "error: could not apply <hash>... <message>",
       "why": "A rebase or cherry-pick hit a conflict on this commit and paused for you.",
       "fix": [
-        { "c": "git status", "n": "Fix the conflicted files, git add them, then:" },
-        { "c": "git rebase --continue", "n": "Or --skip to drop this commit, or --abort to unwind everything. Cherry-pick uses the same three." }
+        {
+          "c": "git status",
+          "n": "Fix the conflicted files, git add them, then:"
+        },
+        {
+          "c": "git rebase --continue",
+          "n": "Or --skip to drop this commit, or --abort to unwind everything. Cherry-pick uses the same three."
+        }
       ],
       "intent": null,
-      "seealso": ["merge-conflict", "abort-operation"]
+      "seealso": [
+        "merge-conflict",
+        "abort-operation"
+      ]
     },
     {
       "id": "conflict-modify-delete",
       "msg": "CONFLICT (modify/delete): <file> deleted in <ref> and modified in <ref>",
       "why": "One side deleted the file, the other edited it; Git cannot choose.",
       "fix": [
-        { "c": "git add <file>", "n": "Keep the modified version, or:" },
-        { "c": "git rm <file>", "n": "Honor the deletion. Either way, continue the merge or rebase after." }
+        {
+          "c": "git add <file>",
+          "n": "Keep the modified version, or:"
+        },
+        {
+          "c": "git rm <file>",
+          "n": "Honor the deletion. Either way, continue the merge or rebase after."
+        }
       ],
       "intent": null,
-      "seealso": ["merge-conflict"]
+      "seealso": [
+        "merge-conflict"
+      ]
     },
     {
       "id": "password-auth-removed",
       "msg": "remote: Support for password authentication was removed on August 13, 2021.",
       "why": "GitHub no longer accepts account passwords over HTTPS; a token or SSH key is required.",
       "fix": [
-        { "c": "gh auth login", "n": "The painless route: browser sign-in wires Git correctly." },
-        { "c": "git config --global credential.helper manager", "n": "Or let the credential manager prompt and store a token on the next push." }
+        {
+          "c": "gh auth login",
+          "n": "The painless route: browser sign-in wires Git correctly."
+        },
+        {
+          "c": "git config --global credential.helper manager",
+          "n": "Or let the credential manager prompt and store a token on the next push."
+        }
       ],
       "intent": null,
-      "seealso": ["stop-password-prompts", "ssh-key-github"]
+      "seealso": [
+        "stop-password-prompts",
+        "ssh-key-github"
+      ]
     },
     {
       "id": "write-access-not-granted",
       "msg": "remote: Write access to repository not granted.",
       "why": "Your account can read this repository but not push to it.",
       "fix": [
-        { "c": "gh repo fork <owner>/<repo> --clone", "n": "The open source path: push to your fork and open a pull request. On team repos, ask for write access instead." }
+        {
+          "c": "gh repo fork <owner>/<repo> --clone",
+          "n": "The open source path: push to your fork and open a pull request. On team repos, ask for write access instead."
+        }
       ],
       "intent": null,
-      "seealso": ["fork-vs-branch", "sync-fork"]
+      "seealso": [
+        "fork-vs-branch",
+        "sync-fork"
+      ]
     },
     {
       "id": "not-valid-object-name",
       "msg": "fatal: Not a valid object name: 'main'.",
       "why": "Branching from main before any commit exists; a branch cannot point at nothing.",
       "fix": [
-        { "c": "git commit -m \"Initial commit\" --allow-empty", "n": "Give the repository its first commit; branches work from then on." }
+        {
+          "c": "git commit -m \"Initial commit\" --allow-empty",
+          "n": "Give the repository its first commit; branches work from then on."
+        }
       ],
       "intent": null,
-      "seealso": ["upload-existing-project", "empty-commit"]
+      "seealso": [
+        "upload-existing-project",
+        "empty-commit"
+      ]
     },
     {
       "id": "gha-permission",
       "msg": "remote: Permission to <repo> denied to github-actions[bot].",
       "why": "A workflow tried to push, but Actions runs with read-only permissions unless the workflow asks for more.",
       "fix": [
-        { "c": "permissions:\n  contents: write", "n": "In the workflow file, at the top level or per job. Grant only what the job needs; read-only stays the right default everywhere else." }
+        {
+          "c": "permissions:\n  contents: write",
+          "n": "In the workflow file, at the top level or per job. Grant only what the job needs; read-only stays the right default everywhere else."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-private-ci"]
+      "seealso": [
+        "clone-private-ci"
+      ]
     },
     {
       "id": "no-commits-yet-branch",
       "msg": "fatal: your current branch 'main' does not have any commits yet",
       "why": "Log, branch, and friends need at least one commit to talk about.",
       "fix": [
-        { "c": "git add . && git commit -m \"Initial commit\"", "n": "" }
+        {
+          "c": "git add . && git commit -m \"Initial commit\"",
+          "n": ""
+        }
       ],
       "intent": null,
-      "seealso": ["upload-existing-project"]
+      "seealso": [
+        "upload-existing-project"
+      ]
     },
     {
       "id": "shallow-update-not-allowed",
       "msg": "fatal: shallow update not allowed",
       "why": "You are pushing from a shallow clone, common in CI checkouts.",
       "fix": [
-        { "c": "git fetch --unshallow", "n": "Complete the history, then push. In GitHub Actions, set fetch-depth: 0 on the checkout step instead." }
+        {
+          "c": "git fetch --unshallow",
+          "n": "Complete the history, then push. In GitHub Actions, set fetch-depth: 0 on the checkout step instead."
+        }
       ],
       "intent": null,
-      "seealso": ["shallow-in-ci"]
+      "seealso": [
+        "shallow-in-ci"
+      ]
     },
     {
       "id": "refusing-fetch-current",
       "msg": "fatal: Refusing to fetch into current branch refs/heads/<branch> of non-bare repository",
       "why": "Fetching directly into the branch you are standing on would pull the floor from under you.",
       "fix": [
-        { "c": "git pull", "n": "For the current branch, pull is the tool." },
-        { "c": "git fetch origin <branch>:<branch>", "n": "The into-a-branch form works only for branches you are not on." }
+        {
+          "c": "git pull",
+          "n": "For the current branch, pull is the tool."
+        },
+        {
+          "c": "git fetch origin <branch>:<branch>",
+          "n": "The into-a-branch form works only for branches you are not on."
+        }
       ],
       "intent": null,
-      "seealso": ["pull-specific-branch"]
+      "seealso": [
+        "pull-specific-branch"
+      ]
     },
     {
       "id": "unadvertised-object",
       "msg": "error: Server does not allow request for unadvertised object <hash>",
       "why": "A submodule is pinned to a commit the server will not hand out directly, or a shallow clone wants what it cannot see.",
       "fix": [
-        { "c": "git fetch --unshallow", "n": "For shallow clones. For submodules, the pin usually points at a commit never pushed: push the submodule's repo first, then update the pin." }
+        {
+          "c": "git fetch --unshallow",
+          "n": "For shallow clones. For submodules, the pin usually points at a commit never pushed: push the submodule's repo first, then update the pin."
+        }
       ],
       "intent": null,
-      "seealso": ["submodule-add", "shallow-in-ci"]
+      "seealso": [
+        "submodule-add",
+        "shallow-in-ci"
+      ]
     },
     {
       "id": "not-a-commit",
       "msg": "fatal: 'origin/<branch>' is not a commit and a branch '<name>' cannot be created from it",
       "why": "Your clone has never heard of that remote branch; the start point does not exist locally.",
       "fix": [
-        { "c": "git fetch", "n": "Learn what the remote has, then create the branch again." }
+        {
+          "c": "git fetch",
+          "n": "Learn what the remote has, then create the branch again."
+        }
       ],
       "intent": null,
-      "seealso": ["checkout-remote-branch"]
+      "seealso": [
+        "checkout-remote-branch"
+      ]
     },
     {
       "id": "branch-not-found-delete",
       "msg": "error: branch '<name>' not found.",
       "why": "No local branch by that exact name; a typo, or it lives only on the remote.",
       "fix": [
-        { "c": "git branch -a", "n": "The full roster. Remote-only branches are deleted with git push origin --delete <name>." }
+        {
+          "c": "git branch -a",
+          "n": "The full roster. Remote-only branches are deleted with git push origin --delete <name>."
+        }
       ],
       "intent": null,
-      "seealso": ["delete-branch"]
+      "seealso": [
+        "delete-branch"
+      ]
     },
     {
       "id": "no-merge-to-abort",
       "msg": "fatal: There is no merge to abort (MERGE_HEAD missing).",
       "why": "Nothing is mid-merge; whatever state you are in, it is not that.",
       "fix": [
-        { "c": "git status", "n": "Names the actual state and its exit: a rebase wants rebase --abort, a cherry-pick its own." }
+        {
+          "c": "git status",
+          "n": "Names the actual state and its exit: a rebase wants rebase --abort, a cherry-pick its own."
+        }
       ],
       "intent": null,
-      "seealso": ["abort-operation"]
+      "seealso": [
+        "abort-operation"
+      ]
     },
     {
       "id": "no-rebase-in-progress",
       "msg": "fatal: No rebase in progress?",
       "why": "The rebase you are trying to continue or abort already ended, or never started.",
       "fix": [
-        { "c": "git status", "n": "Confirm the real state; git log --oneline shows whether the rebase finished." }
+        {
+          "c": "git status",
+          "n": "Confirm the real state; git log --oneline shows whether the rebase finished."
+        }
       ],
       "intent": null,
-      "seealso": ["abort-operation", "undo-rebase"]
+      "seealso": [
+        "abort-operation",
+        "undo-rebase"
+      ]
     },
     {
       "id": "terminal-prompts-disabled",
       "msg": "fatal: could not read Username for 'https://github.com': terminal prompts disabled",
       "why": "GIT_TERMINAL_PROMPT=0 is set, as in most CI, and Git wanted to ask for credentials.",
       "fix": [
-        { "c": "git remote set-url origin https://x-access-token:${TOKEN}@github.com/<owner>/<repo>.git", "n": "Inject a token in CI; actions/checkout does this for you inside GitHub Actions." }
+        {
+          "c": "git remote set-url origin https://x-access-token:${TOKEN}@github.com/<owner>/<repo>.git",
+          "n": "Inject a token in CI; actions/checkout does this for you inside GitHub Actions."
+        }
       ],
       "intent": null,
-      "seealso": ["clone-private-ci"]
+      "seealso": [
+        "clone-private-ci"
+      ]
     },
     {
       "id": "http-basic-access-denied",
       "msg": "remote: HTTP Basic: Access denied",
       "why": "GitLab's phrasing of bad HTTPS credentials: an expired or wrong token, or a password where a token belongs.",
       "fix": [
-        { "c": "git config --global credential.helper manager", "n": "Clear the bad entry when prompted and sign in fresh with a personal access token from GitLab's settings." }
+        {
+          "c": "git config --global credential.helper manager",
+          "n": "Clear the bad entry when prompted and sign in fresh with a personal access token from GitLab's settings."
+        }
       ],
       "intent": null,
-      "seealso": ["stop-password-prompts", "use-other-hosts"]
+      "seealso": [
+        "stop-password-prompts",
+        "use-other-hosts"
+      ]
     },
     {
       "id": "gpg-no-secret-key",
       "msg": "gpg: signing failed: No secret key",
       "why": "Signing is on, but the configured key is not on this machine, typical after a laptop change.",
       "fix": [
-        { "c": "git config --global gpg.format ssh && git config --global user.signingkey ~/.ssh/id_ed25519.pub", "n": "Switch to SSH signing with the key you already have; or import the old GPG key, or set commit.gpgsign false." }
+        {
+          "c": "git config --global gpg.format ssh && git config --global user.signingkey ~/.ssh/id_ed25519.pub",
+          "n": "Switch to SSH signing with the key you already have; or import the old GPG key, or set commit.gpgsign false."
+        }
       ],
       "intent": null,
-      "seealso": ["sign-commits"]
+      "seealso": [
+        "sign-commits"
+      ]
     },
     {
       "id": "gpg-ioctl",
       "msg": "gpg: signing failed: Inappropriate ioctl for device",
       "why": "GPG wants to ask for your passphrase but has no terminal to ask in.",
       "fix": [
-        { "c": "export GPG_TTY=$(tty)", "n": "Add it to your shell profile; GPG then prompts correctly." }
+        {
+          "c": "export GPG_TTY=$(tty)",
+          "n": "Add it to your shell profile; GPG then prompts correctly."
+        }
       ],
       "intent": null,
-      "seealso": ["sign-commits"]
+      "seealso": [
+        "sign-commits"
+      ]
     },
     {
       "id": "could-not-read-remote",
       "msg": "fatal: Could not read from remote repository.",
       "why": "The generic tail of every SSH failure; the true cause sits in the lines above it.",
       "fix": [
-        { "c": "ssh -T git@github.com", "n": "Reproduce the real error alone: publickey, host key, or timeout, each has its own entry here." }
+        {
+          "c": "ssh -T git@github.com",
+          "n": "Reproduce the real error alone: publickey, host key, or timeout, each has its own entry here."
+        }
       ],
       "intent": null,
-      "seealso": ["permission-denied-publickey", "ssh-key-github"]
+      "seealso": [
+        "permission-denied-publickey",
+        "ssh-key-github"
+      ]
     },
     {
       "id": "openssl-connection-reset",
       "msg": "fatal: unable to access '<url>': OpenSSL SSL_read: Connection was reset, errno 10054",
       "why": "Something on the network path, a proxy, VPN, or security software, cut the TLS connection, most often on Windows.",
       "fix": [
-        { "c": "git config --global http.sslBackend schannel", "n": "Uses Windows' own TLS stack, which corporate middleboxes expect. Retry; if it persists, the proxy settings entry is next." }
+        {
+          "c": "git config --global http.sslBackend schannel",
+          "n": "Uses Windows' own TLS stack, which corporate middleboxes expect. Retry; if it persists, the proxy settings entry is next."
+        }
       ],
       "intent": null,
-      "seealso": ["proxy-setup"]
+      "seealso": [
+        "proxy-setup"
+      ]
     },
     {
       "id": "certificate-verify-locations",
       "msg": "fatal: unable to access '<url>': error setting certificate verify locations",
       "why": "Git's CA bundle path is broken, usually after a partial install or an overzealous cleanup.",
       "fix": [
-        { "c": "git config --global --unset http.sslCAInfo", "n": "Drop the broken override so Git falls back to its bundled certificates; reinstalling Git also heals it." }
+        {
+          "c": "git config --global --unset http.sslCAInfo",
+          "n": "Drop the broken override so Git falls back to its bundled certificates; reinstalling Git also heals it."
+        }
       ],
       "intent": null,
-      "seealso": ["update-git"]
+      "seealso": [
+        "update-git"
+      ]
     },
     {
       "id": "index-bad-signature",
       "msg": "error: bad signature 0x00000000 (fatal: index file corrupt)",
       "why": "The index file was damaged, a crash, a full disk, or a sync service writing into .git.",
       "fix": [
-        { "c": "rm .git/index && git reset", "n": "The index rebuilds from HEAD; your files are untouched. Keep .git out of OneDrive and Dropbox sync." }
+        {
+          "c": "rm .git/index && git reset",
+          "n": "The index rebuilds from HEAD; your files are untouched. Keep .git out of OneDrive and Dropbox sync."
+        }
       ],
       "intent": null,
-      "seealso": ["index-lock"]
+      "seealso": [
+        "index-lock"
+      ]
     },
     {
       "id": "lf-would-be-replaced",
@@ -901,11 +1341,20 @@
       "msg": "fatal: It seems that there is already a rebase-merge directory",
       "why": "A previous rebase never finished; its state directory still sits in .git.",
       "fix": [
-        { "c": "git rebase --abort", "n": "The clean exit. If Git insists nothing is in progress:" },
-        { "c": "rm -rf .git/rebase-merge .git/rebase-apply", "n": "Remove the stale state by hand, then start fresh." }
+        {
+          "c": "git rebase --abort",
+          "n": "The clean exit. If Git insists nothing is in progress:"
+        },
+        {
+          "c": "rm -rf .git/rebase-merge .git/rebase-apply",
+          "n": "Remove the stale state by hand, then start fresh."
+        }
       ],
       "intent": null,
-      "seealso": ["abort-operation", "undo-rebase"]
+      "seealso": [
+        "abort-operation",
+        "undo-rebase"
+      ]
     },
     {
       "id": "unsafe-repository",
@@ -920,30 +1369,48 @@
       "msg": "! [remote rejected] <branch> -> <branch> (pre-receive hook declined)",
       "why": "The server ran a policy check and said no: a protected branch, an oversized file, or a failed lint, and it printed its reason just above this line.",
       "fix": [
-        { "c": "<read the remote: lines above the rejection>", "n": "The server states its rule there. Protected branch? Open a pull request instead of pushing directly." }
+        {
+          "c": "<read the remote: lines above the rejection>",
+          "n": "The server states its rule there. Protected branch? Open a pull request instead of pushing directly."
+        }
       ],
       "intent": null,
-      "seealso": ["file-too-large", "checkout-pr"]
+      "seealso": [
+        "file-too-large",
+        "checkout-pr"
+      ]
     },
     {
       "id": "repository-rule-violations",
       "msg": "error: GH013: Repository rule violations found for refs/heads/<branch>.",
       "why": "GitHub rulesets blocked the push; the lines above name the exact rule, commonly a required pull request or signed commits.",
       "fix": [
-        { "c": "git switch -c <change> && git push -u origin <change>", "n": "Land it through a pull request, which is almost always what the rule wants." }
+        {
+          "c": "git switch -c <change> && git push -u origin <change>",
+          "n": "Land it through a pull request, which is almost always what the rule wants."
+        }
       ],
       "intent": null,
-      "seealso": ["create-pr-cli", "sign-commits"]
+      "seealso": [
+        "create-pr-cli",
+        "sign-commits"
+      ]
     },
     {
       "id": "gh006-protected",
       "msg": "error: GH006: Protected branch update failed for refs/heads/<branch>.",
       "why": "That branch only accepts changes through reviewed pull requests.",
       "fix": [
-        { "c": "git switch -c <change> && git push -u origin <change> && gh pr create --fill", "n": "The intended road: branch, push, pull request." }
+        {
+          "c": "git switch -c <change> && git push -u origin <change> && gh pr create --fill",
+          "n": "The intended road: branch, push, pull request."
+        }
       ],
       "intent": null,
-      "seealso": ["create-pr-cli", "merge-branch"]
+      "seealso": [
+        "create-pr-cli",
+        "merge-branch"
+      ]
     },
     {
       "id": "file-size-limit-exact",
@@ -958,11 +1425,20 @@
       "msg": "husky - pre-commit hook exited with code 1 (error)",
       "why": "The project's own pre-commit checks failed: lint, tests, or formatting, and the real output sits just above.",
       "fix": [
-        { "c": "<fix what the output above names>", "n": "That is the hook doing its job." },
-        { "c": "git commit --no-verify -m \"<message>\"", "n": "The documented escape hatch for a genuine emergency; use it knowingly, not habitually." }
+        {
+          "c": "<fix what the output above names>",
+          "n": "That is the hook doing its job."
+        },
+        {
+          "c": "git commit --no-verify -m \"<message>\"",
+          "n": "The documented escape hatch for a genuine emergency; use it knowingly, not habitually."
+        }
       ],
       "intent": null,
-      "seealso": ["hooks", "protect-main-locally"]
+      "seealso": [
+        "hooks",
+        "protect-main-locally"
+      ]
     },
     {
       "id": "everything-up-to-date-msg",
@@ -977,21 +1453,516 @@
       "msg": "nothing to commit, working tree clean",
       "why": "Commit found no staged changes. Either everything is already committed, or the edits live elsewhere.",
       "fix": [
-        { "c": "git status", "n": "Untracked files listed? They need git add first. Nothing at all? Check you are in the right folder and branch." }
+        {
+          "c": "git status",
+          "n": "Untracked files listed? They need git add first. Nothing at all? Check you are in the right folder and branch."
+        }
       ],
       "intent": null,
-      "seealso": ["add-a-vs-dot", "what-changed"]
+      "seealso": [
+        "add-a-vs-dot",
+        "what-changed"
+      ]
     },
     {
       "id": "requested-url-403",
       "msg": "The requested URL returned error: 403",
       "why": "The server recognized you and still said no: wrong account's cached credentials, or no write permission here.",
       "fix": [
-        { "c": "gh auth status", "n": "Confirm which account is talking." },
-        { "c": "printf \"protocol=https\\nhost=github.com\\n\" | git credential reject", "n": "Evict the cached credential so the next push asks fresh; or fork and pull-request if you lack write access." }
+        {
+          "c": "gh auth status",
+          "n": "Confirm which account is talking."
+        },
+        {
+          "c": "printf \"protocol=https\\nhost=github.com\\n\" | git credential reject",
+          "n": "Evict the cached credential so the next push asks fresh; or fork and pull-request if you lack write access."
+        }
       ],
       "intent": null,
-      "seealso": ["stop-password-prompts", "fork-vs-branch"]
+      "seealso": [
+        "stop-password-prompts",
+        "fork-vs-branch"
+      ]
+    },
+    {
+      "id": "partial-commit-during-merge",
+      "msg": "fatal: cannot do a partial commit during a merge.",
+      "why": "You named specific paths while a merge is in progress. A merge commit must record the whole resolved state, not a slice of it.",
+      "fix": [
+        {
+          "c": "git commit",
+          "n": "Commit everything the merge resolved, with no path arguments."
+        },
+        {
+          "c": "git commit -i <file>",
+          "n": "If you truly must, -i stages the named paths on top of the merge result first."
+        }
+      ],
+      "intent": "merge-conflict",
+      "seealso": [
+        "what-is-merging",
+        "abort-operation"
+      ]
+    },
+    {
+      "id": "not-concluded-merge",
+      "msg": "fatal: You have not concluded your merge (MERGE_HEAD exists).",
+      "why": "A previous merge stopped with conflicts and was never finished or aborted. Git will not start anything new on top of it.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Shows what is still unresolved from that merge."
+        },
+        {
+          "c": "git merge --abort",
+          "n": "Backs out completely and returns to the state before it started."
+        }
+      ],
+      "intent": "abort-operation",
+      "seealso": [
+        "merge-conflict",
+        "list-conflicts"
+      ]
+    },
+    {
+      "id": "entry-not-uptodate",
+      "msg": "error: Entry '<file>' not uptodate. Cannot merge.",
+      "why": "That file has uncommitted edits, and the merge needs to change it. Git refuses rather than overwrite them.",
+      "fix": [
+        {
+          "c": "git stash push -- <file>",
+          "n": "Shelve just that file, merge, then git stash pop."
+        },
+        {
+          "c": "git commit -am \"wip\"",
+          "n": "Or commit first, so your version merges properly instead of being set aside."
+        }
+      ],
+      "intent": "overwrite-local",
+      "seealso": [
+        "stash",
+        "switch-with-changes"
+      ]
+    },
+    {
+      "id": "exiting-unresolved-conflict",
+      "msg": "fatal: Exiting because of an unresolved conflict.",
+      "why": "A command that needed a clean tree found conflict markers still in place from an earlier operation.",
+      "fix": [
+        {
+          "c": "git diff --name-only --diff-filter=U",
+          "n": "Lists exactly which files still contain unresolved conflicts."
+        },
+        {
+          "c": "git add <file>",
+          "n": "Edit each one, delete the markers, stage it, then continue the original operation."
+        }
+      ],
+      "intent": "merge-conflict",
+      "seealso": [
+        "conflict-styles",
+        "list-conflicts"
+      ]
+    },
+    {
+      "id": "refname-ambiguous",
+      "msg": "warning: refname 'main' is ambiguous.",
+      "why": "A branch and a tag share the same name, so Git cannot tell which one you mean.",
+      "fix": [
+        {
+          "c": "git rev-parse --symbolic-full-name main",
+          "n": "Shows which refs are competing for the name."
+        },
+        {
+          "c": "git switch refs/heads/main",
+          "n": "Spell it out to be unambiguous, then rename or delete one of them so it stops recurring."
+        }
+      ],
+      "intent": "branch-vs-tag-choice",
+      "seealso": [
+        "tag-vs-branch",
+        "rename-tag"
+      ]
+    },
+    {
+      "id": "not-a-git-command",
+      "msg": "git: 'comit' is not a git command. See 'git --help'.",
+      "why": "A typo, or a subcommand that comes from a tool you have not installed, like lfs or filter-repo.",
+      "fix": [
+        {
+          "c": "git config --global help.autocorrect prompt",
+          "n": "Git offers the command it thinks you meant instead of just refusing."
+        },
+        {
+          "c": "git help -a",
+          "n": "Lists every command actually available, which settles whether it is a typo or a missing tool."
+        }
+      ],
+      "intent": "autocorrect",
+      "seealso": [
+        "git-help",
+        "git-aliases"
+      ]
+    },
+    {
+      "id": "protocol-not-supported",
+      "msg": "fatal: protocol 'https' is not supported",
+      "why": "The URL carries an invisible character, almost always from copying a link out of a web page or chat.",
+      "fix": [
+        {
+          "c": "git clone https://github.com/<owner>/<repo>.git",
+          "n": "Retype the URL by hand rather than pasting it."
+        },
+        {
+          "c": "git remote set-url origin <retyped-url>",
+          "n": "If an existing remote is affected, rewrite it the same way."
+        }
+      ],
+      "intent": "clone-repo",
+      "seealso": [
+        "change-remote-url",
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "unable-find-remote-helper",
+      "msg": "fatal: Unable to find remote helper for 'https'",
+      "why": "This Git build has no HTTPS transport, typically a minimal install or one missing its curl support.",
+      "fix": [
+        {
+          "c": "git remote set-url origin git@github.com:<owner>/<repo>.git",
+          "n": "SSH uses a different transport and usually works immediately."
+        },
+        {
+          "c": "winget upgrade Git.Git",
+          "n": "Or reinstall a complete Git build; on Linux install the git package rather than a stripped core-only one."
+        }
+      ],
+      "intent": "update-git",
+      "seealso": [
+        "https-vs-ssh",
+        "ssh-key-github"
+      ]
+    },
+    {
+      "id": "leaving-commits-behind",
+      "msg": "Warning: you are leaving 2 commits behind, not connected to any of your branches:",
+      "why": "You committed while in detached HEAD and are now switching away. Those commits have no branch pointing at them.",
+      "fix": [
+        {
+          "c": "git branch <name> <hash>",
+          "n": "The message prints the hashes. Naming them makes the work permanent."
+        },
+        {
+          "c": "git reflog",
+          "n": "If you already switched, the hashes are still here for about ninety days."
+        }
+      ],
+      "intent": "detached-head",
+      "seealso": [
+        "recover-lost-commit",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "needed-single-revision",
+      "msg": "fatal: Needed a single revision",
+      "why": "Git could not resolve the reference you gave, commonly a stash entry, branch, or hash that does not exist.",
+      "fix": [
+        {
+          "c": "git stash list",
+          "n": "When it came from a stash command, the entry number is probably wrong or already dropped."
+        },
+        {
+          "c": "git rev-parse <ref>",
+          "n": "Tests any reference on its own and reports precisely what Git cannot resolve."
+        }
+      ],
+      "intent": "stash-inspect",
+      "seealso": [
+        "recover-dropped-stash",
+        "current-commit"
+      ]
+    },
+    {
+      "id": "object-file-empty",
+      "msg": "error: object file .git/objects/ab/cdef... is empty",
+      "why": "An object was truncated, usually by a crash, a full disk, or a sync service writing inside .git.",
+      "fix": [
+        {
+          "c": "git fsck --full",
+          "n": "Reports how much is damaged. Unpushed commits that are still reachable can be branched out first."
+        },
+        {
+          "c": "git clone <url> ../fresh",
+          "n": "If the remote is healthy, a fresh clone is faster and safer than repairing objects by hand."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": [
+        "git-in-synced-folder",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "transport-file-not-allowed",
+      "msg": "fatal: transport 'file' not allowed",
+      "why": "Git blocks submodules and clones from local file paths by default, a hardening change after a security advisory.",
+      "fix": [
+        {
+          "c": "git -c protocol.file.allow=always submodule update --init",
+          "n": "Allows it for this one command, which is the right scope for a local test or sandbox."
+        },
+        {
+          "c": "git config --global protocol.file.allow always",
+          "n": "Only if you genuinely rely on local-path submodules; it re-opens the hole everywhere."
+        }
+      ],
+      "intent": "submodule-update",
+      "seealso": [
+        "practice-sandbox",
+        "clone-local"
+      ]
+    },
+    {
+      "id": "pack-exceeds-max",
+      "msg": "remote: fatal: pack exceeds maximum allowed size",
+      "why": "The push bundles more data than the server accepts in one go, which GitHub caps at 2 GB.",
+      "fix": [
+        {
+          "c": "git push origin <early-hash>:main",
+          "n": "Push history in slices, then push the rest, so no single pack is oversized."
+        },
+        {
+          "c": "git count-objects -vH",
+          "n": "If the size comes from large binaries, LFS or a history rewrite is the real fix."
+        }
+      ],
+      "intent": "push-large-repo",
+      "seealso": [
+        "repo-limits",
+        "git-lfs-migrate-existing"
+      ]
+    },
+    {
+      "id": "out-of-memory-pack",
+      "msg": "fatal: Out of memory, malloc failed (tried to allocate ... bytes)",
+      "why": "Packing a large repository exceeded available memory, often on a small CI runner or container.",
+      "fix": [
+        {
+          "c": "git config --global pack.windowMemory 256m",
+          "n": "Caps how much Git uses while packing. pack.threads 1 lowers it further."
+        },
+        {
+          "c": "git clone --filter=blob:none <url>",
+          "n": "Avoid the problem entirely where you only need history, not every old file version."
+        }
+      ],
+      "intent": "slow-git",
+      "seealso": [
+        "partial-clone",
+        "repack-aggressive"
+      ]
+    },
+    {
+      "id": "unable-create-symlink",
+      "msg": "error: unable to create symlink <path>: Function not implemented",
+      "why": "The repository contains symbolic links and this system will not create them, typically Windows without permission or a filesystem that lacks support.",
+      "fix": [
+        {
+          "c": "git config --global core.symlinks false",
+          "n": "Git checks out plain text files holding the link target instead of failing."
+        },
+        {
+          "c": "Enable Developer Mode in Windows Settings",
+          "n": "Then reclone: symlinks work without administrator rights from then on."
+        }
+      ],
+      "intent": "symlinks",
+      "seealso": [
+        "filename-too-long",
+        "filemode"
+      ]
+    },
+    {
+      "id": "unable-rmdir",
+      "msg": "warning: unable to rmdir '<path>': Directory not empty",
+      "why": "Git removed everything it tracked in that folder, but something untracked remains, most often a leftover submodule or build output.",
+      "fix": [
+        {
+          "c": "git status --ignored <path>",
+          "n": "Shows what is still in there before you delete anything."
+        },
+        {
+          "c": "rm -rf <path>",
+          "n": "Safe once you have confirmed nothing untracked matters. For submodules, deinit first with git submodule deinit -f <path>."
+        }
+      ],
+      "intent": "remove-submodule",
+      "seealso": [
+        "remove-untracked",
+        "nested-repo"
+      ]
+    },
+    {
+      "id": "lfs-not-pointers",
+      "msg": "Encountered 1 file(s) that should have been pointers, but weren't:",
+      "why": "Files matching an LFS rule were committed as ordinary blobs, usually because they went in before LFS was installed or tracked.",
+      "fix": [
+        {
+          "c": "git add --renormalize . && git commit -m \"Convert to LFS pointers\"",
+          "n": "Converts them going forward."
+        },
+        {
+          "c": "git lfs migrate import --include=\"*.psd\"",
+          "n": "Rewrites history so old copies become pointers too, which is what actually shrinks the repository."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": [
+        "git-lfs-migrate-existing",
+        "shrink-repo"
+      ]
+    },
+    {
+      "id": "lfs-over-quota",
+      "msg": "batch response: This repository is over its data quota.",
+      "why": "LFS storage or bandwidth for the account is exhausted. Bandwidth is consumed by every clone and fetch of LFS content, not only by uploads.",
+      "fix": [
+        {
+          "c": "Settings -> Billing -> Git LFS Data",
+          "n": "Shows storage and bandwidth used; buying a data pack restores service immediately."
+        },
+        {
+          "c": "GIT_LFS_SKIP_SMUDGE=1 git clone <url>",
+          "n": "Clones pointers only, so contributors who do not need the binaries stop consuming bandwidth."
+        }
+      ],
+      "intent": "git-lfs",
+      "seealso": [
+        "repo-limits",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "gh-not-found-404",
+      "msg": "gh: Not Found (HTTP 404)",
+      "why": "The resource does not exist, or your token cannot see it. Private repositories return 404 rather than 403 so their existence stays hidden.",
+      "fix": [
+        {
+          "c": "gh auth status",
+          "n": "Confirms which account and scopes are active for that host."
+        },
+        {
+          "c": "gh auth refresh -s repo,read:org",
+          "n": "Adds missing scopes. For a SAML-protected organization, authorize the token for it as well."
+        }
+      ],
+      "intent": "gh-cli-setup",
+      "seealso": [
+        "saml-sso-tokens",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "gh-token-required",
+      "msg": "gh: To use GitHub CLI in a GitHub Actions workflow, set the GH_TOKEN environment variable.",
+      "why": "gh is installed on the runner but has no credentials; workflows do not inherit a login.",
+      "fix": [
+        {
+          "c": "env: GH_TOKEN: ${{ github.token }}",
+          "n": "On the step or the job. That is the whole fix in most workflows."
+        },
+        {
+          "c": "permissions: pull-requests: write",
+          "n": "Grant the job whatever the command needs; the default token is read-only for many operations."
+        }
+      ],
+      "intent": "gh-in-workflows",
+      "seealso": [
+        "workflow-permissions",
+        "actions-secrets"
+      ]
+    },
+    {
+      "id": "gh007-private-email",
+      "msg": "remote: error: GH007: Your push would publish a private email address.",
+      "why": "Your commits carry a real address while your account has email privacy enabled, so GitHub blocks the push.",
+      "fix": [
+        {
+          "c": "git config --global user.email \"<id>+<user>@users.noreply.github.com\"",
+          "n": "Use the noreply address shown in Settings -> Emails."
+        },
+        {
+          "c": "git commit --amend --reset-author",
+          "n": "Rewrites the pending commit with the new identity. For several commits, rebase and reset the author across them."
+        }
+      ],
+      "intent": "private-email",
+      "seealso": [
+        "change-commit-author",
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "actions-git-exit-128",
+      "msg": "The process '/usr/bin/git' failed with exit code 128",
+      "why": "A Git command inside the workflow failed and Actions reports only the exit code. The cause is nearly always credentials or a missing ref.",
+      "fix": [
+        {
+          "c": "fetch-depth: 0",
+          "n": "On actions/checkout, when the failure comes from a command needing history the shallow clone lacks."
+        },
+        {
+          "c": "persist-credentials: true",
+          "n": "Pushing from a workflow needs credentials and contents: write. Read the step's own log above the exit code for the real message."
+        }
+      ],
+      "intent": "debug-workflows",
+      "seealso": [
+        "shallow-in-ci",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "actions-input-required",
+      "msg": "Error: Input required and not supplied: token",
+      "why": "An action expected an input that resolved to an empty string, usually a secret that does not exist under that name.",
+      "fix": [
+        {
+          "c": "gh secret list",
+          "n": "Confirm the secret exists and is spelled exactly as the workflow references it."
+        },
+        {
+          "c": "if: github.event_name != 'pull_request'",
+          "n": "Secrets are unavailable to workflows triggered by forks, so guard steps that need them."
+        }
+      ],
+      "intent": "actions-secrets",
+      "seealso": [
+        "pr-vs-push-triggers",
+        "debug-workflows"
+      ]
+    },
+    {
+      "id": "update-ref-failed",
+      "msg": "fatal: update_ref failed for ref 'refs/heads/main': cannot lock ref",
+      "why": "Another Git process holds the reference, or a stale lock file was left behind by one that crashed.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Check nothing else is running: an editor's Git integration, a watcher, or a background fetch."
+        },
+        {
+          "c": "rm .git/refs/heads/main.lock",
+          "n": "Delete the stale lock only once you are certain no Git process is alive."
+        }
+      ],
+      "intent": "index-lock",
+      "seealso": [
+        "unlink-of-file-failed",
+        "repair-corrupt-repo"
+      ]
     }
   ]
 }
