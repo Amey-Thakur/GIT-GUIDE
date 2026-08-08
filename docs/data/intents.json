@@ -23273,6 +23273,478 @@
         "same-branch-two-worktrees",
         "change-pr-base"
       ]
+    },
+    {
+      "id": "xcode-git",
+      "q": "Git settings for an Xcode or iOS project",
+      "aka": [
+        "xcode git setup",
+        "xcodeproj merge conflict",
+        "ios project version control"
+      ],
+      "variants": [
+        {
+          "when": "Ignore the churn",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Swift.gitignore",
+              "n": "Keeps xcuserdata, DerivedData, and build artifacts out. Commit the .xcodeproj and .xcworkspace themselves."
+            }
+          ],
+          "undo": "Delete .gitignore"
+        },
+        {
+          "when": "Tame project-file conflicts",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"*.pbxproj merge=union\" >> .gitattributes",
+              "n": "The project file is an append-heavy list, so union merging avoids most conflicts. Open the project afterwards to confirm Xcode still parses it."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "merge-union",
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "flutter-git",
+      "q": "Set up a Flutter repository",
+      "aka": [
+        "gitignore for flutter",
+        "flutter pubspec lock commit",
+        "dart project version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Dart.gitignore",
+              "n": "Excludes .dart_tool, build, and generated platform files."
+            },
+            {
+              "c": "git add pubspec.lock",
+              "n": "Commit the lockfile for applications so builds are reproducible; packages usually leave it out."
+            }
+          ],
+          "undo": "Remove the ignore file or untrack the lockfile"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "commit-lockfile",
+        "android-studio-git"
+      ]
+    },
+    {
+      "id": "python-project-git",
+      "q": "Set up a Python repository",
+      "aka": [
+        "gitignore for python",
+        "commit venv or not",
+        "pycache in repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore",
+              "n": "Excludes __pycache__, .venv, and build folders. Never commit the virtual environment: it is machine-specific and large."
+            },
+            {
+              "c": "git add requirements.txt",
+              "n": "Or pyproject.toml and the lockfile. Those describe the environment; the environment itself is rebuilt, not stored."
+            }
+          ],
+          "undo": "Remove the ignore rules"
+        }
+      ],
+      "seealso": [
+        "gitignore-templates",
+        "what-goes-in-git",
+        "install-from-git"
+      ]
+    },
+    {
+      "id": "php-laravel-git",
+      "q": "Git settings for a PHP or Laravel project",
+      "aka": [
+        "gitignore for laravel",
+        "commit vendor folder",
+        "php project version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Laravel.gitignore",
+              "n": "Keeps vendor, node_modules, and the environment file out."
+            },
+            {
+              "c": "git add composer.lock .env.example",
+              "n": "The lockfile pins dependencies; the example file documents the variables without their values."
+            }
+          ],
+          "undo": "Remove the ignore rules"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "gitignore-templates",
+        "wordpress-git"
+      ]
+    },
+    {
+      "id": "latex-thesis-git",
+      "q": "Version a LaTeX thesis or paper",
+      "aka": [
+        "git for latex",
+        "thesis version control",
+        "track paper revisions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '*.aux\\n*.log\\n*.out\\n*.synctex.gz\\n*.pdf\\n' >> .gitignore",
+              "n": "Build artifacts regenerate; only the sources belong in history. Some authors commit the final PDF per release instead."
+            },
+            {
+              "c": "git diff --word-diff",
+              "n": "Prose diffs read far better word by word. One sentence per line in the source makes every diff surgical."
+            }
+          ],
+          "undo": "Remove the ignore rules"
+        }
+      ],
+      "seealso": [
+        "git-for-non-code",
+        "diff-word",
+        "school-project-git"
+      ]
+    },
+    {
+      "id": "static-site-git",
+      "q": "Version a blog or static site",
+      "aka": [
+        "git for hugo",
+        "jekyll site version control",
+        "blog in a repository"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf 'public/\\n.hugo_build.lock\\nresources/_gen/\\n' >> .gitignore",
+              "n": "Commit content and configuration, never the generated output. For Jekyll, ignore _site and .jekyll-cache."
+            },
+            {
+              "c": "Settings -> Pages -> Source: GitHub Actions",
+              "n": "Let a workflow build and deploy, so the repository stays sources-only."
+            }
+          ],
+          "undo": "Remove the ignore rules"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "nojekyll",
+        "what-goes-in-git"
+      ]
+    },
+    {
+      "id": "notes-vault-git",
+      "q": "Back up a notes vault with Git",
+      "aka": [
+        "obsidian git sync",
+        "version my notes",
+        "markdown vault backup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf '.obsidian/workspace*\\n.trash/\\n' >> .gitignore",
+              "n": "Ignore per-machine workspace state and keep the notes and shared settings. Markdown diffs and merges cleanly."
+            },
+            {
+              "c": "git commit -am \"Notes $(date +%F)\" && git push",
+              "n": "A scheduled commit keeps a private repository as a versioned backup, with every past revision recoverable."
+            }
+          ],
+          "undo": "git revert the commit"
+        }
+      ],
+      "seealso": [
+        "git-for-non-code",
+        "dotfiles-repo",
+        "two-machines"
+      ]
+    },
+    {
+      "id": "kubernetes-manifests-git",
+      "q": "Keep Kubernetes manifests in Git",
+      "aka": [
+        "gitops basics",
+        "k8s yaml in repository",
+        "manifests version control"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add k8s/",
+              "n": "The cluster's desired state lives in the repository; a controller like Argo CD or Flux reconciles the cluster to whatever main says. Rollback becomes git revert."
+            },
+            {
+              "c": "echo \"*secret*.yaml\" >> .gitignore",
+              "n": "Plain Secrets must never be committed. Use sealed secrets or an external store and commit only the encrypted reference."
+            }
+          ],
+          "undo": "git revert the manifest commit and let the controller reconcile"
+        }
+      ],
+      "seealso": [
+        "env-files",
+        "deploy-environments",
+        "rollback-decision"
+      ]
+    },
+    {
+      "id": "jenkins-to-actions",
+      "q": "Move CI from Jenkins to GitHub Actions",
+      "aka": [
+        "jenkinsfile to workflow",
+        "migrate jenkins pipeline",
+        "replace jenkins"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".github/workflows/ci.yml",
+              "n": "Jenkins stages become jobs with needs:, agents become runs-on, and credentials become repository secrets. Shell steps usually port unchanged."
+            },
+            {
+              "c": "runs-on: self-hosted",
+              "n": "Where a job needs the old hardware, register that machine as a self-hosted runner and migrate the rest first."
+            }
+          ],
+          "undo": "Keep Jenkins running until the workflow proves itself"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "self-hosted-runner",
+        "gitlab-ci-vs-actions"
+      ]
+    },
+    {
+      "id": "portfolio-repos",
+      "q": "Choose which repositories to show an employer",
+      "aka": [
+        "github for job applications",
+        "what recruiters look at",
+        "portfolio on github"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Profile -> Customize your pins",
+              "n": "Depth beats breadth: three finished projects with clear READMEs, tests, and real commit history read better than thirty tutorials."
+            },
+            {
+              "c": "git log --oneline | head -20",
+              "n": "Reviewers do read history. Meaningful messages and steady commits say more about you than the star count."
+            }
+          ],
+          "undo": "Unpin at any time"
+        }
+      ],
+      "seealso": [
+        "tidy-github-profile",
+        "professional-repo",
+        "achievements"
+      ]
+    },
+    {
+      "id": "teach-git-to-class",
+      "q": "Teach Git to a class or a team",
+      "aka": [
+        "git for teachers",
+        "run a git workshop",
+        "onboarding people to git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git init sandbox",
+              "n": "Teach the model before the commands: four places code lives, branches as labels, and the reflog as the safety net. Fear disappears once people know nothing committed is lost."
+            },
+            {
+              "c": "classroom.github.com",
+              "n": "GitHub Classroom hands out template repositories and collects work as pull requests, which teaches the real workflow rather than a simulation."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "school-project-git",
+        "learn-git-effectively",
+        "practice-sandbox"
+      ]
+    },
+    {
+      "id": "handover-project",
+      "q": "Hand a project over to someone else",
+      "aka": [
+        "transfer project ownership",
+        "leaving the team handover",
+        "give project to another developer"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Transfer ownership",
+              "n": "Moves the repository with its issues, pull requests, and history intact."
+            },
+            {
+              "c": "git log --oneline -30",
+              "n": "Before handing over: a README that explains running and deploying it, CODEOWNERS updated, secrets rotated, and any personal tokens revoked."
+            }
+          ],
+          "undo": "The new owner can transfer it back"
+        }
+      ],
+      "seealso": [
+        "transfer-repo",
+        "codeowners",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "contribute-docs-only",
+      "q": "Contribute to a project without writing code",
+      "aka": [
+        "non code contributions",
+        "fix typos in docs",
+        "help open source without coding"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Edit this file, on any GitHub page",
+              "n": "The pencil icon forks, branches, and opens a pull request in one flow. Documentation fixes are how most maintainers meet their future contributors."
+            },
+            {
+              "c": "gh issue list --label documentation",
+              "n": "Triage, reproduction steps, and translations count too, and are often scarcer than code."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "edit-on-github",
+        "first-contribution",
+        "find-projects-to-contribute"
+      ]
+    },
+    {
+      "id": "review-ai-generated-code",
+      "q": "Review a pull request written with AI assistance",
+      "aka": [
+        "ai generated pr review",
+        "llm code in pull request",
+        "reviewing machine written code"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "Run it. Generated code compiles and reads well far more often than it is correct, so execution and tests carry the review."
+            },
+            {
+              "c": "gh pr diff <number>",
+              "n": "Check the parts models get wrong: error paths, edge cases, invented APIs, and dependencies nobody vetted. Authorship does not change the standard, only where you look first."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "review-large-pr",
+        "pr-checklist"
+      ]
+    },
+    {
+      "id": "multiple-language-repo",
+      "q": "One repository holding several languages",
+      "aka": [
+        "polyglot repository",
+        "frontend and backend same repo",
+        "multiple stacks one repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "printf 'web/node_modules/\\napi/__pycache__/\\n' >> .gitignore",
+              "n": "Combine each ecosystem's rules, scoped by folder, rather than one sprawling file at the root."
+            },
+            {
+              "c": "on: push: paths: [\"api/**\"]",
+              "n": "Give each stack its own workflow so a frontend change does not run the Python suite."
+            }
+          ],
+          "undo": "Remove the rules"
+        }
+      ],
+      "seealso": [
+        "monorepo",
+        "large-monorepo-ci",
+        "gitignore-per-folder"
+      ]
     }
   ]
 }
