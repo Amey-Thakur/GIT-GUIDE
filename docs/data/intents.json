@@ -382,7 +382,8 @@
         "clean untracked",
         "remove new files",
         "git clean",
-        "delete files not in repo"
+        "delete files not in repo",
+        "delete a single untracked file"
       ],
       "variants": [
         {
@@ -1286,7 +1287,8 @@
       "aka": [
         "new branch",
         "make branch",
-        "start feature branch"
+        "start feature branch",
+        "create branch on github website"
       ],
       "variants": [
         {
@@ -2880,7 +2882,8 @@
         "which commit broke it",
         "binary search bug",
         "regression hunt",
-        "bisect run with a script"
+        "bisect run with a script",
+        "bisect skip"
       ],
       "variants": [
         {
@@ -3305,7 +3308,8 @@
         "file was deleted find it",
         "recover deleted file",
         "bring back removed file",
-        "find when a file was deleted"
+        "find when a file was deleted",
+        "history of a deleted file"
       ],
       "variants": [
         {
@@ -4347,7 +4351,8 @@
         "abort rebase",
         "abort merge",
         "cancel cherry-pick",
-        "interactive rebase in progress"
+        "interactive rebase in progress",
+        "switch branch during a merge"
       ],
       "variants": [
         {
@@ -4637,7 +4642,8 @@
         "open pr command line",
         "gh pr create",
         "merge request cli",
-        "pr for the current branch"
+        "pr for the current branch",
+        "compare and pull request banner"
       ],
       "variants": [
         {
@@ -5613,7 +5619,8 @@
       "aka": [
         "hide email github",
         "noreply email",
-        "email exposed in commits"
+        "email exposed in commits",
+        "push blocked email privacy gh007"
       ],
       "variants": [
         {
@@ -6339,7 +6346,8 @@
         "pretty git log",
         "branch graph terminal",
         "log with colors and branches",
-        "visualize branch topology"
+        "visualize branch topology",
+        "show absolute dates in log"
       ],
       "variants": [
         {
@@ -8256,7 +8264,8 @@
         "pull.rebase true",
         "pull creates merge commit",
         "avoid merge commits on pull",
-        "please enter a commit message to explain why this merge is necessary"
+        "please enter a commit message to explain why this merge is necessary",
+        "unexpected merge commit after pull"
       ],
       "variants": [
         {
@@ -8295,7 +8304,8 @@
         "host site on github",
         "deploy static site free",
         "pages from a private repository",
-        "deploy pages with an actions workflow"
+        "deploy pages with an actions workflow",
+        "pages shows 404"
       ],
       "variants": [
         {
@@ -8416,7 +8426,9 @@
       "aka": [
         "branch protection rules",
         "require pull request review",
-        "block force push to main"
+        "block force push to main",
+        "cannot approve my own pr",
+        "merge despite failing checks"
       ],
       "variants": [
         {
@@ -9325,7 +9337,8 @@
       "aka": [
         "github code search",
         "find code examples",
-        "search inside repositories"
+        "search inside repositories",
+        "search only my repositories"
       ],
       "variants": [
         {
@@ -11684,7 +11697,8 @@
       "aka": [
         "pull request explained",
         "pr vs merge",
-        "why not push to main directly"
+        "why not push to main directly",
+        "pr updates when i push more commits"
       ],
       "variants": [
         {
@@ -15122,6 +15136,212 @@
         "deploy-keys",
         "actions-secrets",
         "deploy-environments"
+      ]
+    },
+    {
+      "id": "undo-clean",
+      "q": "Undo git clean",
+      "aka": [
+        "recover cleaned files",
+        "git clean deleted my files",
+        "untracked files gone"
+      ],
+      "variants": [
+        {
+          "when": "The honest answer",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clean -n",
+              "n": "There is no undo: cleaned files were untracked, so Git holds no copy. The -n rehearsal before every real clean is the protection. The same is true of discarding untracked files in an editor's Git panel."
+            }
+          ],
+          "undo": "None in Git"
+        },
+        {
+          "when": "Straws worth grasping",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "code -> Timeline -> Local History",
+              "n": "Editors keep their own file history independent of Git. VS Code's Timeline view or JetBrains Local History often has the lost content."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "remove-untracked",
+        "stash",
+        "why-version-control"
+      ]
+    },
+    {
+      "id": "os-junk-files",
+      "q": "Keep .DS_Store and Thumbs.db out of every repository",
+      "aka": [
+        "ds_store in repo",
+        "thumbs.db committed",
+        "operating system junk files"
+      ],
+      "variants": [
+        {
+          "when": "Once, globally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \".DS_Store\" >> ~/.gitignore_global",
+              "n": "With core.excludesFile pointing there, Finder and Explorer droppings never enter any repository again. Add Thumbs.db and desktop.ini for Windows."
+            }
+          ],
+          "undo": "Remove the lines"
+        },
+        {
+          "when": "Already committed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rm -r --cached \"**/.DS_Store\" && git commit -m \"Remove OS junk\"",
+              "n": "Out of the repository, still on disk, ignored from now on."
+            }
+          ],
+          "undo": "Nothing worth undoing"
+        }
+      ],
+      "seealso": [
+        "global-gitignore",
+        "untrack-file",
+        "gitignore-patterns"
+      ]
+    },
+    {
+      "id": "git-for-non-code",
+      "q": "Use Git for writing, not just code",
+      "aka": [
+        "git for writers",
+        "version a thesis",
+        "track document changes"
+      ],
+      "variants": [
+        {
+          "when": "Plain text shines",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --word-diff",
+              "n": "Markdown or LaTeX prose gets real diffs, word by word. Every draft preserved, every change attributable, branches for restructures you might regret."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Binary formats",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git lfs track \"*.psd\"",
+              "n": "Word files, PSDs, and audio version fine but diff poorly; LFS keeps the repository light. GitHub renders Markdown, so the repo itself is readable."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "diff-word",
+        "git-lfs",
+        "why-version-control"
+      ]
+    },
+    {
+      "id": "shared-branch-etiquette",
+      "q": "Two people on one branch without stepping on each other",
+      "aka": [
+        "shared branch workflow",
+        "pair on same branch",
+        "teammate pushed while i worked"
+      ],
+      "variants": [
+        {
+          "when": "The rules",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git pull --rebase",
+              "n": "Before every push: your commits replay on top of theirs, no merge bubbles between teammates. Never rewrite commits that are already pushed to the shared branch, and announce any force push before it happens."
+            }
+          ],
+          "undo": "git rebase --abort mid-way"
+        }
+      ],
+      "seealso": [
+        "pull-rebase",
+        "force-push-safely",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "network-graph",
+      "q": "See the branch and fork topology of a repository",
+      "aka": [
+        "network graph",
+        "visualize forks",
+        "who branched from what"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Insights -> Network",
+              "n": "Every branch and fork as one timeline: where lines split, where they merged back, and which forks carry unmerged work. The forks page lists them sortable by activity."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pretty-log",
+        "fork-vs-clone",
+        "repo-traffic"
+      ]
+    },
+    {
+      "id": "big-files-where",
+      "q": "Where large files actually belong",
+      "aka": [
+        "datasets in git?",
+        "videos in repository",
+        "large assets strategy"
+      ],
+      "variants": [
+        {
+          "when": "Versioned with the code",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git lfs track \"*.onnx\"",
+              "n": "LFS when the file changes with the code and clones need it: models, design sources, fixtures."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Produced by the code",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh release upload v2.1.0 dist/app.exe",
+              "n": "Build outputs belong on releases, up to 2 GB per file, downloadable without cloning anything. Datasets that neither change with code nor ship with it belong in object storage, referenced by URL."
+            }
+          ],
+          "undo": "gh release delete-asset v2.1.0 app.exe"
+        }
+      ],
+      "seealso": [
+        "git-lfs",
+        "create-release",
+        "repo-limits"
       ]
     }
   ]
