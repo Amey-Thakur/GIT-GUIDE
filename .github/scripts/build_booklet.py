@@ -58,7 +58,7 @@ FOOT = f'''<div class="pfoot">
 
 
 def page(body, title=""):
-    head = (f'<div class="phead">{logo(27)}<span>Git Guide<i>.</i></span><em>{escape(title)}</em></div>'
+    head = (f'<div class="phead"><a class="pbrand" href="https://amey-thakur.github.io/GIT-GUIDE/">{logo(27)}<span>Git Guide<i>.</i></span></a><em>{escape(title)}</em></div>'
             if title else "")
     return f'<section class="page">{head}{body}{FOOT}</section>'
 
@@ -97,7 +97,7 @@ def foreword():
 <h2>A note from Amey</h2>
 <p>Git carries nearly every codebase on earth, and almost everyone who uses it learned it by accident: a command from a teammate, a midnight search, a ritual repeated without understanding.</p>
 <p>Git Guide exists to end that way of learning. Ask in plain language, or paste the error Git printed, and get the exact commands with the two things most resources never give: how dangerous each one is, and how to take it back.</p>
-<p>These pages hold the whole of it: the model that replaces memorizing, every command section, every error decoded, and the chapters on GitHub and on how teams work. The living version, searchable and always current, waits at <b>amey-thakur.github.io/GIT-GUIDE</b>.</p>
+<p>These pages hold the whole of it: the model that replaces memorizing, every command section, every error decoded, and the chapters on GitHub and on how teams work. The living version, searchable and always current, waits at <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a>.</p>
 <p class="sign">Amey</p>
 </div>''', "Foreword")
 
@@ -184,7 +184,7 @@ def start():
         ("6", "When it goes wrong", "It will, for everyone. Ask the site in plain language, or paste the exact error", "amey-thakur.github.io/GIT-GUIDE"),
     ]
     items = "".join(
-        f'<div class="step"><b>{n}</b><div><strong>{escape(t)}</strong><span>{escape(d)}</span><code>{escape(c)}</code></div></div>'
+        f'<div class="step"><b>{n}</b><div><strong>{escape(t)}</strong><span>{escape(d)}</span><code>' + (f'<a class="codelink" href="https://amey-thakur.github.io/GIT-GUIDE/">{escape(c)}</a>' if 'GIT-GUIDE' in c else escape(c)) + '</code></div></div>'
         for n, t, d, c in steps)
     return page(f'<h2>From zero to first push</h2><div class="steps">{items}</div>', "Start")
 
@@ -249,21 +249,21 @@ def error_pages(errs):
                     + "".join(f'<div><code>{escape(e["msg"])}</code><p>{escape(e["why"])}</p></div>' for e in items)
                     + "</div>")
         body = (f'<h2>The errors you will meet</h2>'
-                f'<p class="note">The message, then the cause. Every fix is one search away on the site.</p>'
+                f'<p class="note">The message, then the cause. Every fix is one search away <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">on the site</a>.</p>'
                 f'<div class="cols"><div>{colerr(part[:half])}</div><div>{colerr(part[half:])}</div></div>')
         pages_out.append(page(body, f"Errors {n // chunk + 1}"))
     return pages_out
 
 
 def closing():
-    doors = [("Finder", "ask anything, or paste the error"), ("Start", "zero to first push"),
-             ("Learn", "the model, step by step"), ("Fix", "guided rescue"),
-             ("Errors", "Git's messages, decoded"), ("GitHub", "first repo to branch protection"),
-             ("Workflows", "how teams run Git"), ("Cheatsheet", "everything, one line each")]
-    items = "".join(f'<div><b>{n}</b><span>{d}</span></div>' for n, d in doors)
+    doors = [("Finder", "ask anything, or paste the error", ""), ("Start", "zero to first push", "setup.html"),
+             ("Learn", "the model, step by step", "learn.html"), ("Fix", "guided rescue", "fix.html"),
+             ("Errors", "Git's messages, decoded", "errors.html"), ("GitHub", "first repo to branch protection", "github.html"),
+             ("Workflows", "how teams run Git", "workflows.html"), ("Cheatsheet", "everything, one line each", "cheatsheet.html")]
+    items = "".join(f'<a href="https://amey-thakur.github.io/GIT-GUIDE/{u}"><b>{n}</b><span>{d}</span></a>' for n, d, u in doors)
     return page(f'''
 <h2>The living version</h2>
-<p class="note">Eight doors, one address: <b>amey-thakur.github.io/GIT-GUIDE</b></p>
+<p class="note">Eight doors, one address: <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a></p>
 <div class="doors">{items}</div>
 <p class="note">Every answer also lives in the repository's Discussions; a question the guide cannot answer becomes its next addition. MIT licensed, no trackers, works offline.</p>''', "Closing")
 
@@ -283,6 +283,9 @@ body {{ font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: {PAP
 .phead span {{ font-weight: 700; font-size: 15.5pt; }}
 .phead em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 12pt; }}
 i {{ color: {ACCENT}; font-style: normal; }}
+.pbrand {{ display: flex; align-items: center; gap: 7px; color: inherit; text-decoration: none; }}
+a.inl {{ color: {INK}; font-weight: 700; text-decoration: none; }}
+.codelink {{ color: inherit; text-decoration: none; }}
 h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; padding-left: 4mm; }}
 .h2gap {{ margin-top: 7mm; }}
 .cover {{ display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }}
@@ -318,7 +321,7 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .list.inline code {{ display: inline; }}
 .list.inline span {{ display: inline; margin-left: 2.5mm; }}
 .doors {{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5mm; margin: 7mm 0 8mm; }}
-.doors div {{ border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 5mm; background: {CARD};
+.doors a {{ display: block; color: inherit; text-decoration: none;  border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 5mm; background: {CARD};
   border-left: 1.4mm solid {ACCENT}; }}
 .doors b {{ color: {ACCENT}; font-size: 13pt; display: block; margin-bottom: 1.5mm; }}
 .doors span {{ color: {MUTED}; font-size: 10.5pt; }}
