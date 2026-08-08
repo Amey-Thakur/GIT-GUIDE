@@ -1194,7 +1194,8 @@
         "not on a branch",
         "head detached at",
         "reconcile detached head with main",
-        "go to a particular revision"
+        "go to a particular revision",
+        "keep commits made in detached head"
       ],
       "variants": [
         {
@@ -3818,7 +3819,8 @@
         "committed password",
         "remove env from history",
         "leaked api key",
-        "purge file from repo"
+        "purge file from repo",
+        "remove file from entire history"
       ],
       "variants": [
         {
@@ -5748,7 +5750,8 @@
       "aka": [
         "lockfile in git",
         "yarn.lock commit",
-        "should i commit lock file"
+        "should i commit lock file",
+        "package-lock conflict"
       ],
       "variants": [
         {
@@ -7371,7 +7374,8 @@
       "aka": [
         "ignore whitespace diff",
         "indentation only changes",
-        "reformat diff huge"
+        "reformat diff huge",
+        "merge ignoring whitespace"
       ],
       "variants": [
         {
@@ -9239,7 +9243,8 @@
       "aka": [
         "github labels",
         "create label",
-        "triage issues"
+        "triage issues",
+        "auto label pull requests"
       ],
       "variants": [
         {
@@ -10460,7 +10465,8 @@
       "aka": [
         "github keyboard shortcuts",
         "quick file finder",
-        "github.dev editor"
+        "github.dev editor",
+        "command palette"
       ],
       "variants": [
         {
@@ -10495,7 +10501,8 @@
       "aka": [
         "github compare view",
         "diff two tags online",
-        "compare url"
+        "compare url",
+        "compare across forks"
       ],
       "variants": [
         {
@@ -13088,6 +13095,282 @@
       "seealso": [
         "submodule-update",
         "update-many-repos"
+      ]
+    },
+    {
+      "id": "binary-conflict",
+      "q": "Resolve a conflict in a binary file",
+      "aka": [
+        "conflict in image or pdf",
+        "binary merge conflict",
+        "cannot merge binary"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git checkout --ours <file>",
+              "n": "Binaries cannot merge line by line; you pick a side. --ours keeps your version, --theirs takes the incoming one."
+            },
+            {
+              "c": "git add <file>",
+              "n": "Staging marks the conflict resolved."
+            }
+          ],
+          "undo": "git checkout -m <file> restores the conflict before committing"
+        }
+      ],
+      "seealso": [
+        "merge-take-side",
+        "merge-conflict",
+        "git-lfs"
+      ]
+    },
+    {
+      "id": "commit-as-other",
+      "q": "Make one commit under a different identity",
+      "aka": [
+        "commit with different email once",
+        "one-off author",
+        "work commit from personal machine"
+      ],
+      "variants": [
+        {
+          "when": "Different author, this commit only",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit --author=\"Name <email>\"",
+              "n": "Overrides the author for this commit; the committer stays you. For both fields, prefix the command instead: git -c user.name=\"Name\" -c user.email=\"email\" commit."
+            }
+          ],
+          "undo": "git commit --amend --reset-author"
+        }
+      ],
+      "seealso": [
+        "multiple-identities",
+        "change-commit-author",
+        "commit-dates"
+      ]
+    },
+    {
+      "id": "skip-hooks",
+      "q": "Skip commit hooks for one commit",
+      "aka": [
+        "--no-verify",
+        "bypass pre-commit hook",
+        "hook blocks emergency fix"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit --no-verify",
+              "n": "Skips pre-commit and commit-msg hooks this once. Fair during an incident or a broken hook; the check you skipped still owes its debt, and CI usually collects."
+            }
+          ],
+          "undo": "Run the hook's check manually and amend if it finds problems"
+        }
+      ],
+      "seealso": [
+        "hooks",
+        "commit-frequency"
+      ]
+    },
+    {
+      "id": "push-large-repo",
+      "q": "Push a big repository over HTTPS without it dying",
+      "aka": [
+        "push fails large repo",
+        "http postbuffer",
+        "rpc failed curl 55"
+      ],
+      "variants": [
+        {
+          "when": "Quick unblock",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config http.postBuffer 524288000",
+              "n": "Raises the HTTP buffer to 500 MB, which cures most mid-push drops on huge first pushes."
+            }
+          ],
+          "undo": "git config --unset http.postBuffer"
+        },
+        {
+          "when": "The better path",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote set-url origin git@github.com:<owner>/<repo>.git",
+              "n": "SSH streams without the HTTP buffer dance. If the repo is big because of big files, that is the real problem to fix."
+            }
+          ],
+          "undo": "git remote set-url origin <https-url>"
+        }
+      ],
+      "seealso": [
+        "https-vs-ssh",
+        "repo-limits",
+        "git-lfs"
+      ]
+    },
+    {
+      "id": "actions-matrix",
+      "q": "Test across several versions and systems at once",
+      "aka": [
+        "github actions matrix",
+        "test on multiple node versions",
+        "cross platform ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "strategy: matrix: os: [ubuntu-latest, windows-latest], node: [20, 22]",
+              "n": "One job definition, four runs, every combination. fail-fast: false lets the others finish when one combination breaks."
+            }
+          ],
+          "undo": "Remove the matrix block"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-cache"
+      ]
+    },
+    {
+      "id": "actions-env",
+      "q": "Pass values between workflow steps",
+      "aka": [
+        "github actions environment variables",
+        "github_env",
+        "step outputs"
+      ],
+      "variants": [
+        {
+          "when": "Set for later steps",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"VERSION=2.1.0\" >> \"$GITHUB_ENV\"",
+              "n": "Every following step in the job sees $VERSION. Plain env: blocks work for values known up front."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Between jobs",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"version=2.1.0\" >> \"$GITHUB_OUTPUT\"",
+              "n": "Declare it in the job's outputs: and downstream jobs read needs.<job>.outputs.version."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "deploy-environments",
+      "q": "Gate deployments behind approvals",
+      "aka": [
+        "github environments",
+        "deployment approval",
+        "production protection"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Environments -> New environment",
+              "n": "Name it production, add required reviewers and environment-scoped secrets. A job declaring environment: production pauses for approval and only then sees those secrets."
+            }
+          ],
+          "undo": "Delete the environment"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "workflow-permissions",
+        "branch-protection"
+      ]
+    },
+    {
+      "id": "spa-on-pages",
+      "q": "Single-page app routes 404 on Pages",
+      "aka": [
+        "react router github pages",
+        "spa fallback 404",
+        "refresh breaks route"
+      ],
+      "variants": [
+        {
+          "when": "The fallback trick",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "cp dist/index.html dist/404.html",
+              "n": "Pages serves 404.html for unknown paths; if that is your app, the router takes over and renders the route. Do it in the deploy workflow after the build."
+            }
+          ],
+          "undo": "Remove the copy step"
+        },
+        {
+          "when": "Avoid the problem",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "createHashRouter",
+              "n": "Hash-based routes never leave index.html, so nothing can 404. Less pretty URLs, zero configuration."
+            }
+          ],
+          "undo": "Switch the router back"
+        }
+      ],
+      "seealso": [
+        "github-pages",
+        "nojekyll"
+      ]
+    },
+    {
+      "id": "issue-develop",
+      "q": "Start a branch straight from an issue",
+      "aka": [
+        "gh issue develop",
+        "link branch to issue",
+        "development section branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh issue develop <number> --checkout",
+              "n": "Creates a branch linked in the issue's Development section and switches to it. The pull request from that branch links back, and merging can close the issue."
+            }
+          ],
+          "undo": "git switch - and delete the branch"
+        }
+      ],
+      "seealso": [
+        "close-issue-with-pr",
+        "branch-naming",
+        "open-issue"
       ]
     }
   ]
