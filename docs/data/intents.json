@@ -26341,6 +26341,427 @@
         "reset-modes",
         "safe-commands-list"
       ]
+    },
+    {
+      "id": "multiple-commits-one-push",
+      "q": "Push several commits at once or one at a time",
+      "aka": [
+        "push each commit separately",
+        "batch commits before push",
+        "how often to push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push",
+              "n": "Push sends every commit the remote lacks, in order, as one operation. There is no cost to batching, and CI runs once rather than per commit."
+            },
+            {
+              "c": "git push origin <hash>:<branch>",
+              "n": "To publish only up to a point, name the commit. The rest stay local until you push again."
+            }
+          ],
+          "undo": "git push --force-with-lease to move the branch back"
+        }
+      ],
+      "seealso": [
+        "push-up-to-commit",
+        "commit-frequency",
+        "list-unpushed"
+      ]
+    },
+    {
+      "id": "where-did-my-stash-go",
+      "q": "My stash is missing after switching branches",
+      "aka": [
+        "stash disappeared",
+        "cannot find my stash",
+        "stash list empty"
+      ],
+      "variants": [
+        {
+          "when": "Look properly first",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash list",
+              "n": "Stashes are global to the repository, not per branch, so switching cannot hide them. An empty list means one was popped or dropped."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "It was dropped",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --unreachable | grep commit",
+              "n": "A dropped stash lingers as an unreachable commit. Inspect candidates with git show and restore with git stash apply <hash>."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "recover-dropped-stash",
+        "stash-inspect",
+        "dangling-objects"
+      ]
+    },
+    {
+      "id": "see-config-value-source",
+      "q": "A setting is not doing what I expect",
+      "aka": [
+        "config not taking effect",
+        "why is this setting ignored",
+        "which config wins"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --show-origin --get <key>",
+              "n": "Prints the winning value and the file it came from. Local beats global beats system, so a repository setting can quietly override your global one."
+            },
+            {
+              "c": "git config --show-scope --get-all <key>",
+              "n": "Every level that sets it, so you can see what is being overridden."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "config-precedence",
+        "see-config-for-repo",
+        "show-config"
+      ]
+    },
+    {
+      "id": "repo-has-two-histories",
+      "q": "The repository seems to have two separate histories",
+      "aka": [
+        "unrelated histories in one repo",
+        "two root commits",
+        "disconnected history"
+      ],
+      "variants": [
+        {
+          "when": "See it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --oneline --graph --all",
+              "n": "Two root commits mean two projects were joined with --allow-unrelated-histories, or a branch was created orphaned."
+            },
+            {
+              "c": "git rev-list --max-parents=0 HEAD",
+              "n": "Lists every root commit, which confirms it."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Join them properly",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge --allow-unrelated-histories <branch>",
+              "n": "A merge commit connects the two lines from that point forward. Earlier history stays separate, which is honest."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "unrelated-histories",
+        "merge-two-repos",
+        "empty-branch"
+      ]
+    },
+    {
+      "id": "cannot-see-private-repo",
+      "q": "A colleague cannot see the repository I shared",
+      "aka": [
+        "they get 404 on my repo",
+        "private repo not visible",
+        "link says not found"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators",
+              "n": "GitHub returns 404 rather than 403 for private repositories, so no access looks identical to not existing. Confirm they are invited and accepted."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/collaborators --jq \".[].login\"",
+              "n": "Lists who actually has access, which settles the question quickly."
+            }
+          ],
+          "undo": "Remove the collaborator"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "repo-visibility-who-sees",
+        "org-base-permissions"
+      ]
+    },
+    {
+      "id": "branch-behind-and-ahead",
+      "q": "Read ahead and behind counts correctly",
+      "aka": [
+        "what does 2 ahead 3 behind mean",
+        "ahead behind explained",
+        "branch status numbers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git status -sb",
+              "n": "Ahead means commits you have that the remote lacks; behind means the reverse. Both at once is divergence, which needs a merge or rebase, not just a push."
+            },
+            {
+              "c": "git rev-list --left-right --count origin/main...main",
+              "n": "The two numbers directly, for scripts and prompts."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "ahead-behind",
+        "diverged-branches",
+        "remote-branch-vs-tracking"
+      ]
+    },
+    {
+      "id": "tags-not-showing-on-github",
+      "q": "My tag is not on the releases page",
+      "aka": [
+        "pushed tag but no release",
+        "tag missing on github",
+        "tag vs release page"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push origin <tag>",
+              "n": "Tags do not travel with a normal push, which is the usual cause. Push them explicitly or use --follow-tags."
+            },
+            {
+              "c": "gh release create <tag> --generate-notes",
+              "n": "A pushed tag appears under Tags but is not a release until you create one from it."
+            }
+          ],
+          "undo": "git push origin --delete <tag>"
+        }
+      ],
+      "seealso": [
+        "tags-vs-releases",
+        "fetch-tags",
+        "create-release"
+      ]
+    },
+    {
+      "id": "github-action-uses-old-code",
+      "q": "My workflow runs an old version of the code",
+      "aka": [
+        "workflow using stale commit",
+        "action runs previous version",
+        "ci not picking up changes"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run view --json headSha --jq .headSha",
+              "n": "Compare with your latest commit. On pull_request events the run uses a merge preview, not your branch tip, which explains most confusion."
+            },
+            {
+              "c": "uses: actions/checkout@v5 with ref: ${{ github.head_ref }}",
+              "n": "When a job genuinely needs the branch tip rather than the merge result."
+            }
+          ],
+          "undo": "Remove the ref override"
+        }
+      ],
+      "seealso": [
+        "pr-vs-push-triggers",
+        "branch-in-ci",
+        "works-locally-fails-ci"
+      ]
+    },
+    {
+      "id": "keep-two-branches-in-sync",
+      "q": "Keep two long-lived branches in step",
+      "aka": [
+        "sync develop and main",
+        "keep branches aligned",
+        "forward port between branches"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch develop && git merge main",
+              "n": "Merge one direction consistently, usually from the stable branch into the active one, so the same conflict never gets resolved twice in two places."
+            },
+            {
+              "c": "git log --oneline main..develop",
+              "n": "Check the gap regularly; a divergence measured in weeks is a project risk, not a chore."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "long-lived-branch",
+        "one-commit-many-branches",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "add-everyone-to-review",
+      "q": "Ask the right number of reviewers",
+      "aka": [
+        "how many reviewers",
+        "request review from team",
+        "who should review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr edit --add-reviewer <user>",
+              "n": "One or two people who know the area. Requesting a whole team usually means nobody feels responsible."
+            },
+            {
+              "c": "Ruleset -> Required approvals: 1",
+              "n": "Set the floor in a rule rather than by habit, so it holds when everyone is busy."
+            }
+          ],
+          "undo": "gh pr edit --remove-reviewer <user>"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "codeowners",
+        "who-can-merge"
+      ]
+    },
+    {
+      "id": "readme-not-rendering",
+      "q": "My README is not showing on the repository page",
+      "aka": [
+        "readme not displayed",
+        "readme missing from front page",
+        "github ignores my readme"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git ls-files | grep -i readme",
+              "n": "It must be at the repository root, on the default branch, and named README with a recognised extension. A README inside a folder renders only on that folder's page."
+            },
+            {
+              "c": "gh browse",
+              "n": "Check you are looking at the default branch; a README added on a feature branch shows only there."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "readme-structure",
+        "default-branch",
+        "github-markdown"
+      ]
+    },
+    {
+      "id": "revert-file-permissions",
+      "q": "Only file permissions changed, not content",
+      "aka": [
+        "mode change 100644 100755",
+        "permission only diff",
+        "chmod shows as change"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --summary",
+              "n": "Mode changes show as mode change lines with no content diff. Common after copying files between filesystems or through Docker."
+            },
+            {
+              "c": "git config core.fileMode false",
+              "n": "Stops Git tracking the executable bit locally. Where the bit genuinely matters, set it deliberately with git update-index --chmod=+x <file>."
+            }
+          ],
+          "undo": "git config --unset core.fileMode"
+        }
+      ],
+      "seealso": [
+        "filemode",
+        "phantom-modifications",
+        "wsl-git"
+      ]
+    },
+    {
+      "id": "pull-request-review-required-but-solo",
+      "q": "Required reviews block me when I work alone",
+      "aka": [
+        "cannot approve my own pull request",
+        "solo maintainer blocked by rule",
+        "review required no reviewers"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Required approvals: 0",
+              "n": "Keep the pull request requirement and status checks, and drop only the approval count. You still get CI and a diff to read before merging."
+            },
+            {
+              "c": "Ruleset -> Bypass list",
+              "n": "Adding yourself is the other option, but it removes the discipline the rule was for."
+            }
+          ],
+          "undo": "Raise the approval count when the team grows"
+        }
+      ],
+      "seealso": [
+        "protect-main-solo",
+        "branch-protection",
+        "solo-workflow"
+      ]
     }
   ]
 }

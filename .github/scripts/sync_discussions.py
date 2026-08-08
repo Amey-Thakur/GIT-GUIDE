@@ -37,6 +37,8 @@ def gql(query, **variables):
             print(f"  rate limited, waiting {wait}s")
             time.sleep(wait)
             continue
+        if "already answered" in stderr:
+            return None
         raise RuntimeError(stderr)
     raise RuntimeError(f"still rate limited after retries: {stderr}")
 
