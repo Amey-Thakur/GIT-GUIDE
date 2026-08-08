@@ -25836,6 +25836,511 @@
         "filter-repo-paths",
         "repo-size-limit-hit"
       ]
+    },
+    {
+      "id": "stop-merge-commits-on-pull",
+      "q": "My history is full of merge branch main commits",
+      "aka": [
+        "merge branch main into main noise",
+        "pointless merge commits",
+        "history cluttered with merges"
+      ],
+      "variants": [
+        {
+          "when": "The cause",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global pull.rebase true",
+              "n": "Each pull with local commits creates a merge. Rebasing on pull replays your work on top instead, and the noise stops."
+            }
+          ],
+          "undo": "git config --global --unset pull.rebase"
+        },
+        {
+          "when": "Clean up what exists",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i --rebase-merges <base>",
+              "n": "Only on unpushed history. Published merges are noise you live with, not a reason to rewrite a shared branch."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "pull-rebase",
+        "merge-message-prompt",
+        "keep-history-clean-solo"
+      ]
+    },
+    {
+      "id": "one-branch-per-task",
+      "q": "Should every task get its own branch",
+      "aka": [
+        "how many branches",
+        "one branch or many tasks",
+        "branch per ticket"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c fix/<one-thing> main",
+              "n": "One branch per reviewable unit. Two unrelated changes on one branch force a reviewer to judge both together and block each on the other."
+            },
+            {
+              "c": "git switch -c next/<thing> main",
+              "n": "When you notice a second thing mid-work, branch again from main rather than piling it on."
+            }
+          ],
+          "undo": "git branch -D the extra branch"
+        }
+      ],
+      "seealso": [
+        "branch-naming",
+        "parallel-review-and-work",
+        "pr-checklist"
+      ]
+    },
+    {
+      "id": "recover-after-bad-merge-push",
+      "q": "I pushed a merge that should not have happened",
+      "aka": [
+        "bad merge pushed",
+        "undo a merge on main",
+        "merged wrong branch into main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert -m 1 <merge-hash>",
+              "n": "Undoes the merge as a new commit, safe on a shared branch. Note that re-merging that branch later needs care, since Git considers it already merged."
+            },
+            {
+              "c": "git revert <revert-hash>",
+              "n": "When the branch is genuinely ready later, revert the revert rather than re-merging."
+            }
+          ],
+          "undo": "Revert the revert"
+        }
+      ],
+      "seealso": [
+        "undo-merge",
+        "revert-pr",
+        "undo-revert"
+      ]
+    },
+    {
+      "id": "pull-request-from-main",
+      "q": "I opened a pull request from main by mistake",
+      "aka": [
+        "pr from my main branch",
+        "branched from wrong place",
+        "should not have used main"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c fix/<topic>",
+              "n": "Create the branch you should have used; it points at the same commits."
+            },
+            {
+              "c": "git push -u origin fix/<topic>",
+              "n": "Open a new pull request from it, close the old one, then reset your main back: git switch main && git reset --hard origin/main."
+            }
+          ],
+          "undo": "The old branch tip is in the reflog"
+        }
+      ],
+      "seealso": [
+        "move-commits-to-branch",
+        "reset-to-remote",
+        "change-pr-base"
+      ]
+    },
+    {
+      "id": "github-actions-first-workflow-fails",
+      "q": "My very first workflow fails immediately",
+      "aka": [
+        "new workflow fails at once",
+        "first action does not work",
+        "workflow error on first run"
+      ],
+      "variants": [
+        {
+          "when": "The usual three causes",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run view --log-failed",
+              "n": "Indentation errors, a missing checkout step, or a runner without your toolchain account for nearly all first failures."
+            },
+            {
+              "c": "uses: actions/checkout@v5",
+              "n": "Workflows start with an empty machine: without this step there is no code to build."
+            }
+          ],
+          "undo": "Delete the workflow file"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-locally",
+        "debug-workflows"
+      ]
+    },
+    {
+      "id": "keep-secrets-out-of-logs",
+      "q": "A secret appeared in workflow logs",
+      "aka": [
+        "secret printed in ci log",
+        "mask value in actions",
+        "token visible in output"
+      ],
+      "variants": [
+        {
+          "when": "Right now",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Rotate the secret",
+              "n": "Logs may have been read or cached. Rotation is the only real fix; deleting the run is housekeeping."
+            },
+            {
+              "c": "gh run delete <run-id>",
+              "n": "Then remove the run so the value stops being served."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Prevent the repeat",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"::add-mask::$VALUE\"",
+              "n": "Masks any computed value, not just declared secrets. Avoid set -x in steps that touch credentials."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "remove-secret-from-history",
+        "oidc-deploys"
+      ]
+    },
+    {
+      "id": "which-branch-is-deployed",
+      "q": "Know which commit is actually in production",
+      "aka": [
+        "what is deployed right now",
+        "commit running in prod",
+        "match deploy to commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo>/deployments --jq \".[0] | {ref, sha, environment}\"",
+              "n": "Deployments record the exact commit per environment, which branch names never can."
+            },
+            {
+              "c": "git tag -a deploy/2026-08-08 <sha>",
+              "n": "Without deployment records, tag each release so production is always traceable to a commit."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "deploy-environments",
+        "when-to-tag",
+        "rollback-decision"
+      ]
+    },
+    {
+      "id": "changes-not-showing-on-github",
+      "q": "I pushed but GitHub does not show my changes",
+      "aka": [
+        "pushed but not on github",
+        "commits missing from website",
+        "push succeeded nothing changed"
+      ],
+      "variants": [
+        {
+          "when": "Check what you actually pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log origin/<branch> -1 --oneline",
+              "n": "If this is not your commit, the push went to a different branch or a different remote."
+            },
+            {
+              "c": "git remote -v",
+              "n": "Two remotes, or a fork instead of the original, is the most common explanation."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "You are looking at the wrong place",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh browse --branch <branch>",
+              "n": "The repository page shows the default branch; your commits may be sitting on another branch entirely."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "commit-vs-push",
+        "default-branch",
+        "why-two-remotes-fork"
+      ]
+    },
+    {
+      "id": "working-with-designers",
+      "q": "Work with people who do not use Git",
+      "aka": [
+        "non technical collaborators",
+        "designer cannot use git",
+        "how do others contribute without git"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Edit this file, in the browser",
+              "n": "The web editor covers text changes with no tooling at all, and the result is a normal pull request."
+            },
+            {
+              "c": "gh pr create",
+              "n": "For binary assets, let them drop files into an issue or shared folder and commit on their behalf, crediting them with a Co-authored-by trailer."
+            }
+          ],
+          "undo": "Revert the commit"
+        }
+      ],
+      "seealso": [
+        "no-terminal-github",
+        "design-files-git",
+        "co-authors"
+      ]
+    },
+    {
+      "id": "repo-checklist-before-sharing",
+      "q": "Check a repository before sharing the link",
+      "aka": [
+        "before i share my repo",
+        "quick repo review",
+        "is my repo presentable"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo view --json description,licenseInfo,repositoryTopics",
+              "n": "Description, license, and topics are the three fields most often left empty, and all three show on the page."
+            },
+            {
+              "c": "git log --oneline -5",
+              "n": "Then read your own README as a stranger, confirm the default branch builds, and check no secret sits in history."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "professional-repo",
+        "clean-history-before-public",
+        "readme-structure"
+      ]
+    },
+    {
+      "id": "handle-abandoned-dependency",
+      "q": "A dependency I rely on was abandoned",
+      "aka": [
+        "unmaintained dependency",
+        "fork an abandoned project",
+        "upstream is dead"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo view <owner>/<repo> --json pushedAt,archivedAt",
+              "n": "Confirm it is actually dormant, then check whether an active fork already exists: the forks page sorts by recent activity."
+            },
+            {
+              "c": "gh repo fork <owner>/<repo>",
+              "n": "If you must maintain it, fork, pin your dependency to your fork, and say so in your README. Offer the fixes upstream first."
+            }
+          ],
+          "undo": "Point the dependency back"
+        }
+      ],
+      "seealso": [
+        "repo-insights",
+        "detach-fork",
+        "install-from-git"
+      ]
+    },
+    {
+      "id": "why-is-my-pr-empty",
+      "q": "My pull request shows no changes",
+      "aka": [
+        "pr shows zero files",
+        "empty diff pull request",
+        "nothing to compare"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log <base>..HEAD --oneline",
+              "n": "Empty means the base already contains everything, often because you branched after the work merged, or targeted the wrong base."
+            },
+            {
+              "c": "git push",
+              "n": "Or the commits are still local. A pull request compares what the remote has, never your working tree."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-a-pr",
+        "list-unpushed",
+        "change-pr-base"
+      ]
+    },
+    {
+      "id": "commit-generated-code",
+      "q": "Commit generated code or build it in CI",
+      "aka": [
+        "should i commit generated files",
+        "protobuf generated code in git",
+        "commit build output"
+      ],
+      "variants": [
+        {
+          "when": "Commit it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add gen/",
+              "n": "When consumers need it without your toolchain, or the generator is slow or unavailable in CI. Mark it linguist-generated so diffs collapse."
+            }
+          ],
+          "undo": "git rm -r --cached gen/"
+        },
+        {
+          "when": "Generate it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"gen/\" >> .gitignore",
+              "n": "The default: derived files drift from their source and cause conflicts nobody can resolve meaningfully. Add a CI check that regeneration produces no diff."
+            }
+          ],
+          "undo": "Remove the ignore rule"
+        }
+      ],
+      "seealso": [
+        "what-goes-in-git",
+        "exclude-from-diff",
+        "commit-lockfile"
+      ]
+    },
+    {
+      "id": "first-review-i-give",
+      "q": "Give my first code review well",
+      "aka": [
+        "how to review code as a junior",
+        "new to reviewing",
+        "what to say in a review"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "Read for correctness first, then clarity. Questions beat commands: asking why a branch handles the empty case that way finds more bugs than declaring it wrong."
+            },
+            {
+              "c": "gh pr review --comment",
+              "n": "Say what you checked and what you could not judge. An honest partial review is useful; a rubber stamp is not."
+            }
+          ],
+          "undo": "Dismiss the review"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "suggest-changes",
+        "first-day-on-team"
+      ]
+    },
+    {
+      "id": "revert-vs-reset-vs-restore",
+      "q": "revert, reset, and restore compared",
+      "aka": [
+        "three r commands",
+        "restore vs reset",
+        "difference revert reset restore"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore <path>",
+              "n": "Files only: throw away working-tree or staged changes. Nothing about history moves."
+            },
+            {
+              "c": "git reset <hash>",
+              "n": "Moves the branch pointer. Rewrites your local history, so it belongs to unpushed work."
+            },
+            {
+              "c": "git revert <hash>",
+              "n": "Adds a new commit undoing an old one. The only safe undo for published history."
+            }
+          ],
+          "undo": "Each has its own; revert is itself revertible"
+        }
+      ],
+      "seealso": [
+        "revert-vs-reset",
+        "reset-modes",
+        "safe-commands-list"
+      ]
     }
   ]
 }
