@@ -303,7 +303,8 @@
         "switch to remote branch",
         "get remote branch",
         "track remote branch",
-        "checkout origin branch"
+        "checkout origin branch",
+        "list remote branches"
       ],
       "variants": [
         {
@@ -1239,7 +1240,8 @@
         "stash but keep staged",
         "stash apply vs pop",
         "undo stash pop",
-        "stash including ignored files"
+        "stash including ignored files",
+        "name a stash"
       ],
       "variants": [
         {
@@ -1828,7 +1830,8 @@
       "aka": [
         "move file",
         "git mv",
-        "rename keep history"
+        "rename keep history",
+        "rename a folder"
       ],
       "variants": [
         {
@@ -2402,7 +2405,8 @@
       "aka": [
         "what is the default branch",
         "remote head",
-        "set default branch"
+        "set default branch",
+        "origin/HEAD missing"
       ],
       "variants": [
         {
@@ -5096,7 +5100,8 @@
       "aka": [
         "see branches before clone",
         "check repo access",
-        "ls-remote"
+        "ls-remote",
+        "test if a remote url works"
       ],
       "variants": [
         {
@@ -7466,7 +7471,8 @@
       "aka": [
         "export working changes",
         "diff to file",
-        "send wip without commit"
+        "send wip without commit",
+        "patch from staged changes"
       ],
       "variants": [
         {
@@ -7880,7 +7886,8 @@
         "partial clone",
         "blobless clone",
         "clone too slow",
-        "reduce clone size"
+        "reduce clone size",
+        "check if clone is shallow"
       ],
       "variants": [
         {
@@ -8113,7 +8120,8 @@
         "current sha",
         "head hash",
         "short commit id",
-        "commit id for build stamp"
+        "commit id for build stamp",
+        "how short can a commit hash be"
       ],
       "variants": [
         {
@@ -8433,7 +8441,8 @@
       "aka": [
         "issue template",
         "pull request template",
-        "structured bug reports"
+        "structured bug reports",
+        "issue template config.yml"
       ],
       "variants": [
         {
@@ -9723,7 +9732,8 @@
         "reorder commits",
         "drop a commit",
         "edit an old commit",
-        "reorder last two commits"
+        "reorder last two commits",
+        "delete a commit in the middle"
       ],
       "variants": [
         {
@@ -9905,7 +9915,8 @@
       "aka": [
         "shields.io",
         "build status badge",
-        "version badge"
+        "version badge",
+        "latest release badge"
       ],
       "variants": [
         {
@@ -13884,7 +13895,8 @@
       "aka": [
         "gitignore wildcards",
         "gitignore syntax",
-        "double asterisk pattern"
+        "double asterisk pattern",
+        "multiple gitignore files"
       ],
       "variants": [
         {
@@ -14028,6 +14040,135 @@
       "seealso": [
         "discussions-vs-issues",
         "open-issue"
+      ]
+    },
+    {
+      "id": "fetch-tags",
+      "q": "A tag exists on the remote but not here",
+      "aka": [
+        "git fetch --tags",
+        "tag not found locally",
+        "missing tags after clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch --tags",
+              "n": "Plain fetch only brings tags attached to the history it downloads. --tags brings every tag, including ones on branches you never fetched."
+            }
+          ],
+          "undo": "git tag -d <tag> removes unwanted local tags"
+        }
+      ],
+      "seealso": [
+        "list-tags",
+        "checkout-tag",
+        "fetch-all"
+      ]
+    },
+    {
+      "id": "subtree-commands",
+      "q": "Vendor another project with git subtree",
+      "aka": [
+        "git subtree add",
+        "subtree pull push",
+        "embed repo without submodules"
+      ],
+      "variants": [
+        {
+          "when": "Bring it in",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git subtree add --prefix vendor/lib <url> main --squash",
+              "n": "The project lands as real files in your history. Clones and CI need nothing special, the chief advantage over submodules."
+            }
+          ],
+          "undo": "git rm -r vendor/lib and commit"
+        },
+        {
+          "when": "Update it later",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git subtree pull --prefix vendor/lib <url> main --squash",
+              "n": "Pulls upstream changes into the folder as one commit. subtree push sends your fixes back."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "submodule-vs-subtree",
+        "merge-two-repos"
+      ]
+    },
+    {
+      "id": "clone-local",
+      "q": "Clone from a folder on the same machine",
+      "aka": [
+        "clone local repository",
+        "copy repo without network",
+        "file:// clone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone /path/to/repo new-copy",
+              "n": "Instant: objects are hardlinked, not copied. The original becomes origin, so push and pull work between the two folders."
+            }
+          ],
+          "undo": "Delete the new folder"
+        }
+      ],
+      "seealso": [
+        "practice-sandbox",
+        "bare-repo",
+        "clone-repo"
+      ]
+    },
+    {
+      "id": "octokit",
+      "q": "Script GitHub from a real programming language",
+      "aka": [
+        "octokit",
+        "pygithub",
+        "github api from python or javascript"
+      ],
+      "variants": [
+        {
+          "when": "JavaScript",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "npm install octokit",
+              "n": "GitHub's official client: typed methods for every endpoint, pagination and rate-limit handling built in."
+            }
+          ],
+          "undo": "npm uninstall octokit"
+        },
+        {
+          "when": "Python",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "pip install PyGithub",
+              "n": "The de facto standard. For one-off scripts, plain gh api piped to jq is often all you need."
+            }
+          ],
+          "undo": "pip uninstall PyGithub"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "access-tokens",
+        "api-rate-limits"
       ]
     }
   ]
