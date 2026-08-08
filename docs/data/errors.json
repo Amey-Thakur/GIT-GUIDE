@@ -424,6 +424,16 @@
       ],
       "intent": null,
       "seealso": ["ssh-key-github", "permission-denied-publickey"]
+    },
+    {
+      "id": "gha-permission",
+      "msg": "remote: Permission to <repo> denied to github-actions[bot].",
+      "why": "A workflow tried to push, but Actions runs with read-only permissions unless the workflow asks for more.",
+      "fix": [
+        { "c": "permissions:\n  contents: write", "n": "In the workflow file, at the top level or per job. Grant only what the job needs; read-only stays the right default everywhere else." }
+      ],
+      "intent": null,
+      "seealso": ["clone-private-ci"]
     }
   ]
 }

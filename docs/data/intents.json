@@ -440,7 +440,7 @@
     {
       "id": "merge-conflict",
       "q": "Resolve a merge conflict",
-      "aka": ["fix conflicts", "conflict markers", "both modified", "merge failed"],
+      "aka": ["fix conflicts", "conflict markers", "both modified", "merge failed", "git merge continue"],
       "variants": [
         {
           "when": "Work through it",
@@ -630,7 +630,7 @@
     {
       "id": "detached-head",
       "q": "Fix a detached HEAD",
-      "aka": ["you are in detached head state", "not on a branch", "head detached at"],
+      "aka": ["you are in detached head state", "not on a branch", "head detached at", "reconcile detached head with main"],
       "variants": [
         {
           "when": "You made no commits here",
@@ -1451,7 +1451,7 @@
     {
       "id": "delete-merged-branches",
       "q": "Delete every branch that is already merged",
-      "aka": ["clean up old branches", "bulk delete branches", "remove stale branches"],
+      "aka": ["clean up old branches", "bulk delete branches", "remove stale branches", "delete all branches except main"],
       "variants": [
         {
           "when": "Local cleanup",
@@ -1673,7 +1673,7 @@
     {
       "id": "stash-inspect",
       "q": "See what is inside a stash before applying it",
-      "aka": ["stash contents", "stash show", "what did i stash"],
+      "aka": ["stash contents", "stash show", "what did i stash", "compare stash to working tree"],
       "variants": [
         {
           "when": "Standard case",
@@ -2127,7 +2127,7 @@
     {
       "id": "patches-email",
       "q": "Share commits as patch files, no host needed",
-      "aka": ["format-patch", "apply patch", "email a commit", "patch file"],
+      "aka": ["format-patch", "apply patch", "email a commit", "patch file", "patch for a specific commit"],
       "variants": [
         {
           "when": "Export",
@@ -3051,7 +3051,7 @@
     {
       "id": "gitignore-except",
       "q": "Ignore everything except a few files",
-      "aka": ["gitignore whitelist", "negate gitignore", "except pattern gitignore"],
+      "aka": ["gitignore whitelist", "negate gitignore", "except pattern gitignore", "exclude folder include subfolder"],
       "variants": [
         {
           "when": "The whitelist pattern",
@@ -3361,6 +3361,120 @@
         }
       ],
       "seealso": ["count-commits", "log-search"]
+    },
+    {
+      "id": "pretty-log",
+      "q": "A history graph worth looking at (pretty log)",
+      "aka": ["pretty git log", "branch graph terminal", "log with colors and branches"],
+      "variants": [
+        {
+          "when": "The one-liner",
+          "danger": "safe",
+          "cmds": [{ "c": "git log --graph --oneline --decorate --all", "n": "Every branch as a colored graph with tags and heads labeled." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "The famous format, as an alias",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global alias.lg \"log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'\"", "n": "git lg: hash, age, message, author, refs, colored. Type q to leave the view." }],
+          "undo": "git config --global --unset alias.lg"
+        }
+      ],
+      "seealso": ["see-history", "git-aliases"]
+    },
+    {
+      "id": "ssh-key-per-command",
+      "q": "Use a specific SSH key for one repository or command",
+      "aka": ["specify private key git", "GIT_SSH_COMMAND", "different key per repo"],
+      "variants": [
+        {
+          "when": "Per repository, permanent",
+          "danger": "safe",
+          "cmds": [{ "c": "git config core.sshCommand \"ssh -i ~/.ssh/<key> -o IdentitiesOnly=yes\"", "n": "This repository now always authenticates with that key." }],
+          "undo": "git config --unset core.sshCommand"
+        },
+        {
+          "when": "One command, once",
+          "danger": "safe",
+          "cmds": [{ "c": "GIT_SSH_COMMAND=\"ssh -i ~/.ssh/<key>\" git clone <url>", "n": "The environment variable wins for that invocation only. For a lasting per-host setup, the SSH config alias answer is cleaner." }],
+          "undo": "Nothing persists"
+        }
+      ],
+      "seealso": ["two-github-accounts", "ssh-key-github"]
+    },
+    {
+      "id": "cherry-pick-range",
+      "q": "Cherry-pick multiple commits or a range",
+      "aka": ["cherry pick several commits", "pick commit range", "apply many commits"],
+      "variants": [
+        {
+          "when": "A list",
+          "danger": "safe",
+          "cmds": [{ "c": "git cherry-pick <hash1> <hash2> <hash3>", "n": "Applied in the order given, each as its own commit." }],
+          "undo": "git reset --hard HEAD~3 if not pushed"
+        },
+        {
+          "when": "A range",
+          "danger": "safe",
+          "cmds": [{ "c": "git cherry-pick <oldest>^..<newest>", "n": "The ^ includes the oldest itself. On any conflict: resolve, git add, git cherry-pick --continue, or --abort to unwind the whole run." }],
+          "undo": "git cherry-pick --abort mid-run; git reflog after"
+        }
+      ],
+      "seealso": ["cherry-pick", "rebase-onto-main"]
+    },
+    {
+      "id": "rename-tag",
+      "q": "Rename a tag",
+      "aka": ["change tag name", "move tag name", "retag release"],
+      "variants": [
+        {
+          "when": "Old name out, new name in",
+          "danger": "history",
+          "cmds": [
+            { "c": "git tag <new> <old>^{}", "n": "The ^{} points the new tag at the same commit even when the old one is annotated." },
+            { "c": "git tag -d <old> && git push origin <new> --delete <old>", "n": "Anyone who fetched the old tag keeps it until they delete it locally; announce renames of published releases." }
+          ],
+          "undo": "Recreate the old name the same way"
+        }
+      ],
+      "seealso": ["delete-tag", "tag-release"]
+    },
+    {
+      "id": "exit-pager",
+      "q": "Trapped in git log (the pager)",
+      "aka": ["exit git log", "q to quit", "END in terminal", "colon at bottom of screen"],
+      "variants": [
+        {
+          "when": "Leave",
+          "danger": "safe",
+          "cmds": [{ "c": "q", "n": "The screen with the colon or END is a pager called less. Arrows and space scroll; / searches; q returns to your prompt." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Never page short output again",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global core.pager \"less -FRX\"", "n": "Output shorter than the screen prints straight through; long output still pages. One command without paging: git --no-pager log" }],
+          "undo": "git config --global --unset core.pager"
+        }
+      ],
+      "seealso": ["exit-vim", "see-history"]
+    },
+    {
+      "id": "commit-a",
+      "q": "What git commit -a actually stages",
+      "aka": ["commit -am", "commit without add", "why new file not committed"],
+      "variants": [
+        {
+          "when": "The blind spot",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git commit -am \"<message>\"", "n": "Stages and commits every change to files Git already tracks. Brand-new files are invisible to it; that is the classic missing-file mystery." },
+            { "c": "git add <new-file> && git commit -m \"<message>\"", "n": "New files need one explicit add, their first." }
+          ],
+          "undo": "git reset --soft HEAD~1"
+        }
+      ],
+      "seealso": ["add-a-vs-dot", "undo-last-commit"]
     }
   ]
 }

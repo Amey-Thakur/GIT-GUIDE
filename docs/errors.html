@@ -371,6 +371,15 @@
   <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
   <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
 </article>
+<article class="result errcard" id="gha-permission">
+  <h2><code class="errmsg">remote: Permission to &lt;repo&gt; denied to github-actions[bot].</code><a class="anchor" href="#gha-permission" aria-label="Link to this error">#</a></h2>
+  <p class="note">A workflow tried to push, but Actions runs with read-only permissions unless the workflow asks for more.</p>
+  <div class="cmd"><code>permissions:
+  contents: write</code><button class="copy" data-cmd="permissions:
+  contents: write" aria-label="Copy command">Copy</button></div>
+  <p class="note">In the workflow file, at the top level or per job. Grant only what the job needs; read-only stays the right default everywhere else.</p>
+  <p class="seealso">See also: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
