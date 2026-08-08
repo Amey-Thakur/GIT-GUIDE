@@ -2822,6 +2822,213 @@
         }
       ],
       "seealso": ["change-remote-url"]
+    },
+    {
+      "id": "checkout-vs-switch",
+      "q": "checkout vs switch vs restore, what replaced what",
+      "aka": ["git checkout deprecated", "switch or checkout", "new git commands", "restore vs checkout"],
+      "variants": [
+        {
+          "when": "The 2019 split, in one look",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git switch <branch>", "n": "Moving between branches. Refuses to lose your work, which checkout would not." },
+            { "c": "git restore <file>", "n": "Touching files: discard edits, unstage, pull old versions." },
+            { "c": "git checkout <anything>", "n": "Still does both jobs and is not going anywhere; the new pair exists because one command doing two unrelated things caused accidents." }
+          ],
+          "undo": "Nothing to undo; this is a choice of vocabulary"
+        }
+      ],
+      "seealso": ["create-branch", "discard-changes"]
+    },
+    {
+      "id": "merge-branch",
+      "q": "Merge my branch into main",
+      "aka": ["merge branch to master", "merge feature into main", "how to merge a branch"],
+      "variants": [
+        {
+          "when": "The full sequence",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git switch main && git pull", "n": "Merge into a current main, never a stale one." },
+            { "c": "git merge <branch>", "n": "Conflicts? Resolve, add, commit; the merge conflict answer walks it." },
+            { "c": "git push", "n": "" },
+            { "c": "git branch -d <branch>", "n": "The branch's work lives in main now; the label has served." }
+          ],
+          "undo": "git reset --hard ORIG_HEAD before pushing; git revert -m 1 <merge-hash> after"
+        }
+      ],
+      "seealso": ["merge-conflict", "undo-merge", "delete-branch"]
+    },
+    {
+      "id": "revert-vs-reset",
+      "q": "revert vs reset, which undo when",
+      "aka": ["difference revert reset", "safe undo pushed", "which undo command"],
+      "variants": [
+        {
+          "when": "One question decides: is the commit shared?",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git revert <hash>", "n": "Shared: adds a new commit that cancels the old one. History grows forward; nobody's clone breaks." },
+            { "c": "git reset --soft HEAD~1", "n": "Private: moves your branch pointer back as if the commit had not happened. --soft keeps the work, --hard discards it." }
+          ],
+          "undo": "revert: revert the revert. reset: git reflog holds what you left."
+        }
+      ],
+      "seealso": ["undo-last-commit", "undo-push"]
+    },
+    {
+      "id": "remove-remote",
+      "q": "Remove a remote",
+      "aka": ["delete remote origin", "remove origin", "disconnect from github"],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [{ "c": "git remote remove <name>", "n": "Only the connection is removed; the remote repository and your local history are untouched." }],
+          "undo": "git remote add <name> <url>"
+        }
+      ],
+      "seealso": ["what-is-origin", "change-remote-url"]
+    },
+    {
+      "id": "pull-specific-branch",
+      "q": "Pull a specific branch",
+      "aka": ["pull one branch", "pull branch without switching", "update another branch"],
+      "variants": [
+        {
+          "when": "Bring another branch's commits into the current one",
+          "danger": "safe",
+          "cmds": [{ "c": "git pull origin <branch>", "n": "Fetches that branch and merges it here, wherever here is." }],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Update a local branch without switching to it",
+          "danger": "safe",
+          "cmds": [{ "c": "git fetch origin <branch>:<branch>", "n": "Fast-forwards the local branch in place. Works on any branch except the one you are standing on." }],
+          "undo": "git reflog shows the branch's previous tip"
+        }
+      ],
+      "seealso": ["update-branch", "checkout-remote-branch"]
+    },
+    {
+      "id": "delete-repo",
+      "q": "Delete a repository",
+      "aka": ["delete github repository", "remove repo", "delete project from github"],
+      "variants": [
+        {
+          "when": "Only your local copy",
+          "danger": "destructive",
+          "cmds": [{ "c": "rm -rf <folder>", "n": "Local clone gone; the remote and everyone else's clones are untouched." }],
+          "undo": "git clone the remote again"
+        },
+        {
+          "when": "On GitHub, forever",
+          "danger": "destructive",
+          "cmds": [{ "c": "gh repo delete <owner>/<repo>", "n": "Asks for confirmation and needs the delete_repo scope: gh auth refresh -s delete_repo. The website route is Settings, Danger Zone. Issues, stars, and PRs die with it; there is no trash bin." }],
+          "undo": "None on the host. Any clone can republish the code and history, but not the issues or stars."
+        }
+      ],
+      "seealso": ["undo-git-init", "rename-repo"]
+    },
+    {
+      "id": "diff-no-index",
+      "q": "Diff two files or folders outside Git",
+      "aka": ["compare files without repo", "diff no index", "use git diff anywhere"],
+      "variants": [
+        {
+          "when": "Any two paths, no repository needed",
+          "danger": "safe",
+          "cmds": [{ "c": "git diff --no-index <a> <b>", "n": "Git's excellent diff, colors and all, as a general tool. Directories compare recursively." }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["what-changed", "diff-word"]
+    },
+    {
+      "id": "overwrite-branch",
+      "q": "Make one branch exactly match another",
+      "aka": ["reset branch to main", "overwrite branch", "branch identical to another"],
+      "variants": [
+        {
+          "when": "Local branch, discard its own commits",
+          "danger": "destructive",
+          "cmds": [
+            { "c": "git switch <branch>", "n": "" },
+            { "c": "git reset --hard <other-branch>", "n": "The branch now points exactly where the other does; its own commits leave the branch." }
+          ],
+          "undo": "git reflog, then git reset --hard <hash>"
+        },
+        {
+          "when": "It was already pushed",
+          "danger": "history",
+          "cmds": [{ "c": "git push --force-with-lease", "n": "Only on branches nobody builds on." }],
+          "undo": "git reflog still holds the old tip"
+        }
+      ],
+      "seealso": ["reset-to-remote", "force-push-safely"]
+    },
+    {
+      "id": "private-email",
+      "q": "Keep your email private in commits",
+      "aka": ["hide email github", "noreply email", "email exposed in commits"],
+      "variants": [
+        {
+          "when": "GitHub's noreply address",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git config --global user.email \"<id>+<username>@users.noreply.github.com\"", "n": "Your exact address is on GitHub: Settings, Emails, after ticking Keep my email addresses private. Commits still count on your profile." }
+          ],
+          "undo": "Set user.email back; addresses already in pushed history stay there"
+        },
+        {
+          "when": "Make Git enforce it",
+          "danger": "safe",
+          "cmds": [{ "c": "<Settings, Emails, Block command line pushes that expose my email>", "n": "GitHub then rejects any push whose commits carry your real address, before it becomes public." }],
+          "undo": "Untick the setting"
+        }
+      ],
+      "seealso": ["tell-me-who-you-are", "change-commit-author"]
+    },
+    {
+      "id": "multiline-commit",
+      "q": "Write a commit message with a body",
+      "aka": ["multiline commit message", "commit description", "long commit message"],
+      "variants": [
+        {
+          "when": "In the editor",
+          "danger": "safe",
+          "cmds": [{ "c": "git commit", "n": "No -m opens your editor: subject line, blank line, then the body explaining why." }],
+          "undo": "git commit --amend rewrites it"
+        },
+        {
+          "when": "Inline",
+          "danger": "safe",
+          "cmds": [{ "c": "git commit -m \"<subject>\" -m \"<body>\"", "n": "Each -m becomes a paragraph; the first is the subject." }],
+          "undo": "git commit --amend"
+        }
+      ],
+      "seealso": ["commit-messages", "edit-commit-message"]
+    },
+    {
+      "id": "merge-take-side",
+      "q": "Resolve every conflict by preferring one side",
+      "aka": ["merge strategy theirs", "take all their changes", "prefer ours in merge"],
+      "variants": [
+        {
+          "when": "Only where conflicts arise",
+          "danger": "safe",
+          "cmds": [{ "c": "git merge -X theirs <branch>", "n": "Non-conflicting changes merge normally; conflicting lines silently take their side. -X ours prefers yours. Silence is the risk: review the result before pushing." }],
+          "undo": "git reset --hard ORIG_HEAD before pushing"
+        },
+        {
+          "when": "Take their version of everything",
+          "danger": "destructive",
+          "cmds": [{ "c": "git reset --hard <branch>", "n": "That is not a merge; it is replacement. See making one branch match another." }],
+          "undo": "git reflog"
+        }
+      ],
+      "seealso": ["merge-conflict", "overwrite-branch"]
     }
   ]
 }
