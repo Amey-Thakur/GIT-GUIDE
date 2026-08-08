@@ -3363,6 +3363,781 @@
         "abort-operation",
         "cherry-pick"
       ]
+    },
+    {
+      "id": "gnutls-recv-error",
+      "msg": "fatal: unable to access '<url>': gnutls_handshake() failed: Error in the pull function.",
+      "why": "The TLS handshake failed, typically an intercepting proxy or an outdated Git build.",
+      "fix": [
+        {
+          "c": "git config --global http.version HTTP/1.1",
+          "n": "Forces the simpler protocol, which many corporate proxies handle correctly."
+        },
+        {
+          "c": "git remote set-url origin git@github.com:<owner>/<repo>.git",
+          "n": "SSH sidesteps TLS inspection entirely."
+        }
+      ],
+      "intent": "proxy-setup",
+      "seealso": [
+        "https-vs-ssh",
+        "github-status"
+      ]
+    },
+    {
+      "id": "empty-reply-from-server",
+      "msg": "fatal: unable to access '<url>': Empty reply from server",
+      "why": "Something closed the connection without answering: a proxy, a firewall, or a captive portal.",
+      "fix": [
+        {
+          "c": "git config --global --get-regexp proxy",
+          "n": "Shows any proxy Git is configured to use."
+        },
+        {
+          "c": "curl -v https://github.com",
+          "n": "The verbose output names whatever actually answered."
+        }
+      ],
+      "intent": "proxy-setup",
+      "seealso": [
+        "github-status"
+      ]
+    },
+    {
+      "id": "bad-packet-length",
+      "msg": "fatal: protocol error: bad line length character: <chars>",
+      "why": "The server sent something Git could not parse, usually an HTML error page or an SSH login banner.",
+      "fix": [
+        {
+          "c": "ssh -T git@github.com",
+          "n": "A banner or message of the day printed here will break the protocol."
+        },
+        {
+          "c": "GIT_TRACE_PACKET=1 git fetch",
+          "n": "Shows the raw exchange so you can see what arrived instead of Git data."
+        }
+      ],
+      "intent": "debug-ssh-key",
+      "seealso": [
+        "proxy-setup",
+        "github-status"
+      ]
+    },
+    {
+      "id": "cannot-fork-index-pack",
+      "msg": "fatal: cannot fork() for index-pack: Resource temporarily unavailable",
+      "why": "The machine hit a process or memory limit while unpacking the transfer.",
+      "fix": [
+        {
+          "c": "git config --global pack.threads 1",
+          "n": "Fewer threads means less memory for the unpack."
+        },
+        {
+          "c": "git clone --filter=blob:none <url>",
+          "n": "A smaller transfer avoids the heavy unpack altogether."
+        }
+      ],
+      "intent": "partial-clone",
+      "seealso": [
+        "slow-git",
+        "resume-clone"
+      ]
+    },
+    {
+      "id": "ref-not-valid-object",
+      "msg": "error: refs/heads/<name> does not point to a valid object!",
+      "why": "The ref file names an object this repository no longer holds.",
+      "fix": [
+        {
+          "c": "git fsck --full",
+          "n": "Confirms what is missing before you change anything."
+        },
+        {
+          "c": "git update-ref -d refs/heads/<name>",
+          "n": "Delete the broken ref, then recreate the branch from a good commit or the remote."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": [
+        "dangling-objects",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "unable-to-read-sha1",
+      "msg": "error: unable to read sha1 file of <path> (<hash>)",
+      "why": "An object the index references is missing from the object store.",
+      "fix": [
+        {
+          "c": "git fsck",
+          "n": "Lists every missing object."
+        },
+        {
+          "c": "git clone <url> ../fresh",
+          "n": "If the remote is healthy, recloning beats object surgery."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": [
+        "backup-repo",
+        "restore-repo-from-backup"
+      ]
+    },
+    {
+      "id": "multiple-merge-bases",
+      "msg": "warning: multiple merge bases found, using the first",
+      "why": "History has more than one common ancestor, usually after criss-cross merges.",
+      "fix": [
+        {
+          "c": "git merge-base --all <a> <b>",
+          "n": "Lists them all so you can see the shape."
+        },
+        {
+          "c": "git merge <branch>",
+          "n": "The merge still proceeds; this is information, not a failure."
+        }
+      ],
+      "intent": "merge-base",
+      "seealso": [
+        "repo-has-two-histories"
+      ]
+    },
+    {
+      "id": "path-outside-repository",
+      "msg": "fatal: <path>: '<path>' is outside repository at '<root>'",
+      "why": "The path argument resolves above the repository root.",
+      "fix": [
+        {
+          "c": "git rev-parse --show-toplevel",
+          "n": "Prints the root, so you can see where you actually are."
+        },
+        {
+          "c": "cd \"$(git rev-parse --show-toplevel)\"",
+          "n": "Run the command from inside the repository."
+        }
+      ],
+      "intent": "repo-root",
+      "seealso": [
+        "inside-repo",
+        "minimal-git-for-scripts"
+      ]
+    },
+    {
+      "id": "paths-are-ignored",
+      "msg": "The following paths are ignored by one of your .gitignore files:",
+      "why": "You asked Git to add a file that an ignore rule excludes.",
+      "fix": [
+        {
+          "c": "git check-ignore -v <path>",
+          "n": "Names the file, line, and pattern responsible."
+        },
+        {
+          "c": "git add -f <path>",
+          "n": "Force it in when the rule is too broad, or narrow the rule instead."
+        }
+      ],
+      "intent": "gitignore-not-working",
+      "seealso": [
+        "check-ignore",
+        "gitignore-patterns"
+      ]
+    },
+    {
+      "id": "sparse-checkout-empty",
+      "msg": "error: Sparse checkout leaves no entry on working directory",
+      "why": "The sparse patterns match nothing, so the checkout would be empty.",
+      "fix": [
+        {
+          "c": "git sparse-checkout list",
+          "n": "Shows the patterns currently in force."
+        },
+        {
+          "c": "git sparse-checkout set <folder>",
+          "n": "Use a path that exists, or disable sparse checkout to see everything again."
+        }
+      ],
+      "intent": "sparse-checkout",
+      "seealso": [
+        "clone-specific-folder",
+        "scalar"
+      ]
+    },
+    {
+      "id": "aborting-empty-message",
+      "msg": "Aborting commit due to empty commit message.",
+      "why": "The editor closed with no text, so Git refused to record the commit.",
+      "fix": [
+        {
+          "c": "git commit -m \"<message>\"",
+          "n": "Pass the message inline and skip the editor."
+        },
+        {
+          "c": "git config --global core.editor \"code --wait\"",
+          "n": "Without --wait the editor returns instantly and the message stays empty."
+        }
+      ],
+      "intent": "commit-without-editor",
+      "seealso": [
+        "set-editor",
+        "commit-messages"
+      ]
+    },
+    {
+      "id": "no-changes-added-to-commit",
+      "msg": "no changes added to commit (use \"git add\" and/or \"git commit -a\")",
+      "why": "Files are modified but nothing is staged, so there is nothing to record.",
+      "fix": [
+        {
+          "c": "git add <path>",
+          "n": "Stage what belongs in this commit."
+        },
+        {
+          "c": "git commit -a",
+          "n": "Or commit every tracked modification at once, which still skips untracked files."
+        }
+      ],
+      "intent": "what-is-staging",
+      "seealso": [
+        "understand-git-add-dot",
+        "add-a-vs-dot"
+      ]
+    },
+    {
+      "id": "guessed-identity-warning",
+      "msg": "Your name and email address were configured automatically based on your username and hostname.",
+      "why": "Git guessed an identity from the machine, and commits made this way are attributed to nobody.",
+      "fix": [
+        {
+          "c": "git config --global user.email \"you@example.com\"",
+          "n": "Set it before committing anything you care about."
+        },
+        {
+          "c": "git commit --amend --reset-author",
+          "n": "Fixes the last commit once the identity is right."
+        }
+      ],
+      "intent": "first-time-setup",
+      "seealso": [
+        "name-vs-username",
+        "contributions-graph"
+      ]
+    },
+    {
+      "id": "invalid-date-format",
+      "msg": "fatal: invalid date format: <value>",
+      "why": "The date string does not match any format Git understands.",
+      "fix": [
+        {
+          "c": "git commit --date=\"2026-08-08T10:00:00\"",
+          "n": "ISO 8601 always parses."
+        },
+        {
+          "c": "GIT_COMMITTER_DATE=\"2026-08-08T10:00:00\" git commit --amend",
+          "n": "Set the committer date too when both should agree."
+        }
+      ],
+      "intent": "change-commit-date",
+      "seealso": [
+        "commit-dates"
+      ]
+    },
+    {
+      "id": "dst-refspec-ambiguous",
+      "msg": "error: dst refspec <name> matches more than one",
+      "why": "A tag and a branch share that name, so the push target is ambiguous.",
+      "fix": [
+        {
+          "c": "git push origin refs/heads/<name>",
+          "n": "Spell out which one you mean."
+        },
+        {
+          "c": "git tag -d <name>",
+          "n": "Better, rename one: sharing a name between a tag and a branch invites this forever."
+        }
+      ],
+      "intent": "push-to-different-name",
+      "seealso": [
+        "tag-vs-branch",
+        "understand-fetch-refspec"
+      ]
+    },
+    {
+      "id": "remote-ref-does-not-exist",
+      "msg": "error: unable to delete '<branch>': remote ref does not exist",
+      "why": "The branch is already gone from the remote, or the name is misspelled.",
+      "fix": [
+        {
+          "c": "git ls-remote --heads origin",
+          "n": "Lists exactly what the server has right now."
+        },
+        {
+          "c": "git fetch --prune",
+          "n": "Your local view was stale; pruning refreshes it."
+        }
+      ],
+      "intent": "prune-remote-branches",
+      "seealso": [
+        "see-all-remote-branches",
+        "local-branch-out-of-sync"
+      ]
+    },
+    {
+      "id": "no-configured-push-destination",
+      "msg": "fatal: No configured push destination.",
+      "why": "This branch has no remote to push to, and none was given on the command line.",
+      "fix": [
+        {
+          "c": "git remote add origin <url>",
+          "n": "Add the remote if the repository has none."
+        },
+        {
+          "c": "git push -u origin HEAD",
+          "n": "Set the upstream so later pushes need no arguments."
+        }
+      ],
+      "intent": "auto-setup-remote",
+      "seealso": [
+        "branch-upstream",
+        "what-is-origin"
+      ]
+    },
+    {
+      "id": "secondary-rate-limit",
+      "msg": "You have exceeded a secondary rate limit. Please wait a few minutes before you try again.",
+      "why": "Too many writes in a short window. This limit is separate from the hourly quota.",
+      "fix": [
+        {
+          "c": "gh api rate_limit",
+          "n": "The primary quota often still looks healthy, which is why this surprises scripts."
+        },
+        {
+          "c": "sleep 60",
+          "n": "Back off and retry; secondary limits clear in minutes, not hours."
+        }
+      ],
+      "intent": "api-rate-limits",
+      "seealso": [
+        "github-api",
+        "gh-api-pagination"
+      ]
+    },
+    {
+      "id": "resource-not-accessible",
+      "msg": "Error: Resource not accessible by integration",
+      "why": "The workflow token lacks permission for what the step attempted.",
+      "fix": [
+        {
+          "c": "permissions: issues: write",
+          "n": "Grant the one scope the step needs, at job level."
+        },
+        {
+          "c": "Settings -> Actions -> Workflow permissions",
+          "n": "Check the repository default has not been pinned to read-only."
+        }
+      ],
+      "intent": "workflow-permissions",
+      "seealso": [
+        "gh-in-workflows",
+        "actions-secrets"
+      ]
+    },
+    {
+      "id": "approving-review-required",
+      "msg": "At least 1 approving review is required by reviewers with write access.",
+      "why": "A ruleset requires approvals this pull request does not have.",
+      "fix": [
+        {
+          "c": "gh pr view --json reviewDecision",
+          "n": "Shows what is still outstanding."
+        },
+        {
+          "c": "Ruleset -> Required approvals",
+          "n": "Solo maintainers usually want this at zero while keeping status checks required."
+        }
+      ],
+      "intent": "pull-request-review-required-but-solo",
+      "seealso": [
+        "branch-protection",
+        "who-can-merge"
+      ]
+    },
+    {
+      "id": "required-check-expected",
+      "msg": "Required status check \"build\" is expected.",
+      "why": "A required check never reported, so the pull request waits indefinitely.",
+      "fix": [
+        {
+          "c": "gh pr checks <number>",
+          "n": "Shows which check is missing rather than failing."
+        },
+        {
+          "c": "Ruleset -> Require status checks",
+          "n": "Remove renamed or skipped checks from the required list."
+        }
+      ],
+      "intent": "pull-request-checks-stuck",
+      "seealso": [
+        "workflow-not-triggering",
+        "github-status-checks-required"
+      ]
+    },
+    {
+      "id": "pr-has-conflicts",
+      "msg": "This branch has conflicts that must be resolved",
+      "why": "The pull request cannot merge until the overlap with its base branch is settled.",
+      "fix": [
+        {
+          "c": "gh pr checkout <number> && git merge main",
+          "n": "Resolve locally, where you can test the result."
+        },
+        {
+          "c": "Resolve conflicts",
+          "n": "For small text conflicts the in-browser editor is enough."
+        }
+      ],
+      "intent": "resolve-conflicts-online",
+      "seealso": [
+        "merge-conflict",
+        "rebase-pull-request-branch"
+      ]
+    },
+    {
+      "id": "repository-archived-readonly",
+      "msg": "This repository has been archived by the owner. It is now read-only.",
+      "why": "Archived repositories reject pushes, issues, and pull requests by design.",
+      "fix": [
+        {
+          "c": "Settings -> General -> Unarchive",
+          "n": "Only the owner can reopen it."
+        },
+        {
+          "c": "gh repo fork <owner>/<repo>",
+          "n": "To carry the work on elsewhere, fork it."
+        }
+      ],
+      "intent": "archive-repo",
+      "seealso": [
+        "handle-abandoned-dependency",
+        "detach-fork"
+      ]
+    },
+    {
+      "id": "sso-session-expired",
+      "msg": "Your SSO session has expired or you must re-authenticate to access this organization.",
+      "why": "A SAML-protected organization needs the credential or session authorized again.",
+      "fix": [
+        {
+          "c": "Settings -> Developer settings -> Tokens -> Configure SSO",
+          "n": "Authorize the token for that organization."
+        },
+        {
+          "c": "gh auth login",
+          "n": "Signing in again refreshes the SSO session."
+        }
+      ],
+      "intent": "saml-sso-tokens",
+      "seealso": [
+        "access-tokens",
+        "org-teams"
+      ]
+    },
+    {
+      "id": "no-space-left-runner",
+      "msg": "No space left on device",
+      "why": "The runner filled its disk, usually with container layers or build output.",
+      "fix": [
+        {
+          "c": "df -h",
+          "n": "Add it as a step before the failure point to confirm."
+        },
+        {
+          "c": "docker system prune -af",
+          "n": "Free space mid-job, or move heavy work to a larger runner."
+        }
+      ],
+      "intent": "reduce-ci-minutes",
+      "seealso": [
+        "actions-cache",
+        "self-hosted-runner"
+      ]
+    },
+    {
+      "id": "artifact-not-found",
+      "msg": "Error: Unable to find any artifacts for the associated workflow run",
+      "why": "The download ran for an artifact that was never uploaded, or belongs to a different run.",
+      "fix": [
+        {
+          "c": "gh run view --json jobs",
+          "n": "Confirm the uploading job actually completed."
+        },
+        {
+          "c": "needs: build",
+          "n": "Downstream jobs must declare the dependency, or they race the upload."
+        }
+      ],
+      "intent": "actions-artifacts",
+      "seealso": [
+        "github-actions-artifacts-between-jobs",
+        "debug-workflows"
+      ]
+    },
+    {
+      "id": "matrix-job-cancelled",
+      "msg": "The job was canceled because \"ubuntu-latest\" failed",
+      "why": "One matrix combination failed and fail-fast cancelled the others.",
+      "fix": [
+        {
+          "c": "fail-fast: false",
+          "n": "Let every combination finish so you see the whole picture."
+        },
+        {
+          "c": "gh run view --log-failed",
+          "n": "Read the combination that genuinely failed first."
+        }
+      ],
+      "intent": "actions-matrix",
+      "seealso": [
+        "work-with-flaky-tests",
+        "debug-workflows"
+      ]
+    },
+    {
+      "id": "scheduled-workflow-disabled",
+      "msg": "This scheduled workflow is disabled because the repository has been inactive for 60 days",
+      "why": "Scheduled runs pause automatically after a long quiet period.",
+      "fix": [
+        {
+          "c": "gh workflow enable <file>",
+          "n": "Re-enable it in one command."
+        },
+        {
+          "c": "git commit --allow-empty -m \"Keep the schedule alive\"",
+          "n": "Any activity resets the inactivity clock."
+        }
+      ],
+      "intent": "scheduled-workflow",
+      "seealso": [
+        "workflow-not-triggering",
+        "empty-commit"
+      ]
+    },
+    {
+      "id": "reusable-workflow-not-found",
+      "msg": "error parsing called workflow: workflow was not found",
+      "why": "The reusable workflow path or ref does not resolve for the caller.",
+      "fix": [
+        {
+          "c": "uses: <owner>/<repo>/.github/workflows/ci.yml@main",
+          "n": "The path must be complete, including .github/workflows."
+        },
+        {
+          "c": "gh api repos/<owner>/<repo>/contents/.github/workflows",
+          "n": "Confirms the file exists on that ref and is visible to the caller."
+        }
+      ],
+      "intent": "reusable-workflows",
+      "seealso": [
+        "github-actions-start",
+        "third-party-action-safety"
+      ]
+    },
+    {
+      "id": "npm-eintegrity",
+      "msg": "npm ERR! code EINTEGRITY  npm ERR! integrity checksum failed when using sha512",
+      "why": "The lockfile records a hash that no longer matches what the registry served.",
+      "fix": [
+        {
+          "c": "rm -rf node_modules package-lock.json && npm install",
+          "n": "Regenerate the lockfile, then commit it."
+        },
+        {
+          "c": "git diff package-lock.json",
+          "n": "Review the regenerated file: an unexpected change of source is worth understanding."
+        }
+      ],
+      "intent": "handle-merge-conflict-in-lockfile",
+      "seealso": [
+        "commit-lockfile",
+        "install-from-git"
+      ]
+    },
+    {
+      "id": "pip-git-clone-128",
+      "msg": "ERROR: Command errored out with exit status 128: git clone -q <url>",
+      "why": "pip shelled out to Git and Git failed, almost always on authentication.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Reproduces the failure with pip out of the way."
+        },
+        {
+          "c": "pip install git+https://<token>@github.com/<owner>/<repo>",
+          "n": "In CI, supply credentials in the URL or through a Git config rewrite."
+        }
+      ],
+      "intent": "install-from-git",
+      "seealso": [
+        "clone-private-ci",
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "go-checksum-mismatch",
+      "msg": "verifying <module>: checksum mismatch  SECURITY ERROR",
+      "why": "The module checksum differs from the recorded sum, which can mean a moved tag or a poisoned cache.",
+      "fix": [
+        {
+          "c": "go clean -modcache",
+          "n": "Clears a bad cache entry."
+        },
+        {
+          "c": "go env -w GOPRIVATE=github.com/<org>/*",
+          "n": "For private modules, exclude them from the public sum database rather than disabling verification."
+        }
+      ],
+      "intent": "private-go-modules",
+      "seealso": [
+        "install-from-git"
+      ]
+    },
+    {
+      "id": "docker-git-context",
+      "msg": "failed to solve: failed to read dockerfile: error fetching default branch",
+      "why": "Docker tried to build from a Git URL it could not read.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Confirm the reference resolves and that you have access."
+        },
+        {
+          "c": "docker build .",
+          "n": "Build from a local checkout when the repository is private."
+        }
+      ],
+      "intent": "clone-private-ci",
+      "seealso": [
+        "access-tokens",
+        "container-jobs"
+      ]
+    },
+    {
+      "id": "composer-clone-failed",
+      "msg": "Failed to execute git clone --mirror -- '<url>'",
+      "why": "Composer's Git call failed, usually credentials for a private package.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Tests the same access Composer needs."
+        },
+        {
+          "c": "composer config --global github-oauth.github.com <token>",
+          "n": "Give Composer a token rather than relying on interactive prompts."
+        }
+      ],
+      "intent": "php-laravel-git",
+      "seealso": [
+        "access-tokens",
+        "install-from-git"
+      ]
+    },
+    {
+      "id": "vscode-git-not-found",
+      "msg": "Git not found. Install Git, or configure git.path in your settings.",
+      "why": "VS Code cannot locate a Git binary on PATH.",
+      "fix": [
+        {
+          "c": "git --version",
+          "n": "If this fails in a terminal too, Git is genuinely missing."
+        },
+        {
+          "c": "\"git.path\": \"C:/Program Files/Git/bin/git.exe\"",
+          "n": "Point the setting at the binary when PATH cannot be fixed."
+        }
+      ],
+      "intent": "clone-in-vscode",
+      "seealso": [
+        "git-guis",
+        "pick-a-git-client"
+      ]
+    },
+    {
+      "id": "ide-push-rejected-dialog",
+      "msg": "Push rejected: Push to origin/main was rejected",
+      "why": "The IDE is reporting a non-fast-forward push behind a friendlier dialog.",
+      "fix": [
+        {
+          "c": "git log --oneline HEAD..origin/main",
+          "n": "Shows exactly what you are missing."
+        },
+        {
+          "c": "git pull --rebase",
+          "n": "Bring your work on top of theirs, then push."
+        }
+      ],
+      "intent": "git-in-jetbrains",
+      "seealso": [
+        "branch-behind-and-ahead",
+        "pull-rebase"
+      ]
+    },
+    {
+      "id": "xcode-license-required",
+      "msg": "Agreeing to the Xcode/iOS license requires admin privileges",
+      "why": "macOS ships Git through the developer tools, which refuse to run until the licence is accepted.",
+      "fix": [
+        {
+          "c": "sudo xcodebuild -license accept",
+          "n": "Accept it once."
+        },
+        {
+          "c": "brew install git",
+          "n": "Or install a Git that does not depend on Xcode at all."
+        }
+      ],
+      "intent": "xcode-git",
+      "seealso": [
+        "git-guis",
+        "first-time-setup"
+      ]
+    },
+    {
+      "id": "windows-reserved-name",
+      "msg": "error: unable to create file <name>: Invalid argument",
+      "why": "Windows reserves names such as aux, con, and nul, so a checkout containing one fails.",
+      "fix": [
+        {
+          "c": "git config core.protectNTFS true",
+          "n": "Keeps Git from creating paths Windows cannot handle safely."
+        },
+        {
+          "c": "git sparse-checkout set <safe-paths>",
+          "n": "Or exclude the offending path when you need only part of the tree."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "sparse-checkout"
+      ]
+    },
+    {
+      "id": "paths-collided",
+      "msg": "warning: the following paths have collided (e.g. 'README.md' and 'readme.md')",
+      "why": "Two paths differ only by case, which a case-insensitive filesystem cannot represent at once.",
+      "fix": [
+        {
+          "c": "git ls-files | sort -f | uniq -di",
+          "n": "Lists the colliding pairs."
+        },
+        {
+          "c": "git mv --force <one> <new-name>",
+          "n": "Rename one from a case-sensitive machine, or check out only one of them."
+        }
+      ],
+      "intent": "case-only-rename-windows",
+      "seealso": [
+        "case-rename",
+        "rename-file"
+      ]
     }
   ]
 }

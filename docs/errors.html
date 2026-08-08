@@ -1245,6 +1245,205 @@
   <p class="note">An earlier pick stopped on a conflict and was never finished.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#cherry-pick-conflict">A cherry-pick hit a conflict</a></p>
 </article>
+<article class="result errcard" id="gnutls-recv-error">
+  <h2><code class="errmsg">fatal: unable to access &#x27;&lt;url&gt;&#x27;: gnutls_handshake() failed: Error in the pull function.</code><a class="anchor" href="#gnutls-recv-error" aria-label="Link to this error">#</a></h2>
+  <p class="note">The TLS handshake failed, typically an intercepting proxy or an outdated Git build.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="empty-reply-from-server">
+  <h2><code class="errmsg">fatal: unable to access &#x27;&lt;url&gt;&#x27;: Empty reply from server</code><a class="anchor" href="#empty-reply-from-server" aria-label="Link to this error">#</a></h2>
+  <p class="note">Something closed the connection without answering: a proxy, a firewall, or a captive portal.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="bad-packet-length">
+  <h2><code class="errmsg">fatal: protocol error: bad line length character: &lt;chars&gt;</code><a class="anchor" href="#bad-packet-length" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server sent something Git could not parse, usually an HTML error page or an SSH login banner.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#debug-ssh-key">See which SSH key Git is actually using</a></p>
+</article>
+<article class="result errcard" id="cannot-fork-index-pack">
+  <h2><code class="errmsg">fatal: cannot fork() for index-pack: Resource temporarily unavailable</code><a class="anchor" href="#cannot-fork-index-pack" aria-label="Link to this error">#</a></h2>
+  <p class="note">The machine hit a process or memory limit while unpacking the transfer.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#partial-clone">Clone a huge repository faster</a></p>
+</article>
+<article class="result errcard" id="ref-not-valid-object">
+  <h2><code class="errmsg">error: refs/heads/&lt;name&gt; does not point to a valid object!</code><a class="anchor" href="#ref-not-valid-object" aria-label="Link to this error">#</a></h2>
+  <p class="note">The ref file names an object this repository no longer holds.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="unable-to-read-sha1">
+  <h2><code class="errmsg">error: unable to read sha1 file of &lt;path&gt; (&lt;hash&gt;)</code><a class="anchor" href="#unable-to-read-sha1" aria-label="Link to this error">#</a></h2>
+  <p class="note">An object the index references is missing from the object store.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="multiple-merge-bases">
+  <h2><code class="errmsg">warning: multiple merge bases found, using the first</code><a class="anchor" href="#multiple-merge-bases" aria-label="Link to this error">#</a></h2>
+  <p class="note">History has more than one common ancestor, usually after criss-cross merges.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-base">Find where two branches diverged</a></p>
+</article>
+<article class="result errcard" id="path-outside-repository">
+  <h2><code class="errmsg">fatal: &lt;path&gt;: &#x27;&lt;path&gt;&#x27; is outside repository at &#x27;&lt;root&gt;&#x27;</code><a class="anchor" href="#path-outside-repository" aria-label="Link to this error">#</a></h2>
+  <p class="note">The path argument resolves above the repository root.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-root">Find the top of the repository from anywhere</a></p>
+</article>
+<article class="result errcard" id="paths-are-ignored">
+  <h2><code class="errmsg">The following paths are ignored by one of your .gitignore files:</code><a class="anchor" href="#paths-are-ignored" aria-label="Link to this error">#</a></h2>
+  <p class="note">You asked Git to add a file that an ignore rule excludes.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitignore-not-working">My .gitignore is being ignored</a></p>
+</article>
+<article class="result errcard" id="sparse-checkout-empty">
+  <h2><code class="errmsg">error: Sparse checkout leaves no entry on working directory</code><a class="anchor" href="#sparse-checkout-empty" aria-label="Link to this error">#</a></h2>
+  <p class="note">The sparse patterns match nothing, so the checkout would be empty.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
+</article>
+<article class="result errcard" id="aborting-empty-message">
+  <h2><code class="errmsg">Aborting commit due to empty commit message.</code><a class="anchor" href="#aborting-empty-message" aria-label="Link to this error">#</a></h2>
+  <p class="note">The editor closed with no text, so Git refused to record the commit.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-without-editor">Commit without an editor opening</a></p>
+</article>
+<article class="result errcard" id="no-changes-added-to-commit">
+  <h2><code class="errmsg">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code><a class="anchor" href="#no-changes-added-to-commit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Files are modified but nothing is staged, so there is nothing to record.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#what-is-staging">What the staging area actually is</a></p>
+</article>
+<article class="result errcard" id="guessed-identity-warning">
+  <h2><code class="errmsg">Your name and email address were configured automatically based on your username and hostname.</code><a class="anchor" href="#guessed-identity-warning" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git guessed an identity from the machine, and commits made this way are attributed to nobody.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#first-time-setup">First-time Git setup on a new machine</a></p>
+</article>
+<article class="result errcard" id="invalid-date-format">
+  <h2><code class="errmsg">fatal: invalid date format: &lt;value&gt;</code><a class="anchor" href="#invalid-date-format" aria-label="Link to this error">#</a></h2>
+  <p class="note">The date string does not match any format Git understands.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#change-commit-date">Change a commit&#x27;s date</a></p>
+</article>
+<article class="result errcard" id="dst-refspec-ambiguous">
+  <h2><code class="errmsg">error: dst refspec &lt;name&gt; matches more than one</code><a class="anchor" href="#dst-refspec-ambiguous" aria-label="Link to this error">#</a></h2>
+  <p class="note">A tag and a branch share that name, so the push target is ambiguous.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#push-to-different-name">Push my branch under a different name on the remote</a></p>
+</article>
+<article class="result errcard" id="remote-ref-does-not-exist">
+  <h2><code class="errmsg">error: unable to delete &#x27;&lt;branch&gt;&#x27;: remote ref does not exist</code><a class="anchor" href="#remote-ref-does-not-exist" aria-label="Link to this error">#</a></h2>
+  <p class="note">The branch is already gone from the remote, or the name is misspelled.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#prune-remote-branches">Remove local references to deleted remote branches</a></p>
+</article>
+<article class="result errcard" id="no-configured-push-destination">
+  <h2><code class="errmsg">fatal: No configured push destination.</code><a class="anchor" href="#no-configured-push-destination" aria-label="Link to this error">#</a></h2>
+  <p class="note">This branch has no remote to push to, and none was given on the command line.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#auto-setup-remote">Stop typing -u on every first push</a></p>
+</article>
+<article class="result errcard" id="secondary-rate-limit">
+  <h2><code class="errmsg">You have exceeded a secondary rate limit. Please wait a few minutes before you try again.</code><a class="anchor" href="#secondary-rate-limit" aria-label="Link to this error">#</a></h2>
+  <p class="note">Too many writes in a short window. This limit is separate from the hourly quota.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#api-rate-limits">GitHub API says rate limit exceeded</a></p>
+</article>
+<article class="result errcard" id="resource-not-accessible">
+  <h2><code class="errmsg">Error: Resource not accessible by integration</code><a class="anchor" href="#resource-not-accessible" aria-label="Link to this error">#</a></h2>
+  <p class="note">The workflow token lacks permission for what the step attempted.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#workflow-permissions">Limit what a workflow is allowed to do</a></p>
+</article>
+<article class="result errcard" id="approving-review-required">
+  <h2><code class="errmsg">At least 1 approving review is required by reviewers with write access.</code><a class="anchor" href="#approving-review-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">A ruleset requires approvals this pull request does not have.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pull-request-review-required-but-solo">Required reviews block me when I work alone</a></p>
+</article>
+<article class="result errcard" id="required-check-expected">
+  <h2><code class="errmsg">Required status check &quot;build&quot; is expected.</code><a class="anchor" href="#required-check-expected" aria-label="Link to this error">#</a></h2>
+  <p class="note">A required check never reported, so the pull request waits indefinitely.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pull-request-checks-stuck">Pull request checks are stuck as expected</a></p>
+</article>
+<article class="result errcard" id="pr-has-conflicts">
+  <h2><code class="errmsg">This branch has conflicts that must be resolved</code><a class="anchor" href="#pr-has-conflicts" aria-label="Link to this error">#</a></h2>
+  <p class="note">The pull request cannot merge until the overlap with its base branch is settled.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#resolve-conflicts-online">Resolve pull request conflicts in the browser</a></p>
+</article>
+<article class="result errcard" id="repository-archived-readonly">
+  <h2><code class="errmsg">This repository has been archived by the owner. It is now read-only.</code><a class="anchor" href="#repository-archived-readonly" aria-label="Link to this error">#</a></h2>
+  <p class="note">Archived repositories reject pushes, issues, and pull requests by design.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#archive-repo">Archive a repository instead of deleting it</a></p>
+</article>
+<article class="result errcard" id="sso-session-expired">
+  <h2><code class="errmsg">Your SSO session has expired or you must re-authenticate to access this organization.</code><a class="anchor" href="#sso-session-expired" aria-label="Link to this error">#</a></h2>
+  <p class="note">A SAML-protected organization needs the credential or session authorized again.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#saml-sso-tokens">Token works everywhere except my company org</a></p>
+</article>
+<article class="result errcard" id="no-space-left-runner">
+  <h2><code class="errmsg">No space left on device</code><a class="anchor" href="#no-space-left-runner" aria-label="Link to this error">#</a></h2>
+  <p class="note">The runner filled its disk, usually with container layers or build output.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#reduce-ci-minutes">Cut what CI costs me</a></p>
+</article>
+<article class="result errcard" id="artifact-not-found">
+  <h2><code class="errmsg">Error: Unable to find any artifacts for the associated workflow run</code><a class="anchor" href="#artifact-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The download ran for an artifact that was never uploaded, or belongs to a different run.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-artifacts">Save files a workflow produced</a></p>
+</article>
+<article class="result errcard" id="matrix-job-cancelled">
+  <h2><code class="errmsg">The job was canceled because &quot;ubuntu-latest&quot; failed</code><a class="anchor" href="#matrix-job-cancelled" aria-label="Link to this error">#</a></h2>
+  <p class="note">One matrix combination failed and fail-fast cancelled the others.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-matrix">Test across several versions and systems at once</a></p>
+</article>
+<article class="result errcard" id="scheduled-workflow-disabled">
+  <h2><code class="errmsg">This scheduled workflow is disabled because the repository has been inactive for 60 days</code><a class="anchor" href="#scheduled-workflow-disabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">Scheduled runs pause automatically after a long quiet period.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#scheduled-workflow">Run a workflow on a schedule</a></p>
+</article>
+<article class="result errcard" id="reusable-workflow-not-found">
+  <h2><code class="errmsg">error parsing called workflow: workflow was not found</code><a class="anchor" href="#reusable-workflow-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The reusable workflow path or ref does not resolve for the caller.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#reusable-workflows">Share one workflow across many repositories</a></p>
+</article>
+<article class="result errcard" id="npm-eintegrity">
+  <h2><code class="errmsg">npm ERR! code EINTEGRITY  npm ERR! integrity checksum failed when using sha512</code><a class="anchor" href="#npm-eintegrity" aria-label="Link to this error">#</a></h2>
+  <p class="note">The lockfile records a hash that no longer matches what the registry served.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#handle-merge-conflict-in-lockfile">Resolve a conflict in a lockfile</a></p>
+</article>
+<article class="result errcard" id="pip-git-clone-128">
+  <h2><code class="errmsg">ERROR: Command errored out with exit status 128: git clone -q &lt;url&gt;</code><a class="anchor" href="#pip-git-clone-128" aria-label="Link to this error">#</a></h2>
+  <p class="note">pip shelled out to Git and Git failed, almost always on authentication.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#install-from-git">Install a package straight from a repository</a></p>
+</article>
+<article class="result errcard" id="go-checksum-mismatch">
+  <h2><code class="errmsg">verifying &lt;module&gt;: checksum mismatch  SECURITY ERROR</code><a class="anchor" href="#go-checksum-mismatch" aria-label="Link to this error">#</a></h2>
+  <p class="note">The module checksum differs from the recorded sum, which can mean a moved tag or a poisoned cache.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#private-go-modules">Use a private repository as a Go module</a></p>
+</article>
+<article class="result errcard" id="docker-git-context">
+  <h2><code class="errmsg">failed to solve: failed to read dockerfile: error fetching default branch</code><a class="anchor" href="#docker-git-context" aria-label="Link to this error">#</a></h2>
+  <p class="note">Docker tried to build from a Git URL it could not read.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
+<article class="result errcard" id="composer-clone-failed">
+  <h2><code class="errmsg">Failed to execute git clone --mirror -- &#x27;&lt;url&gt;&#x27;</code><a class="anchor" href="#composer-clone-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Composer&#x27;s Git call failed, usually credentials for a private package.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#php-laravel-git">Git settings for a PHP or Laravel project</a></p>
+</article>
+<article class="result errcard" id="vscode-git-not-found">
+  <h2><code class="errmsg">Git not found. Install Git, or configure git.path in your settings.</code><a class="anchor" href="#vscode-git-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">VS Code cannot locate a Git binary on PATH.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#clone-in-vscode">Clone and open a repository in VS Code</a></p>
+</article>
+<article class="result errcard" id="ide-push-rejected-dialog">
+  <h2><code class="errmsg">Push rejected: Push to origin/main was rejected</code><a class="anchor" href="#ide-push-rejected-dialog" aria-label="Link to this error">#</a></h2>
+  <p class="note">The IDE is reporting a non-fast-forward push behind a friendlier dialog.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-in-jetbrains">Use Git inside IntelliJ or PyCharm</a></p>
+</article>
+<article class="result errcard" id="xcode-license-required">
+  <h2><code class="errmsg">Agreeing to the Xcode/iOS license requires admin privileges</code><a class="anchor" href="#xcode-license-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">macOS ships Git through the developer tools, which refuse to run until the licence is accepted.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#xcode-git">Git settings for an Xcode or iOS project</a></p>
+</article>
+<article class="result errcard" id="windows-reserved-name">
+  <h2><code class="errmsg">error: unable to create file &lt;name&gt;: Invalid argument</code><a class="anchor" href="#windows-reserved-name" aria-label="Link to this error">#</a></h2>
+  <p class="note">Windows reserves names such as aux, con, and nul, so a checkout containing one fails.</p>
+  <div class="cmd"><code>git config core.protectNTFS true</code><button class="copy" data-cmd="git config core.protectNTFS true" aria-label="Copy command">Copy</button></div>
+  <p class="note">Keeps Git from creating paths Windows cannot handle safely.</p>
+  <div class="cmd"><code>git sparse-checkout set &lt;safe-paths&gt;</code><button class="copy" data-cmd="git sparse-checkout set &lt;safe-paths&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Or exclude the offending path when you need only part of the tree.</p>
+  <p class="seealso">See also: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
+</article>
+<article class="result errcard" id="paths-collided">
+  <h2><code class="errmsg">warning: the following paths have collided (e.g. &#x27;README.md&#x27; and &#x27;readme.md&#x27;)</code><a class="anchor" href="#paths-collided" aria-label="Link to this error">#</a></h2>
+  <p class="note">Two paths differ only by case, which a case-insensitive filesystem cannot represent at once.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#case-only-rename-windows">Rename a file to different capitalisation</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
