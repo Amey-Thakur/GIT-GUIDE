@@ -21858,6 +21858,617 @@
         "pin-repositories",
         "professional-repo"
       ]
+    },
+    {
+      "id": "gitignore-per-folder",
+      "q": "Ignore rules for one subfolder only",
+      "aka": [
+        "nested gitignore",
+        "gitignore in subdirectory",
+        "different rules per folder"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"*.log\" > <folder>/.gitignore",
+              "n": "Rules apply from that folder down, and a nested file overrides the parent for its own subtree. Keeping rules next to what they describe survives folder moves."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "gitignore-patterns",
+        "ignore-mechanisms",
+        "check-ignore"
+      ]
+    },
+    {
+      "id": "exclude-from-diff",
+      "q": "Hide generated files from every diff",
+      "aka": [
+        "ignore lockfile in diff",
+        "collapse generated files",
+        "linguist-generated"
+      ],
+      "variants": [
+        {
+          "when": "On GitHub",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"package-lock.json linguist-generated=true\" >> .gitattributes",
+              "n": "The file collapses by default in pull request diffs and stops skewing the language bar. It is still tracked and still merges."
+            }
+          ],
+          "undo": "Remove the line"
+        },
+        {
+          "when": "Locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff -- . \":(exclude)package-lock.json\"",
+              "n": "Pathspec exclusion for a single command, useful when reviewing a noisy change."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "gitattributes",
+        "commit-lockfile",
+        "review-large-pr"
+      ]
+    },
+    {
+      "id": "amend-old-commit-message",
+      "q": "Fix the message of a commit further back",
+      "aka": [
+        "reword old commit",
+        "change message of third commit",
+        "edit past commit message"
+      ],
+      "variants": [
+        {
+          "when": "Not pushed",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i HEAD~5",
+              "n": "Mark the commit reword; Git stops there and opens the editor for its message only."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        },
+        {
+          "when": "Already pushed",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git push --force-with-lease",
+              "n": "After the rebase. Coordinate first: everyone who pulled that commit must reset rather than merge. On a shared branch, leave it alone."
+            }
+          ],
+          "undo": "Push the old hash back, or reset to it and force again"
+        }
+      ],
+      "seealso": [
+        "edit-commit-message",
+        "interactive-rebase",
+        "force-push-safely"
+      ]
+    },
+    {
+      "id": "pull-request-templates-multiple",
+      "q": "Offer more than one pull request template",
+      "aka": [
+        "multiple pr templates",
+        "choose a template",
+        "template query parameter"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".github/PULL_REQUEST_TEMPLATE/bugfix.md",
+              "n": "A folder holds several. GitHub does not prompt for a choice, so link to the one you want with ?template=bugfix.md on the compare URL."
+            },
+            {
+              "c": "gh pr create --body-file .github/PULL_REQUEST_TEMPLATE/bugfix.md",
+              "n": "From the terminal, name the file directly."
+            }
+          ],
+          "undo": "Delete the folder"
+        }
+      ],
+      "seealso": [
+        "issue-templates",
+        "pr-checklist",
+        "contributing-file"
+      ]
+    },
+    {
+      "id": "track-upstream-releases",
+      "q": "Know when a dependency I forked releases something",
+      "aka": [
+        "watch upstream releases",
+        "fork out of date",
+        "upstream new version alert"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Watch -> Custom -> Releases",
+              "n": "On the upstream repository, so only version news reaches you."
+            },
+            {
+              "c": "git fetch upstream --tags",
+              "n": "Then compare: git log --oneline HEAD..upstream/main shows exactly what your fork is missing."
+            }
+          ],
+          "undo": "Set Watch back to Participating"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "releases-feed",
+        "upstream-downstream"
+      ]
+    },
+    {
+      "id": "commit-emoji-convention",
+      "q": "Should commit messages use emoji",
+      "aka": [
+        "gitmoji convention",
+        "emoji in commit messages",
+        "conventional commits vs emoji"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"fix: handle empty CSV rows\"",
+              "n": "Machine-readable prefixes drive changelogs and version bumps; emoji do not. Pick the convention your tooling reads, and apply it consistently or not at all."
+            }
+          ],
+          "undo": "git commit --amend before pushing"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "generate-changelog",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "stop-tracking-but-keep-remote",
+      "q": "Remove a file locally without deleting it for everyone",
+      "aka": [
+        "delete file only for me",
+        "keep file on server remove locally",
+        "local deletion not shared"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git update-index --skip-worktree <file>",
+              "n": "Git ignores your local state of the file, so deleting or editing it never enters a commit. Everyone else keeps their copy."
+            },
+            {
+              "c": "git ls-files -v | grep ^S",
+              "n": "Lists what you have skipped, which is easy to forget six months later."
+            }
+          ],
+          "undo": "git update-index --no-skip-worktree <file> && git restore <file>"
+        }
+      ],
+      "seealso": [
+        "skip-worktree",
+        "ignore-mechanisms",
+        "local-only-ignore"
+      ]
+    },
+    {
+      "id": "see-branch-graph-terminal",
+      "q": "Draw the branch graph in the terminal",
+      "aka": [
+        "ascii commit graph",
+        "visual log in terminal",
+        "see branches diverge"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --graph --oneline --decorate --all",
+              "n": "Every branch and merge as lines. Add --simplify-by-decoration when the repository is too busy to read."
+            },
+            {
+              "c": "git config --global alias.lg \"log --graph --oneline --decorate --all\"",
+              "n": "Worth an alias; you will use it constantly."
+            }
+          ],
+          "undo": "git config --global --unset alias.lg"
+        }
+      ],
+      "seealso": [
+        "pretty-log",
+        "history-visualization",
+        "git-aliases"
+      ]
+    },
+    {
+      "id": "apply-stash-to-other-branch",
+      "q": "Move stashed work to a different branch",
+      "aka": [
+        "stash to another branch",
+        "pop stash on wrong branch",
+        "transfer uncommitted work"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash",
+              "n": "Stashes are not tied to a branch, so this is the whole trick."
+            },
+            {
+              "c": "git switch <other> && git stash pop",
+              "n": "The work applies wherever you stand. Conflicts appear only if that branch touched the same lines."
+            }
+          ],
+          "undo": "git stash again to shelve it back"
+        }
+      ],
+      "seealso": [
+        "stash",
+        "stash-branch",
+        "commit-to-other-branch"
+      ]
+    },
+    {
+      "id": "github-status-checks-required",
+      "q": "Require CI to pass before merge",
+      "aka": [
+        "required status checks",
+        "block merge until tests pass",
+        "green checks mandatory"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require status checks to pass",
+              "n": "Pick each check by name. A check must have run at least once before it appears in the list, which is why new pipelines seem missing."
+            },
+            {
+              "c": "Require branches to be up to date before merging",
+              "n": "Stronger, and slower: it forces a rebase when main moves. Pair with a merge queue on busy repositories."
+            }
+          ],
+          "undo": "Remove the requirement"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "merge-queue",
+        "auto-merge"
+      ]
+    },
+    {
+      "id": "revert-many-commits",
+      "q": "Undo a whole range of commits at once",
+      "aka": [
+        "revert several commits",
+        "undo last five commits published",
+        "roll back a series"
+      ],
+      "variants": [
+        {
+          "when": "Published history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert --no-commit <oldest>^..<newest>",
+              "n": "Stages the combined inverse of the range."
+            },
+            {
+              "c": "git commit -m \"Revert the <feature> series\"",
+              "n": "One clean commit undoing all of it, with history intact."
+            }
+          ],
+          "undo": "git revert the revert commit"
+        },
+        {
+          "when": "Unpushed",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git reset --hard <last-good-hash>",
+              "n": "Simply drop them. Nothing published, nothing owed to anyone."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "revert-multiple",
+        "rollback-decision",
+        "undo-revert"
+      ]
+    },
+    {
+      "id": "same-branch-two-worktrees",
+      "q": "Work on two branches at the same time",
+      "aka": [
+        "two branches simultaneously",
+        "build one branch while editing another",
+        "parallel checkouts"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git worktree add ../hotfix main",
+              "n": "A second folder sharing the same history and objects: no second clone, no re-download."
+            },
+            {
+              "c": "git worktree list",
+              "n": "Git refuses to check out one branch in two worktrees, which prevents the confusing half of this idea."
+            }
+          ],
+          "undo": "git worktree remove ../hotfix"
+        }
+      ],
+      "seealso": [
+        "worktrees",
+        "commit-to-other-branch",
+        "switch-with-changes"
+      ]
+    },
+    {
+      "id": "large-monorepo-ci",
+      "q": "Only build the parts of a monorepo that changed",
+      "aka": [
+        "monorepo ci paths filter",
+        "skip unaffected packages",
+        "selective builds"
+      ],
+      "variants": [
+        {
+          "when": "Coarse and simple",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: push: paths: [\"services/api/**\"]",
+              "n": "One workflow per area, each triggered by its own paths. No tooling required, and it covers most repositories."
+            }
+          ],
+          "undo": "Remove the filter"
+        },
+        {
+          "when": "Dependency-aware",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git diff --name-only origin/main...HEAD",
+              "n": "Feed the changed paths into a matrix, or let a build tool that understands the dependency graph decide."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "monorepo",
+        "actions-matrix",
+        "reduce-ci-minutes"
+      ]
+    },
+    {
+      "id": "recover-uncommitted-after-reset",
+      "q": "I ran reset --hard and lost uncommitted work",
+      "aka": [
+        "reset hard lost changes",
+        "recover after hard reset",
+        "uncommitted work gone"
+      ],
+      "variants": [
+        {
+          "when": "It was staged at some point",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --lost-found",
+              "n": "Staged content becomes a blob object, and blobs survive the reset. The dangling blobs listed here often contain the work."
+            },
+            {
+              "c": "git show <blob-hash>",
+              "n": "Inspect each candidate and redirect the one you want back into a file."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "It was never staged",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "code -> Timeline -> Local History",
+              "n": "Git never saw it, so only your editor can help. This is the case that makes committing early worth the habit."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "undo-clean",
+        "dangling-objects",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "clean-up-old-tags",
+      "q": "Delete old tags in bulk",
+      "aka": [
+        "remove many tags",
+        "tag cleanup",
+        "delete tags matching pattern"
+      ],
+      "variants": [
+        {
+          "when": "Locally",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -l \"nightly-*\" | xargs -r git tag -d",
+              "n": "Removes matching tags from your clone only."
+            }
+          ],
+          "undo": "git fetch --tags brings back anything still on the remote"
+        },
+        {
+          "when": "On the remote too",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git tag -l \"nightly-*\" | xargs -r -n1 git push origin --delete",
+              "n": "Deleting published tags breaks anyone pinned to them. Nightly tags are fine; release tags are not."
+            }
+          ],
+          "undo": "git push origin <tag> from a clone that still has it"
+        }
+      ],
+      "seealso": [
+        "delete-tag",
+        "undo-published-tag",
+        "archive-branch"
+      ]
+    },
+    {
+      "id": "detect-secrets-in-history",
+      "q": "Check whether a secret was ever committed",
+      "aka": [
+        "scan history for secrets",
+        "was my key ever committed",
+        "audit repo for credentials"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gitleaks git .",
+              "n": "Scans every commit, not just the working tree. Run this before making any repository public."
+            },
+            {
+              "c": "git log -S \"AKIA\" --oneline --all",
+              "n": "A quick targeted search when you know the prefix of what leaked."
+            }
+          ],
+          "undo": "Nothing to undo; rotate anything found"
+        }
+      ],
+      "seealso": [
+        "secret-scan-local",
+        "remove-secret-from-history",
+        "make-repo-private"
+      ]
+    },
+    {
+      "id": "why-my-push-slow",
+      "q": "Pushing takes far longer than it should",
+      "aka": [
+        "slow push",
+        "push hangs at writing objects",
+        "upload is slow"
+      ],
+      "variants": [
+        {
+          "when": "Find out what is being sent",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git count-objects -vH",
+              "n": "A push that crawls is usually sending large or numerous objects, not a network problem."
+            },
+            {
+              "c": "GIT_TRACE=1 git push",
+              "n": "Shows where the time actually goes, which is often compression on a huge new blob."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Fix the cause",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git lfs track \"*.mp4\"",
+              "n": "Route large binaries out of the pack. For a first push of a large history, SSH usually beats HTTPS."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "slow-git",
+        "push-large-repo",
+        "big-files-where"
+      ]
+    },
+    {
+      "id": "organize-many-repos",
+      "q": "Keep dozens of local repositories organized",
+      "aka": [
+        "manage many clones",
+        "folder structure for repos",
+        "find my local repos"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "~/src/<host>/<owner>/<repo>",
+              "n": "Mirroring the remote path makes every clone's origin obvious and prevents name collisions between forks and originals."
+            },
+            {
+              "c": "git config --global --add safe.directory '*'",
+              "n": "Only if the tree spans drives or users; otherwise leave ownership checks on."
+            }
+          ],
+          "undo": "Move folders back"
+        }
+      ],
+      "seealso": [
+        "update-many-repos",
+        "clone-all-repos",
+        "move-to-new-machine"
+      ]
     }
   ]
 }
