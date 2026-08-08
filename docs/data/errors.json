@@ -6356,6 +6356,843 @@
       "seealso": [
         "repair-corrupt-repo"
       ]
+    },
+    {
+      "id": "vs-team-explorer-auth",
+      "msg": "Visual Studio: Git failed with a fatal error. Authentication failed for '<url>'",
+      "why": "Visual Studio reuses the Windows credential store, and the entry there is stale.",
+      "fix": [
+        {
+          "c": "Credential Manager -> Windows Credentials",
+          "n": "Delete the git:https://github.com entry and sign in again."
+        },
+        {
+          "c": "git credential-manager erase",
+          "n": "The command-line equivalent of the same cleanup."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "eclipse-egit-lock",
+      "msg": "Exception caught during execution of add command  org.eclipse.jgit.api.errors.JGitInternalException",
+      "why": "The IDE's own Git implementation hit a locked index, usually alongside a command-line operation.",
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Confirm no operation is mid-flight."
+        },
+        {
+          "c": "rm -f .git/index.lock",
+          "n": "Remove the stale lock once nothing is running."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "git-guis"
+      ]
+    },
+    {
+      "id": "sourcetree-embedded-git",
+      "msg": "SourceTree: The embedded Git version is out of date",
+      "why": "The bundled Git is older than the repository features in use.",
+      "fix": [
+        {
+          "c": "Tools -> Options -> Git -> Use System Git",
+          "n": "Point the client at your installed Git."
+        },
+        {
+          "c": "git --version",
+          "n": "Check the system version is the newer one first."
+        }
+      ],
+      "intent": "update-git",
+      "seealso": [
+        "git-guis"
+      ]
+    },
+    {
+      "id": "android-studio-vcs-none",
+      "msg": "Android Studio: No version control systems are configured for this project",
+      "why": "The IDE has not been told the project folder is a repository.",
+      "fix": [
+        {
+          "c": "git rev-parse --is-inside-work-tree",
+          "n": "Confirms Git sees it as a repository."
+        },
+        {
+          "c": "VCS -> Enable Version Control Integration",
+          "n": "Point the IDE at Git for the project root."
+        }
+      ],
+      "intent": "android-studio-git",
+      "seealso": [
+        "git-in-jetbrains"
+      ]
+    },
+    {
+      "id": "xcode-source-control-disabled",
+      "msg": "Xcode: Source control is disabled for this project",
+      "why": "Xcode's source control integration is switched off, or the repository is outside the project root.",
+      "fix": [
+        {
+          "c": "Settings -> Source Control -> Enable",
+          "n": "Turn the integration on."
+        },
+        {
+          "c": "git rev-parse --show-toplevel",
+          "n": "Confirms where the repository root actually is."
+        }
+      ],
+      "intent": "xcode-git",
+      "seealso": [
+        "git-guis"
+      ]
+    },
+    {
+      "id": "jenkins-git-checkout-fail",
+      "msg": "hudson.plugins.git.GitException: Failed to fetch from <url>",
+      "why": "The Jenkins agent could not authenticate or reach the remote.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Run it as the Jenkins user to reproduce the failure directly."
+        },
+        {
+          "c": "Manage Jenkins -> Credentials",
+          "n": "Attach a deploy key or token scoped to that repository."
+        }
+      ],
+      "intent": "jenkins-to-actions",
+      "seealso": [
+        "deploy-keys"
+      ]
+    },
+    {
+      "id": "circleci-checkout-key",
+      "msg": "Permission denied (publickey).  Please make sure you have the correct access rights (CircleCI)",
+      "why": "The CI project has no valid checkout key for the repository.",
+      "fix": [
+        {
+          "c": "Project Settings -> SSH Keys",
+          "n": "Add or rotate the checkout key."
+        },
+        {
+          "c": "ssh -T git@github.com",
+          "n": "Reproduces the same handshake the runner performs."
+        }
+      ],
+      "intent": "deploy-keys",
+      "seealso": []
+    },
+    {
+      "id": "azure-pipelines-shallow",
+      "msg": "fatal: could not read Username  (Azure Pipelines checkout)",
+      "why": "The pipeline checkout has no credential for a second repository.",
+      "fix": [
+        {
+          "c": "persistCredentials: true",
+          "n": "Lets later steps reuse the checkout credential."
+        },
+        {
+          "c": "checkout: git://<project>/<repo>",
+          "n": "Declare the extra repository so the agent authenticates for it."
+        }
+      ],
+      "intent": "use-azure-devops",
+      "seealso": [
+        "private-repo-in-actions"
+      ]
+    },
+    {
+      "id": "terraform-module-git",
+      "msg": "Failed to download module: error downloading '<url>': /usr/bin/git exited with 128",
+      "why": "Terraform shelled out to Git for a module source and Git failed.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Reproduces the failure without Terraform."
+        },
+        {
+          "c": "git config --global url.\"https://<token>@github.com/\".insteadOf \"https://github.com/\"",
+          "n": "Supply credentials for private module sources in automation."
+        }
+      ],
+      "intent": "kubernetes-manifests-git",
+      "seealso": [
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "ansible-git-module-fail",
+      "msg": "fatal: [host]: FAILED! => {\"msg\": \"Failed to checkout branch <name>\"}",
+      "why": "The Ansible git module could not check out that reference on the target host.",
+      "fix": [
+        {
+          "c": "git ls-remote <url> <branch>",
+          "n": "Confirms the branch exists and is reachable from that host."
+        },
+        {
+          "c": "accept_hostkey: true",
+          "n": "First contact over SSH fails without a known host entry."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "deploy-ssh-server"
+      ]
+    },
+    {
+      "id": "cargo-git-auth",
+      "msg": "error: failed to authenticate when downloading repository  attempted ssh-agent authentication",
+      "why": "Cargo used SSH and found no usable key in the agent.",
+      "fix": [
+        {
+          "c": "ssh-add -l",
+          "n": "Lists the keys the agent currently holds."
+        },
+        {
+          "c": "net.git-fetch-with-cli = true",
+          "n": "In .cargo/config.toml, this makes Cargo use your Git and its credentials."
+        }
+      ],
+      "intent": "cargo-git-dependency",
+      "seealso": [
+        "ssh-agent-passphrase"
+      ]
+    },
+    {
+      "id": "bundler-git-source",
+      "msg": "Bundler::GitError: Git error: command `git fetch` in directory <path> has failed.",
+      "why": "Bundler's cached Git source could not update.",
+      "fix": [
+        {
+          "c": "bundle config --delete <name>",
+          "n": "Clears a stale local override."
+        },
+        {
+          "c": "rm -rf ~/.bundle/cache/git",
+          "n": "Remove the cached clone and let Bundler fetch again."
+        }
+      ],
+      "intent": "install-from-git",
+      "seealso": [
+        "clone-private-ci"
+      ]
+    },
+    {
+      "id": "maven-scm-checkout",
+      "msg": "[ERROR] Failed to execute goal ... scm:checkout  Cannot checkout: <url>",
+      "why": "The Maven build tried a Git checkout it could not authenticate.",
+      "fix": [
+        {
+          "c": "git ls-remote <url>",
+          "n": "Confirms access from the build machine."
+        },
+        {
+          "c": "settings.xml server entry",
+          "n": "Store the credential where Maven expects it rather than in the POM."
+        }
+      ],
+      "intent": "clone-private-ci",
+      "seealso": [
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "nuget-source-auth",
+      "msg": "Unable to load the service index for source <url>  401 (Unauthorized)",
+      "why": "The package feed rejected the credential, commonly a GitHub Packages token without read:packages.",
+      "fix": [
+        {
+          "c": "gh auth refresh -s read:packages",
+          "n": "Add the scope."
+        },
+        {
+          "c": "dotnet nuget update source <name> --username <user> --password <token>",
+          "n": "Store the credential for that feed."
+        }
+      ],
+      "intent": "packages-registry",
+      "seealso": []
+    },
+    {
+      "id": "swiftpm-resolve-failed",
+      "msg": "error: failed to resolve dependencies  Couldn't get the list of tags",
+      "why": "Swift Package Manager could not read the repository's tags, usually access or a moved URL.",
+      "fix": [
+        {
+          "c": "git ls-remote --tags <url>",
+          "n": "Confirms the tags are visible to you."
+        },
+        {
+          "c": "swift package reset",
+          "n": "Clears a stale resolution cache and retries."
+        }
+      ],
+      "intent": "install-from-git",
+      "seealso": [
+        "fetch-tags"
+      ]
+    },
+    {
+      "id": "cocoapods-git-fetch",
+      "msg": "[!] Error installing <pod>  fatal: could not read Username for 'https://github.com'",
+      "why": "CocoaPods fetched a private pod source with no credential available.",
+      "fix": [
+        {
+          "c": "git config --global credential.helper osxkeychain",
+          "n": "Let the keychain answer for it."
+        },
+        {
+          "c": "pod repo update",
+          "n": "Refresh the spec repo once credentials work."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "nx-affected-base",
+      "msg": "Error: Cannot determine base for affected commands: fatal: bad revision 'origin/main'",
+      "why": "The monorepo tool compared against a ref the shallow CI checkout never fetched.",
+      "fix": [
+        {
+          "c": "fetch-depth: 0",
+          "n": "Affected calculations need history and the base branch."
+        },
+        {
+          "c": "git fetch origin main:main",
+          "n": "Or fetch just the base ref the tool compares against."
+        }
+      ],
+      "intent": "large-monorepo-ci",
+      "seealso": [
+        "turbo-affected"
+      ]
+    },
+    {
+      "id": "changesets-no-commits",
+      "msg": "No new changesets found  (release workflow exits without publishing)",
+      "why": "The release tool found no changeset files, so there is nothing to version.",
+      "fix": [
+        {
+          "c": "npx changeset",
+          "n": "Add a changeset describing the change before merging."
+        },
+        {
+          "c": "git log --oneline origin/main..HEAD",
+          "n": "Confirms whether the branch carries any releasable work."
+        }
+      ],
+      "intent": "changesets",
+      "seealso": [
+        "decide-what-to-tag-in-monorepo"
+      ]
+    },
+    {
+      "id": "semantic-release-no-tag",
+      "msg": "There is no previous release, the next release version is 1.0.0",
+      "why": "Not an error: the tool found no prior tag and is starting the version history.",
+      "fix": [
+        {
+          "c": "git tag -l",
+          "n": "Confirms whether tags exist but were not fetched."
+        },
+        {
+          "c": "fetch-depth: 0 and fetch tags",
+          "n": "Release tooling needs the full tag history to compute the next version."
+        }
+      ],
+      "intent": "semantic-versioning",
+      "seealso": [
+        "fetch-tags"
+      ]
+    },
+    {
+      "id": "pre-commit-not-installed",
+      "msg": "pre-commit not found. Did you forget to activate your virtualenv?",
+      "why": "The hook script calls a tool missing from this environment.",
+      "fix": [
+        {
+          "c": "pip install pre-commit && pre-commit install",
+          "n": "Install it and reinstall the hooks."
+        },
+        {
+          "c": "git commit --no-verify",
+          "n": "Bypass once while you fix the environment."
+        }
+      ],
+      "intent": "pre-commit-framework",
+      "seealso": [
+        "skip-hooks"
+      ]
+    },
+    {
+      "id": "lint-staged-no-staged",
+      "msg": "No staged files match any configured task",
+      "why": "Nothing staged matches the configured patterns, so the tool had nothing to run.",
+      "fix": [
+        {
+          "c": "git status --short",
+          "n": "Shows what is staged and whether the pattern should match."
+        },
+        {
+          "c": "git add <path>",
+          "n": "Stage the files the task expects."
+        }
+      ],
+      "intent": "hooks",
+      "seealso": [
+        "what-is-staging"
+      ]
+    },
+    {
+      "id": "commitlint-subject-case",
+      "msg": "subject may not be empty [subject-empty]  type may not be empty [type-empty]",
+      "why": "The message does not match the enforced convention, usually missing the type prefix.",
+      "fix": [
+        {
+          "c": "git commit -m \"fix: handle empty rows\"",
+          "n": "Type, colon, space, then the subject."
+        },
+        {
+          "c": "git commit --amend",
+          "n": "Fix the last message rather than adding a second commit."
+        }
+      ],
+      "intent": "commit-messages",
+      "seealso": [
+        "commit-emoji-convention"
+      ]
+    },
+    {
+      "id": "git-crypt-locked",
+      "msg": "git-crypt: error: file not encrypted: <path>",
+      "why": "An encrypted-path file was committed before git-crypt was unlocked.",
+      "fix": [
+        {
+          "c": "git-crypt unlock",
+          "n": "Unlock the repository first."
+        },
+        {
+          "c": "git-crypt status",
+          "n": "Lists which paths should be encrypted and which are not."
+        }
+      ],
+      "intent": "gitignore-for-secrets",
+      "seealso": [
+        "stop-committing-passwords"
+      ]
+    },
+    {
+      "id": "sops-decrypt-failed",
+      "msg": "Failed to get the data key required to decrypt the SOPS file",
+      "why": "No key available here can decrypt the secrets file.",
+      "fix": [
+        {
+          "c": "sops -d <file>",
+          "n": "Reproduces the failure with the underlying tool."
+        },
+        {
+          "c": "Check the KMS or age key is present",
+          "n": "Decryption needs a key this machine or runner actually holds."
+        }
+      ],
+      "intent": "keep-secrets-per-environment",
+      "seealso": [
+        "actions-secrets"
+      ]
+    },
+    {
+      "id": "bfg-not-fresh-clone",
+      "msg": "Aborting: refusing to run on a repo with a working tree",
+      "why": "BFG expects a bare mirror clone, not a working checkout.",
+      "fix": [
+        {
+          "c": "git clone --mirror <url>",
+          "n": "Clone bare, run the tool, then push."
+        },
+        {
+          "c": "git filter-repo --path <file> --invert-paths",
+          "n": "filter-repo is the maintained alternative and gives clearer errors."
+        }
+      ],
+      "intent": "remove-secret-from-history",
+      "seealso": []
+    },
+    {
+      "id": "svn-clone-authors",
+      "msg": "Author: <user> not defined in authors file",
+      "why": "The SVN import found a username with no mapping to a Git identity.",
+      "fix": [
+        {
+          "c": "echo \"<user> = Name <email>\" >> authors.txt",
+          "n": "Add the missing mapping."
+        },
+        {
+          "c": "git svn clone <url> --authors-file=authors.txt",
+          "n": "Restart the import with the completed file."
+        }
+      ],
+      "intent": "migrate-from-svn",
+      "seealso": [
+        "mailmap"
+      ]
+    },
+    {
+      "id": "hg-fast-export-missing",
+      "msg": "hg-fast-export.sh: command not found",
+      "why": "The Mercurial conversion script is not installed or not on PATH.",
+      "fix": [
+        {
+          "c": "git clone https://github.com/frej/fast-export",
+          "n": "Fetch the tool, then call its script by path."
+        },
+        {
+          "c": "hg version",
+          "n": "Mercurial itself must also be installed for the export to run."
+        }
+      ],
+      "intent": "migrate-from-mercurial",
+      "seealso": [
+        "migrate-from-svn"
+      ]
+    },
+    {
+      "id": "gh-cs-ssh-failed",
+      "msg": "codespace not found or not running",
+      "why": "The codespace is stopped or was deleted.",
+      "fix": [
+        {
+          "c": "gh codespace list",
+          "n": "Shows state; stopped codespaces must be started first."
+        },
+        {
+          "c": "gh codespace start -c <name>",
+          "n": "Start it, then connect."
+        }
+      ],
+      "intent": "codespaces",
+      "seealso": []
+    },
+    {
+      "id": "devcontainer-feature-failed",
+      "msg": "Error: Failed to install feature '<feature>'",
+      "why": "A devcontainer feature failed during the image build.",
+      "fix": [
+        {
+          "c": "gh codespace logs",
+          "n": "The build log names the failing feature and step."
+        },
+        {
+          "c": "devcontainer.json",
+          "n": "Pin the feature version, or remove it and install in postCreateCommand."
+        }
+      ],
+      "intent": "devcontainer",
+      "seealso": []
+    },
+    {
+      "id": "actions-runner-offline",
+      "msg": "This job is waiting for a runner from '<label>' to come online",
+      "why": "No runner with that label is available to take the job.",
+      "fix": [
+        {
+          "c": "Settings -> Actions -> Runners",
+          "n": "Check the self-hosted runner is online and carries the label."
+        },
+        {
+          "c": "runs-on: ubuntu-latest",
+          "n": "Or move the job to a hosted runner."
+        }
+      ],
+      "intent": "self-hosted-runner",
+      "seealso": [
+        "actions-billing"
+      ]
+    },
+    {
+      "id": "actions-concurrency-cancelled",
+      "msg": "Canceling since a higher priority waiting request for '<group>' exists",
+      "why": "A newer run in the same concurrency group superseded this one.",
+      "fix": [
+        {
+          "c": "concurrency: group: ci-${{ github.ref }}",
+          "n": "Expected behaviour when cancel-in-progress is on."
+        },
+        {
+          "c": "cancel-in-progress: false",
+          "n": "Turn it off for deploys that must never be interrupted."
+        }
+      ],
+      "intent": "cancel-in-progress",
+      "seealso": [
+        "reduce-ci-minutes"
+      ]
+    },
+    {
+      "id": "actions-billing-blocked",
+      "msg": "The job was not started because recent account payments have failed",
+      "why": "Actions is blocked because billing is unpaid or the spending limit is reached.",
+      "fix": [
+        {
+          "c": "Settings -> Billing",
+          "n": "Clear the payment or raise the limit."
+        },
+        {
+          "c": "Public repositories run free",
+          "n": "Moving open work to a public repository sidesteps the limit entirely."
+        }
+      ],
+      "intent": "actions-billing",
+      "seealso": [
+        "reduce-ci-minutes"
+      ]
+    },
+    {
+      "id": "submodule-url-relative",
+      "msg": "fatal: repository '../<name>.git' does not exist",
+      "why": "The submodule uses a relative URL that resolves against a different parent than expected.",
+      "fix": [
+        {
+          "c": "git config --file .gitmodules --get-regexp url",
+          "n": "Shows the recorded relative path."
+        },
+        {
+          "c": "git submodule sync --recursive",
+          "n": "Recomputes absolute URLs from the current remote."
+        }
+      ],
+      "intent": "submodule-url",
+      "seealso": []
+    },
+    {
+      "id": "delta-resolution-cpu",
+      "msg": "Resolving deltas: 100% (done) but the command never returns",
+      "why": "Delta resolution finished and Git is now writing files, which is disk-bound on huge trees.",
+      "fix": [
+        {
+          "c": "git config --global core.fsmonitor true",
+          "n": "Speeds later operations on large working trees."
+        },
+        {
+          "c": "git clone --filter=blob:none <url>",
+          "n": "Avoids materialising history you do not need."
+        }
+      ],
+      "intent": "clone-taking-forever",
+      "seealso": [
+        "repo-size-vs-clone-time"
+      ]
+    },
+    {
+      "id": "checkout-slow-antivirus",
+      "msg": "Updating files: 100% (12000/12000), done.  (taking minutes)",
+      "why": "Every file write is being scanned, which multiplies checkout time on Windows.",
+      "fix": [
+        {
+          "c": "Exclude the repository folder from real-time scanning",
+          "n": "The single biggest Windows speed fix."
+        },
+        {
+          "c": "git config core.fscache true",
+          "n": "Reduces filesystem round trips on Windows."
+        }
+      ],
+      "intent": "why-status-is-slow",
+      "seealso": []
+    },
+    {
+      "id": "gitattributes-merge-driver-missing",
+      "msg": "warning: Cannot merge binary files  (custom merge driver not defined)",
+      "why": "A .gitattributes entry names a merge driver that is not configured here.",
+      "fix": [
+        {
+          "c": "git config merge.<name>.driver",
+          "n": "Shows whether the driver exists on this machine."
+        },
+        {
+          "c": "git config --global merge.<name>.driver \"<command> %O %A %B\"",
+          "n": "Define it, or remove the attribute if it is unused."
+        }
+      ],
+      "intent": "gitattributes",
+      "seealso": [
+        "binary-conflict"
+      ]
+    },
+    {
+      "id": "union-merge-duplicate-lines",
+      "msg": "CHANGELOG.md merged with duplicated entries",
+      "why": "A union merge keeps both sides, which duplicates lines that were meant to be one.",
+      "fix": [
+        {
+          "c": "git diff HEAD",
+          "n": "Review the merged file; union never reports a conflict, so it never asks."
+        },
+        {
+          "c": "Edit and commit the corrected file",
+          "n": "Union suits append-only lists, not files where order matters."
+        }
+      ],
+      "intent": "merge-union",
+      "seealso": [
+        "keep-changelog-updated"
+      ]
+    },
+    {
+      "id": "sparse-index-incompatible",
+      "msg": "warning: disabling cone pattern matching  (non-cone patterns present)",
+      "why": "Non-cone sparse patterns disable the fast sparse index.",
+      "fix": [
+        {
+          "c": "git sparse-checkout set --cone <folder>",
+          "n": "Cone mode is faster and covers most needs."
+        },
+        {
+          "c": "git sparse-checkout list",
+          "n": "Shows which patterns forced the fallback."
+        }
+      ],
+      "intent": "sparse-checkout",
+      "seealso": [
+        "scalar"
+      ]
+    },
+    {
+      "id": "gh-api-jq-null",
+      "msg": "jq: error: null has no keys",
+      "why": "The API returned no data for that path, so the filter had nothing to read.",
+      "fix": [
+        {
+          "c": "gh api <endpoint>",
+          "n": "Run it without --jq to see the raw response first."
+        },
+        {
+          "c": "gh api <endpoint> --jq '.[]?'",
+          "n": "The question mark tolerates an empty or null result."
+        }
+      ],
+      "intent": "github-api",
+      "seealso": [
+        "gh-api-pagination"
+      ]
+    },
+    {
+      "id": "gh-api-pagination-truncated",
+      "msg": "only 30 results returned",
+      "why": "The endpoint paginates and the request took only the first page.",
+      "fix": [
+        {
+          "c": "gh api --paginate <endpoint>",
+          "n": "Follows every page."
+        },
+        {
+          "c": "gh api '<endpoint>?per_page=100'",
+          "n": "Fewer round trips for large lists."
+        }
+      ],
+      "intent": "gh-api-pagination",
+      "seealso": [
+        "github-api"
+      ]
+    },
+    {
+      "id": "webhook-delivery-failed",
+      "msg": "We couldn't deliver this payload: Service Timeout",
+      "why": "The receiving endpoint did not answer inside the delivery window.",
+      "fix": [
+        {
+          "c": "Settings -> Webhooks -> Recent Deliveries",
+          "n": "Inspect and redeliver the exact payload."
+        },
+        {
+          "c": "Return 200 immediately, then work asynchronously",
+          "n": "Webhook handlers must acknowledge fast and process afterwards."
+        }
+      ],
+      "intent": "webhooks",
+      "seealso": [
+        "github-api"
+      ]
+    },
+    {
+      "id": "app-installation-missing",
+      "msg": "Resource not accessible by personal access token",
+      "why": "The token type cannot reach that resource; some endpoints require a GitHub App installation token.",
+      "fix": [
+        {
+          "c": "gh api /installation/repositories",
+          "n": "Confirms what an installation can actually see."
+        },
+        {
+          "c": "Settings -> Developer settings -> GitHub Apps",
+          "n": "Fine-grained permissions are granted per installation, not per user."
+        }
+      ],
+      "intent": "github-apps-vs-oauth",
+      "seealso": [
+        "access-tokens"
+      ]
+    },
+    {
+      "id": "dependabot-secret-missing",
+      "msg": "Dependabot could not authenticate to the private registry",
+      "why": "Dependabot has its own secret store, separate from Actions secrets.",
+      "fix": [
+        {
+          "c": "Settings -> Secrets -> Dependabot",
+          "n": "Add the credential there as well."
+        },
+        {
+          "c": "registries: in dependabot.yml",
+          "n": "Declare the registry and reference the Dependabot secret."
+        }
+      ],
+      "intent": "dependabot",
+      "seealso": [
+        "actions-secrets"
+      ]
+    },
+    {
+      "id": "codespaces-secret-scope",
+      "msg": "Secret <name> is not available in this codespace",
+      "why": "Codespaces secrets are granted per repository and must be selected for this one.",
+      "fix": [
+        {
+          "c": "Settings -> Codespaces -> Repository access",
+          "n": "Grant the secret to this repository."
+        },
+        {
+          "c": "gh secret list --app codespaces",
+          "n": "Lists what the codespace can actually see."
+        }
+      ],
+      "intent": "codespaces",
+      "seealso": [
+        "keep-secrets-per-environment"
+      ]
+    },
+    {
+      "id": "org-2fa-required",
+      "msg": "You must enable two-factor authentication to access this organization",
+      "why": "The organization requires two-factor authentication and your account has none.",
+      "fix": [
+        {
+          "c": "Settings -> Password and authentication",
+          "n": "Enable it, then rejoin or refresh access."
+        },
+        {
+          "c": "gh auth status",
+          "n": "Access is restored once the requirement is satisfied."
+        }
+      ],
+      "intent": "enable-2fa",
+      "seealso": [
+        "org-base-permissions"
+      ]
     }
   ]
 }

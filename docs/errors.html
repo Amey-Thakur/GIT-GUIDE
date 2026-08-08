@@ -2047,6 +2047,239 @@
   <p class="note">A cloud sync client is holding or rewriting files while Git works on them.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-in-synced-folder">Use Git inside Dropbox, OneDrive, or Drive</a></p>
 </article>
+<article class="result errcard" id="vs-team-explorer-auth">
+  <h2><code class="errmsg">Visual Studio: Git failed with a fatal error. Authentication failed for &#x27;&lt;url&gt;&#x27;</code><a class="anchor" href="#vs-team-explorer-auth" aria-label="Link to this error">#</a></h2>
+  <p class="note">Visual Studio reuses the Windows credential store, and the entry there is stale.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="eclipse-egit-lock">
+  <h2><code class="errmsg">Exception caught during execution of add command  org.eclipse.jgit.api.errors.JGitInternalException</code><a class="anchor" href="#eclipse-egit-lock" aria-label="Link to this error">#</a></h2>
+  <p class="note">The IDE&#x27;s own Git implementation hit a locked index, usually alongside a command-line operation.</p>
+  <div class="cmd"><code>git status</code><button class="copy" data-cmd="git status" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirm no operation is mid-flight.</p>
+  <div class="cmd"><code>rm -f .git/index.lock</code><button class="copy" data-cmd="rm -f .git/index.lock" aria-label="Copy command">Copy</button></div>
+  <p class="note">Remove the stale lock once nothing is running.</p>
+  <p class="seealso">See also: <a href="index.html#git-guis">Good graphical tools for Git</a></p>
+</article>
+<article class="result errcard" id="sourcetree-embedded-git">
+  <h2><code class="errmsg">SourceTree: The embedded Git version is out of date</code><a class="anchor" href="#sourcetree-embedded-git" aria-label="Link to this error">#</a></h2>
+  <p class="note">The bundled Git is older than the repository features in use.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="android-studio-vcs-none">
+  <h2><code class="errmsg">Android Studio: No version control systems are configured for this project</code><a class="anchor" href="#android-studio-vcs-none" aria-label="Link to this error">#</a></h2>
+  <p class="note">The IDE has not been told the project folder is a repository.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#android-studio-git">Git settings for an Android or Gradle project</a></p>
+</article>
+<article class="result errcard" id="xcode-source-control-disabled">
+  <h2><code class="errmsg">Xcode: Source control is disabled for this project</code><a class="anchor" href="#xcode-source-control-disabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">Xcode&#x27;s source control integration is switched off, or the repository is outside the project root.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#xcode-git">Git settings for an Xcode or iOS project</a></p>
+</article>
+<article class="result errcard" id="jenkins-git-checkout-fail">
+  <h2><code class="errmsg">hudson.plugins.git.GitException: Failed to fetch from &lt;url&gt;</code><a class="anchor" href="#jenkins-git-checkout-fail" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Jenkins agent could not authenticate or reach the remote.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#jenkins-to-actions">Move CI from Jenkins to GitHub Actions</a></p>
+</article>
+<article class="result errcard" id="circleci-checkout-key">
+  <h2><code class="errmsg">Permission denied (publickey).  Please make sure you have the correct access rights (CircleCI)</code><a class="anchor" href="#circleci-checkout-key" aria-label="Link to this error">#</a></h2>
+  <p class="note">The CI project has no valid checkout key for the repository.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#deploy-keys">Give a server access to one repository</a></p>
+</article>
+<article class="result errcard" id="azure-pipelines-shallow">
+  <h2><code class="errmsg">fatal: could not read Username  (Azure Pipelines checkout)</code><a class="anchor" href="#azure-pipelines-shallow" aria-label="Link to this error">#</a></h2>
+  <p class="note">The pipeline checkout has no credential for a second repository.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#use-azure-devops">Use Git with Azure DevOps (Azure Repos)</a></p>
+</article>
+<article class="result errcard" id="terraform-module-git">
+  <h2><code class="errmsg">Failed to download module: error downloading &#x27;&lt;url&gt;&#x27;: /usr/bin/git exited with 128</code><a class="anchor" href="#terraform-module-git" aria-label="Link to this error">#</a></h2>
+  <p class="note">Terraform shelled out to Git for a module source and Git failed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#kubernetes-manifests-git">Keep Kubernetes manifests in Git</a></p>
+</article>
+<article class="result errcard" id="ansible-git-module-fail">
+  <h2><code class="errmsg">fatal: [host]: FAILED! =&gt; {&quot;msg&quot;: &quot;Failed to checkout branch &lt;name&gt;&quot;}</code><a class="anchor" href="#ansible-git-module-fail" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Ansible git module could not check out that reference on the target host.</p>
+  <div class="cmd"><code>git ls-remote &lt;url&gt; &lt;branch&gt;</code><button class="copy" data-cmd="git ls-remote &lt;url&gt; &lt;branch&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">Confirms the branch exists and is reachable from that host.</p>
+  <div class="cmd"><code>accept_hostkey: true</code><button class="copy" data-cmd="accept_hostkey: true" aria-label="Copy command">Copy</button></div>
+  <p class="note">First contact over SSH fails without a known host entry.</p>
+  <p class="seealso">See also: <a href="index.html#deploy-ssh-server">Deploy to my own server when main changes</a></p>
+</article>
+<article class="result errcard" id="cargo-git-auth">
+  <h2><code class="errmsg">error: failed to authenticate when downloading repository  attempted ssh-agent authentication</code><a class="anchor" href="#cargo-git-auth" aria-label="Link to this error">#</a></h2>
+  <p class="note">Cargo used SSH and found no usable key in the agent.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cargo-git-dependency">Depend on a Git repository in Cargo</a></p>
+</article>
+<article class="result errcard" id="bundler-git-source">
+  <h2><code class="errmsg">Bundler::GitError: Git error: command `git fetch` in directory &lt;path&gt; has failed.</code><a class="anchor" href="#bundler-git-source" aria-label="Link to this error">#</a></h2>
+  <p class="note">Bundler&#x27;s cached Git source could not update.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#install-from-git">Install a package straight from a repository</a></p>
+</article>
+<article class="result errcard" id="maven-scm-checkout">
+  <h2><code class="errmsg">[ERROR] Failed to execute goal ... scm:checkout  Cannot checkout: &lt;url&gt;</code><a class="anchor" href="#maven-scm-checkout" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Maven build tried a Git checkout it could not authenticate.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#clone-private-ci">Clone a private repository in CI or a script</a></p>
+</article>
+<article class="result errcard" id="nuget-source-auth">
+  <h2><code class="errmsg">Unable to load the service index for source &lt;url&gt;  401 (Unauthorized)</code><a class="anchor" href="#nuget-source-auth" aria-label="Link to this error">#</a></h2>
+  <p class="note">The package feed rejected the credential, commonly a GitHub Packages token without read:packages.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#packages-registry">Publish packages to GitHub Packages</a></p>
+</article>
+<article class="result errcard" id="swiftpm-resolve-failed">
+  <h2><code class="errmsg">error: failed to resolve dependencies  Couldn&#x27;t get the list of tags</code><a class="anchor" href="#swiftpm-resolve-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Swift Package Manager could not read the repository&#x27;s tags, usually access or a moved URL.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#install-from-git">Install a package straight from a repository</a></p>
+</article>
+<article class="result errcard" id="cocoapods-git-fetch">
+  <h2><code class="errmsg">[!] Error installing &lt;pod&gt;  fatal: could not read Username for &#x27;https://github.com&#x27;</code><a class="anchor" href="#cocoapods-git-fetch" aria-label="Link to this error">#</a></h2>
+  <p class="note">CocoaPods fetched a private pod source with no credential available.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="nx-affected-base">
+  <h2><code class="errmsg">Error: Cannot determine base for affected commands: fatal: bad revision &#x27;origin/main&#x27;</code><a class="anchor" href="#nx-affected-base" aria-label="Link to this error">#</a></h2>
+  <p class="note">The monorepo tool compared against a ref the shallow CI checkout never fetched.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#large-monorepo-ci">Only build the parts of a monorepo that changed</a></p>
+</article>
+<article class="result errcard" id="changesets-no-commits">
+  <h2><code class="errmsg">No new changesets found  (release workflow exits without publishing)</code><a class="anchor" href="#changesets-no-commits" aria-label="Link to this error">#</a></h2>
+  <p class="note">The release tool found no changeset files, so there is nothing to version.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#changesets">Version a monorepo&#x27;s packages independently</a></p>
+</article>
+<article class="result errcard" id="semantic-release-no-tag">
+  <h2><code class="errmsg">There is no previous release, the next release version is 1.0.0</code><a class="anchor" href="#semantic-release-no-tag" aria-label="Link to this error">#</a></h2>
+  <p class="note">Not an error: the tool found no prior tag and is starting the version history.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#semantic-versioning">Number releases so the number means something</a></p>
+</article>
+<article class="result errcard" id="pre-commit-not-installed">
+  <h2><code class="errmsg">pre-commit not found. Did you forget to activate your virtualenv?</code><a class="anchor" href="#pre-commit-not-installed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The hook script calls a tool missing from this environment.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pre-commit-framework">Manage hooks with the pre-commit framework</a></p>
+</article>
+<article class="result errcard" id="lint-staged-no-staged">
+  <h2><code class="errmsg">No staged files match any configured task</code><a class="anchor" href="#lint-staged-no-staged" aria-label="Link to this error">#</a></h2>
+  <p class="note">Nothing staged matches the configured patterns, so the tool had nothing to run.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#hooks">Run checks automatically before each commit (hooks)</a></p>
+</article>
+<article class="result errcard" id="commitlint-subject-case">
+  <h2><code class="errmsg">subject may not be empty [subject-empty]  type may not be empty [type-empty]</code><a class="anchor" href="#commitlint-subject-case" aria-label="Link to this error">#</a></h2>
+  <p class="note">The message does not match the enforced convention, usually missing the type prefix.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-messages">Write commit messages people thank you for</a></p>
+</article>
+<article class="result errcard" id="git-crypt-locked">
+  <h2><code class="errmsg">git-crypt: error: file not encrypted: &lt;path&gt;</code><a class="anchor" href="#git-crypt-locked" aria-label="Link to this error">#</a></h2>
+  <p class="note">An encrypted-path file was committed before git-crypt was unlocked.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitignore-for-secrets">Make sure a secret file can never be committed</a></p>
+</article>
+<article class="result errcard" id="sops-decrypt-failed">
+  <h2><code class="errmsg">Failed to get the data key required to decrypt the SOPS file</code><a class="anchor" href="#sops-decrypt-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">No key available here can decrypt the secrets file.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#keep-secrets-per-environment">Different credentials for staging and production</a></p>
+</article>
+<article class="result errcard" id="bfg-not-fresh-clone">
+  <h2><code class="errmsg">Aborting: refusing to run on a repo with a working tree</code><a class="anchor" href="#bfg-not-fresh-clone" aria-label="Link to this error">#</a></h2>
+  <p class="note">BFG expects a bare mirror clone, not a working checkout.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#remove-secret-from-history">Remove a committed secret or file from all history</a></p>
+</article>
+<article class="result errcard" id="svn-clone-authors">
+  <h2><code class="errmsg">Author: &lt;user&gt; not defined in authors file</code><a class="anchor" href="#svn-clone-authors" aria-label="Link to this error">#</a></h2>
+  <p class="note">The SVN import found a username with no mapping to a Git identity.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#migrate-from-svn">Move a project from Subversion to Git</a></p>
+</article>
+<article class="result errcard" id="hg-fast-export-missing">
+  <h2><code class="errmsg">hg-fast-export.sh: command not found</code><a class="anchor" href="#hg-fast-export-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The Mercurial conversion script is not installed or not on PATH.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#migrate-from-mercurial">Convert a Mercurial repository to Git</a></p>
+</article>
+<article class="result errcard" id="gh-cs-ssh-failed">
+  <h2><code class="errmsg">codespace not found or not running</code><a class="anchor" href="#gh-cs-ssh-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The codespace is stopped or was deleted.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#codespaces">Open a repository in a cloud dev environment</a></p>
+</article>
+<article class="result errcard" id="devcontainer-feature-failed">
+  <h2><code class="errmsg">Error: Failed to install feature &#x27;&lt;feature&gt;&#x27;</code><a class="anchor" href="#devcontainer-feature-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">A devcontainer feature failed during the image build.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#devcontainer">Define the dev environment inside the repository</a></p>
+</article>
+<article class="result errcard" id="actions-runner-offline">
+  <h2><code class="errmsg">This job is waiting for a runner from &#x27;&lt;label&gt;&#x27; to come online</code><a class="anchor" href="#actions-runner-offline" aria-label="Link to this error">#</a></h2>
+  <p class="note">No runner with that label is available to take the job.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#self-hosted-runner">Run workflows on my own machine</a></p>
+</article>
+<article class="result errcard" id="actions-concurrency-cancelled">
+  <h2><code class="errmsg">Canceling since a higher priority waiting request for &#x27;&lt;group&gt;&#x27; exists</code><a class="anchor" href="#actions-concurrency-cancelled" aria-label="Link to this error">#</a></h2>
+  <p class="note">A newer run in the same concurrency group superseded this one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#cancel-in-progress">Cancel superseded CI runs automatically</a></p>
+</article>
+<article class="result errcard" id="actions-billing-blocked">
+  <h2><code class="errmsg">The job was not started because recent account payments have failed</code><a class="anchor" href="#actions-billing-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">Actions is blocked because billing is unpaid or the spending limit is reached.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-billing">What GitHub Actions costs</a></p>
+</article>
+<article class="result errcard" id="submodule-url-relative">
+  <h2><code class="errmsg">fatal: repository &#x27;../&lt;name&gt;.git&#x27; does not exist</code><a class="anchor" href="#submodule-url-relative" aria-label="Link to this error">#</a></h2>
+  <p class="note">The submodule uses a relative URL that resolves against a different parent than expected.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#submodule-url">Change a submodule&#x27;s URL</a></p>
+</article>
+<article class="result errcard" id="delta-resolution-cpu">
+  <h2><code class="errmsg">Resolving deltas: 100% (done) but the command never returns</code><a class="anchor" href="#delta-resolution-cpu" aria-label="Link to this error">#</a></h2>
+  <p class="note">Delta resolution finished and Git is now writing files, which is disk-bound on huge trees.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#clone-taking-forever">Clone is stuck at resolving deltas</a></p>
+</article>
+<article class="result errcard" id="checkout-slow-antivirus">
+  <h2><code class="errmsg">Updating files: 100% (12000/12000), done.  (taking minutes)</code><a class="anchor" href="#checkout-slow-antivirus" aria-label="Link to this error">#</a></h2>
+  <p class="note">Every file write is being scanned, which multiplies checkout time on Windows.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#why-status-is-slow">git status takes seconds to run</a></p>
+</article>
+<article class="result errcard" id="gitattributes-merge-driver-missing">
+  <h2><code class="errmsg">warning: Cannot merge binary files  (custom merge driver not defined)</code><a class="anchor" href="#gitattributes-merge-driver-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">A .gitattributes entry names a merge driver that is not configured here.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gitattributes">What .gitattributes controls</a></p>
+</article>
+<article class="result errcard" id="union-merge-duplicate-lines">
+  <h2><code class="errmsg">CHANGELOG.md merged with duplicated entries</code><a class="anchor" href="#union-merge-duplicate-lines" aria-label="Link to this error">#</a></h2>
+  <p class="note">A union merge keeps both sides, which duplicates lines that were meant to be one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-union">Stop changelog files from conflicting</a></p>
+</article>
+<article class="result errcard" id="sparse-index-incompatible">
+  <h2><code class="errmsg">warning: disabling cone pattern matching  (non-cone patterns present)</code><a class="anchor" href="#sparse-index-incompatible" aria-label="Link to this error">#</a></h2>
+  <p class="note">Non-cone sparse patterns disable the fast sparse index.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
+</article>
+<article class="result errcard" id="gh-api-jq-null">
+  <h2><code class="errmsg">jq: error: null has no keys</code><a class="anchor" href="#gh-api-jq-null" aria-label="Link to this error">#</a></h2>
+  <p class="note">The API returned no data for that path, so the filter had nothing to read.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-api">Read GitHub data from the command line</a></p>
+</article>
+<article class="result errcard" id="gh-api-pagination-truncated">
+  <h2><code class="errmsg">only 30 results returned</code><a class="anchor" href="#gh-api-pagination-truncated" aria-label="Link to this error">#</a></h2>
+  <p class="note">The endpoint paginates and the request took only the first page.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#gh-api-pagination">Get every page from the GitHub API</a></p>
+</article>
+<article class="result errcard" id="webhook-delivery-failed">
+  <h2><code class="errmsg">We couldn&#x27;t deliver this payload: Service Timeout</code><a class="anchor" href="#webhook-delivery-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The receiving endpoint did not answer inside the delivery window.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#webhooks">Call my server when something happens in the repository</a></p>
+</article>
+<article class="result errcard" id="app-installation-missing">
+  <h2><code class="errmsg">Resource not accessible by personal access token</code><a class="anchor" href="#app-installation-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The token type cannot reach that resource; some endpoints require a GitHub App installation token.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-apps-vs-oauth">GitHub App or OAuth app for my integration</a></p>
+</article>
+<article class="result errcard" id="dependabot-secret-missing">
+  <h2><code class="errmsg">Dependabot could not authenticate to the private registry</code><a class="anchor" href="#dependabot-secret-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">Dependabot has its own secret store, separate from Actions secrets.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dependabot">Get automatic dependency updates and security alerts</a></p>
+</article>
+<article class="result errcard" id="codespaces-secret-scope">
+  <h2><code class="errmsg">Secret &lt;name&gt; is not available in this codespace</code><a class="anchor" href="#codespaces-secret-scope" aria-label="Link to this error">#</a></h2>
+  <p class="note">Codespaces secrets are granted per repository and must be selected for this one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#codespaces">Open a repository in a cloud dev environment</a></p>
+</article>
+<article class="result errcard" id="org-2fa-required">
+  <h2><code class="errmsg">You must enable two-factor authentication to access this organization</code><a class="anchor" href="#org-2fa-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">The organization requires two-factor authentication and your account has none.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#enable-2fa">Protect my account with two-factor authentication</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>
