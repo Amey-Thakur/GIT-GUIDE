@@ -4496,7 +4496,8 @@
         "fetch-depth",
         "shallow clone",
         "unshallow",
-        "ci cannot find tag"
+        "ci cannot find tag",
+        "checkout fetch-depth 0"
       ],
       "variants": [
         {
@@ -10275,7 +10276,8 @@
       "aka": [
         "dependabot setup",
         "vulnerable dependency alert",
-        "automatic dependency prs"
+        "automatic dependency prs",
+        "group dependabot updates"
       ],
       "variants": [
         {
@@ -11265,7 +11267,8 @@
       "aka": [
         "github actions cache",
         "cache node_modules ci",
-        "speed up workflow"
+        "speed up workflow",
+        "cache vs artifact"
       ],
       "variants": [
         {
@@ -13329,7 +13332,8 @@
       "aka": [
         "github actions matrix",
         "test on multiple node versions",
-        "cross platform ci"
+        "cross platform ci",
+        "matrix include and exclude"
       ],
       "variants": [
         {
@@ -17057,6 +17061,342 @@
         "github-api",
         "api-rate-limits",
         "octokit"
+      ]
+    },
+    {
+      "id": "gitlab-ci-vs-actions",
+      "q": "GitLab CI and GitHub Actions, translated",
+      "aka": [
+        "gitlab-ci.yml vs workflow",
+        "moving ci between hosts",
+        "stages vs jobs"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".gitlab-ci.yml <-> .github/workflows/*.yml",
+              "n": "GitLab's stages map to job needs: chains; script lines map to run steps; include maps to reusable workflows; GitLab runners to self-hosted runners. The concepts translate one-to-one more than either vendor admits."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "use-other-hosts",
+        "reusable-workflows"
+      ]
+    },
+    {
+      "id": "org-teams",
+      "q": "Structure an organization with teams",
+      "aka": [
+        "github teams",
+        "nested teams",
+        "team permissions"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Organization -> Teams -> New team",
+              "n": "Grant repositories to teams, never to individuals: joining a team grants everything at once. Teams nest, so platform/backend inherits from platform, and @org/team mentions and CODEOWNERS entries come free."
+            }
+          ],
+          "undo": "Delete the team; repository access via other paths survives"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "codeowners",
+        "org-vs-personal"
+      ]
+    },
+    {
+      "id": "saml-sso-tokens",
+      "q": "Token works everywhere except my company org",
+      "aka": [
+        "saml sso authorize token",
+        "organization has enabled saml",
+        "ssh key not authorized for org"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Developer settings -> Tokens -> Configure SSO -> Authorize",
+              "n": "SAML-protected organizations require each token and SSH key to be authorized for them explicitly, one click per org. The token itself is fine; it just has not been introduced."
+            }
+          ],
+          "undo": "Revoke the authorization in the same menu"
+        }
+      ],
+      "seealso": [
+        "access-tokens",
+        "ssh-key-github",
+        "org-teams"
+      ]
+    },
+    {
+      "id": "signing-choices",
+      "q": "SSH, GPG, or gitsign for signing commits",
+      "aka": [
+        "which signing method",
+        "gpg vs ssh signing",
+        "keyless signing"
+      ],
+      "variants": [
+        {
+          "when": "Default: SSH",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global gpg.format ssh",
+              "n": "Reuses the key you already push with; two config lines and the Verified badge appears. The right answer for individuals."
+            }
+          ],
+          "undo": "git config --global --unset gpg.format"
+        },
+        {
+          "when": "The other two",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gitsign",
+              "n": "GPG remains for ecosystems built on its web of trust, like kernel work. Sigstore's gitsign signs keylessly against your OIDC identity, aimed at supply-chain verification in organizations."
+            }
+          ],
+          "undo": "Unset gpg.x509.program and gpg.format"
+        }
+      ],
+      "seealso": [
+        "sign-commits",
+        "verify-signatures",
+        "require-signed-commits"
+      ]
+    },
+    {
+      "id": "sbom-export",
+      "q": "Export a software bill of materials",
+      "aka": [
+        "sbom from github",
+        "dependency inventory",
+        "spdx export"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Insights -> Dependency graph -> Export SBOM",
+              "n": "SPDX JSON of everything the dependency graph sees, the artifact compliance reviews ask for. Scriptable at /dependency-graph/sbom via gh api."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "github-api",
+        "code-scanning"
+      ]
+    },
+    {
+      "id": "oidc-deploys",
+      "q": "Deploy to a cloud with no stored keys",
+      "aka": [
+        "actions oidc",
+        "aws without secrets",
+        "keyless cloud deploy"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "permissions: id-token: write",
+              "n": "The workflow requests a short-lived identity token; the cloud (AWS, Azure, GCP) is configured to trust this repository's workflows and issues temporary credentials. Nothing long-lived exists to leak or rotate."
+            },
+            {
+              "c": "uses: aws-actions/configure-aws-credentials@v4",
+              "n": "With role-to-assume: the official actions handle the exchange."
+            }
+          ],
+          "undo": "Remove the trust relationship in the cloud account"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "deploy-environments",
+        "workflow-permissions"
+      ]
+    },
+    {
+      "id": "gh-in-workflows",
+      "q": "Use gh inside a workflow",
+      "aka": [
+        "gh cli in actions",
+        "gh auth in ci",
+        "script github from workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "env: GH_TOKEN: ${{ github.token }}",
+              "n": "gh is preinstalled on GitHub runners and authenticates from that variable alone: no login step. Grant the job the permissions the command needs, like issues: write to comment."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "github-api",
+        "workflow-permissions",
+        "actions-env"
+      ]
+    },
+    {
+      "id": "delete-old-runs",
+      "q": "Delete old workflow runs",
+      "aka": [
+        "clean up actions history",
+        "remove failed runs",
+        "workflow runs clutter"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh run list --status failure --json databaseId -q \".[].databaseId\" | xargs -n1 gh run delete",
+              "n": "Deletes matching runs, here every failure. Retention eventually removes logs on its own; this is for tidying now. Run it in Git Bash on Windows."
+            }
+          ],
+          "undo": "None; runs are gone for good"
+        }
+      ],
+      "seealso": [
+        "rerun-checks",
+        "actions-billing"
+      ]
+    },
+    {
+      "id": "job-timeouts",
+      "q": "Stop a hung job from burning six hours",
+      "aka": [
+        "timeout-minutes",
+        "job runs forever",
+        "hung workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "timeout-minutes: 15",
+              "n": "On the job or a single step. The default is 360 minutes, which is 360 minutes of billing when something wedges. Set it just above your worst honest run."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "actions-billing",
+        "cancel-in-progress",
+        "debug-workflows"
+      ]
+    },
+    {
+      "id": "rulesets-vs-classic",
+      "q": "Rulesets or classic branch protection",
+      "aka": [
+        "ruleset vs branch protection",
+        "which protection system",
+        "migrate to rulesets"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Rules -> Rulesets",
+              "n": "Rulesets are the successor: they layer, target patterns of branches and tags, work at organization level, and can run in evaluate mode before enforcing. Classic protection still works; new setups should not start there."
+            }
+          ],
+          "undo": "Delete the ruleset; nothing else changes"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "require-signed-commits",
+        "merge-queue"
+      ]
+    },
+    {
+      "id": "audit-log",
+      "q": "See who changed what in the organization",
+      "aka": [
+        "organization audit log",
+        "who removed that member",
+        "admin activity history"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Organization -> Settings -> Audit log",
+              "n": "Searchable events for settings, access, and repository changes: action:repo.destroy or actor:<user> narrow it. Reachable at /orgs/<org>/audit-log via gh api for retention beyond the UI window."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "org-teams",
+        "github-api"
+      ]
+    },
+    {
+      "id": "gitsign",
+      "q": "Sign commits with no key to manage",
+      "aka": [
+        "sigstore commits",
+        "keyless commit signing",
+        "gitsign setup"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gitsign initialize",
+              "n": "Signing rides your OIDC login through Sigstore instead of a key file: nothing to back up, nothing to leak, a transparency log entry per signature. Verification tooling is still maturing outside supply-chain contexts; individuals are usually better served by SSH signing."
+            }
+          ],
+          "undo": "Unset the gitsign config values"
+        }
+      ],
+      "seealso": [
+        "signing-choices",
+        "sign-commits"
       ]
     }
   ]
