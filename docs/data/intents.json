@@ -2274,7 +2274,7 @@
             },
             {
               "c": "git config --global commit.gpgsign true",
-              "n": "Then add the same public key on GitHub as a Signing key (not just an Authentication key). Every commit in this very repository is signed this way."
+              "n": "Then add the same public key on GitHub as a Signing key (not just an Authentication key). Every commit in this repository is signed this way."
             }
           ],
           "undo": "git config --global commit.gpgsign false"
@@ -3569,7 +3569,7 @@
           "cmds": [
             {
               "c": "git filter-repo --strip-blobs-bigger-than 10M",
-              "n": "Removes every blob over the threshold from all commits; it prints what it dropped. Fresh clone, backup, force push, teammates re-clone: same ritual as any history rewrite."
+              "n": "Removes every blob over the threshold from all commits; it prints what it dropped. Fresh clone, backup, force push, teammates re-clone: same ritual as any history rewrite. filter-repo is not built into Git: install it with pip install git-filter-repo."
             }
           ],
           "undo": "Only the backup clone"
@@ -5879,7 +5879,7 @@
             },
             {
               "c": "git subtree add --prefix=<path> <url> main --squash",
-              "n": "A copy: their code lives in your history like normal files. Clones just work; updating back and forth takes more care. When in doubt, subtree for apps, submodule for tightly pinned shared libraries."
+              "n": "A copy: their code lives in your history like normal files. Clones just work; updating back and forth takes more care. When in doubt, subtree for apps, submodule for tightly pinned shared libraries. subtree ships with Git on Windows and macOS; some Linux distributions package it separately."
             }
           ],
           "undo": "Submodule: the remove answer. Subtree: git rm -r <path> and commit."
@@ -9308,7 +9308,7 @@
           "undo": "Untick the same box"
         },
         {
-          "when": "An issue that is really a question",
+          "when": "An issue that is a question",
           "danger": "safe",
           "cmds": [
             {
@@ -13841,7 +13841,7 @@
           "cmds": [
             {
               "c": "git subtree add --prefix vendor/lib <url> main --squash",
-              "n": "The project lands as real files in your history. Clones and CI need nothing special, the chief advantage over submodules."
+              "n": "The project lands as real files in your history. Clones and CI need nothing special, the chief advantage over submodules. subtree ships with Git on Windows and macOS; some Linux distributions package it separately."
             }
           ],
           "undo": "git rm -r vendor/lib and commit"
@@ -17272,7 +17272,7 @@
           "cmds": [
             {
               "c": "git filter-repo --path src/ --path README.md",
-              "n": "Rewrites every commit to contain only those paths, dropping commits that touched nothing else. --invert-paths removes them instead. Every hash changes, so this is for fresh copies, never a shared repository."
+              "n": "Rewrites every commit to contain only those paths, dropping commits that touched nothing else. --invert-paths removes them instead. Every hash changes, so this is for fresh copies, never a shared repository. filter-repo is not built into Git: install it with pip install git-filter-repo."
             }
           ],
           "undo": "None in place; work on a clone and keep the original"
@@ -17954,7 +17954,7 @@
           "cmds": [
             {
               "c": "gh pr diff <number>",
-              "n": "The web view hides individual files past a size threshold and stops rendering entirely on very large pull requests. The terminal has no such limit."
+              "n": "The web view hides individual files past a size threshold and stops rendering entirely on the largest pull requests. The terminal has no such limit."
             },
             {
               "c": "gh pr checkout <number> && git diff main...HEAD -- <path>",
@@ -22781,7 +22781,7 @@
             },
             {
               "c": "git filter-repo --path <internal-file> --invert-paths",
-              "n": "Remove anything that must not ship, then add a license and README before publishing."
+              "n": "Remove anything that must not ship, then add a license and README before publishing. filter-repo is not built into Git: install it with pip install git-filter-repo."
             }
           ],
           "undo": "Visibility can be flipped back, but anything fetched while public stays out there"
@@ -24346,7 +24346,7 @@
           "cmds": [
             {
               "c": "git filter-repo --strip-blobs-bigger-than 10M",
-              "n": "Rewrites history without them, then force-push. Everyone must reclone."
+              "n": "Rewrites history without them, then force-push. Everyone must reclone. filter-repo is not built into Git: install it with pip install git-filter-repo."
             },
             {
               "c": "git lfs migrate import --include=\"*.zip\"",
@@ -24618,7 +24618,7 @@
           "undo": "Delete the folder"
         },
         {
-          "when": "It really is stuck",
+          "when": "It is genuinely stuck",
           "danger": "safe",
           "cmds": [
             {
@@ -25413,7 +25413,7 @@
           "cmds": [
             {
               "c": "git filter-repo --path node_modules --invert-paths",
-              "n": "Only worth it when the repository is painfully large. Everyone must reclone afterwards."
+              "n": "Only worth it when the repository is painfully large. Everyone must reclone afterwards. filter-repo is not built into Git: install it with pip install git-filter-repo."
             }
           ],
           "undo": "Only from a clone with the old history"
@@ -31719,7 +31719,7 @@
             },
             {
               "c": "git filter-repo --path <file> --invert-paths",
-              "n": "Then purge it from history and force-push. Forks and caches may still hold it, which is why rotation came first."
+              "n": "Then purge it from history and force-push. Forks and caches may still hold it, which is why rotation came first. filter-repo is not built into Git: install it with pip install git-filter-repo."
             },
             {
               "c": "Settings -> Advanced Security -> Push protection",

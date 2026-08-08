@@ -335,7 +335,7 @@
         },
         {
           "c": "git filter-repo --path <file> --invert-paths",
-          "n": "Or remove them from history entirely, then force-push."
+          "n": "Or remove them from history entirely, then force-push. filter-repo is not built into Git: install it with pip install git-filter-repo."
         }
       ],
       "intent": "big-files-where",
@@ -2237,7 +2237,7 @@
         },
         {
           "c": "git rebase --skip",
-          "n": "If the commit really has nothing left to apply, skipping it is correct."
+          "n": "If the commit has nothing left to apply, skipping it is correct."
         }
       ],
       "intent": "interactive-rebase",
@@ -4436,7 +4436,7 @@
         },
         {
           "c": "git filter-repo --force",
-          "n": "Overrides the guard only when you understand the risk."
+          "n": "Overrides the guard only when you understand the risk. filter-repo is not built into Git: install it with pip install git-filter-repo."
         }
       ],
       "intent": "filter-repo-paths",
@@ -6920,7 +6920,7 @@
     {
       "id": "bfg-not-fresh-clone",
       "msg": "Aborting: refusing to run on a repo with a working tree",
-      "why": "BFG expects a bare mirror clone, not a working checkout.",
+      "why": "BFG expects a bare mirror clone, not a working checkout. BFG is a separate download that needs Java.",
       "fix": [
         {
           "c": "git clone --mirror <url>",
@@ -6928,7 +6928,7 @@
         },
         {
           "c": "git filter-repo --path <file> --invert-paths",
-          "n": "filter-repo is the maintained alternative and gives clearer errors."
+          "n": "filter-repo is the maintained alternative and gives clearer errors. filter-repo is not built into Git: install it with pip install git-filter-repo."
         }
       ],
       "intent": "remove-secret-from-history",
@@ -7660,7 +7660,7 @@
         },
         {
           "c": "Ignore it",
-          "n": "The build is unaffected; one job simply loses the race to write."
+          "n": "The build is unaffected; one job loses the race to write."
         }
       ],
       "intent": "actions-cache",
@@ -8924,7 +8924,7 @@
         },
         {
           "c": "split -b 1G <file>",
-          "n": "Or split very large assets into parts."
+          "n": "Or split large assets into parts."
         }
       ],
       "intent": "create-release",
