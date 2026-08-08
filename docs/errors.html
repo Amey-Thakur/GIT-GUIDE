@@ -1638,6 +1638,241 @@
   <p class="note">The filesystem or platform will not create symbolic links, so Git wrote a plain file.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#symlinks">How Git handles symbolic links</a></p>
 </article>
+<article class="result errcard" id="config-bad-numeric">
+  <h2><code class="errmsg">fatal: bad numeric config value &#x27;&lt;value&gt;&#x27; for &#x27;&lt;key&gt;&#x27;: invalid unit</code><a class="anchor" href="#config-bad-numeric" aria-label="Link to this error">#</a></h2>
+  <p class="note">A size or count setting was given a value Git cannot parse. Units are k, m, and g.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#config-precedence">Which config file a setting comes from</a></p>
+</article>
+<article class="result errcard" id="config-section-invalid">
+  <h2><code class="errmsg">error: invalid key: &lt;key&gt;</code><a class="anchor" href="#config-section-invalid" aria-label="Link to this error">#</a></h2>
+  <p class="note">The key is malformed, usually a missing section or a stray character.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#show-config">See every Git setting and where it comes from</a></p>
+</article>
+<article class="result errcard" id="remote-url-unsupported">
+  <h2><code class="errmsg">fatal: transport &#x27;ftp&#x27; not supported</code><a class="anchor" href="#remote-url-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">The remote URL uses a protocol this Git build cannot speak.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#change-remote-url">Change the remote URL</a></p>
+</article>
+<article class="result errcard" id="log-unknown-option">
+  <h2><code class="errmsg">error: unknown option `&lt;flag&gt;&#x27;</code><a class="anchor" href="#log-unknown-option" aria-label="Link to this error">#</a></h2>
+  <p class="note">The flag does not exist for that command, or belongs to a different subcommand.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-help">Read Git&#x27;s own documentation</a></p>
+</article>
+<article class="result errcard" id="log-l-needs-file">
+  <h2><code class="errmsg">fatal: -L requires a range and a file</code><a class="anchor" href="#log-l-needs-file" aria-label="Link to this error">#</a></h2>
+  <p class="note">Line-range logging needs both the range and the path, joined by a colon.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#function-history">Follow the history of one function</a></p>
+</article>
+<article class="result errcard" id="pathspec-magic-error">
+  <h2><code class="errmsg">fatal: Invalid pathspec magic in &#x27;:(exclude)&#x27;</code><a class="anchor" href="#pathspec-magic-error" aria-label="Link to this error">#</a></h2>
+  <p class="note">The pathspec syntax is wrong or unquoted, so the shell mangled it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#exclude-from-diff">Hide generated files from every diff</a></p>
+</article>
+<article class="result errcard" id="tag-not-annotated">
+  <h2><code class="errmsg">fatal: cannot describe &#x27;&lt;hash&gt;&#x27;  (no annotated tags)</code><a class="anchor" href="#tag-not-annotated" aria-label="Link to this error">#</a></h2>
+  <p class="note">describe reads annotated tags by default, and only lightweight ones exist.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#annotated-tags">Annotated or lightweight tag</a></p>
+</article>
+<article class="result errcard" id="tag-message-required">
+  <h2><code class="errmsg">fatal: no tag message?</code><a class="anchor" href="#tag-message-required" aria-label="Link to this error">#</a></h2>
+  <p class="note">An annotated tag was requested without a message and the editor closed empty.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#annotated-tags">Annotated or lightweight tag</a></p>
+</article>
+<article class="result errcard" id="stash-no-local-changes">
+  <h2><code class="errmsg">No local changes to save</code><a class="anchor" href="#stash-no-local-changes" aria-label="Link to this error">#</a></h2>
+  <p class="note">There is nothing modified or staged, so a stash would hold nothing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stash">Set work aside temporarily (stash)</a></p>
+</article>
+<article class="result errcard" id="stash-not-a-stash-ref">
+  <h2><code class="errmsg">fatal: &#x27;&lt;ref&gt;&#x27; is not a stash-like commit</code><a class="anchor" href="#stash-not-a-stash-ref" aria-label="Link to this error">#</a></h2>
+  <p class="note">The reference given is not a stash entry.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stash-inspect">See what is inside a stash before applying it</a></p>
+</article>
+<article class="result errcard" id="clean-requires-force">
+  <h2><code class="errmsg">fatal: clean.requireForce defaults to true and neither -i, -n, nor -f given</code><a class="anchor" href="#clean-requires-force" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git refuses to delete untracked files without an explicit instruction.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#remove-untracked">Delete untracked files from the working tree</a></p>
+</article>
+<article class="result errcard" id="rm-has-local-modifications">
+  <h2><code class="errmsg">error: the following file has local modifications:  (use --cached to keep the file, or -f to force removal)</code><a class="anchor" href="#rm-has-local-modifications" aria-label="Link to this error">#</a></h2>
+  <p class="note">Removing a file with uncommitted edits would discard them.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#untrack-file">Make Git forget a tracked file that is now in .gitignore</a></p>
+</article>
+<article class="result errcard" id="mv-destination-exists">
+  <h2><code class="errmsg">fatal: destination exists, source=&lt;a&gt;, destination=&lt;b&gt;</code><a class="anchor" href="#mv-destination-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">The target path already exists, so the move would overwrite it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#rename-file">Rename or move a file and keep its history</a></p>
+</article>
+<article class="result errcard" id="restore-source-invalid">
+  <h2><code class="errmsg">fatal: could not resolve --source=&lt;ref&gt;</code><a class="anchor" href="#restore-source-invalid" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit, branch, or tag named as the source does not resolve.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#restore-file">Restore a file from an older commit</a></p>
+</article>
+<article class="result errcard" id="switch-needs-branch">
+  <h2><code class="errmsg">fatal: a branch is expected, got commit &#x27;&lt;hash&gt;&#x27;</code><a class="anchor" href="#switch-needs-branch" aria-label="Link to this error">#</a></h2>
+  <p class="note">switch works on branches; a bare commit needs an explicit detach.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#detached-head">Fix a detached HEAD</a></p>
+</article>
+<article class="result errcard" id="sparse-checkout-not-enabled">
+  <h2><code class="errmsg">fatal: this worktree is not sparse</code><a class="anchor" href="#sparse-checkout-not-enabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">A sparse-checkout command ran in a repository where the feature is off.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
+</article>
+<article class="result errcard" id="rerere-not-enabled">
+  <h2><code class="errmsg">warning: rerere.enabled is not set; nothing recorded</code><a class="anchor" href="#rerere-not-enabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">Conflict resolutions are only remembered when the feature is switched on.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#rerere">Stop resolving the same conflict twice (rerere)</a></p>
+</article>
+<article class="result errcard" id="bundle-verify-failed">
+  <h2><code class="errmsg">error: Repository lacks these prerequisite commits:</code><a class="anchor" href="#bundle-verify-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The bundle is incremental and this repository lacks the commits it builds on.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#git-bundle">Move a repository over USB or an air gap (bundle)</a></p>
+</article>
+<article class="result errcard" id="send-email-not-available">
+  <h2><code class="errmsg">git: &#x27;send-email&#x27; is not a git command.</code><a class="anchor" href="#send-email-not-available" aria-label="Link to this error">#</a></h2>
+  <p class="note">send-email ships separately from core Git on most platforms.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#patches-email">Share commits as patch files, no host needed</a></p>
+</article>
+<article class="result errcard" id="ssh-signing-no-key">
+  <h2><code class="errmsg">error: Load key &quot;&lt;path&gt;&quot;: No such file or directory  fatal: failed to write commit object</code><a class="anchor" href="#ssh-signing-no-key" aria-label="Link to this error">#</a></h2>
+  <p class="note">Signing is configured with a key file that does not exist.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#signing-choices">SSH, GPG, or gitsign for signing commits</a></p>
+</article>
+<article class="result errcard" id="credential-helper-not-found">
+  <h2><code class="errmsg">git: &#x27;credential-manager&#x27; is not a git command</code><a class="anchor" href="#credential-helper-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The configured credential helper is not installed on this machine.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="askpass-failed">
+  <h2><code class="errmsg">error: unable to read askpass response from &#x27;&lt;program&gt;&#x27;</code><a class="anchor" href="#askpass-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Git tried to prompt through a helper program that failed or is missing.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#stop-asking-for-username">Git keeps asking for my username on every push</a></p>
+</article>
+<article class="result errcard" id="tls-version-unsupported">
+  <h2><code class="errmsg">fatal: unable to access &#x27;&lt;url&gt;&#x27;: error:1408F10B:SSL routines:ssl3_get_record:wrong version number</code><a class="anchor" href="#tls-version-unsupported" aria-label="Link to this error">#</a></h2>
+  <p class="note">Something is speaking plain HTTP to an HTTPS port, usually a misconfigured proxy.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#proxy-setup">Use Git behind a corporate proxy</a></p>
+</article>
+<article class="result errcard" id="push-requires-signed">
+  <h2><code class="errmsg">remote: error: Commits must have verified signatures.</code><a class="anchor" href="#push-requires-signed" aria-label="Link to this error">#</a></h2>
+  <p class="note">A ruleset requires signed commits and one in the push is unsigned.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#require-signed-commits">Require signed commits on a branch</a></p>
+</article>
+<article class="result errcard" id="api-409-conflict">
+  <h2><code class="errmsg">HTTP 409: Conflict</code><a class="anchor" href="#api-409-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">The resource changed since you read it, or the repository is empty.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-api">Read GitHub data from the command line</a></p>
+</article>
+<article class="result errcard" id="api-410-gone">
+  <h2><code class="errmsg">HTTP 410: Issues are disabled for this repo</code><a class="anchor" href="#api-410-gone" aria-label="Link to this error">#</a></h2>
+  <p class="note">The feature was switched off for the repository.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#open-issue">Report a bug that actually gets fixed</a></p>
+</article>
+<article class="result errcard" id="api-401-bad-credentials">
+  <h2><code class="errmsg">HTTP 401: Bad credentials</code><a class="anchor" href="#api-401-bad-credentials" aria-label="Link to this error">#</a></h2>
+  <p class="note">The token is wrong, revoked, or expired.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#access-tokens">Create a token for scripts and CI</a></p>
+</article>
+<article class="result errcard" id="actions-expression-syntax">
+  <h2><code class="errmsg">Invalid workflow file: Unrecognized named-value: &#x27;env&#x27;</code><a class="anchor" href="#actions-expression-syntax" aria-label="Link to this error">#</a></h2>
+  <p class="note">An expression referenced a context that is not available where it was used.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#debug-workflows">Debug a failing workflow properly</a></p>
+</article>
+<article class="result errcard" id="actions-needs-cycle">
+  <h2><code class="errmsg">The workflow is not valid: job &#x27;a&#x27; and job &#x27;b&#x27; are in a dependency cycle</code><a class="anchor" href="#actions-needs-cycle" aria-label="Link to this error">#</a></h2>
+  <p class="note">Two jobs list each other in needs, which can never resolve.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#github-actions-start">Run tests automatically on every push</a></p>
+</article>
+<article class="result errcard" id="actions-service-unhealthy">
+  <h2><code class="errmsg">Failed to initialize container &lt;image&gt;: health check failed</code><a class="anchor" href="#actions-service-unhealthy" aria-label="Link to this error">#</a></h2>
+  <p class="note">A service container never became ready, so the job aborted.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#services-in-ci">Run a database next to my CI job</a></p>
+</article>
+<article class="result errcard" id="actions-artifact-v3-v4">
+  <h2><code class="errmsg">Error: This version of actions/download-artifact is not compatible with artifacts uploaded by v3</code><a class="anchor" href="#actions-artifact-v3-v4" aria-label="Link to this error">#</a></h2>
+  <p class="note">Artifact versions must match between upload and download.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-artifacts">Save files a workflow produced</a></p>
+</article>
+<article class="result errcard" id="actions-cache-key-miss">
+  <h2><code class="errmsg">Cache not found for input keys: &lt;key&gt;</code><a class="anchor" href="#actions-cache-key-miss" aria-label="Link to this error">#</a></h2>
+  <p class="note">No cache matches that key, which is normal on the first run or after a lockfile change.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-cache">Make CI faster by caching dependencies</a></p>
+</article>
+<article class="result errcard" id="environment-protection-blocked">
+  <h2><code class="errmsg">Waiting for approval from required reviewers</code><a class="anchor" href="#environment-protection-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">The job targets a protected environment and is paused until someone approves.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#deploy-environments">Gate deployments behind approvals</a></p>
+</article>
+<article class="result errcard" id="codeql-no-source">
+  <h2><code class="errmsg">CodeQL did not detect any code written in languages supported by CodeQL</code><a class="anchor" href="#codeql-no-source" aria-label="Link to this error">#</a></h2>
+  <p class="note">The scan found nothing to analyse, usually a build that produced no compiled output.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#code-scanning">Scan the repository for vulnerabilities automatically</a></p>
+</article>
+<article class="result errcard" id="dependabot-cannot-update">
+  <h2><code class="errmsg">Dependabot cannot update &lt;package&gt; to a non-vulnerable version</code><a class="anchor" href="#dependabot-cannot-update" aria-label="Link to this error">#</a></h2>
+  <p class="note">No fixed release exists yet, or your constraints forbid the one that does.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dependabot">Get automatic dependency updates and security alerts</a></p>
+</article>
+<article class="result errcard" id="devcontainer-build-failed">
+  <h2><code class="errmsg">An error occurred setting up the container: failed to build</code><a class="anchor" href="#devcontainer-build-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The devcontainer image failed to build, so the environment never started.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#devcontainer">Define the dev environment inside the repository</a></p>
+</article>
+<article class="result errcard" id="pages-dns-not-verified">
+  <h2><code class="errmsg">Domain does not resolve to the GitHub Pages server</code><a class="anchor" href="#pages-dns-not-verified" aria-label="Link to this error">#</a></h2>
+  <p class="note">The DNS record is missing, wrong, or has not propagated yet.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pages-custom-domain">Put my Pages site on my own domain</a></p>
+</article>
+<article class="result errcard" id="pages-https-pending">
+  <h2><code class="errmsg">Certificate not yet issued for &lt;domain&gt;</code><a class="anchor" href="#pages-https-pending" aria-label="Link to this error">#</a></h2>
+  <p class="note">The certificate is still being provisioned after a DNS change.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#pages-custom-domain">Put my Pages site on my own domain</a></p>
+</article>
+<article class="result errcard" id="release-asset-exists">
+  <h2><code class="errmsg">HTTP 422: Validation Failed  asset with this name already exists</code><a class="anchor" href="#release-asset-exists" aria-label="Link to this error">#</a></h2>
+  <p class="note">That filename is already attached to the release.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-release">Publish a release with notes and downloads</a></p>
+</article>
+<article class="result errcard" id="release-tag-missing">
+  <h2><code class="errmsg">release not found</code><a class="anchor" href="#release-tag-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">The release does not exist, or the tag was never pushed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tags-not-showing-on-github">My tag is not on the releases page</a></p>
+</article>
+<article class="result errcard" id="project-item-not-found">
+  <h2><code class="errmsg">Could not resolve to a ProjectV2 with the number &lt;n&gt;</code><a class="anchor" href="#project-item-not-found" aria-label="Link to this error">#</a></h2>
+  <p class="note">The project number belongs to another owner, or the token lacks project scope.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#project-boards">Plan work with GitHub Projects</a></p>
+</article>
+<article class="result errcard" id="milestone-closed">
+  <h2><code class="errmsg">Cannot add issue to a closed milestone</code><a class="anchor" href="#milestone-closed" aria-label="Link to this error">#</a></h2>
+  <p class="note">Closed milestones do not accept new items.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#milestones">Group issues toward a release</a></p>
+</article>
+<article class="result errcard" id="rename-repo-conflict">
+  <h2><code class="errmsg">The repository &lt;name&gt; already exists on this account.</code><a class="anchor" href="#rename-repo-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">That name is taken by another repository you own, possibly archived.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-naming-collision">The repository name I want is taken</a></p>
+</article>
+<article class="result errcard" id="transfer-not-permitted">
+  <h2><code class="errmsg">You don&#x27;t have admin rights to transfer this repository</code><a class="anchor" href="#transfer-not-permitted" aria-label="Link to this error">#</a></h2>
+  <p class="note">Transfers require admin on the source and permission to create in the target.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#transfer-repo">Transfer a repository to another account or organization</a></p>
+</article>
+<article class="result errcard" id="scim-provisioning-error">
+  <h2><code class="errmsg">User is not provisioned in this organization</code><a class="anchor" href="#scim-provisioning-error" aria-label="Link to this error">#</a></h2>
+  <p class="note">An identity-managed organization only admits users its provider has provisioned.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#org-teams">Structure an organization with teams</a></p>
+</article>
+<article class="result errcard" id="unicode-normalization-mac">
+  <h2><code class="errmsg">warning: &lt;path&gt; has different normalization forms</code><a class="anchor" href="#unicode-normalization-mac" aria-label="Link to this error">#</a></h2>
+  <p class="note">macOS stores certain accented names differently, so the same name can appear twice.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#unicode-filenames">Show non-ASCII file names readably</a></p>
+</article>
+<article class="result errcard" id="encoding-invalid-utf8">
+  <h2><code class="errmsg">warning: commit message did not conform to UTF-8</code><a class="anchor" href="#encoding-invalid-utf8" aria-label="Link to this error">#</a></h2>
+  <p class="note">The message contains bytes that are not valid UTF-8, usually from a terminal in another codepage.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#commit-messages">Write commit messages people thank you for</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

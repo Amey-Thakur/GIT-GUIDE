@@ -4851,6 +4851,885 @@
       ],
       "intent": "symlinks",
       "seealso": []
+    },
+    {
+      "id": "config-bad-numeric",
+      "msg": "fatal: bad numeric config value '<value>' for '<key>': invalid unit",
+      "why": "A size or count setting was given a value Git cannot parse. Units are k, m, and g.",
+      "fix": [
+        {
+          "c": "git config --show-origin --get <key>",
+          "n": "Finds which file holds the bad value."
+        },
+        {
+          "c": "git config --global http.postBuffer 524288000",
+          "n": "Plain bytes always parse."
+        }
+      ],
+      "intent": "config-precedence",
+      "seealso": [
+        "see-config-value-source"
+      ]
+    },
+    {
+      "id": "config-section-invalid",
+      "msg": "error: invalid key: <key>",
+      "why": "The key is malformed, usually a missing section or a stray character.",
+      "fix": [
+        {
+          "c": "git config --global user.name \"<name>\"",
+          "n": "Every key is section.key, and the dot is required."
+        },
+        {
+          "c": "git config --global --edit",
+          "n": "Fix a typo directly in the file when a script wrote it."
+        }
+      ],
+      "intent": "show-config",
+      "seealso": []
+    },
+    {
+      "id": "remote-url-unsupported",
+      "msg": "fatal: transport 'ftp' not supported",
+      "why": "The remote URL uses a protocol this Git build cannot speak.",
+      "fix": [
+        {
+          "c": "git remote -v",
+          "n": "Read the URL; a typo in the scheme is the usual cause."
+        },
+        {
+          "c": "git remote set-url origin https://github.com/<owner>/<repo>.git",
+          "n": "Use https or ssh, which every build supports."
+        }
+      ],
+      "intent": "change-remote-url",
+      "seealso": [
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "log-unknown-option",
+      "msg": "error: unknown option `<flag>'",
+      "why": "The flag does not exist for that command, or belongs to a different subcommand.",
+      "fix": [
+        {
+          "c": "git log -h",
+          "n": "Lists the flags this command actually accepts."
+        },
+        {
+          "c": "git help log",
+          "n": "The full page explains which forms combine."
+        }
+      ],
+      "intent": "git-help",
+      "seealso": [
+        "read-a-diff"
+      ]
+    },
+    {
+      "id": "log-l-needs-file",
+      "msg": "fatal: -L requires a range and a file",
+      "why": "Line-range logging needs both the range and the path, joined by a colon.",
+      "fix": [
+        {
+          "c": "git log -L 40,60:src/app.js",
+          "n": "Numbers, colon, then the path."
+        },
+        {
+          "c": "git log -L :render:src/app.js",
+          "n": "Or name a function instead of line numbers."
+        }
+      ],
+      "intent": "function-history",
+      "seealso": [
+        "one-file-many-commits"
+      ]
+    },
+    {
+      "id": "pathspec-magic-error",
+      "msg": "fatal: Invalid pathspec magic in ':(exclude)'",
+      "why": "The pathspec syntax is wrong or unquoted, so the shell mangled it.",
+      "fix": [
+        {
+          "c": "git diff -- . \":(exclude)package-lock.json\"",
+          "n": "Quote the pathspec so the shell leaves it alone."
+        },
+        {
+          "c": "git diff -- . \":!package-lock.json\"",
+          "n": "The short form needs quoting too."
+        }
+      ],
+      "intent": "exclude-from-diff",
+      "seealso": [
+        "read-a-diff"
+      ]
+    },
+    {
+      "id": "tag-not-annotated",
+      "msg": "fatal: cannot describe '<hash>'  (no annotated tags)",
+      "why": "describe reads annotated tags by default, and only lightweight ones exist.",
+      "fix": [
+        {
+          "c": "git describe --tags",
+          "n": "Includes lightweight tags in the search."
+        },
+        {
+          "c": "git tag -a v1.0.0 -m \"Release\"",
+          "n": "Annotated tags are the right kind for releases."
+        }
+      ],
+      "intent": "annotated-tags",
+      "seealso": [
+        "describe-version"
+      ]
+    },
+    {
+      "id": "tag-message-required",
+      "msg": "fatal: no tag message?",
+      "why": "An annotated tag was requested without a message and the editor closed empty.",
+      "fix": [
+        {
+          "c": "git tag -a v1.0.0 -m \"Release v1.0.0\"",
+          "n": "Pass the message inline."
+        },
+        {
+          "c": "git tag v1.0.0",
+          "n": "Or make a lightweight tag when no message is wanted."
+        }
+      ],
+      "intent": "annotated-tags",
+      "seealso": [
+        "when-to-tag"
+      ]
+    },
+    {
+      "id": "stash-no-local-changes",
+      "msg": "No local changes to save",
+      "why": "There is nothing modified or staged, so a stash would hold nothing.",
+      "fix": [
+        {
+          "c": "git status --short",
+          "n": "Confirms the tree is clean."
+        },
+        {
+          "c": "git stash push -u",
+          "n": "Untracked files need -u; without it they are not stashed."
+        }
+      ],
+      "intent": "stash",
+      "seealso": [
+        "understand-git-add-dot"
+      ]
+    },
+    {
+      "id": "stash-not-a-stash-ref",
+      "msg": "fatal: '<ref>' is not a stash-like commit",
+      "why": "The reference given is not a stash entry.",
+      "fix": [
+        {
+          "c": "git stash list",
+          "n": "Shows valid entries such as stash@{0}."
+        },
+        {
+          "c": "git stash apply stash@{1}",
+          "n": "Quote it in shells where braces expand."
+        }
+      ],
+      "intent": "stash-inspect",
+      "seealso": [
+        "where-did-my-stash-go"
+      ]
+    },
+    {
+      "id": "clean-requires-force",
+      "msg": "fatal: clean.requireForce defaults to true and neither -i, -n, nor -f given",
+      "why": "Git refuses to delete untracked files without an explicit instruction.",
+      "fix": [
+        {
+          "c": "git clean -n -d",
+          "n": "Rehearse first; this lists what would go."
+        },
+        {
+          "c": "git clean -f -d",
+          "n": "Then delete. There is no undo, because Git never had these files."
+        }
+      ],
+      "intent": "remove-untracked",
+      "seealso": [
+        "undo-clean"
+      ]
+    },
+    {
+      "id": "rm-has-local-modifications",
+      "msg": "error: the following file has local modifications:  (use --cached to keep the file, or -f to force removal)",
+      "why": "Removing a file with uncommitted edits would discard them.",
+      "fix": [
+        {
+          "c": "git rm --cached <file>",
+          "n": "Stop tracking it but keep the file and its edits."
+        },
+        {
+          "c": "git rm -f <file>",
+          "n": "Delete it and the edits, when that is genuinely what you want."
+        }
+      ],
+      "intent": "untrack-file",
+      "seealso": [
+        "stop-tracking-folder"
+      ]
+    },
+    {
+      "id": "mv-destination-exists",
+      "msg": "fatal: destination exists, source=<a>, destination=<b>",
+      "why": "The target path already exists, so the move would overwrite it.",
+      "fix": [
+        {
+          "c": "git mv -f <a> <b>",
+          "n": "Force it when replacing is intended."
+        },
+        {
+          "c": "git status",
+          "n": "Check what is at the destination first; case-only renames need -f too."
+        }
+      ],
+      "intent": "rename-file",
+      "seealso": [
+        "case-only-rename-windows"
+      ]
+    },
+    {
+      "id": "restore-source-invalid",
+      "msg": "fatal: could not resolve --source=<ref>",
+      "why": "The commit, branch, or tag named as the source does not resolve.",
+      "fix": [
+        {
+          "c": "git rev-parse --verify <ref>",
+          "n": "Confirms the reference exists."
+        },
+        {
+          "c": "git restore --source origin/main -- <path>",
+          "n": "Remote branches need the remote prefix."
+        }
+      ],
+      "intent": "restore-file",
+      "seealso": [
+        "see-remote-file"
+      ]
+    },
+    {
+      "id": "switch-needs-branch",
+      "msg": "fatal: a branch is expected, got commit '<hash>'",
+      "why": "switch works on branches; a bare commit needs an explicit detach.",
+      "fix": [
+        {
+          "c": "git switch --detach <hash>",
+          "n": "States that standing on a commit is intended."
+        },
+        {
+          "c": "git switch -c <name> <hash>",
+          "n": "Or make a branch there so commits have a home."
+        }
+      ],
+      "intent": "detached-head",
+      "seealso": [
+        "understand-detached-head-danger"
+      ]
+    },
+    {
+      "id": "sparse-checkout-not-enabled",
+      "msg": "fatal: this worktree is not sparse",
+      "why": "A sparse-checkout command ran in a repository where the feature is off.",
+      "fix": [
+        {
+          "c": "git sparse-checkout init --cone",
+          "n": "Turn it on first."
+        },
+        {
+          "c": "git sparse-checkout set <folder>",
+          "n": "Then choose the paths you want on disk."
+        }
+      ],
+      "intent": "sparse-checkout",
+      "seealso": [
+        "clone-specific-folder"
+      ]
+    },
+    {
+      "id": "rerere-not-enabled",
+      "msg": "warning: rerere.enabled is not set; nothing recorded",
+      "why": "Conflict resolutions are only remembered when the feature is switched on.",
+      "fix": [
+        {
+          "c": "git config --global rerere.enabled true",
+          "n": "Records resolutions from now on."
+        },
+        {
+          "c": "ls .git/rr-cache",
+          "n": "Shows what has been recorded once it is running."
+        }
+      ],
+      "intent": "rerere",
+      "seealso": [
+        "rebase-many-commits-conflicts"
+      ]
+    },
+    {
+      "id": "bundle-verify-failed",
+      "msg": "error: Repository lacks these prerequisite commits:",
+      "why": "The bundle is incremental and this repository lacks the commits it builds on.",
+      "fix": [
+        {
+          "c": "git bundle verify <file>",
+          "n": "Lists exactly which commits are required."
+        },
+        {
+          "c": "git bundle create full.bundle --all",
+          "n": "Ask for a complete bundle when the prerequisites are missing."
+        }
+      ],
+      "intent": "git-bundle",
+      "seealso": [
+        "repo-with-no-network-access"
+      ]
+    },
+    {
+      "id": "send-email-not-available",
+      "msg": "git: 'send-email' is not a git command.",
+      "why": "send-email ships separately from core Git on most platforms.",
+      "fix": [
+        {
+          "c": "sudo apt install git-email",
+          "n": "Install the package that provides it."
+        },
+        {
+          "c": "git format-patch -1 && attach the file",
+          "n": "Or produce the patch and send it by any means."
+        }
+      ],
+      "intent": "patches-email",
+      "seealso": [
+        "apply-patch"
+      ]
+    },
+    {
+      "id": "ssh-signing-no-key",
+      "msg": "error: Load key \"<path>\": No such file or directory  fatal: failed to write commit object",
+      "why": "Signing is configured with a key file that does not exist.",
+      "fix": [
+        {
+          "c": "git config --global user.signingkey ~/.ssh/id_ed25519.pub",
+          "n": "SSH signing points at the public key."
+        },
+        {
+          "c": "git config --global commit.gpgsign false",
+          "n": "Or turn signing off until the key is in place."
+        }
+      ],
+      "intent": "signing-choices",
+      "seealso": [
+        "require-signed-commits"
+      ]
+    },
+    {
+      "id": "credential-helper-not-found",
+      "msg": "git: 'credential-manager' is not a git command",
+      "why": "The configured credential helper is not installed on this machine.",
+      "fix": [
+        {
+          "c": "git config --global --get credential.helper",
+          "n": "Shows what is configured."
+        },
+        {
+          "c": "git config --global credential.helper store",
+          "n": "Switch to a helper this machine has, or install the intended one."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "askpass-failed",
+      "msg": "error: unable to read askpass response from '<program>'",
+      "why": "Git tried to prompt through a helper program that failed or is missing.",
+      "fix": [
+        {
+          "c": "unset SSH_ASKPASS GIT_ASKPASS",
+          "n": "Fall back to a terminal prompt."
+        },
+        {
+          "c": "git config --global core.askPass \"\"",
+          "n": "Clear a stale helper path."
+        }
+      ],
+      "intent": "stop-asking-for-username",
+      "seealso": []
+    },
+    {
+      "id": "tls-version-unsupported",
+      "msg": "fatal: unable to access '<url>': error:1408F10B:SSL routines:ssl3_get_record:wrong version number",
+      "why": "Something is speaking plain HTTP to an HTTPS port, usually a misconfigured proxy.",
+      "fix": [
+        {
+          "c": "git config --global --unset http.proxy",
+          "n": "Clear a proxy pointing at the wrong scheme."
+        },
+        {
+          "c": "curl -v https://github.com",
+          "n": "Confirms whether TLS works outside Git at all."
+        }
+      ],
+      "intent": "proxy-setup",
+      "seealso": []
+    },
+    {
+      "id": "push-requires-signed",
+      "msg": "remote: error: Commits must have verified signatures.",
+      "why": "A ruleset requires signed commits and one in the push is unsigned.",
+      "fix": [
+        {
+          "c": "git log --show-signature -3",
+          "n": "Finds the unsigned commit."
+        },
+        {
+          "c": "git rebase --exec \"git commit --amend --no-edit -S\" <base>",
+          "n": "Re-sign the range, then force-push if the branch is yours."
+        }
+      ],
+      "intent": "require-signed-commits",
+      "seealso": [
+        "signing-choices"
+      ]
+    },
+    {
+      "id": "api-409-conflict",
+      "msg": "HTTP 409: Conflict",
+      "why": "The resource changed since you read it, or the repository is empty.",
+      "fix": [
+        {
+          "c": "gh api repos/<owner>/<repo>/contents/<path>",
+          "n": "Fetch the current sha and send it with the update."
+        },
+        {
+          "c": "gh api repos/<owner>/<repo>/commits",
+          "n": "An empty repository returns 409 for content operations until the first commit."
+        }
+      ],
+      "intent": "github-api",
+      "seealso": [
+        "repo-with-no-commits"
+      ]
+    },
+    {
+      "id": "api-410-gone",
+      "msg": "HTTP 410: Issues are disabled for this repo",
+      "why": "The feature was switched off for the repository.",
+      "fix": [
+        {
+          "c": "Settings -> Features",
+          "n": "Enable issues, wikis, or projects as needed."
+        },
+        {
+          "c": "gh repo view --json hasIssuesEnabled",
+          "n": "Confirms the state before scripting against it."
+        }
+      ],
+      "intent": "open-issue",
+      "seealso": [
+        "discussions-vs-issues"
+      ]
+    },
+    {
+      "id": "api-401-bad-credentials",
+      "msg": "HTTP 401: Bad credentials",
+      "why": "The token is wrong, revoked, or expired.",
+      "fix": [
+        {
+          "c": "gh auth status",
+          "n": "Shows whether the stored token still authenticates."
+        },
+        {
+          "c": "gh auth refresh",
+          "n": "Re-issue it; fine-grained tokens expire on a schedule by design."
+        }
+      ],
+      "intent": "access-tokens",
+      "seealso": [
+        "api-rate-limits"
+      ]
+    },
+    {
+      "id": "actions-expression-syntax",
+      "msg": "Invalid workflow file: Unrecognized named-value: 'env'",
+      "why": "An expression referenced a context that is not available where it was used.",
+      "fix": [
+        {
+          "c": "if: ${{ github.ref == 'refs/heads/main' }}",
+          "n": "job-level if cannot read env; use the github context."
+        },
+        {
+          "c": "gh workflow view <file>",
+          "n": "The error names the line, which is usually enough."
+        }
+      ],
+      "intent": "debug-workflows",
+      "seealso": [
+        "actions-env"
+      ]
+    },
+    {
+      "id": "actions-needs-cycle",
+      "msg": "The workflow is not valid: job 'a' and job 'b' are in a dependency cycle",
+      "why": "Two jobs list each other in needs, which can never resolve.",
+      "fix": [
+        {
+          "c": "needs: [build]",
+          "n": "Dependencies must form a one-way chain."
+        },
+        {
+          "c": "gh workflow view <file>",
+          "n": "Sketch the graph; cycles usually come from a copied block."
+        }
+      ],
+      "intent": "github-actions-start",
+      "seealso": [
+        "read-a-workflow-file"
+      ]
+    },
+    {
+      "id": "actions-service-unhealthy",
+      "msg": "Failed to initialize container <image>: health check failed",
+      "why": "A service container never became ready, so the job aborted.",
+      "fix": [
+        {
+          "c": "options: --health-cmd pg_isready --health-retries 5",
+          "n": "Give the service a health check and enough retries."
+        },
+        {
+          "c": "gh run view --log",
+          "n": "The container log usually names the real startup failure."
+        }
+      ],
+      "intent": "services-in-ci",
+      "seealso": [
+        "container-jobs"
+      ]
+    },
+    {
+      "id": "actions-artifact-v3-v4",
+      "msg": "Error: This version of actions/download-artifact is not compatible with artifacts uploaded by v3",
+      "why": "Artifact versions must match between upload and download.",
+      "fix": [
+        {
+          "c": "uses: actions/upload-artifact@v4",
+          "n": "Use the same major version on both sides."
+        },
+        {
+          "c": "gh run view --json jobs",
+          "n": "Check which version the uploading job used."
+        }
+      ],
+      "intent": "actions-artifacts",
+      "seealso": [
+        "github-actions-artifacts-between-jobs"
+      ]
+    },
+    {
+      "id": "actions-cache-key-miss",
+      "msg": "Cache not found for input keys: <key>",
+      "why": "No cache matches that key, which is normal on the first run or after a lockfile change.",
+      "fix": [
+        {
+          "c": "restore-keys:",
+          "n": "A prefix fallback reuses a near-match instead of starting cold."
+        },
+        {
+          "c": "gh cache list",
+          "n": "Shows what is stored and how large it is."
+        }
+      ],
+      "intent": "actions-cache",
+      "seealso": [
+        "reduce-ci-minutes"
+      ]
+    },
+    {
+      "id": "environment-protection-blocked",
+      "msg": "Waiting for approval from required reviewers",
+      "why": "The job targets a protected environment and is paused until someone approves.",
+      "fix": [
+        {
+          "c": "gh run view",
+          "n": "Shows who can approve and the pending deployment."
+        },
+        {
+          "c": "Settings -> Environments",
+          "n": "Adjust the reviewer list if the gate is in the wrong place."
+        }
+      ],
+      "intent": "deploy-environments",
+      "seealso": [
+        "keep-secrets-per-environment"
+      ]
+    },
+    {
+      "id": "codeql-no-source",
+      "msg": "CodeQL did not detect any code written in languages supported by CodeQL",
+      "why": "The scan found nothing to analyse, usually a build that produced no compiled output.",
+      "fix": [
+        {
+          "c": "languages: javascript-typescript",
+          "n": "Name the languages explicitly in the workflow."
+        },
+        {
+          "c": "Settings -> Code scanning -> Default setup",
+          "n": "The managed setup handles build detection for you."
+        }
+      ],
+      "intent": "code-scanning",
+      "seealso": [
+        "dependabot"
+      ]
+    },
+    {
+      "id": "dependabot-cannot-update",
+      "msg": "Dependabot cannot update <package> to a non-vulnerable version",
+      "why": "No fixed release exists yet, or your constraints forbid the one that does.",
+      "fix": [
+        {
+          "c": "gh api repos/<owner>/<repo>/dependabot/alerts",
+          "n": "Shows the alert and the patched version if there is one."
+        },
+        {
+          "c": "Loosen the version constraint",
+          "n": "Or apply a workaround and dismiss the alert with a reason."
+        }
+      ],
+      "intent": "dependabot",
+      "seealso": [
+        "see-what-changed-in-a-dependency"
+      ]
+    },
+    {
+      "id": "devcontainer-build-failed",
+      "msg": "An error occurred setting up the container: failed to build",
+      "why": "The devcontainer image failed to build, so the environment never started.",
+      "fix": [
+        {
+          "c": "gh codespace logs",
+          "n": "The build log names the failing step."
+        },
+        {
+          "c": "devcontainer.json",
+          "n": "Test the same Dockerfile locally before pushing the change."
+        }
+      ],
+      "intent": "devcontainer",
+      "seealso": [
+        "codespaces"
+      ]
+    },
+    {
+      "id": "pages-dns-not-verified",
+      "msg": "Domain does not resolve to the GitHub Pages server",
+      "why": "The DNS record is missing, wrong, or has not propagated yet.",
+      "fix": [
+        {
+          "c": "dig +short <domain>",
+          "n": "Should show the Pages address or your user subdomain."
+        },
+        {
+          "c": "Settings -> Pages -> Custom domain",
+          "n": "Re-check after DNS propagates, then enable HTTPS."
+        }
+      ],
+      "intent": "pages-custom-domain",
+      "seealso": []
+    },
+    {
+      "id": "pages-https-pending",
+      "msg": "Certificate not yet issued for <domain>",
+      "why": "The certificate is still being provisioned after a DNS change.",
+      "fix": [
+        {
+          "c": "Settings -> Pages",
+          "n": "Enforce HTTPS becomes available once issuance completes."
+        },
+        {
+          "c": "dig +short <domain>",
+          "n": "A wrong record is the usual reason it never completes."
+        }
+      ],
+      "intent": "pages-custom-domain",
+      "seealso": [
+        "github-pages"
+      ]
+    },
+    {
+      "id": "release-asset-exists",
+      "msg": "HTTP 422: Validation Failed  asset with this name already exists",
+      "why": "That filename is already attached to the release.",
+      "fix": [
+        {
+          "c": "gh release delete-asset <tag> <file>",
+          "n": "Remove the old one first."
+        },
+        {
+          "c": "gh release upload <tag> <file> --clobber",
+          "n": "Or overwrite it in one step."
+        }
+      ],
+      "intent": "create-release",
+      "seealso": [
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "release-tag-missing",
+      "msg": "release not found",
+      "why": "The release does not exist, or the tag was never pushed.",
+      "fix": [
+        {
+          "c": "git push origin <tag>",
+          "n": "Push the tag, then create the release from it."
+        },
+        {
+          "c": "gh release list",
+          "n": "Shows what exists on the server."
+        }
+      ],
+      "intent": "tags-not-showing-on-github",
+      "seealso": [
+        "tags-vs-releases"
+      ]
+    },
+    {
+      "id": "project-item-not-found",
+      "msg": "Could not resolve to a ProjectV2 with the number <n>",
+      "why": "The project number belongs to another owner, or the token lacks project scope.",
+      "fix": [
+        {
+          "c": "gh project list --owner <owner>",
+          "n": "Lists the projects you can see."
+        },
+        {
+          "c": "gh auth refresh -s project",
+          "n": "Projects need their own scope."
+        }
+      ],
+      "intent": "project-boards",
+      "seealso": []
+    },
+    {
+      "id": "milestone-closed",
+      "msg": "Cannot add issue to a closed milestone",
+      "why": "Closed milestones do not accept new items.",
+      "fix": [
+        {
+          "c": "gh api repos/<owner>/<repo>/milestones",
+          "n": "Lists milestones and their state."
+        },
+        {
+          "c": "Reopen the milestone",
+          "n": "Or attach the issue to the current one."
+        }
+      ],
+      "intent": "milestones",
+      "seealso": [
+        "project-boards"
+      ]
+    },
+    {
+      "id": "rename-repo-conflict",
+      "msg": "The repository <name> already exists on this account.",
+      "why": "That name is taken by another repository you own, possibly archived.",
+      "fix": [
+        {
+          "c": "gh repo list --limit 200",
+          "n": "Find the holder, including archived repositories."
+        },
+        {
+          "c": "gh repo rename <new-name>",
+          "n": "Pick a free name, or rename the old repository first."
+        }
+      ],
+      "intent": "repo-naming-collision",
+      "seealso": [
+        "rename-repo"
+      ]
+    },
+    {
+      "id": "transfer-not-permitted",
+      "msg": "You don't have admin rights to transfer this repository",
+      "why": "Transfers require admin on the source and permission to create in the target.",
+      "fix": [
+        {
+          "c": "gh api repos/<owner>/<repo> --jq .permissions",
+          "n": "Confirms your role."
+        },
+        {
+          "c": "Organization -> Settings -> Member privileges",
+          "n": "Organizations can restrict who may create or receive repositories."
+        }
+      ],
+      "intent": "transfer-repo",
+      "seealso": [
+        "who-can-delete-my-repo"
+      ]
+    },
+    {
+      "id": "scim-provisioning-error",
+      "msg": "User is not provisioned in this organization",
+      "why": "An identity-managed organization only admits users its provider has provisioned.",
+      "fix": [
+        {
+          "c": "Ask an owner to check the identity provider",
+          "n": "Membership is granted upstream, not on GitHub."
+        },
+        {
+          "c": "gh api orgs/<org>/members/<user>",
+          "n": "Confirms current membership."
+        }
+      ],
+      "intent": "org-teams",
+      "seealso": [
+        "saml-sso-tokens"
+      ]
+    },
+    {
+      "id": "unicode-normalization-mac",
+      "msg": "warning: <path> has different normalization forms",
+      "why": "macOS stores certain accented names differently, so the same name can appear twice.",
+      "fix": [
+        {
+          "c": "git config core.precomposeUnicode true",
+          "n": "Normalises names on macOS, which is the default in modern Git."
+        },
+        {
+          "c": "git status",
+          "n": "Confirms the phantom rename disappears."
+        }
+      ],
+      "intent": "unicode-filenames",
+      "seealso": []
+    },
+    {
+      "id": "encoding-invalid-utf8",
+      "msg": "warning: commit message did not conform to UTF-8",
+      "why": "The message contains bytes that are not valid UTF-8, usually from a terminal in another codepage.",
+      "fix": [
+        {
+          "c": "git config --global i18n.commitEncoding utf-8",
+          "n": "Declares the encoding you actually use."
+        },
+        {
+          "c": "git commit --amend",
+          "n": "Rewrite the message from a UTF-8 capable terminal."
+        }
+      ],
+      "intent": "commit-messages",
+      "seealso": [
+        "unicode-filenames"
+      ]
     }
   ]
 }
