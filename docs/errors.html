@@ -2280,6 +2280,196 @@
   <p class="note">The organization requires two-factor authentication and your account has none.</p>
   <p class="seealso">Full answer with danger level and undo: <a href="index.html#enable-2fa">Protect my account with two-factor authentication</a></p>
 </article>
+<article class="result errcard" id="checkout-orphan-has-changes">
+  <h2><code class="errmsg">fatal: --orphan is incompatible with -b</code><a class="anchor" href="#checkout-orphan-has-changes" aria-label="Link to this error">#</a></h2>
+  <p class="note">Those two ways of creating a branch cannot be combined.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#empty-branch">Start a branch with no files at all</a></p>
+</article>
+<article class="result errcard" id="branch-force-current">
+  <h2><code class="errmsg">fatal: Cannot force update the current branch.</code><a class="anchor" href="#branch-force-current" aria-label="Link to this error">#</a></h2>
+  <p class="note">A branch cannot be moved with -f while it is checked out.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#move-branch-pointer">Move a branch to another commit without switching to it</a></p>
+</article>
+<article class="result errcard" id="cannot-rename-current">
+  <h2><code class="errmsg">fatal: Invalid branch name: &#x27;&lt;name&gt;&#x27;</code><a class="anchor" href="#cannot-rename-current" aria-label="Link to this error">#</a></h2>
+  <p class="note">The new branch name breaks the naming rules, often a leading dash or a space.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#branch-naming">Name branches well</a></p>
+</article>
+<article class="result errcard" id="fetch-refusing-current-branch">
+  <h2><code class="errmsg">fatal: Refusing to fetch into branch &#x27;refs/heads/main&#x27; checked out at &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#fetch-refusing-current-branch" aria-label="Link to this error">#</a></h2>
+  <p class="note">Fetching directly into a checked-out branch would desynchronise the working tree.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#update-branch-no-checkout">Update another branch without switching to it</a></p>
+</article>
+<article class="result errcard" id="remote-already-has-branch">
+  <h2><code class="errmsg">! [rejected] &lt;name&gt; -&gt; &lt;name&gt; (fetch first)</code><a class="anchor" href="#remote-already-has-branch" aria-label="Link to this error">#</a></h2>
+  <p class="note">The remote branch moved after you last fetched.</p>
+  <div class="cmd"><code>git fetch origin</code><button class="copy" data-cmd="git fetch origin" aria-label="Copy command">Copy</button></div>
+  <p class="note">See what arrived before deciding.</p>
+  <div class="cmd"><code>git pull --rebase &amp;&amp; git push</code><button class="copy" data-cmd="git pull --rebase &amp;&amp; git push" aria-label="Copy command">Copy</button></div>
+  <p class="note">Replay your work on top, then push.</p>
+  <p class="seealso">See also: <a href="index.html#branch-behind-and-ahead">Read ahead and behind counts correctly</a></p>
+</article>
+<article class="result errcard" id="gc-reflog-expire">
+  <h2><code class="errmsg">warning: reflog of &#x27;HEAD&#x27; references pruned commits</code><a class="anchor" href="#gc-reflog-expire" aria-label="Link to this error">#</a></h2>
+  <p class="note">The reflog names commits that garbage collection has already removed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dangling-objects">What dangling commits and blobs are</a></p>
+</article>
+<article class="result errcard" id="fsck-dangling-blob">
+  <h2><code class="errmsg">dangling blob &lt;hash&gt;</code><a class="anchor" href="#fsck-dangling-blob" aria-label="Link to this error">#</a></h2>
+  <p class="note">An object exists that nothing references, usually staged-then-reset content.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#find-orphaned-work">Find commits not on any branch</a></p>
+</article>
+<article class="result errcard" id="fsck-broken-link">
+  <h2><code class="errmsg">broken link from commit &lt;a&gt; to tree &lt;b&gt;</code><a class="anchor" href="#fsck-broken-link" aria-label="Link to this error">#</a></h2>
+  <p class="note">A commit points at a tree the repository no longer holds.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repair-corrupt-repo">Repair a corrupted repository</a></p>
+</article>
+<article class="result errcard" id="pack-idx-mismatch">
+  <h2><code class="errmsg">error: index-pack died of signal 9</code><a class="anchor" href="#pack-idx-mismatch" aria-label="Link to this error">#</a></h2>
+  <p class="note">The unpack process was killed, almost always by the out-of-memory killer.</p>
+  <div class="cmd"><code>git config --global pack.windowMemory 100m</code><button class="copy" data-cmd="git config --global pack.windowMemory 100m" aria-label="Copy command">Copy</button></div>
+  <p class="note">Caps memory during packing.</p>
+  <div class="cmd"><code>git clone --filter=blob:none &lt;url&gt;</code><button class="copy" data-cmd="git clone --filter=blob:none &lt;url&gt;" aria-label="Copy command">Copy</button></div>
+  <p class="note">A smaller transfer avoids the peak entirely.</p>
+  <p class="seealso">See also: <a href="index.html#repack-aggressive">When aggressive repacking is worth it</a></p>
+</article>
+<article class="result errcard" id="ssh-permission-denied-key-type">
+  <h2><code class="errmsg">sign_and_send_pubkey: no mutual signature algorithm</code><a class="anchor" href="#ssh-permission-denied-key-type" aria-label="Link to this error">#</a></h2>
+  <p class="note">The client and server share no acceptable signature algorithm, typical with an old RSA key.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+</article>
+<article class="result errcard" id="ssh-too-many-auth-failures">
+  <h2><code class="errmsg">Received disconnect from &lt;host&gt;: Too many authentication failures</code><a class="anchor" href="#ssh-too-many-auth-failures" aria-label="Link to this error">#</a></h2>
+  <p class="note">The agent offered too many keys before the right one.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-per-command">Use a specific SSH key for one repository or command</a></p>
+</article>
+<article class="result errcard" id="known-hosts-changed">
+  <h2><code class="errmsg">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</code><a class="anchor" href="#known-hosts-changed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The server&#x27;s host key differs from the one recorded, which SSH treats as serious.</p>
+  <div class="cmd"><code>ssh-keygen -R github.com</code><button class="copy" data-cmd="ssh-keygen -R github.com" aria-label="Copy command">Copy</button></div>
+  <p class="note">Remove the stale entry after verifying the new key is genuine.</p>
+  <div class="cmd"><code>Compare against GitHub&#x27;s published fingerprints</code><button class="copy" data-cmd="Compare against GitHub&#x27;s published fingerprints" aria-label="Copy command">Copy</button></div>
+  <p class="note">Never accept a changed key without checking the published values.</p>
+</article>
+<article class="result errcard" id="unverified-signature-github">
+  <h2><code class="errmsg">Unverified: The signing key is not known to GitHub</code><a class="anchor" href="#unverified-signature-github" aria-label="Link to this error">#</a></h2>
+  <p class="note">The commit is signed, but the public key is not on the account.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#verify-signatures">Check which commits are signed</a></p>
+</article>
+<article class="result errcard" id="vigilant-mode-unverified">
+  <h2><code class="errmsg">Unverified: This commit was created without a signature</code><a class="anchor" href="#vigilant-mode-unverified" aria-label="Link to this error">#</a></h2>
+  <p class="note">Vigilant mode marks every unsigned commit, including old ones.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+</article>
+<article class="result errcard" id="api-secondary-abuse">
+  <h2><code class="errmsg">You have triggered an abuse detection mechanism.</code><a class="anchor" href="#api-secondary-abuse" aria-label="Link to this error">#</a></h2>
+  <p class="note">The request pattern looked automated and aggressive.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#api-rate-limits">GitHub API says rate limit exceeded</a></p>
+</article>
+<article class="result errcard" id="gh-token-scope-workflow">
+  <h2><code class="errmsg">refusing to allow a Personal Access Token to create or update workflow without `workflow` scope</code><a class="anchor" href="#gh-token-scope-workflow" aria-label="Link to this error">#</a></h2>
+  <p class="note">Pushing changes to files under .github/workflows needs an extra scope.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#access-tokens">Create a token for scripts and CI</a></p>
+</article>
+<article class="result errcard" id="actions-job-timeout">
+  <h2><code class="errmsg">Error: The operation was canceled.  (job exceeded timeout-minutes)</code><a class="anchor" href="#actions-job-timeout" aria-label="Link to this error">#</a></h2>
+  <p class="note">The job ran past its allowed time and was stopped.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#job-timeouts">Stop a hung job from burning six hours</a></p>
+</article>
+<article class="result errcard" id="runner-image-deprecated">
+  <h2><code class="errmsg">The &lt;image&gt; runner image is deprecated and will be removed</code><a class="anchor" href="#runner-image-deprecated" aria-label="Link to this error">#</a></h2>
+  <p class="note">The runner label points at an image being retired.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#setup-runtimes">Install language runtimes in a workflow properly</a></p>
+</article>
+<article class="result errcard" id="setup-node-version-missing">
+  <h2><code class="errmsg">Error: Unable to find Node version &#x27;&lt;version&gt;&#x27; for platform linux</code><a class="anchor" href="#setup-node-version-missing" aria-label="Link to this error">#</a></h2>
+  <p class="note">That exact runtime version is not available for the runner platform.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#setup-runtimes">Install language runtimes in a workflow properly</a></p>
+</article>
+<article class="result errcard" id="cache-restore-key-mismatch">
+  <h2><code class="errmsg">Warning: Cache save failed: Unable to reserve cache with key &lt;key&gt;, another job may be creating this cache</code><a class="anchor" href="#cache-restore-key-mismatch" aria-label="Link to this error">#</a></h2>
+  <p class="note">Two jobs raced to save the same cache key.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-cache">Make CI faster by caching dependencies</a></p>
+</article>
+<article class="result errcard" id="artifact-name-invalid">
+  <h2><code class="errmsg">Error: Artifact name is not valid: &lt;name&gt;. Contains the following character: Double quote</code><a class="anchor" href="#artifact-name-invalid" aria-label="Link to this error">#</a></h2>
+  <p class="note">Artifact names cannot contain characters that are illegal in file paths.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#actions-artifacts">Save files a workflow produced</a></p>
+</article>
+<article class="result errcard" id="environment-url-invalid">
+  <h2><code class="errmsg">Error: The environment url is not a valid URL</code><a class="anchor" href="#environment-url-invalid" aria-label="Link to this error">#</a></h2>
+  <p class="note">The deployment URL output was empty or malformed.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#deploy-environments">Gate deployments behind approvals</a></p>
+</article>
+<article class="result errcard" id="pages-deployment-conflict">
+  <h2><code class="errmsg">Error: Deployment request failed: another deployment is in progress</code><a class="anchor" href="#pages-deployment-conflict" aria-label="Link to this error">#</a></h2>
+  <p class="note">Two Pages deployments overlapped.</p>
+  <div class="cmd"><code>concurrency: group: pages</code><button class="copy" data-cmd="concurrency: group: pages" aria-label="Copy command">Copy</button></div>
+  <p class="note">Serialise Pages deploys so they queue instead of colliding.</p>
+  <div class="cmd"><code>gh run list --workflow pages.yml</code><button class="copy" data-cmd="gh run list --workflow pages.yml" aria-label="Copy command">Copy</button></div>
+  <p class="note">Check for a run still in flight.</p>
+  <p class="seealso">See also: <a href="index.html#cancel-in-progress">Cancel superseded CI runs automatically</a></p>
+</article>
+<article class="result errcard" id="release-draft-not-published">
+  <h2><code class="errmsg">Release is a draft and cannot be downloaded</code><a class="anchor" href="#release-draft-not-published" aria-label="Link to this error">#</a></h2>
+  <p class="note">Draft releases are visible only to maintainers and serve no assets publicly.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#create-release">Publish a release with notes and downloads</a></p>
+</article>
+<article class="result errcard" id="issue-transfer-labels-lost">
+  <h2><code class="errmsg">Some labels could not be transferred</code><a class="anchor" href="#issue-transfer-labels-lost" aria-label="Link to this error">#</a></h2>
+  <p class="note">Labels that do not exist in the target repository are dropped during a transfer.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#transfer-issue">Move an issue to another repository</a></p>
+</article>
+<article class="result errcard" id="codeowners-syntax-error">
+  <h2><code class="errmsg">CODEOWNERS errors: &lt;line&gt; is not a valid owner</code><a class="anchor" href="#codeowners-syntax-error" aria-label="Link to this error">#</a></h2>
+  <p class="note">An owner entry is misspelled, not a member, or lacks repository access.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#codeowners">Route reviews automatically with CODEOWNERS</a></p>
+</article>
+<article class="result errcard" id="ruleset-bypass-blocked">
+  <h2><code class="errmsg">Changes must be made through a pull request.</code><a class="anchor" href="#ruleset-bypass-blocked" aria-label="Link to this error">#</a></h2>
+  <p class="note">A ruleset blocks direct pushes to that branch, including for administrators.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#branch-protection">Protect main so nothing lands unreviewed</a></p>
+</article>
+<article class="result errcard" id="merge-queue-removed">
+  <h2><code class="errmsg">Pull request was removed from the merge queue</code><a class="anchor" href="#merge-queue-removed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The pull request failed its checks against the queued result, so the queue ejected it.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-queue">Stop racing pull requests from breaking main</a></p>
+</article>
+<article class="result errcard" id="auto-merge-not-allowed">
+  <h2><code class="errmsg">Auto-merge is not enabled for this repository</code><a class="anchor" href="#auto-merge-not-allowed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository setting that allows auto-merge is switched off.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#auto-merge">Merge automatically once checks pass</a></p>
+</article>
+<article class="result errcard" id="squash-merge-disabled">
+  <h2><code class="errmsg">Squash merging is not allowed on this repository</code><a class="anchor" href="#squash-merge-disabled" aria-label="Link to this error">#</a></h2>
+  <p class="note">The repository permits only the merge methods its settings enable.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#merge-methods">Merge commit, squash, or rebase for pull requests</a></p>
+</article>
+<article class="result errcard" id="visibility-change-forks">
+  <h2><code class="errmsg">Making this repository private will detach all public forks</code><a class="anchor" href="#visibility-change-forks" aria-label="Link to this error">#</a></h2>
+  <p class="note">Public forks cannot follow a repository into private visibility.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#make-repo-private">Switch a repository between public and private</a></p>
+</article>
+<article class="result errcard" id="delete-repo-confirm">
+  <h2><code class="errmsg">The repository name you entered does not match</code><a class="anchor" href="#delete-repo-confirm" aria-label="Link to this error">#</a></h2>
+  <p class="note">Deletion requires typing the full owner and repository name exactly.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#delete-remote-repo-mistake">I deleted the wrong repository</a></p>
+</article>
+<article class="result errcard" id="import-repo-failed">
+  <h2><code class="errmsg">Import failed: unable to access the source repository</code><a class="anchor" href="#import-repo-failed" aria-label="Link to this error">#</a></h2>
+  <p class="note">The importer could not read the source, usually credentials or an unsupported protocol.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#mirror-migrate">Move a repository anywhere with full history</a></p>
+</article>
+<article class="result errcard" id="large-file-warning-50mb">
+  <h2><code class="errmsg">remote: warning: File &lt;name&gt; is 63.00 MB; this is larger than GitHub&#x27;s recommended maximum file size of 50.00 MB</code><a class="anchor" href="#large-file-warning-50mb" aria-label="Link to this error">#</a></h2>
+  <p class="note">A warning, not a rejection: the push succeeds but the repository is heading somewhere painful.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#big-files-where">Where large files belong</a></p>
+</article>
+<article class="result errcard" id="history-rewrite-forks-warning">
+  <h2><code class="errmsg">Rewriting history will break every existing clone and fork</code><a class="anchor" href="#history-rewrite-forks-warning" aria-label="Link to this error">#</a></h2>
+  <p class="note">A force-push after a rewrite leaves everyone else on incompatible history.</p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#decide-to-rewrite-history">Is it worth rewriting this history</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

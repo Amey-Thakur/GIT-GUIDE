@@ -7193,6 +7193,649 @@
       "seealso": [
         "org-base-permissions"
       ]
+    },
+    {
+      "id": "checkout-orphan-has-changes",
+      "msg": "fatal: --orphan is incompatible with -b",
+      "why": "Those two ways of creating a branch cannot be combined.",
+      "fix": [
+        {
+          "c": "git switch --orphan <name>",
+          "n": "The modern form, which needs no extra flag."
+        },
+        {
+          "c": "git checkout --orphan <name>",
+          "n": "The older equivalent; pick one form, not both."
+        }
+      ],
+      "intent": "empty-branch",
+      "seealso": [
+        "switch-orphan"
+      ]
+    },
+    {
+      "id": "branch-force-current",
+      "msg": "fatal: Cannot force update the current branch.",
+      "why": "A branch cannot be moved with -f while it is checked out.",
+      "fix": [
+        {
+          "c": "git reset --hard <hash>",
+          "n": "Moves the current branch, which is the supported way."
+        },
+        {
+          "c": "git switch <other> && git branch -f <name> <hash>",
+          "n": "Or step off it first."
+        }
+      ],
+      "intent": "move-branch-pointer",
+      "seealso": [
+        "reset-modes"
+      ]
+    },
+    {
+      "id": "cannot-rename-current",
+      "msg": "fatal: Invalid branch name: '<name>'",
+      "why": "The new branch name breaks the naming rules, often a leading dash or a space.",
+      "fix": [
+        {
+          "c": "git check-ref-format --branch <name>",
+          "n": "Validates a name before you use it."
+        },
+        {
+          "c": "git branch -m <valid-name>",
+          "n": "Rename with a name Git accepts."
+        }
+      ],
+      "intent": "branch-naming",
+      "seealso": []
+    },
+    {
+      "id": "fetch-refusing-current-branch",
+      "msg": "fatal: Refusing to fetch into branch 'refs/heads/main' checked out at '<path>'",
+      "why": "Fetching directly into a checked-out branch would desynchronise the working tree.",
+      "fix": [
+        {
+          "c": "git fetch origin main:main",
+          "n": "Works only when that branch is not checked out anywhere."
+        },
+        {
+          "c": "git pull",
+          "n": "From the branch itself, pull is the correct command."
+        }
+      ],
+      "intent": "update-branch-no-checkout",
+      "seealso": []
+    },
+    {
+      "id": "remote-already-has-branch",
+      "msg": "! [rejected] <name> -> <name> (fetch first)",
+      "why": "The remote branch moved after you last fetched.",
+      "fix": [
+        {
+          "c": "git fetch origin",
+          "n": "See what arrived before deciding."
+        },
+        {
+          "c": "git pull --rebase && git push",
+          "n": "Replay your work on top, then push."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "branch-behind-and-ahead"
+      ]
+    },
+    {
+      "id": "gc-reflog-expire",
+      "msg": "warning: reflog of 'HEAD' references pruned commits",
+      "why": "The reflog names commits that garbage collection has already removed.",
+      "fix": [
+        {
+          "c": "git reflog expire --expire-unreachable=now --all",
+          "n": "Clears the stale entries."
+        },
+        {
+          "c": "git gc --prune=now",
+          "n": "Then repack; the entries were pointing at nothing recoverable."
+        }
+      ],
+      "intent": "dangling-objects",
+      "seealso": []
+    },
+    {
+      "id": "fsck-dangling-blob",
+      "msg": "dangling blob <hash>",
+      "why": "An object exists that nothing references, usually staged-then-reset content.",
+      "fix": [
+        {
+          "c": "git show <hash>",
+          "n": "Inspect it; this is often exactly the work you thought was lost."
+        },
+        {
+          "c": "git gc --prune=now",
+          "n": "Removes it once you are certain it is not wanted."
+        }
+      ],
+      "intent": "find-orphaned-work",
+      "seealso": [
+        "recover-uncommitted-after-reset"
+      ]
+    },
+    {
+      "id": "fsck-broken-link",
+      "msg": "broken link from commit <a> to tree <b>",
+      "why": "A commit points at a tree the repository no longer holds.",
+      "fix": [
+        {
+          "c": "git fsck --full",
+          "n": "Shows the extent of the damage."
+        },
+        {
+          "c": "git clone <url> ../fresh",
+          "n": "Reclone from a healthy remote rather than repairing object by object."
+        }
+      ],
+      "intent": "repair-corrupt-repo",
+      "seealso": []
+    },
+    {
+      "id": "pack-idx-mismatch",
+      "msg": "error: index-pack died of signal 9",
+      "why": "The unpack process was killed, almost always by the out-of-memory killer.",
+      "fix": [
+        {
+          "c": "git config --global pack.windowMemory 100m",
+          "n": "Caps memory during packing."
+        },
+        {
+          "c": "git clone --filter=blob:none <url>",
+          "n": "A smaller transfer avoids the peak entirely."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "repack-aggressive"
+      ]
+    },
+    {
+      "id": "ssh-permission-denied-key-type",
+      "msg": "sign_and_send_pubkey: no mutual signature algorithm",
+      "why": "The client and server share no acceptable signature algorithm, typical with an old RSA key.",
+      "fix": [
+        {
+          "c": "ssh-keygen -t ed25519 -C \"you@example.com\"",
+          "n": "Generate a modern key and add it to your account."
+        },
+        {
+          "c": "PubkeyAcceptedAlgorithms +ssh-rsa",
+          "n": "A short-term workaround in ~/.ssh/config while you migrate."
+        }
+      ],
+      "intent": "ssh-key-github",
+      "seealso": []
+    },
+    {
+      "id": "ssh-too-many-auth-failures",
+      "msg": "Received disconnect from <host>: Too many authentication failures",
+      "why": "The agent offered too many keys before the right one.",
+      "fix": [
+        {
+          "c": "ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 -T git@github.com",
+          "n": "Offer exactly one key."
+        },
+        {
+          "c": "IdentitiesOnly yes",
+          "n": "Set it per host in ~/.ssh/config so it stops recurring."
+        }
+      ],
+      "intent": "ssh-key-per-command",
+      "seealso": [
+        "two-github-accounts"
+      ]
+    },
+    {
+      "id": "known-hosts-changed",
+      "msg": "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!",
+      "why": "The server's host key differs from the one recorded, which SSH treats as serious.",
+      "fix": [
+        {
+          "c": "ssh-keygen -R github.com",
+          "n": "Remove the stale entry after verifying the new key is genuine."
+        },
+        {
+          "c": "Compare against GitHub's published fingerprints",
+          "n": "Never accept a changed key without checking the published values."
+        }
+      ],
+      "intent": null,
+      "seealso": []
+    },
+    {
+      "id": "unverified-signature-github",
+      "msg": "Unverified: The signing key is not known to GitHub",
+      "why": "The commit is signed, but the public key is not on the account.",
+      "fix": [
+        {
+          "c": "Settings -> SSH and GPG keys -> New signing key",
+          "n": "Add the public key as a signing key, not only an authentication key."
+        },
+        {
+          "c": "git log --show-signature -1",
+          "n": "Confirms which key made the signature."
+        }
+      ],
+      "intent": "verify-signatures",
+      "seealso": [
+        "why-commit-signed-locally"
+      ]
+    },
+    {
+      "id": "vigilant-mode-unverified",
+      "msg": "Unverified: This commit was created without a signature",
+      "why": "Vigilant mode marks every unsigned commit, including old ones.",
+      "fix": [
+        {
+          "c": "Settings -> SSH and GPG keys -> Vigilant mode",
+          "n": "Turn it off if the badges are noise rather than policy."
+        },
+        {
+          "c": "git config --global commit.gpgsign true",
+          "n": "Or sign consistently from now on."
+        }
+      ],
+      "intent": "sign-commits",
+      "seealso": [
+        "require-signed-commits"
+      ]
+    },
+    {
+      "id": "api-secondary-abuse",
+      "msg": "You have triggered an abuse detection mechanism.",
+      "why": "The request pattern looked automated and aggressive.",
+      "fix": [
+        {
+          "c": "Add a delay between requests",
+          "n": "A second or two between writes avoids it entirely."
+        },
+        {
+          "c": "gh api --paginate",
+          "n": "Let the CLI pace pagination rather than looping requests yourself."
+        }
+      ],
+      "intent": "api-rate-limits",
+      "seealso": []
+    },
+    {
+      "id": "gh-token-scope-workflow",
+      "msg": "refusing to allow a Personal Access Token to create or update workflow without `workflow` scope",
+      "why": "Pushing changes to files under .github/workflows needs an extra scope.",
+      "fix": [
+        {
+          "c": "gh auth refresh -s workflow",
+          "n": "Adds the scope to the existing login."
+        },
+        {
+          "c": "git push",
+          "n": "Retry; the same push succeeds once the token carries it."
+        }
+      ],
+      "intent": "access-tokens",
+      "seealso": []
+    },
+    {
+      "id": "actions-job-timeout",
+      "msg": "Error: The operation was canceled.  (job exceeded timeout-minutes)",
+      "why": "The job ran past its allowed time and was stopped.",
+      "fix": [
+        {
+          "c": "timeout-minutes: 30",
+          "n": "Raise it if the work genuinely takes that long."
+        },
+        {
+          "c": "gh run view --log",
+          "n": "Find the step that hung; a wedged step is more common than slow work."
+        }
+      ],
+      "intent": "job-timeouts",
+      "seealso": [
+        "work-with-flaky-tests"
+      ]
+    },
+    {
+      "id": "runner-image-deprecated",
+      "msg": "The <image> runner image is deprecated and will be removed",
+      "why": "The runner label points at an image being retired.",
+      "fix": [
+        {
+          "c": "runs-on: ubuntu-latest",
+          "n": "Track the current image."
+        },
+        {
+          "c": "runs-on: ubuntu-24.04",
+          "n": "Or pin a supported version explicitly and plan the upgrade."
+        }
+      ],
+      "intent": "setup-runtimes",
+      "seealso": [
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "setup-node-version-missing",
+      "msg": "Error: Unable to find Node version '<version>' for platform linux",
+      "why": "That exact runtime version is not available for the runner platform.",
+      "fix": [
+        {
+          "c": "node-version: 20.x",
+          "n": "A range resolves to the newest matching release."
+        },
+        {
+          "c": "node-version-file: .nvmrc",
+          "n": "Keeps the workflow and local development on one source of truth."
+        }
+      ],
+      "intent": "setup-runtimes",
+      "seealso": []
+    },
+    {
+      "id": "cache-restore-key-mismatch",
+      "msg": "Warning: Cache save failed: Unable to reserve cache with key <key>, another job may be creating this cache",
+      "why": "Two jobs raced to save the same cache key.",
+      "fix": [
+        {
+          "c": "key: ${{ runner.os }}-${{ hashFiles('**/lockfile') }}",
+          "n": "Make the key unique per job dimension."
+        },
+        {
+          "c": "Ignore it",
+          "n": "The build is unaffected; one job simply loses the race to write."
+        }
+      ],
+      "intent": "actions-cache",
+      "seealso": []
+    },
+    {
+      "id": "artifact-name-invalid",
+      "msg": "Error: Artifact name is not valid: <name>. Contains the following character: Double quote",
+      "why": "Artifact names cannot contain characters that are illegal in file paths.",
+      "fix": [
+        {
+          "c": "name: build-${{ matrix.os }}",
+          "n": "Build names from safe values only."
+        },
+        {
+          "c": "Avoid quotes, colons, and slashes",
+          "n": "Matrix values often contain them, which is the usual cause."
+        }
+      ],
+      "intent": "actions-artifacts",
+      "seealso": [
+        "actions-matrix"
+      ]
+    },
+    {
+      "id": "environment-url-invalid",
+      "msg": "Error: The environment url is not a valid URL",
+      "why": "The deployment URL output was empty or malformed.",
+      "fix": [
+        {
+          "c": "echo \"url=https://<host>\" >> \"$GITHUB_OUTPUT\"",
+          "n": "Emit a complete URL including the scheme."
+        },
+        {
+          "c": "environment: name: production",
+          "n": "Drop the url field when there is nothing meaningful to link."
+        }
+      ],
+      "intent": "deploy-environments",
+      "seealso": [
+        "actions-env"
+      ]
+    },
+    {
+      "id": "pages-deployment-conflict",
+      "msg": "Error: Deployment request failed: another deployment is in progress",
+      "why": "Two Pages deployments overlapped.",
+      "fix": [
+        {
+          "c": "concurrency: group: pages",
+          "n": "Serialise Pages deploys so they queue instead of colliding."
+        },
+        {
+          "c": "gh run list --workflow pages.yml",
+          "n": "Check for a run still in flight."
+        }
+      ],
+      "intent": null,
+      "seealso": [
+        "cancel-in-progress"
+      ]
+    },
+    {
+      "id": "release-draft-not-published",
+      "msg": "Release is a draft and cannot be downloaded",
+      "why": "Draft releases are visible only to maintainers and serve no assets publicly.",
+      "fix": [
+        {
+          "c": "gh release edit <tag> --draft=false",
+          "n": "Publish it."
+        },
+        {
+          "c": "gh release view <tag> --json isDraft",
+          "n": "Confirms the state before debugging download links."
+        }
+      ],
+      "intent": "create-release",
+      "seealso": [
+        "latest-release-api"
+      ]
+    },
+    {
+      "id": "issue-transfer-labels-lost",
+      "msg": "Some labels could not be transferred",
+      "why": "Labels that do not exist in the target repository are dropped during a transfer.",
+      "fix": [
+        {
+          "c": "gh label list --repo <target>",
+          "n": "Create the missing labels first if they matter."
+        },
+        {
+          "c": "gh issue transfer <number> <owner>/<repo>",
+          "n": "Then transfer; the rest of the issue moves intact."
+        }
+      ],
+      "intent": "transfer-issue",
+      "seealso": [
+        "issue-labels"
+      ]
+    },
+    {
+      "id": "codeowners-syntax-error",
+      "msg": "CODEOWNERS errors: <line> is not a valid owner",
+      "why": "An owner entry is misspelled, not a member, or lacks repository access.",
+      "fix": [
+        {
+          "c": "Settings -> Code owners",
+          "n": "GitHub lists every syntax error with its line number."
+        },
+        {
+          "c": "@org/team-name",
+          "n": "Teams need the organization prefix, and users must have write access."
+        }
+      ],
+      "intent": "codeowners",
+      "seealso": [
+        "limit-who-can-push-paths"
+      ]
+    },
+    {
+      "id": "ruleset-bypass-blocked",
+      "msg": "Changes must be made through a pull request.",
+      "why": "A ruleset blocks direct pushes to that branch, including for administrators.",
+      "fix": [
+        {
+          "c": "git switch -c fix/<topic> && gh pr create",
+          "n": "Use the flow the rule expects."
+        },
+        {
+          "c": "Ruleset -> Bypass list",
+          "n": "Add yourself only if the rule is genuinely wrong for this repository."
+        }
+      ],
+      "intent": "branch-protection",
+      "seealso": []
+    },
+    {
+      "id": "merge-queue-removed",
+      "msg": "Pull request was removed from the merge queue",
+      "why": "The pull request failed its checks against the queued result, so the queue ejected it.",
+      "fix": [
+        {
+          "c": "gh pr checks <number>",
+          "n": "Shows what failed once merged with the ones ahead."
+        },
+        {
+          "c": "git merge main",
+          "n": "Update the branch, fix the failure, and requeue."
+        }
+      ],
+      "intent": "merge-queue",
+      "seealso": [
+        "handle-two-prs-same-file"
+      ]
+    },
+    {
+      "id": "auto-merge-not-allowed",
+      "msg": "Auto-merge is not enabled for this repository",
+      "why": "The repository setting that allows auto-merge is switched off.",
+      "fix": [
+        {
+          "c": "Settings -> General -> Allow auto-merge",
+          "n": "Enable it once."
+        },
+        {
+          "c": "gh pr merge --auto --squash",
+          "n": "Then it works per pull request."
+        }
+      ],
+      "intent": "auto-merge",
+      "seealso": [
+        "merge-methods"
+      ]
+    },
+    {
+      "id": "squash-merge-disabled",
+      "msg": "Squash merging is not allowed on this repository",
+      "why": "The repository permits only the merge methods its settings enable.",
+      "fix": [
+        {
+          "c": "Settings -> General -> Pull Requests",
+          "n": "Enable the method you want to use."
+        },
+        {
+          "c": "gh pr merge --merge",
+          "n": "Or use a method the repository allows."
+        }
+      ],
+      "intent": "merge-methods",
+      "seealso": [
+        "squash-vs-merge-team"
+      ]
+    },
+    {
+      "id": "visibility-change-forks",
+      "msg": "Making this repository private will detach all public forks",
+      "why": "Public forks cannot follow a repository into private visibility.",
+      "fix": [
+        {
+          "c": "gh repo view --json forkCount",
+          "n": "See how many forks are affected before deciding."
+        },
+        {
+          "c": "Settings -> General -> Change visibility",
+          "n": "Proceed knowing the forks become independent repositories."
+        }
+      ],
+      "intent": "make-repo-private",
+      "seealso": [
+        "who-can-see-my-forks"
+      ]
+    },
+    {
+      "id": "delete-repo-confirm",
+      "msg": "The repository name you entered does not match",
+      "why": "Deletion requires typing the full owner and repository name exactly.",
+      "fix": [
+        {
+          "c": "gh repo delete <owner>/<repo>",
+          "n": "The CLI asks for the same confirmation."
+        },
+        {
+          "c": "Settings -> Archive this repository",
+          "n": "Archiving is usually the better answer and is reversible."
+        }
+      ],
+      "intent": "delete-remote-repo-mistake",
+      "seealso": [
+        "archive-repo"
+      ]
+    },
+    {
+      "id": "import-repo-failed",
+      "msg": "Import failed: unable to access the source repository",
+      "why": "The importer could not read the source, usually credentials or an unsupported protocol.",
+      "fix": [
+        {
+          "c": "git clone --mirror <source-url>",
+          "n": "Clone locally, then push --mirror into the new repository."
+        },
+        {
+          "c": "gh repo create <name> --private",
+          "n": "Create the target empty first."
+        }
+      ],
+      "intent": "mirror-migrate",
+      "seealso": [
+        "restore-repo-from-backup"
+      ]
+    },
+    {
+      "id": "large-file-warning-50mb",
+      "msg": "remote: warning: File <name> is 63.00 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB",
+      "why": "A warning, not a rejection: the push succeeds but the repository is heading somewhere painful.",
+      "fix": [
+        {
+          "c": "git lfs track \"<pattern>\"",
+          "n": "Route large files to LFS before they become history."
+        },
+        {
+          "c": "gh release upload <tag> <file>",
+          "n": "Or ship build outputs as release assets instead."
+        }
+      ],
+      "intent": "big-files-where",
+      "seealso": [
+        "repo-limits"
+      ]
+    },
+    {
+      "id": "history-rewrite-forks-warning",
+      "msg": "Rewriting history will break every existing clone and fork",
+      "why": "A force-push after a rewrite leaves everyone else on incompatible history.",
+      "fix": [
+        {
+          "c": "git log --oneline -5",
+          "n": "Confirm the rewrite is genuinely necessary before proceeding."
+        },
+        {
+          "c": "Tell every collaborator to reclone",
+          "n": "There is no way to migrate other clones automatically."
+        }
+      ],
+      "intent": "decide-to-rewrite-history",
+      "seealso": [
+        "clean-history-before-public"
+      ]
     }
   ]
 }
