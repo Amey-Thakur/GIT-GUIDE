@@ -24285,6 +24285,563 @@
         "contributing-file",
         "handover-project"
       ]
+    },
+    {
+      "id": "squash-all-history",
+      "q": "Collapse an entire history into one commit",
+      "aka": [
+        "single initial commit",
+        "flatten all history",
+        "start history over but keep files"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git checkout --orphan clean-start",
+              "n": "A branch with no parent, carrying your current files."
+            },
+            {
+              "c": "git commit -m \"Initial commit\"",
+              "n": "One commit holding everything as it stands today."
+            },
+            {
+              "c": "git branch -M main && git push --force",
+              "n": "Replaces published history entirely. Every clone and open pull request breaks, so do this only on a repository nobody else uses."
+            }
+          ],
+          "undo": "Only from another clone that still has the old history"
+        }
+      ],
+      "seealso": [
+        "fresh-history",
+        "empty-branch",
+        "filter-repo-paths"
+      ]
+    },
+    {
+      "id": "split-one-commit",
+      "q": "Break one big commit into several",
+      "aka": [
+        "split a commit",
+        "divide commit into parts",
+        "one commit too large"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase -i <hash>^",
+              "n": "Mark the commit edit, so the rebase stops with it applied."
+            },
+            {
+              "c": "git reset HEAD^",
+              "n": "Uncommit it, leaving the changes in the working tree."
+            },
+            {
+              "c": "git add -p && git commit",
+              "n": "Commit in pieces, then git rebase --continue."
+            }
+          ],
+          "undo": "git rebase --abort mid-way, git reset --hard ORIG_HEAD after"
+        }
+      ],
+      "seealso": [
+        "split-commit",
+        "interactive-rebase",
+        "commit-only-part-of-file"
+      ]
+    },
+    {
+      "id": "remote-branch-vs-tracking",
+      "q": "origin/main and main are different things",
+      "aka": [
+        "remote tracking branch explained",
+        "why is origin main behind",
+        "difference local and remote branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git branch -a",
+              "n": "main is yours to move; origin/main is a cached note of where the server was at your last fetch. Neither updates the other by itself."
+            },
+            {
+              "c": "git fetch",
+              "n": "Refreshes the cached note only. Your branch and files move only when you merge, rebase, or reset."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "branch-upstream",
+        "pull-vs-fetch",
+        "ahead-behind"
+      ]
+    },
+    {
+      "id": "amend-pushed-commit",
+      "q": "I amended a commit that was already pushed",
+      "aka": [
+        "amend after push",
+        "force push after amend",
+        "rewrote pushed commit"
+      ],
+      "variants": [
+        {
+          "when": "Nobody pulled yet",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git push --force-with-lease",
+              "n": "Replaces the remote commit and refuses if someone else pushed meanwhile, which plain --force would trample."
+            }
+          ],
+          "undo": "Push the original hash back from your reflog"
+        },
+        {
+          "when": "Others already have it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash> or a new commit",
+              "n": "Leave the published commit alone. Anyone who pulled would otherwise get a confusing duplicate history."
+            }
+          ],
+          "undo": "Revert the revert"
+        }
+      ],
+      "seealso": [
+        "undo-amend",
+        "force-push-safely",
+        "amend-vs-new-commit"
+      ]
+    },
+    {
+      "id": "clean-vs-reset",
+      "q": "clean or reset, which one do I need",
+      "aka": [
+        "difference git clean and reset",
+        "remove new files vs undo changes",
+        "which command removes what"
+      ],
+      "variants": [
+        {
+          "when": "Tracked files you edited",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git restore .",
+              "n": "Or reset --hard for the whole tree: both act on files Git already knows."
+            }
+          ],
+          "undo": "Only through the reflog if the content was ever committed or staged"
+        },
+        {
+          "when": "New files Git never saw",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git clean -n",
+              "n": "Only clean touches untracked files. Rehearse with -n first, because Git holds no copy of them at all."
+            }
+          ],
+          "undo": "None"
+        }
+      ],
+      "seealso": [
+        "safe-commands-list",
+        "undo-clean",
+        "discard-changes"
+      ]
+    },
+    {
+      "id": "why-two-remotes-fork",
+      "q": "Why my fork needs two remotes",
+      "aka": [
+        "origin and upstream fork",
+        "fork remote setup",
+        "which remote do i pull from"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add upstream <original-url>",
+              "n": "origin is your fork, the only place you can push. upstream is the original, which you pull from but never push to."
+            },
+            {
+              "c": "git fetch upstream && git merge upstream/main",
+              "n": "That split is why syncing a fork takes two remotes rather than one."
+            }
+          ],
+          "undo": "git remote remove upstream"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "upstream-downstream",
+        "pr-from-fork-branch"
+      ]
+    },
+    {
+      "id": "commit-count-badge",
+      "q": "Show how active a project is",
+      "aka": [
+        "commit count",
+        "project activity metrics",
+        "how busy is this repo"
+      ],
+      "variants": [
+        {
+          "when": "From history",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rev-list --count HEAD",
+              "n": "Total commits on this branch. git rev-list --count --since=\"1 month ago\" HEAD narrows it to recent activity, which is the more honest number."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "On the page",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Insights -> Commits",
+              "n": "Weekly activity over time, and a last-commit badge from shields.io says more to visitors than a total ever will."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "count-commits",
+        "readme-badges",
+        "repo-insights"
+      ]
+    },
+    {
+      "id": "protect-tags",
+      "q": "Stop release tags from being moved or deleted",
+      "aka": [
+        "tag protection rules",
+        "lock published tags",
+        "prevent tag deletion"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Rules -> Rulesets -> Target: Tags",
+              "n": "Match a pattern like v* and block deletions and updates. Published tags are promises; this keeps them."
+            },
+            {
+              "c": "git push origin v2.1.0",
+              "n": "Creating new tags still works; only moving or deleting existing ones is refused."
+            }
+          ],
+          "undo": "Remove the ruleset"
+        }
+      ],
+      "seealso": [
+        "undo-published-tag",
+        "rulesets-vs-classic",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "empty-pr-for-discussion",
+      "q": "Open a pull request before writing the code",
+      "aka": [
+        "design pr",
+        "rfc pull request",
+        "propose before implementing"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit --allow-empty -m \"Proposal: <approach>\"",
+              "n": "An empty commit gives the branch something to push, so the pull request exists as a place to argue about the plan."
+            },
+            {
+              "c": "gh pr create --draft --title \"Proposal: <approach>\"",
+              "n": "Draft status makes the intent obvious and keeps the merge button out of reach until the work is real."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "empty-commit",
+        "draft-pr",
+        "issue-vs-discussion-vs-pr"
+      ]
+    },
+    {
+      "id": "see-someone-elses-branch",
+      "q": "Try a colleague's branch on my machine",
+      "aka": [
+        "check out someone else branch",
+        "test a teammate branch",
+        "pull their work locally"
+      ],
+      "variants": [
+        {
+          "when": "Same repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch && git switch <their-branch>",
+              "n": "Git creates a local branch tracking theirs automatically."
+            }
+          ],
+          "undo": "git switch - and delete the local branch"
+        },
+        {
+          "when": "Their fork",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "The simplest path when a pull request exists. Otherwise add their fork as a remote and fetch from it."
+            }
+          ],
+          "undo": "git switch - and remove the remote"
+        }
+      ],
+      "seealso": [
+        "checkout-pr",
+        "checkout-remote-branch",
+        "restore-from-another-clone"
+      ]
+    },
+    {
+      "id": "stop-tracking-ide-folder",
+      "q": "My editor keeps adding files to the repository",
+      "aka": [
+        "idea folder committed",
+        "editor files in git",
+        "stop ide files appearing"
+      ],
+      "variants": [
+        {
+          "when": "Just for me",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global core.excludesFile ~/.gitignore_global",
+              "n": "Add .idea/ and .vscode/ there once and no repository of yours ever sees them again, without imposing your editor choice on anyone."
+            }
+          ],
+          "undo": "Remove the lines"
+        },
+        {
+          "when": "For the project",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git rm -r --cached .idea && echo \".idea/\" >> .gitignore",
+              "n": "When they were already committed. Share only the parts of editor config that genuinely help everyone."
+            }
+          ],
+          "undo": "git revert the commit"
+        }
+      ],
+      "seealso": [
+        "global-gitignore",
+        "commit-vscode-folder",
+        "untrack-file"
+      ]
+    },
+    {
+      "id": "one-file-many-commits",
+      "q": "See every version of one file at once",
+      "aka": [
+        "all versions of a file",
+        "full history of one file",
+        "every change to this file"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --follow -p -- <path>",
+              "n": "Every commit that touched it, with the patch, following renames."
+            },
+            {
+              "c": "git log --format=\"%h %ad %s\" --date=short -- <path>",
+              "n": "The index version: hashes to feed into git show <hash>:<path> when you want a specific one."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "file-history",
+        "function-history",
+        "restore-single-commit-file"
+      ]
+    },
+    {
+      "id": "github-actions-artifacts-between-jobs",
+      "q": "Pass a built file from one job to the next",
+      "aka": [
+        "share files between jobs",
+        "artifact between workflow jobs",
+        "build once deploy twice"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/upload-artifact@v4",
+              "n": "Jobs run on separate machines with nothing shared, so the file must be uploaded."
+            },
+            {
+              "c": "uses: actions/download-artifact@v4",
+              "n": "In the later job, with needs: pointing at the earlier one. Build once and deploy the same bytes rather than rebuilding."
+            }
+          ],
+          "undo": "Remove the steps"
+        }
+      ],
+      "seealso": [
+        "actions-artifacts",
+        "actions-cache",
+        "release-workflow"
+      ]
+    },
+    {
+      "id": "repo-size-limit-hit",
+      "q": "GitHub says my repository is too large",
+      "aka": [
+        "repository size warning",
+        "repo over 5gb",
+        "github size email"
+      ],
+      "variants": [
+        {
+          "when": "Find the cause",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git count-objects -vH",
+              "n": "Almost always a handful of large binaries committed over time, not the source."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Fix it",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git filter-repo --strip-blobs-bigger-than 10M",
+              "n": "Rewrites history without them, then force-push. Everyone must reclone."
+            },
+            {
+              "c": "git lfs migrate import --include=\"*.zip\"",
+              "n": "Or move them to LFS, which keeps them available while shrinking the pack."
+            }
+          ],
+          "undo": "Only from a clone with the old history"
+        }
+      ],
+      "seealso": [
+        "shrink-repo",
+        "repo-limits",
+        "find-large-files-history"
+      ]
+    },
+    {
+      "id": "rebase-pull-request-branch",
+      "q": "Update my pull request branch with the latest main",
+      "aka": [
+        "pr out of date with main",
+        "update branch button",
+        "refresh pull request"
+      ],
+      "variants": [
+        {
+          "when": "Merge, the safe default",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge main",
+              "n": "Or the Update branch button on the pull request. Adds a merge commit and never rewrites what reviewers already read."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD before pushing"
+        },
+        {
+          "when": "Rebase, for a clean line",
+          "danger": "history",
+          "cmds": [
+            {
+              "c": "git rebase main && git push --force-with-lease",
+              "n": "Tidier history, but review comments can detach from rewritten commits. Prefer it before review starts, not during."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD, then force-push again"
+        }
+      ],
+      "seealso": [
+        "merge-main-into-feature",
+        "squash-before-merge",
+        "github-status-checks-required"
+      ]
+    },
+    {
+      "id": "who-approved-what",
+      "q": "Audit who approved a change",
+      "aka": [
+        "approval history",
+        "who signed off on this",
+        "review record"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr view <number> --json reviews --jq \".reviews[] | {who: .author.login, state: .state, when: .submittedAt}\"",
+              "n": "Every review with its verdict and timestamp, which is what audits ask for."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/commits/<hash>/pulls",
+              "n": "Start from a commit and find the pull request that carried it, then read its approvals."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "pr-for-commit",
+        "audit-log",
+        "branch-protection"
+      ]
     }
   ]
 }
