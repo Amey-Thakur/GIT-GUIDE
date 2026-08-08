@@ -1003,7 +1003,8 @@
         "update fork",
         "fork behind upstream",
         "pull upstream changes",
-        "pull original repository into my fork"
+        "pull original repository into my fork",
+        "sync fork button"
       ],
       "variants": [
         {
@@ -1236,7 +1237,8 @@
         "stash pop conflict",
         "stash but keep staged",
         "stash apply vs pop",
-        "undo stash pop"
+        "undo stash pop",
+        "stash including ignored files"
       ],
       "variants": [
         {
@@ -2672,7 +2674,8 @@
         "list file names changed between two commits",
         "git diff --name-only",
         "show which files changed between two revisions",
-        "diff with the previous commit"
+        "diff with the previous commit",
+        "same file between two commits"
       ],
       "variants": [
         {
@@ -4027,7 +4030,8 @@
         "email a commit",
         "patch file",
         "patch for a specific commit",
-        "patch from diff between branches"
+        "patch from diff between branches",
+        "patch of a single commit"
       ],
       "variants": [
         {
@@ -4758,7 +4762,8 @@
         "ls-files",
         "tracked files",
         "how many files in repo",
-        "is this file tracked"
+        "is this file tracked",
+        "check if a file is tracked"
       ],
       "variants": [
         {
@@ -8131,7 +8136,8 @@
       "aka": [
         "apply .patch file",
         "apply .diff file",
-        "git am vs apply"
+        "git am vs apply",
+        "apply patch with conflicts (3-way)"
       ],
       "variants": [
         {
@@ -8247,7 +8253,8 @@
       "aka": [
         "github pages setup",
         "host site on github",
-        "deploy static site free"
+        "deploy static site free",
+        "pages from a private repository"
       ],
       "variants": [
         {
@@ -10968,7 +10975,8 @@
       "aka": [
         "semver explained",
         "major minor patch",
-        "when to bump version"
+        "when to bump version",
+        "calver"
       ],
       "variants": [
         {
@@ -13371,6 +13379,246 @@
         "close-issue-with-pr",
         "branch-naming",
         "open-issue"
+      ]
+    },
+    {
+      "id": "function-history",
+      "q": "Follow the history of one function",
+      "aka": [
+        "log for a function",
+        "who changed this method",
+        "function evolution"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -L :render:src/app.js",
+              "n": "Every change to that function, patch by patch, found by name. Git locates the boundaries itself for most languages."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "blame-line",
+        "file-history",
+        "log-search"
+      ]
+    },
+    {
+      "id": "file-as-of-date",
+      "q": "Get a file as it was on a date",
+      "aka": [
+        "file from yesterday",
+        "restore file as of last week",
+        "version by date"
+      ],
+      "variants": [
+        {
+          "when": "Look first",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log --before=\"2026-08-01\" -1 --oneline -- <path>",
+              "n": "The last commit touching the file before that date."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Take it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore --source \"main@{2.days.ago}\" -- <path>",
+              "n": "@{time} reads your reflog: where main stood then, on this machine."
+            }
+          ],
+          "undo": "git restore <path> from HEAD, or the reflog"
+        }
+      ],
+      "seealso": [
+        "show-old-version",
+        "restore-file",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "merge-queue",
+      "q": "Stop racing pull requests from breaking main",
+      "aka": [
+        "github merge queue",
+        "two green prs conflict",
+        "serialize merges"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require merge queue",
+              "n": "Two pull requests can both be green against old main yet break it together. The queue re-tests each against the result of the ones ahead, then merges automatically. For busy repositories."
+            }
+          ],
+          "undo": "Disable the requirement in the ruleset"
+        }
+      ],
+      "seealso": [
+        "branch-protection",
+        "auto-merge",
+        "merge-methods"
+      ]
+    },
+    {
+      "id": "cancel-in-progress",
+      "q": "Cancel superseded CI runs automatically",
+      "aka": [
+        "concurrency cancel-in-progress",
+        "stop old workflow runs",
+        "ci queue per branch"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "concurrency: group: ci-${{ github.ref }} with cancel-in-progress: true",
+              "n": "A new push cancels the run still testing the previous push of the same branch. Saves minutes and stops stale results from landing after fresh ones."
+            }
+          ],
+          "undo": "Remove the concurrency block"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-matrix"
+      ]
+    },
+    {
+      "id": "maintainer-edits",
+      "q": "Push fixes to a contributor's pull request",
+      "aka": [
+        "allow edits by maintainers",
+        "push to fork branch",
+        "fix pr for contributor"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr checkout <number>",
+              "n": "With Allow edits by maintainers ticked on the pull request, this branch can be pushed straight back to the contributor's fork: git push after your fix updates their pull request."
+            }
+          ],
+          "undo": "git reset --hard HEAD~1 before pushing, or revert after"
+        }
+      ],
+      "seealso": [
+        "checkout-pr",
+        "review-pr",
+        "suggest-changes"
+      ]
+    },
+    {
+      "id": "repair-corrupt-repo",
+      "q": "Repair a corrupted repository",
+      "aka": [
+        "object file is empty",
+        "corrupt loose object",
+        "fsck reports errors"
+      ],
+      "variants": [
+        {
+          "when": "A healthy remote exists",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone <url> ../fresh",
+              "n": "The remote holds everything pushed. Clone clean, copy over your uncommitted files, carry on. Fighting corruption object by object is rarely worth it."
+            }
+          ],
+          "undo": "Keep the old folder until the fresh one is confirmed whole"
+        },
+        {
+          "when": "See how bad it is",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fsck --full",
+              "n": "Lists broken and missing objects. Unpushed commits that fsck can still reach can be rescued with git branch before recloning."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-in-synced-folder",
+        "dangling-objects",
+        "backup-repo"
+      ]
+    },
+    {
+      "id": "auto-delete-branches",
+      "q": "Delete merged branches automatically",
+      "aka": [
+        "auto delete head branches",
+        "branch cleanup after merge",
+        "stale branches pile up"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> General -> Automatically delete head branches",
+              "n": "The moment a pull request merges, its branch goes. A Restore branch button remains on the pull request if you need it back."
+            }
+          ],
+          "undo": "Untick the box; restore any branch from its pull request"
+        }
+      ],
+      "seealso": [
+        "delete-merged-branches",
+        "prune-remote-branches"
+      ]
+    },
+    {
+      "id": "review-large-pr",
+      "q": "Review a pull request that is too big",
+      "aka": [
+        "huge pr how to review",
+        "review commit by commit",
+        "large diff strategy"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number> --name-only",
+              "n": "Map the blast radius first. Then read commit by commit on the Commits tab if the history is clean, or file by file marking Viewed as you go."
+            },
+            {
+              "c": "gh pr checkout <number>",
+              "n": "For anything subtle, run it. Reading cannot catch what execution can."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "review-pr",
+        "pr-checklist",
+        "maintainer-edits"
       ]
     }
   ]
