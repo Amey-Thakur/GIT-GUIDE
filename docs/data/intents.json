@@ -4517,7 +4517,7 @@
               "n": "CI systems clone with --depth 1 for speed, so describe, blame, and changelog tools see one commit. This restores everything. In GitHub Actions set fetch-depth: 0 on actions/checkout instead."
             }
           ],
-          "undo": "Nothing to undo; the clone is simply complete now"
+          "undo": "Nothing to undo; the clone is complete now"
         }
       ],
       "seealso": [
@@ -11540,7 +11540,7 @@
       "aka": [
         "fast forward merge explained",
         "ff only",
-        "branch simply moved",
+        "branch moved forward",
         "make ff-only the default"
       ],
       "variants": [
@@ -19004,7 +19004,7 @@
           "cmds": [
             {
               "c": "git status",
-              "n": "First: it may simply be on another branch or still staged."
+              "n": "First: it may be on another branch or still staged."
             },
             {
               "c": "git stash list",
@@ -22201,7 +22201,7 @@
           "cmds": [
             {
               "c": "git reset --hard <last-good-hash>",
-              "n": "Simply drop them. Nothing published, nothing owed to anyone."
+              "n": "Drop them. Nothing published, nothing owed to anyone."
             }
           ],
           "undo": "git reset --hard ORIG_HEAD"
@@ -29547,7 +29547,7 @@
           "cmds": [
             {
               "c": "gh repo sync <you>/<fork>",
-              "n": "Behind simply means upstream moved on; nothing is wrong with your fork. Syncing fast-forwards it when you have no conflicting commits."
+              "n": "Behind means upstream moved on; nothing is wrong with your fork. Syncing fast-forwards it when you have no conflicting commits."
             },
             {
               "c": "git fetch upstream && git merge upstream/main",
@@ -30926,7 +30926,7 @@
           "cmds": [
             {
               "c": "git switch --detach <hash>",
-              "n": "Not dangerous by itself: you are simply standing on a commit rather than a branch. Looking around, building, and testing are all fine."
+              "n": "Not dangerous by itself: you are standing on a commit rather than a branch. Looking around, building, and testing are all fine."
             },
             {
               "c": "git switch -c <name>",

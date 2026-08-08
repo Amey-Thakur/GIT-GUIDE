@@ -15,7 +15,7 @@
       "fix": [
         {
           "c": "cd <project-folder>",
-          "n": "Nine times out of ten you are simply in the wrong directory."
+          "n": "Nine times out of ten you are in the wrong directory."
         },
         {
           "c": "git init",
@@ -2855,7 +2855,7 @@
         },
         {
           "c": "git rebase <base>",
-          "n": "Usually the branch simply needs updating, or the work was already merged."
+          "n": "Usually the branch needs updating, or the work was already merged."
         }
       ],
       "intent": "pr-vs-push-triggers",
