@@ -349,6 +349,23 @@
   <p class="seealso">See also: <a href="index.html#clone-repo">Clone a repository</a></p>
   <p class="seealso">See also: <a href="index.html#sparse-checkout">Work with a huge repository without downloading it all</a></p>
 </article>
+<article class="result errcard" id="xcrun-macos">
+  <h2><code class="errmsg">xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools)</code><a class="anchor" href="#xcrun-macos" aria-label="Link to this error">#</a></h2>
+  <p class="note">A macOS update removed the command line tools, and git on a Mac lives inside them.</p>
+  <div class="cmd"><code>xcode-select --install</code><button class="copy" data-cmd="xcode-select --install" aria-label="Copy command">Copy</button></div>
+  <p class="note">Reinstalls the tools; git returns with them. This repeats after most major macOS upgrades.</p>
+  <p class="seealso">See also: <a href="index.html#update-git">Check and update my Git version</a></p>
+</article>
+<article class="result errcard" id="auth-agent">
+  <h2><code class="errmsg">Could not open a connection to your authentication agent.</code><a class="anchor" href="#auth-agent" aria-label="Link to this error">#</a></h2>
+  <p class="note">ssh-add needs the ssh-agent process, and none is running in this shell.</p>
+  <div class="cmd"><code>eval &quot;$(ssh-agent -s)&quot; &amp;&amp; ssh-add</code><button class="copy" data-cmd="eval &quot;$(ssh-agent -s)&quot; &amp;&amp; ssh-add" aria-label="Copy command">Copy</button></div>
+  <p class="note">Starts the agent and loads your key, macOS and Linux.</p>
+  <div class="cmd"><code>Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent</code><button class="copy" data-cmd="Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent" aria-label="Copy command">Copy</button></div>
+  <p class="note">Windows PowerShell, once as administrator; the agent then starts with the system.</p>
+  <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
+  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
+</article>
 <!-- errors:end -->
       </div>
     </section>

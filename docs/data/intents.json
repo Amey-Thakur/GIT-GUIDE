@@ -426,7 +426,7 @@
     {
       "id": "empty-directory",
       "q": "Add an empty directory to the repository",
-      "aka": ["commit empty folder", "keep folder", "gitkeep"],
+      "aka": ["commit empty folder", "keep folder", "gitkeep", "gitignore vs gitkeep"],
       "variants": [
         {
           "when": "Standard case",
@@ -774,7 +774,7 @@
     {
       "id": "file-history",
       "q": "See the history of one file",
-      "aka": ["who changed this file", "file log", "blame", "who wrote this line"],
+      "aka": ["who changed this file", "file log", "blame", "who wrote this line", "search history for code"],
       "variants": [
         {
           "when": "Commits that touched the file",
@@ -870,7 +870,7 @@
     {
       "id": "cherry-pick",
       "q": "Copy a commit from another branch (cherry-pick)",
-      "aka": ["apply commit from other branch", "pick one commit", "port a fix"],
+      "aka": ["apply commit from other branch", "pick one commit", "port a fix", "what does cherry picking mean"],
       "variants": [
         {
           "when": "Standard case",
@@ -918,7 +918,7 @@
     {
       "id": "recover-lost-commit",
       "q": "Recover a lost commit or branch",
-      "aka": ["deleted branch recover", "find lost commit", "reflog", "accidentally reset"],
+      "aka": ["deleted branch recover", "find lost commit", "reflog", "accidentally reset", "undo git reset"],
       "variants": [
         {
           "when": "The safety net",
@@ -1048,7 +1048,7 @@
     {
       "id": "stop-password-prompts",
       "q": "Stop Git asking for my password every time",
-      "aka": ["cache credentials", "remember password", "credential manager", "authentication failed token"],
+      "aka": ["cache credentials", "remember password", "credential manager", "authentication failed token", "save username and password"],
       "variants": [
         {
           "when": "Per operating system",
@@ -1827,7 +1827,7 @@
     {
       "id": "checkout-tag",
       "q": "Check out a tag or build from a release",
-      "aka": ["switch to tag", "checkout version", "build old release"],
+      "aka": ["switch to tag", "checkout version", "build old release", "download a specific tag"],
       "variants": [
         {
           "when": "Just build or inspect",
@@ -2164,7 +2164,7 @@
     {
       "id": "archive-export",
       "q": "Export the project as a zip without the .git folder",
-      "aka": ["export source", "zip without history", "clean source archive"],
+      "aka": ["export source", "zip without history", "clean source archive", "git export like svn"],
       "variants": [
         {
           "when": "Standard case",
@@ -2948,7 +2948,7 @@
     {
       "id": "overwrite-branch",
       "q": "Make one branch exactly match another",
-      "aka": ["reset branch to main", "overwrite branch", "branch identical to another"],
+      "aka": ["reset branch to main", "overwrite branch", "branch identical to another", "replace branch entirely with another"],
       "variants": [
         {
           "when": "Local branch, discard its own commits",
@@ -3029,6 +3029,100 @@
         }
       ],
       "seealso": ["merge-conflict", "overwrite-branch"]
+    },
+    {
+      "id": "add-a-vs-dot",
+      "q": "git add -A vs git add . vs git add -u",
+      "aka": ["difference add all", "add dot or add A", "stage everything"],
+      "variants": [
+        {
+          "when": "The three scopes",
+          "danger": "safe",
+          "cmds": [
+            { "c": "git add -A", "n": "Everything, everywhere in the repository: new, modified, deleted." },
+            { "c": "git add .", "n": "The same, but only from the current folder down. Run at the repository root, it equals -A." },
+            { "c": "git add -u", "n": "Only files Git already tracks: modified and deleted, never new ones." }
+          ],
+          "undo": "git restore --staged ."
+        }
+      ],
+      "seealso": ["undo-git-add", "add-patch"]
+    },
+    {
+      "id": "gitignore-except",
+      "q": "Ignore everything except a few files",
+      "aka": ["gitignore whitelist", "negate gitignore", "except pattern gitignore"],
+      "variants": [
+        {
+          "when": "The whitelist pattern",
+          "danger": "safe",
+          "cmds": [{ "c": "printf \"*\\n!.gitignore\\n!keep.txt\\n\" > .gitignore", "n": "* ignores everything; each ! re-includes one thing. For folders re-include both the folder and its contents: !dir/ and !dir/**. Git cannot look inside a folder that is itself ignored." }],
+          "undo": "Edit the file; ignoring affects untracked files only"
+        }
+      ],
+      "seealso": ["ignore-files", "untrack-file"]
+    },
+    {
+      "id": "commit-lockfile",
+      "q": "Commit package-lock.json or ignore it",
+      "aka": ["lockfile in git", "yarn.lock commit", "should i commit lock file"],
+      "variants": [
+        {
+          "when": "Commit it, always",
+          "danger": "safe",
+          "cmds": [{ "c": "git add package-lock.json", "n": "The lockfile pins every dependency exactly, so teammates and CI install what you installed; npm ci depends on it. Same for yarn.lock, pnpm-lock.yaml, Cargo.lock in applications." }],
+          "undo": "Nothing destructive; ignoring it is the mistake"
+        }
+      ],
+      "seealso": ["ignore-files"]
+    },
+    {
+      "id": "symlinks",
+      "q": "How Git handles symbolic links",
+      "aka": ["symlink in repo", "symbolic link windows git", "symlink becomes text file"],
+      "variants": [
+        {
+          "when": "What is actually stored",
+          "danger": "safe",
+          "cmds": [{ "c": "git ls-files -s <link>", "n": "Mode 120000: Git stores the link's target path, never the file it points to. Linked content does not travel with the repository." }],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "On Windows they arrive as text files",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global core.symlinks true", "n": "Then re-clone. Needs Developer Mode enabled in Windows settings, or an administrator shell, for Git to create real links." }],
+          "undo": "git config --global --unset core.symlinks"
+        }
+      ],
+      "seealso": ["filemode", "line-endings"]
+    },
+    {
+      "id": "branch-by-date",
+      "q": "List branches by most recent activity",
+      "aka": ["branches sorted by date", "latest branches", "which branch was i on recently"],
+      "variants": [
+        {
+          "when": "Newest first",
+          "danger": "safe",
+          "cmds": [{ "c": "git branch --sort=-committerdate", "n": "Add -r for remote branches. Richer view: git for-each-ref --sort=-committerdate refs/heads --format='%(committerdate:short) %(refname:short)'" }],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": ["merged-branches", "recover-lost-commit"]
+    },
+    {
+      "id": "auto-setup-remote",
+      "q": "Stop typing -u on every first push",
+      "aka": ["push without set upstream", "auto setup remote", "no upstream branch every time"],
+      "variants": [
+        {
+          "when": "Once, forever (Git 2.37+)",
+          "danger": "safe",
+          "cmds": [{ "c": "git config --global push.autoSetupRemote true", "n": "Plain git push on a new branch now creates the remote branch and links it, exactly as push -u did." }],
+          "undo": "git config --global --unset push.autoSetupRemote"
+        }
+      ],
+      "seealso": ["push-new-branch"]
     }
   ]
 }
