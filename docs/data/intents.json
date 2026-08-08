@@ -918,7 +918,8 @@
         "cancel merge",
         "revert merge commit",
         "revert merge after push",
-        "undo a merge that has not been pushed"
+        "undo a merge that has not been pushed",
+        "merged too early by accident"
       ],
       "variants": [
         {
@@ -4357,7 +4358,9 @@
       "aka": [
         "pre-commit hook",
         "git hooks",
-        "run tests before push"
+        "run tests before push",
+        "husky hooks",
+        "run formatter before commit"
       ],
       "variants": [
         {
@@ -4873,7 +4876,8 @@
         "delete commit from remote",
         "pushed by mistake",
         "remove commits from remote branch",
-        "reset remote to a commit"
+        "reset remote to a commit",
+        "pushed to wrong branch"
       ],
       "variants": [
         {
@@ -7991,7 +7995,8 @@
         "gitattributes explained",
         "export-ignore",
         "linguist-vendored",
-        "mark files binary"
+        "mark files binary",
+        "repository language shown wrong"
       ],
       "variants": [
         {
@@ -9463,7 +9468,8 @@
         "open github issue",
         "write bug report",
         "file an issue",
-        "assign issue"
+        "assign issue",
+        "pin an issue"
       ],
       "variants": [
         {
@@ -11325,6 +11331,500 @@
         "git-bundle",
         "mirror-migrate",
         "bare-repo"
+      ]
+    },
+    {
+      "id": "how-git-stores",
+      "q": "How Git actually stores your project",
+      "aka": [
+        "git objects explained",
+        "blob tree commit",
+        "why hashes everywhere"
+      ],
+      "variants": [
+        {
+          "when": "The model",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cat-file -p HEAD",
+              "n": "A commit is a tiny text object: a tree, parents, author, message. The tree lists file names pointing at blobs, which hold content. Every object is named by the hash of its bytes, which is why nothing can change without everything noticing."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Follow the chain",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git cat-file -p HEAD^{tree}",
+              "n": "The root folder of the current commit, hash by hash. Repeat on any tree hash to walk deeper."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-dot-git",
+        "current-commit"
+      ]
+    },
+    {
+      "id": "fast-forward",
+      "q": "What a fast-forward is",
+      "aka": [
+        "fast forward merge explained",
+        "ff only",
+        "branch simply moved"
+      ],
+      "variants": [
+        {
+          "when": "The idea",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge --ff-only <branch>",
+              "n": "When your branch has nothing the other lacks, merging is just sliding the label forward: no new commit, nothing to resolve. --ff-only makes that a guarantee, failing loudly instead of creating a merge."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "no-ff-merge",
+        "merge-vs-rebase",
+        "pull-rebase"
+      ]
+    },
+    {
+      "id": "two-machines",
+      "q": "Work on the same project from two computers",
+      "aka": [
+        "sync between laptop and desktop",
+        "continue work on other machine",
+        "git on two devices"
+      ],
+      "variants": [
+        {
+          "when": "The habit",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push",
+              "n": "Before leaving one machine; git pull before starting on the other. The remote is the single source of truth; uncommitted work cannot travel."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Half-done work",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c wip/tuesday && git commit -am \"wip\" && git push -u origin wip/tuesday",
+              "n": "A wip branch carries unfinished work across machines without touching main. Squash or amend it before it becomes real history."
+            }
+          ],
+          "undo": "git push origin --delete wip/tuesday when merged or abandoned"
+        }
+      ],
+      "seealso": [
+        "stash",
+        "patch-uncommitted",
+        "git-in-synced-folder"
+      ]
+    },
+    {
+      "id": "wsl-git",
+      "q": "Use Git well between Windows and WSL",
+      "aka": [
+        "git slow in wsl",
+        "wsl vs windows git",
+        "line endings wsl"
+      ],
+      "variants": [
+        {
+          "when": "The one rule",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.autocrlf",
+              "n": "Keep a repo on the side that edits it: Linux tools on /home, Windows tools on C:. Crossing the boundary through /mnt/c is slow and mixes line-ending worlds."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Share credentials instead of keys twice",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global credential.helper \"/mnt/c/Program\\ Files/Git/mingw64/bin/git-credential-manager.exe\"",
+              "n": "WSL Git borrows the Windows credential manager, so both sides sign in once."
+            }
+          ],
+          "undo": "git config --global --unset credential.helper"
+        }
+      ],
+      "seealso": [
+        "line-endings",
+        "git-bash",
+        "stop-password-prompts"
+      ]
+    },
+    {
+      "id": "nested-repo",
+      "q": "Fix an accidental repository inside a repository",
+      "aka": [
+        "adding embedded git repository warning",
+        "nested git repo",
+        "cloned inside my repo"
+      ],
+      "variants": [
+        {
+          "when": "It should be ordinary files",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "rm -rf <folder>/.git",
+              "n": "Delete the inner .git, then git add the folder. The warning came from that hidden folder."
+            },
+            {
+              "c": "git rm --cached <folder> && git add <folder>",
+              "n": "If the empty-looking pointer was already committed, clear it first."
+            }
+          ],
+          "undo": "The inner history is gone once its .git is deleted; re-clone it if needed"
+        },
+        {
+          "when": "It should stay its own repo",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule add <url> <folder>",
+              "n": "A submodule records the relationship properly instead of a confusing pointer."
+            }
+          ],
+          "undo": "git rm <folder> and delete the .gitmodules entry"
+        }
+      ],
+      "seealso": [
+        "submodule-add",
+        "what-is-dot-git"
+      ]
+    },
+    {
+      "id": "cherry-pick-other-repo",
+      "q": "Bring a commit over from another repository",
+      "aka": [
+        "cherry pick from fork",
+        "commit from another repo",
+        "port a fix between repos"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote add other <url> && git fetch other",
+              "n": "Any repository can be a remote, even a fork or an unrelated project."
+            },
+            {
+              "c": "git cherry-pick <hash>",
+              "n": "Once fetched, its commits are reachable like your own."
+            }
+          ],
+          "undo": "git cherry-pick --abort mid-way, git reset --hard HEAD~1 after; git remote remove other cleans up"
+        }
+      ],
+      "seealso": [
+        "cherry-pick",
+        "patches-email"
+      ]
+    },
+    {
+      "id": "tags-vs-releases",
+      "q": "Tags and releases are not the same thing",
+      "aka": [
+        "github release vs git tag",
+        "difference tag release",
+        "release without tag"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push origin v2.1.0",
+              "n": "A tag is Git: a name for one commit, visible in every clone. A release is GitHub wrapping a tag with notes, downloads, and a page. Every release has a tag; a tag becomes a release only when you make one."
+            }
+          ],
+          "undo": "git push origin --delete v2.1.0"
+        }
+      ],
+      "seealso": [
+        "tag-release",
+        "create-release",
+        "annotated-tags"
+      ]
+    },
+    {
+      "id": "what-is-a-pr",
+      "q": "What a pull request actually is",
+      "aka": [
+        "pull request explained",
+        "pr vs merge",
+        "why not push to main directly"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr create",
+              "n": "A pull request is not a Git object. It is GitHub's room around a proposed merge: the diff, the conversation, the reviews, and the checks, ending in one merge button. The branch is Git; everything around it is the platform."
+            }
+          ],
+          "undo": "gh pr close <number>; the branch survives"
+        }
+      ],
+      "seealso": [
+        "pr-vs-mr",
+        "review-pr",
+        "merge-methods"
+      ]
+    },
+    {
+      "id": "commit-frequency",
+      "q": "How often to commit",
+      "aka": [
+        "how big should commits be",
+        "commit every change?",
+        "when to commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Extract retry logic into helper\"",
+              "n": "One reversible idea per commit: if the message needs the word and, split it. Commit far more often than you push; local history is free to polish before it goes public."
+            }
+          ],
+          "undo": "git reset --soft HEAD~1 folds it back"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "add-patch",
+        "squash-commits"
+      ]
+    },
+    {
+      "id": "commit-vscode-folder",
+      "q": "Should .vscode be committed",
+      "aka": [
+        "commit editor settings",
+        "vscode folder in git",
+        ".idea in repository"
+      ],
+      "variants": [
+        {
+          "when": "Share what helps everyone",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git add .vscode/extensions.json .vscode/launch.json",
+              "n": "Recommended extensions and debug configs benefit the whole team. The same logic applies to .idea: share code style, not personal state."
+            }
+          ],
+          "undo": "git rm --cached <file>"
+        },
+        {
+          "when": "Ignore what is personal",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \".vscode/settings.json\" >> .gitignore",
+              "n": "Window layouts and machine-specific paths churn every diff for nobody's benefit."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "ignore-files",
+        "global-gitignore"
+      ]
+    },
+    {
+      "id": "env-files",
+      "q": "Keep .env files out of the repository",
+      "aka": [
+        "never commit .env",
+        "secrets in environment file",
+        "api keys local config"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \".env*\" >> .gitignore",
+              "n": "Before the first commit, not after. Once a secret is committed, it lives in history and must be rotated."
+            },
+            {
+              "c": "git add .env.example",
+              "n": "Commit a template with the variable names and no values, so setup stays documented."
+            }
+          ],
+          "undo": "Remove the lines"
+        }
+      ],
+      "seealso": [
+        "remove-secret-from-history",
+        "gitignore-not-working",
+        "actions-secrets"
+      ]
+    },
+    {
+      "id": "achievements",
+      "q": "What GitHub achievements are",
+      "aka": [
+        "github badges on profile",
+        "pull shark",
+        "achievements list"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Profile -> Achievements",
+              "n": "Small badges earned by normal activity: merged pull requests, answered discussions, starred releases, co-authored commits. They cannot be bought or assigned, which is exactly what makes them mean something."
+            }
+          ],
+          "undo": "Hide them under Settings -> Profile if you prefer"
+        }
+      ],
+      "seealso": [
+        "first-contribution",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "sponsors",
+      "q": "Let people fund my open source work",
+      "aka": [
+        "github sponsors",
+        "funding.yml",
+        "sponsor button"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": ".github/FUNDING.yml",
+              "n": "Lists your GitHub Sponsors profile or external platforms; a Sponsor button appears on the repository. Sponsors itself takes no cut."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "contributing-file",
+        "profile-readme"
+      ]
+    },
+    {
+      "id": "security-policy",
+      "q": "Tell researchers how to report vulnerabilities",
+      "aka": [
+        "security.md",
+        "report vulnerability privately",
+        "responsible disclosure"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "SECURITY.md",
+              "n": "Which versions you patch and where to write. GitHub links it from the Security tab."
+            },
+            {
+              "c": "Settings -> Advanced Security -> Private vulnerability reporting",
+              "n": "Researchers open a private advisory instead of a public issue."
+            }
+          ],
+          "undo": "Delete the file, disable the toggle"
+        }
+      ],
+      "seealso": [
+        "dependabot",
+        "contributing-file"
+      ]
+    },
+    {
+      "id": "workflow-permissions",
+      "q": "Limit what a workflow is allowed to do",
+      "aka": [
+        "github_token permissions",
+        "least privilege actions",
+        "workflow write access"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "permissions: contents: read",
+              "n": "At the top of the workflow file: the built-in token gets only what you list. Grant write per job only where something actually pushes, comments, or deploys."
+            }
+          ],
+          "undo": "Remove the block to fall back to repository defaults"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "github-actions-start"
+      ]
+    },
+    {
+      "id": "reusable-workflows",
+      "q": "Share one workflow across many repositories",
+      "aka": [
+        "workflow_call",
+        "reusable github action",
+        "standardize ci"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "on: workflow_call",
+              "n": "Makes a workflow callable. Consumers add one job with uses: <owner>/<repo>/.github/workflows/ci.yml@main and inherit the whole pipeline; fix it once, every repo gets the fix."
+            }
+          ],
+          "undo": "Consumers pin a tag instead of @main to opt out of surprises"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "workflow-permissions"
       ]
     }
   ]
