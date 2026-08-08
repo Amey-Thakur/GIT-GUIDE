@@ -27711,6 +27711,513 @@
         "squash-merge-branch-behind",
         "which-commits-in-release"
       ]
+    },
+    {
+      "id": "why-did-git-do-that",
+      "q": "Find out what a Git command actually did",
+      "aka": [
+        "what did that command do",
+        "git trace",
+        "debug a git command"
+      ],
+      "variants": [
+        {
+          "when": "After the fact",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git reflog --date=iso",
+              "n": "Every move HEAD made, labelled with the command that caused it: commit, rebase, reset, merge. The first place to look when something surprising happened."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "While it happens",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "GIT_TRACE=1 git <command>",
+              "n": "Prints the internal steps. GIT_TRACE_PACKET=1 adds the network conversation, which settles most remote mysteries."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "what-is-reflog",
+        "fix-mistake-quickly",
+        "slow-git"
+      ]
+    },
+    {
+      "id": "repo-with-many-contributors",
+      "q": "Keep a busy repository from descending into chaos",
+      "aka": [
+        "many contributors at once",
+        "high traffic repository",
+        "lots of parallel pull requests"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require merge queue",
+              "n": "Serialises merges so two independently green pull requests cannot break main together."
+            },
+            {
+              "c": "Settings -> Automatically delete head branches",
+              "n": "Then short branches, one merge method, CODEOWNERS for routing, and automatic branch cleanup. Chaos in busy repositories is nearly always a missing convention rather than too many people."
+            }
+          ],
+          "undo": "Disable each setting separately"
+        }
+      ],
+      "seealso": [
+        "merge-queue",
+        "codeowners",
+        "auto-delete-branches"
+      ]
+    },
+    {
+      "id": "commit-that-breaks-build",
+      "q": "My commit broke the build for everyone",
+      "aka": [
+        "i broke main",
+        "build broken by my commit",
+        "fix broken main fast"
+      ],
+      "variants": [
+        {
+          "when": "First move",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash> && git push",
+              "n": "Unblock everyone before diagnosing. Reverting is not an admission of anything; leaving main broken while you think is the actual mistake."
+            }
+          ],
+          "undo": "Revert the revert once fixed"
+        },
+        {
+          "when": "Then prevent it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require status checks to pass",
+              "n": "A commit that reached main without passing CI means the rule is missing, not that someone was careless."
+            }
+          ],
+          "undo": "Remove the rule"
+        }
+      ],
+      "seealso": [
+        "rollback-decision",
+        "github-status-checks-required",
+        "works-locally-fails-ci"
+      ]
+    },
+    {
+      "id": "squash-or-keep-commits",
+      "q": "Keep my messy commits or squash them",
+      "aka": [
+        "should i squash my history",
+        "messy commits before merge",
+        "keep every commit"
+      ],
+      "variants": [
+        {
+          "when": "Squash",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr merge --squash",
+              "n": "When the commits are a diary of your afternoon: wip, fix, oops. Nobody benefits from bisecting through those."
+            }
+          ],
+          "undo": "git revert the squashed commit"
+        },
+        {
+          "when": "Keep them",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr merge --merge",
+              "n": "When each commit is a deliberate, reviewable step. Curated history is genuinely valuable; the mistake is pretending a messy branch qualifies."
+            }
+          ],
+          "undo": "git revert -m 1 the merge"
+        }
+      ],
+      "seealso": [
+        "merge-methods",
+        "squash-before-merge",
+        "commit-frequency"
+      ]
+    },
+    {
+      "id": "find-a-commit-by-content",
+      "q": "Find the commit that added a specific line",
+      "aka": [
+        "which commit added this line",
+        "find commit containing text",
+        "search for the change that introduced this"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log -S \"<exact text>\" --oneline -- <path>",
+              "n": "Finds commits where the number of occurrences changed: the one that added it, and the one that removed it."
+            },
+            {
+              "c": "git log -G \"<regex>\" -p",
+              "n": "Regular expression matching against the diff itself when the exact string is unknown."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "log-search",
+        "blame-line",
+        "grep-across-branches"
+      ]
+    },
+    {
+      "id": "work-on-two-features-at-once",
+      "q": "Juggle two features without mixing them up",
+      "aka": [
+        "two things at once git",
+        "context switch between features",
+        "interrupted mid feature"
+      ],
+      "variants": [
+        {
+          "when": "Quick interruption",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git stash push -u -m \"<what it was>\"",
+              "n": "Shelve, switch, deal with the urgent thing, then pop. Label the stash: an unlabelled one is a mystery by Thursday."
+            }
+          ],
+          "undo": "git stash pop"
+        },
+        {
+          "when": "Ongoing in parallel",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git worktree add ../<feature> -b feat/<name>",
+              "n": "Two folders, two branches, no switching at all. Better than stashing when both features are live for days."
+            }
+          ],
+          "undo": "git worktree remove ../<feature>"
+        }
+      ],
+      "seealso": [
+        "worktrees",
+        "same-branch-two-worktrees",
+        "stash"
+      ]
+    },
+    {
+      "id": "commit-message-language",
+      "q": "Which tense and language for commit messages",
+      "aka": [
+        "imperative mood commits",
+        "commit message tense",
+        "write commits in english"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git commit -m \"Add retry to the upload path\"",
+              "n": "Imperative mood, as if completing the sentence: if applied, this commit will add retry. It matches what Git itself generates for merges and reverts."
+            },
+            {
+              "c": "git log --oneline -10",
+              "n": "Match the project's existing language and style. Consistency matters more than any particular rule."
+            }
+          ],
+          "undo": "git commit --amend before pushing"
+        }
+      ],
+      "seealso": [
+        "commit-messages",
+        "commit-message-body",
+        "commit-emoji-convention"
+      ]
+    },
+    {
+      "id": "reduce-repo-noise",
+      "q": "Cut the noise in a repository's history",
+      "aka": [
+        "too many trivial commits",
+        "history full of noise",
+        "formatting commits everywhere"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"<formatting-commit-sha>\" >> .git-blame-ignore-revs",
+              "n": "Bulk reformatting commits stay in history but stop hiding real authorship in blame."
+            },
+            {
+              "c": "git config --global blame.ignoreRevsFile .git-blame-ignore-revs",
+              "n": "Then agree a formatter so style never lands in a feature commit again."
+            }
+          ],
+          "undo": "Remove the file or the config"
+        }
+      ],
+      "seealso": [
+        "blame-ignore-revs",
+        "which-files-conflict-often",
+        "commit-frequency"
+      ]
+    },
+    {
+      "id": "github-page-not-found",
+      "q": "A GitHub link gives 404 but should work",
+      "aka": [
+        "github 404 on a repo",
+        "link not found github",
+        "page not found but repo exists"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh auth status",
+              "n": "GitHub hides private repositories behind 404 rather than 403, so a missing page usually means wrong account or no access, not a bad link."
+            },
+            {
+              "c": "gh repo view <owner>/<repo>",
+              "n": "Also check for a rename or transfer: redirects stop working once the old name is claimed by someone else."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "cannot-see-private-repo",
+        "repo-transfer-broke-remotes",
+        "gh-auth-switch"
+      ]
+    },
+    {
+      "id": "remove-a-collaborator-safely",
+      "q": "Remove someone's access without breaking things",
+      "aka": [
+        "revoke collaborator access",
+        "someone left the project",
+        "offboard a contributor"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Collaborators -> Remove",
+              "n": "Their commits stay in history and keep their name: authorship is a record, not a permission."
+            },
+            {
+              "c": "Settings -> Deploy keys",
+              "n": "Then audit what else they set up: deploy keys, webhooks, tokens in CI, and any automation running as them."
+            }
+          ],
+          "undo": "Re-invite them"
+        }
+      ],
+      "seealso": [
+        "add-collaborator",
+        "leaving-a-team",
+        "audit-log"
+      ]
+    },
+    {
+      "id": "keep-changelog-updated",
+      "q": "Keep a changelog current without hating it",
+      "aka": [
+        "changelog discipline",
+        "who updates the changelog",
+        "changelog always out of date"
+      ],
+      "variants": [
+        {
+          "when": "Generate it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh release create <tag> --generate-notes",
+              "n": "Derive notes from merged pull request titles, which makes titles the thing worth reviewing. Nothing extra to maintain."
+            }
+          ],
+          "undo": "Edit the release notes"
+        },
+        {
+          "when": "Curate it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "echo \"- <user-visible change>\" >> CHANGELOG.md",
+              "n": "A hand-written file suits libraries where users need migration notes. Use merge=union in .gitattributes so parallel entries stop conflicting."
+            }
+          ],
+          "undo": "Remove the line"
+        }
+      ],
+      "seealso": [
+        "generate-changelog",
+        "merge-union",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "restore-branch-to-yesterday",
+      "q": "Put a branch back to how it was yesterday",
+      "aka": [
+        "branch as of yesterday",
+        "rewind branch to a time",
+        "undo a days worth of commits"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "destructive",
+          "cmds": [
+            {
+              "c": "git log --before=\"yesterday\" -1 --oneline",
+              "n": "Find the last commit from before the change you regret."
+            },
+            {
+              "c": "git reset --hard <hash>",
+              "n": "On unpushed work. For a shared branch use git revert over the range instead, which undoes the content without rewriting anything."
+            }
+          ],
+          "undo": "git reset --hard HEAD@{1}"
+        }
+      ],
+      "seealso": [
+        "file-as-of-date",
+        "revert-many-commits",
+        "what-is-reflog"
+      ]
+    },
+    {
+      "id": "stop-large-clone-in-ci",
+      "q": "Stop CI wasting minutes on cloning",
+      "aka": [
+        "ci clone slow",
+        "checkout takes forever in workflow",
+        "reduce checkout time"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/checkout@v5",
+              "n": "The default already fetches only one commit, which is right for most jobs."
+            },
+            {
+              "c": "with: fetch-depth: 0",
+              "n": "Only add this when a step genuinely needs history: changelog generation, diff against a base, or version tags. It is the usual cause of slow checkouts."
+            }
+          ],
+          "undo": "Remove the option"
+        }
+      ],
+      "seealso": [
+        "shallow-in-ci",
+        "reduce-ci-minutes",
+        "actions-cache"
+      ]
+    },
+    {
+      "id": "who-owns-this-repository",
+      "q": "Work out who owns or maintains a repository",
+      "aka": [
+        "who maintains this project",
+        "find the owner",
+        "who to contact about a repo"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo> --jq \"{owner: .owner.login, org: .organization.login}\"",
+              "n": "The account it belongs to, which is not always who maintains it."
+            },
+            {
+              "c": "git shortlog -sn --since=\"1 year ago\"",
+              "n": "Recent commit volume identifies actual maintainers. CODEOWNERS, MAINTAINERS, and the SECURITY policy name the responsible parties directly."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "who-to-ask",
+        "multiple-maintainers",
+        "repo-insights"
+      ]
+    },
+    {
+      "id": "why-is-history-linear-or-not",
+      "q": "Linear history or merge commits",
+      "aka": [
+        "should history be linear",
+        "merge bubbles vs straight line",
+        "linear history rule"
+      ],
+      "variants": [
+        {
+          "when": "Linear",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Ruleset -> Require linear history",
+              "n": "Every merge must fast-forward, so log reads as one line and bisect is trivial. The cost is rebasing before every merge."
+            }
+          ],
+          "undo": "Remove the rule"
+        },
+        {
+          "when": "Merge commits",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git merge --no-ff <branch>",
+              "n": "History records what actually happened, including when work happened in parallel. Neither is wrong; consistency within a repository is what matters."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "no-ff-merge",
+        "fast-forward",
+        "merge-methods"
+      ]
     }
   ]
 }
