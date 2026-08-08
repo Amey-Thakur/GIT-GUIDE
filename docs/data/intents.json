@@ -29183,6 +29183,458 @@
         "git-lfs",
         "why-is-clone-so-big"
       ]
+    },
+    {
+      "id": "commit-then-branch",
+      "q": "I committed on main but wanted a branch",
+      "aka": [
+        "commit on wrong branch move it",
+        "meant to branch first",
+        "move last commit to a new branch"
+      ],
+      "variants": [
+        {
+          "when": "Not pushed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c fix/<topic>",
+              "n": "The new branch carries the commits with it, since a branch is only a label."
+            },
+            {
+              "c": "git switch main && git reset --hard origin/main",
+              "n": "Then put main back where the remote has it. The work is safe on the new branch."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD on main"
+        },
+        {
+          "when": "Already pushed to main",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <hash>",
+              "n": "On a shared main, revert rather than rewrite, then re-apply the change through a branch and a pull request."
+            }
+          ],
+          "undo": "Revert the revert"
+        }
+      ],
+      "seealso": [
+        "move-commits-to-branch",
+        "pull-request-from-main",
+        "prevent-committing-to-main"
+      ]
+    },
+    {
+      "id": "see-repo-defaults",
+      "q": "Check a repository's merge and branch settings",
+      "aka": [
+        "what merge methods are allowed",
+        "repository settings summary",
+        "check repo policy"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo view --json defaultBranchRef,mergeCommitAllowed,squashMergeAllowed,rebaseMergeAllowed,deleteBranchOnMerge",
+              "n": "Default branch, permitted merge methods, and whether branches auto-delete, in one call."
+            },
+            {
+              "c": "gh api repos/<owner>/<repo>/rulesets",
+              "n": "The rules that will block a push before you discover them the hard way."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "merge-methods",
+        "rulesets-vs-classic",
+        "repo-first-hour"
+      ]
+    },
+    {
+      "id": "one-off-alias",
+      "q": "Run a Git command with different settings once",
+      "aka": [
+        "temporary git config",
+        "override config for one command",
+        "one time setting"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git -c user.email=\"other@example.com\" commit",
+              "n": "The -c flag applies a setting to that command alone, leaving all config files untouched."
+            },
+            {
+              "c": "git -c core.pager=cat log",
+              "n": "Handy in scripts and one-off diagnostics where you do not want to change anyone's setup."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "commit-as-other",
+        "config-precedence",
+        "git-aliases"
+      ]
+    },
+    {
+      "id": "stop-tracking-a-submodule",
+      "q": "Convert a submodule back into normal files",
+      "aka": [
+        "remove submodule keep files",
+        "flatten submodule into repo",
+        "submodule to regular folder"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git submodule deinit -f <path> && git rm --cached <path>",
+              "n": "Removes the submodule registration while leaving the files on disk."
+            },
+            {
+              "c": "rm -rf <path>/.git && git add <path>",
+              "n": "Delete the inner repository so the files become ordinary tracked content, then commit. Their separate history is not preserved."
+            }
+          ],
+          "undo": "Re-add the submodule from its URL"
+        }
+      ],
+      "seealso": [
+        "remove-submodule",
+        "nested-repo",
+        "subtree-commands"
+      ]
+    },
+    {
+      "id": "why-status-is-slow",
+      "q": "git status takes seconds to run",
+      "aka": [
+        "slow git status",
+        "status hangs on large repo",
+        "git feels sluggish"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config core.fsmonitor true",
+              "n": "A filesystem monitor stops Git rescanning every file. The single biggest win on large working trees."
+            },
+            {
+              "c": "git config core.untrackedCache true",
+              "n": "Caches untracked-file scanning too. On Windows, excluding the repository from antivirus scanning often matters more than either setting."
+            }
+          ],
+          "undo": "Unset both settings"
+        }
+      ],
+      "seealso": [
+        "slow-git",
+        "git-maintenance",
+        "repo-size-vs-clone-time"
+      ]
+    },
+    {
+      "id": "stop-asking-for-username",
+      "q": "Git keeps asking for my username on every push",
+      "aka": [
+        "credentials not saved",
+        "asks username each time",
+        "store git credentials"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git config --global credential.helper manager",
+              "n": "On Windows, Git Credential Manager stores the token securely. On macOS use osxkeychain; on Linux, libsecret."
+            },
+            {
+              "c": "gh auth login",
+              "n": "Signing in with the CLI configures the helper for you, which is the shortest path."
+            }
+          ],
+          "undo": "git config --global --unset credential.helper"
+        }
+      ],
+      "seealso": [
+        "stop-password-prompts",
+        "access-tokens",
+        "https-vs-ssh"
+      ]
+    },
+    {
+      "id": "merge-into-multiple-branches",
+      "q": "Merge one branch into several at once",
+      "aka": [
+        "merge to develop and main",
+        "apply branch to two targets",
+        "same merge twice"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch develop && git merge feature",
+              "n": "Merge separately into each target. There is no multi-target merge, and cherry-picking instead would duplicate the commits."
+            },
+            {
+              "c": "git switch main && git merge develop",
+              "n": "Where the branches themselves are related, merging along the chain keeps one line of ancestry rather than three."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD on each"
+        }
+      ],
+      "seealso": [
+        "keep-two-branches-in-sync",
+        "one-commit-many-branches",
+        "branching-strategy"
+      ]
+    },
+    {
+      "id": "read-github-permissions",
+      "q": "Work out what access I actually have",
+      "aka": [
+        "what permissions do i have",
+        "can i push to this repo",
+        "check my access level"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh api repos/<owner>/<repo> --jq .permissions",
+              "n": "Your effective admin, push, and pull flags for that repository, whatever the path that granted them."
+            },
+            {
+              "c": "gh auth status",
+              "n": "Confirms which account you are acting as, which is the usual surprise when permissions look wrong."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "cannot-push-after-clone",
+        "org-base-permissions",
+        "gh-auth-switch"
+      ]
+    },
+    {
+      "id": "restore-single-line",
+      "q": "Restore one line without touching the rest of the file",
+      "aka": [
+        "undo one line change",
+        "revert a single line",
+        "keep most edits discard one"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git restore -p <path>",
+              "n": "Walks the file hunk by hunk, discarding only what you accept. Press s to split a hunk down to the line you want."
+            },
+            {
+              "c": "git diff <path>",
+              "n": "Read the diff first so you know which hunk holds the line."
+            }
+          ],
+          "undo": "None for discarded hunks"
+        }
+      ],
+      "seealso": [
+        "add-patch",
+        "revert-vs-checkout-file",
+        "commit-only-part-of-file"
+      ]
+    },
+    {
+      "id": "tag-a-commit-i-forgot",
+      "q": "Tag a release I forgot to tag",
+      "aka": [
+        "tag an old commit retroactively",
+        "missed tagging a release",
+        "add tag after the fact"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v1.4.0 <hash> -m \"Release v1.4.0\"",
+              "n": "Any commit can be tagged at any time. The tag's own date is today, which is honest and rarely matters."
+            },
+            {
+              "c": "git push origin v1.4.0",
+              "n": "Then create the release from it if you need notes and downloads."
+            }
+          ],
+          "undo": "git tag -d v1.4.0 && git push origin --delete v1.4.0"
+        }
+      ],
+      "seealso": [
+        "tag-old-commit",
+        "when-to-tag",
+        "tags-vs-releases"
+      ]
+    },
+    {
+      "id": "check-a-pr-is-safe",
+      "q": "Judge whether a stranger's pull request is safe to run",
+      "aka": [
+        "untrusted pull request",
+        "is this pr malicious",
+        "review from unknown contributor"
+      ],
+      "variants": [
+        {
+          "when": "Before running anything",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh pr diff <number>",
+              "n": "Read the whole diff first, especially workflow files, build scripts, and new dependencies. Those are where a hostile pull request hides, not in the feature code."
+            },
+            {
+              "c": "gh pr view <number> --json files --jq \".files[].path\"",
+              "n": "A change to .github/workflows from a first-time contributor deserves particular attention."
+            }
+          ],
+          "undo": "gh pr close <number>"
+        }
+      ],
+      "seealso": [
+        "approve-fork-runs",
+        "pr-vs-push-triggers",
+        "review-ai-generated-code"
+      ]
+    },
+    {
+      "id": "why-my-fork-shows-behind",
+      "q": "My fork says it is behind by dozens of commits",
+      "aka": [
+        "fork behind upstream message",
+        "this branch is behind",
+        "fork out of date banner"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo sync <you>/<fork>",
+              "n": "Behind simply means upstream moved on; nothing is wrong with your fork. Syncing fast-forwards it when you have no conflicting commits."
+            },
+            {
+              "c": "git fetch upstream && git merge upstream/main",
+              "n": "With your own commits on the branch, merge or rebase instead, which the sync button will refuse to guess at."
+            }
+          ],
+          "undo": "git reset --hard ORIG_HEAD"
+        }
+      ],
+      "seealso": [
+        "sync-fork",
+        "upstream-downstream",
+        "branch-behind-and-ahead"
+      ]
+    },
+    {
+      "id": "share-repo-with-non-github-user",
+      "q": "Share code with someone who has no GitHub account",
+      "aka": [
+        "send code to someone without github",
+        "share without account",
+        "give code to a client"
+      ],
+      "variants": [
+        {
+          "when": "Public repository",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh browse",
+              "n": "Anyone can read, clone, and download a ZIP without an account. Only interaction needs one."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Private work",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git bundle create project.bundle --all",
+              "n": "A single file holding the whole repository, sendable by any means. Or export a snapshot with git archive when history should not travel."
+            }
+          ],
+          "undo": "Delete the file"
+        }
+      ],
+      "seealso": [
+        "git-bundle",
+        "archive-export",
+        "read-only-access"
+      ]
+    },
+    {
+      "id": "repo-activity-summary",
+      "q": "Summarise what happened in a repository this month",
+      "aka": [
+        "monthly repo summary",
+        "report on recent work",
+        "what did the team ship"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git shortlog -sn --since=\"1 month ago\"",
+              "n": "Who committed and how much, grouped by author."
+            },
+            {
+              "c": "gh pr list --state merged --search \"merged:>=2026-07-08\" --json title,author",
+              "n": "Merged pull requests read better than raw commits for a summary, since each is a complete change."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "standup-log",
+        "repo-traffic",
+        "generate-changelog"
+      ]
     }
   ]
 }
