@@ -818,7 +818,6 @@
       "aka": [
         "commit empty folder",
         "keep folder",
-        "gitkeep",
         "gitignore vs gitkeep"
       ],
       "variants": [
@@ -2174,7 +2173,6 @@
       "aka": [
         "work and personal email",
         "per folder git config",
-        "includeIf",
         "conditional config",
         "multiple users in gitconfig"
       ],
@@ -4004,7 +4002,6 @@
       "aka": [
         "azure repos",
         "azure devops git",
-        "tfs git",
         "visual studio git remote"
       ],
       "variants": [
@@ -8641,8 +8638,7 @@
       "aka": [
         "gh auth login",
         "install gh",
-        "github cli setup",
-        "gh aliases"
+        "github cli setup"
       ],
       "variants": [
         {
