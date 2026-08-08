@@ -336,7 +336,8 @@
         "untrack",
         "remove file from repo but keep it locally",
         "ignore files already committed",
-        "remove file from repository without deleting it from disk"
+        "remove file from repository without deleting it from disk",
+        "remove node_modules from repository"
       ],
       "variants": [
         {
@@ -1228,7 +1229,8 @@
         "stash changes",
         "switch branch with uncommitted work",
         "stash pop conflict",
-        "stash but keep staged"
+        "stash but keep staged",
+        "stash apply vs pop"
       ],
       "variants": [
         {
@@ -2316,7 +2318,8 @@
         "verified commits",
         "ssh signing",
         "gpg sign",
-        "signature"
+        "signature",
+        "verified badge on commits"
       ],
       "variants": [
         {
@@ -3021,7 +3024,8 @@
       "aka": [
         "undo a range of commits",
         "revert range",
-        "back out multiple changes"
+        "back out multiple changes",
+        "revert one specific commit"
       ],
       "variants": [
         {
@@ -3090,7 +3094,8 @@
         "get file from branch",
         "checkout single file from branch",
         "take file from main",
-        "take folder from branch"
+        "take folder from branch",
+        "take a folder from another branch"
       ],
       "variants": [
         {
@@ -3227,7 +3232,8 @@
         "commits since date",
         "search log",
         "grep through committed code",
-        "search git history for a string"
+        "search git history for a string",
+        "who deleted this line"
       ],
       "variants": [
         {
@@ -7920,7 +7926,8 @@
       "aka": [
         "git fetch --all",
         "update all remotes",
-        "refresh remote branches"
+        "refresh remote branches",
+        "prune automatically on fetch"
       ],
       "variants": [
         {
@@ -9650,7 +9657,8 @@
         "git rebase -i",
         "edit commit history",
         "reorder commits",
-        "drop a commit"
+        "drop a commit",
+        "edit an old commit"
       ],
       "variants": [
         {
@@ -10467,7 +10475,8 @@
       "aka": [
         "repo traffic",
         "views and clones",
-        "referral sources"
+        "referral sources",
+        "contributors graph"
       ],
       "variants": [
         {
@@ -10783,6 +10792,539 @@
       "seealso": [
         "add-collaborator",
         "transfer-repo"
+      ]
+    },
+    {
+      "id": "branching-strategy",
+      "q": "Pick a branching strategy that fits the team",
+      "aka": [
+        "git flow vs github flow",
+        "trunk based development",
+        "which branching model"
+      ],
+      "variants": [
+        {
+          "when": "Default: GitHub flow",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c feat/short-lived && gh pr create",
+              "n": "One long-lived branch, main, always deployable. Everything else is a short branch merged through a pull request. Right for most teams and every web app."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "When you ship versions, not deploys",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git switch -c release/2.1 v2.1.0",
+              "n": "Release branches carry patches for versions customers still run. This is most of what Git flow got right; the rest of its ceremony is rarely worth it."
+            }
+          ],
+          "undo": "git branch -d release/2.1"
+        }
+      ],
+      "seealso": [
+        "branch-naming",
+        "merge-methods",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "monorepo",
+      "q": "One repository or many",
+      "aka": [
+        "monorepo vs polyrepo",
+        "split services into repos",
+        "single repo for everything"
+      ],
+      "variants": [
+        {
+          "when": "One repo",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git sparse-checkout set apps/web",
+              "n": "Atomic cross-project changes, one history, one CI. Sparse checkout and partial clone keep it fast on disk even when it grows."
+            }
+          ],
+          "undo": "git sparse-checkout disable"
+        },
+        {
+          "when": "Many repos",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh repo create <org>/<service>",
+              "n": "Independent access, releases, and blast radius. The price is coordinating changes that cross repos."
+            }
+          ],
+          "undo": "Repos can be merged later with subtree or filter-repo"
+        }
+      ],
+      "seealso": [
+        "sparse-checkout",
+        "partial-clone",
+        "submodule-vs-subtree"
+      ]
+    },
+    {
+      "id": "generate-changelog",
+      "q": "Write a changelog from the history",
+      "aka": [
+        "changelog from commits",
+        "release notes from git",
+        "what changed since last release"
+      ],
+      "variants": [
+        {
+          "when": "Raw material",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git log v1.4.0..HEAD --oneline --no-merges",
+              "n": "Every commit since the last release. With disciplined messages this is nearly the changelog already."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Let GitHub write it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "gh release create v1.5.0 --generate-notes",
+              "n": "Notes assembled from merged pull requests, grouped and linked, with first-time contributors credited."
+            }
+          ],
+          "undo": "gh release delete v1.5.0"
+        }
+      ],
+      "seealso": [
+        "log-between-tags",
+        "create-release",
+        "commit-messages"
+      ]
+    },
+    {
+      "id": "semantic-versioning",
+      "q": "Number releases so the number means something",
+      "aka": [
+        "semver explained",
+        "major minor patch",
+        "when to bump version"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git tag -a v2.1.3 -m \"Release v2.1.3\"",
+              "n": "MAJOR when you break users, MINOR when you add without breaking, PATCH when you only fix. Everything after 1.0.0 is a promise to users."
+            }
+          ],
+          "undo": "git tag -d v2.1.3 before pushing"
+        }
+      ],
+      "seealso": [
+        "annotated-tags",
+        "tag-release",
+        "generate-changelog"
+      ]
+    },
+    {
+      "id": "remote-info",
+      "q": "Everything about a remote in one view",
+      "aka": [
+        "git remote show origin",
+        "remote details",
+        "stale branches report"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git remote show origin",
+              "n": "Fetch and push URLs, the default branch, which locals track what, what is out of date, and which remote branches are stale."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "find-remote-url",
+        "prune-remote-branches",
+        "branch-upstream"
+      ]
+    },
+    {
+      "id": "undo-revert",
+      "q": "Undo a revert",
+      "aka": [
+        "revert the revert",
+        "bring reverted change back",
+        "re-apply reverted commit"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git revert <revert-hash>",
+              "n": "Reverting the revert commit brings the original change back as new history. Nothing is rewritten, so it is safe on shared branches."
+            }
+          ],
+          "undo": "Revert it again"
+        }
+      ],
+      "seealso": [
+        "revert-multiple",
+        "revert-pr"
+      ]
+    },
+    {
+      "id": "push-to-different-name",
+      "q": "Push my branch under a different name on the remote",
+      "aka": [
+        "push local to different remote branch",
+        "refspec push",
+        "rename branch on push"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git push origin local-name:remote-name",
+              "n": "The colon maps local to remote. Useful when the remote expects a naming scheme your local habit ignores."
+            }
+          ],
+          "undo": "git push origin --delete remote-name"
+        }
+      ],
+      "seealso": [
+        "push-new-branch",
+        "rename-branch"
+      ]
+    },
+    {
+      "id": "pull-single-file",
+      "q": "Update just one file from the remote",
+      "aka": [
+        "pull only one file",
+        "get latest version of single file",
+        "checkout file from origin"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git fetch origin",
+              "n": "Bring the remote state down without touching anything."
+            },
+            {
+              "c": "git restore --source origin/main -- <path>",
+              "n": "Only that file changes, to exactly what the remote has."
+            }
+          ],
+          "undo": "git restore <path> back from your last commit, or the reflog"
+        }
+      ],
+      "seealso": [
+        "pull-vs-fetch",
+        "restore-file"
+      ]
+    },
+    {
+      "id": "git-guis",
+      "q": "Good graphical tools for Git",
+      "aka": [
+        "git gui clients",
+        "visual git tool",
+        "alternative to command line"
+      ],
+      "variants": [
+        {
+          "when": "Already installed",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "code .",
+              "n": "VS Code's Source Control view stages, commits, diffs, and resolves conflicts; GitLens adds blame and history."
+            }
+          ],
+          "undo": "Nothing to undo"
+        },
+        {
+          "when": "Dedicated clients",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "winget install GitHub.GitHubDesktop",
+              "n": "GitHub Desktop for the basics with zero setup; lazygit if you live in the terminal; gitk ships with Git itself."
+            }
+          ],
+          "undo": "Uninstall the app"
+        }
+      ],
+      "seealso": [
+        "mergetool-vscode",
+        "difftool-vscode",
+        "git-bash"
+      ]
+    },
+    {
+      "id": "git-help",
+      "q": "Read Git's own documentation",
+      "aka": [
+        "git help command",
+        "man pages for git",
+        "list all git commands"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git help <command>",
+              "n": "The full manual, in the browser on Windows. git <command> -h prints just the flags."
+            },
+            {
+              "c": "git help -a",
+              "n": "Every command Git actually has, including the obscure ones."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "git-aliases",
+        "autocorrect"
+      ]
+    },
+    {
+      "id": "actions-cache",
+      "q": "Make CI faster by caching dependencies",
+      "aka": [
+        "github actions cache",
+        "cache node_modules ci",
+        "speed up workflow"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/cache@v4",
+              "n": "Key the cache on the lockfile hash: when the lockfile changes the cache rebuilds, otherwise installs are nearly instant. setup-node and friends have caching built in behind one input."
+            }
+          ],
+          "undo": "Remove the step; caches expire on their own after a week unused"
+        }
+      ],
+      "seealso": [
+        "github-actions-start",
+        "actions-artifacts"
+      ]
+    },
+    {
+      "id": "actions-artifacts",
+      "q": "Save files a workflow produced",
+      "aka": [
+        "upload artifact",
+        "download build output",
+        "pass files between jobs"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "uses: actions/upload-artifact@v4",
+              "n": "Zips a path and attaches it to the run: build output, test reports, screenshots. download-artifact retrieves it in a later job."
+            },
+            {
+              "c": "gh run download",
+              "n": "Pulls artifacts from the latest run to your machine."
+            }
+          ],
+          "undo": "Artifacts expire automatically, 90 days by default"
+        }
+      ],
+      "seealso": [
+        "actions-cache",
+        "create-release"
+      ]
+    },
+    {
+      "id": "github-status",
+      "q": "Check whether GitHub itself is down",
+      "aka": [
+        "is github down",
+        "github outage",
+        "push hangs everyone"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "https://www.githubstatus.com",
+              "n": "Live status per service: Git operations, Actions, Pages, API. When pushes hang for the whole team at once, look here before debugging anything local."
+            }
+          ],
+          "undo": "Nothing to undo"
+        }
+      ],
+      "seealso": [
+        "slow-git",
+        "github-api"
+      ]
+    },
+    {
+      "id": "project-boards",
+      "q": "Plan work with GitHub Projects",
+      "aka": [
+        "github projects board",
+        "kanban on github",
+        "track issues in a table"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Projects tab -> New project",
+              "n": "A table or board over your issues and pull requests, with custom fields, filters, and views. Items update as the underlying issues move."
+            }
+          ],
+          "undo": "Delete the project; the issues are untouched"
+        }
+      ],
+      "seealso": [
+        "open-issue",
+        "milestones",
+        "issue-labels"
+      ]
+    },
+    {
+      "id": "milestones",
+      "q": "Group issues toward a release",
+      "aka": [
+        "github milestones",
+        "issues for next version",
+        "release planning"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Issues -> Milestones -> New milestone",
+              "n": "Attach issues and pull requests to it; the milestone page shows a progress bar and everything left before the release ships."
+            }
+          ],
+          "undo": "Close or delete the milestone; issues survive"
+        }
+      ],
+      "seealso": [
+        "project-boards",
+        "semantic-versioning"
+      ]
+    },
+    {
+      "id": "access-tokens",
+      "q": "Create a token for scripts and CI",
+      "aka": [
+        "personal access token",
+        "fine-grained pat",
+        "token instead of password"
+      ],
+      "variants": [
+        {
+          "when": "Standard case",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Developer settings -> Fine-grained tokens",
+              "n": "Scope it to the one repository and the permissions it needs, with an expiry. The token is shown once; treat it like a password."
+            }
+          ],
+          "undo": "Revoke the token in the same list"
+        },
+        {
+          "when": "Using it",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone https://<token>@github.com/<owner>/<private-repo>.git",
+              "n": "Anywhere a password once went. In Actions, prefer the built-in GITHUB_TOKEN or a secret."
+            }
+          ],
+          "undo": "Revoke and rotate if it ever leaks"
+        }
+      ],
+      "seealso": [
+        "actions-secrets",
+        "clone-private-ci",
+        "stop-password-prompts"
+      ]
+    },
+    {
+      "id": "backup-repo",
+      "q": "Back up a repository completely",
+      "aka": [
+        "backup github repo",
+        "offline copy of repository",
+        "export everything"
+      ],
+      "variants": [
+        {
+          "when": "History, branches, and tags",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "git clone --mirror <url>",
+              "n": "Everything Git knows, in one bare folder. Refresh it later with git remote update."
+            },
+            {
+              "c": "git bundle create backup.bundle --all",
+              "n": "The same as a single file you can store or mail. Clone from it directly if the worst happens."
+            }
+          ],
+          "undo": "Delete the backup"
+        },
+        {
+          "when": "Issues and the rest",
+          "danger": "safe",
+          "cmds": [
+            {
+              "c": "Settings -> Export account data",
+              "n": "Git history covers only code. GitHub's export includes issues, pull requests, and wikis."
+            }
+          ],
+          "undo": "Delete the export"
+        }
+      ],
+      "seealso": [
+        "git-bundle",
+        "mirror-migrate",
+        "bare-repo"
       ]
     }
   ]
