@@ -51,9 +51,25 @@
       "id": "publickey-denied",
       "msg": "git@github.com: Permission denied (publickey).",
       "why": "The host never received a key it recognizes: no key loaded, key not added to your account, or an HTTPS problem disguised by an SSH URL.",
-      "fix": [],
-      "intent": "permission-denied-publickey",
-      "seealso": []
+      "fix": [
+        {
+          "c": "ssh -T git@github.com",
+          "n": "If this greets you by name, SSH is fine and the problem is the remote URL."
+        },
+        {
+          "c": "git remote -v",
+          "n": "An https:// URL never uses your SSH key. Switch with git remote set-url origin git@github.com:<user>/<repo>.git"
+        },
+        {
+          "c": "ssh-add -l",
+          "n": "Empty means no key is loaded: run ssh-add ~/.ssh/id_ed25519. No key at all: generate one first."
+        }
+      ],
+      "intent": "ssh-key-github",
+      "seealso": [
+        "ssh-key-github",
+        "change-remote-url"
+      ]
     },
     {
       "id": "authentication-failed",
@@ -79,33 +95,68 @@
       "id": "non-fast-forward-rejected",
       "msg": "! [rejected] main -> main (non-fast-forward)",
       "why": "The remote has commits you do not have. Git refuses to overwrite them.",
-      "fix": [],
-      "intent": "non-fast-forward",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git pull --rebase",
+          "n": "Bring their commits in, yours on top."
+        },
+        {
+          "c": "git push",
+          "n": "Never solve this with --force on a shared branch; that erases their work."
+        }
+      ],
+      "intent": "force-push-safely",
+      "seealso": [
+        "force-push-safely"
+      ]
     },
     {
       "id": "fetch-first",
       "msg": "! [rejected] main -> main (fetch first)",
       "why": "Same cause as non-fast-forward: someone pushed before you.",
       "fix": [],
-      "intent": "non-fast-forward",
+      "intent": "force-push-safely",
       "seealso": []
     },
     {
       "id": "src-refspec",
       "msg": "error: src refspec main does not match any",
       "why": "The branch you are pushing does not exist locally, almost always because there is no commit yet.",
-      "fix": [],
-      "intent": "src-refspec-error",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git status",
+          "n": "If it says No commits yet, the branch does not exist until the first commit."
+        },
+        {
+          "c": "git add . && git commit -m \"Initial commit\"",
+          "n": ""
+        },
+        {
+          "c": "git push -u origin main",
+          "n": "If your branch is actually named master, push that name or rename with git branch -m master main first."
+        }
+      ],
+      "intent": "repo-with-no-commits",
+      "seealso": [
+        "upload-existing-project",
+        "push-new-branch"
+      ]
     },
     {
       "id": "unrelated-histories",
       "msg": "fatal: refusing to merge unrelated histories",
       "why": "The two sides share no common commit, typically a fresh git init pulled against a remote that already has commits.",
-      "fix": [],
-      "intent": "unrelated-histories",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git pull origin main --allow-unrelated-histories",
+          "n": "Typical after git init in a folder while the remote already has a README. Resolve any conflicts and commit."
+        }
+      ],
+      "intent": "repo-has-two-histories",
+      "seealso": [
+        "upload-existing-project",
+        "merge-conflict"
+      ]
     },
     {
       "id": "merge-conflict-marker",
@@ -160,9 +211,21 @@
       "id": "auto-detect-email",
       "msg": "fatal: unable to auto-detect email address",
       "why": "Git has no identity to stamp into the commit.",
-      "fix": [],
-      "intent": "tell-me-who-you-are",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git config --global user.name \"<your name>\"",
+          "n": ""
+        },
+        {
+          "c": "git config --global user.email \"<your email>\"",
+          "n": "Use your GitHub email so commits count on your profile. Drop --global to set it for one repository only."
+        }
+      ],
+      "intent": "first-time-setup",
+      "seealso": [
+        "first-time-setup",
+        "change-commit-author"
+      ]
     },
     {
       "id": "cannot-pull-unstaged",
@@ -218,7 +281,7 @@
       ],
       "intent": null,
       "seealso": [
-        "file-too-large"
+        "big-files-where"
       ]
     },
     {
@@ -226,24 +289,38 @@
       "msg": "remote: error: GH001: Large files detected.",
       "why": "GitHub refuses files over 100 MB in normal Git storage.",
       "fix": [],
-      "intent": "file-too-large",
+      "intent": "big-files-where",
       "seealso": []
     },
     {
       "id": "index-lock-exists",
       "msg": "fatal: Unable to create '.git/index.lock': File exists.",
       "why": "Another Git process is running, or one crashed and left its lock behind.",
-      "fix": [],
-      "intent": "index-lock",
-      "seealso": []
+      "fix": [
+        {
+          "c": "rm -f .git/index.lock",
+          "n": "Close your editor and any Git GUI first: if something IS mid-operation, deleting the lock can corrupt the index. The file is usually a leftover from a crashed process."
+        }
+      ],
+      "intent": "fix-mistake-quickly",
+      "seealso": [
+        "recover-lost-commit"
+      ]
     },
     {
       "id": "dubious-ownership-msg",
       "msg": "fatal: detected dubious ownership in repository",
       "why": "The repository folder belongs to a different OS user than the one running Git, common in containers, WSL, and network drives.",
-      "fix": [],
-      "intent": "dubious-ownership",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git config --global --add safe.directory <path>",
+          "n": "Common with WSL, containers, network drives, or repos created by another user. The error text prints the exact path to paste."
+        }
+      ],
+      "intent": "protect-work-on-a-shared-laptop",
+      "seealso": [
+        "first-time-setup"
+      ]
     },
     {
       "id": "lf-crlf-warning",
@@ -365,9 +442,20 @@
       "id": "diverged-msg",
       "msg": "Your branch and 'origin/main' have diverged",
       "why": "Both you and the remote gained different commits since you last synced.",
-      "fix": [],
-      "intent": "diverged-branches",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git pull --rebase",
+          "n": "Keep both sides, yours replayed on top. The usual right answer: remote commits land, yours follow cleanly on top."
+        },
+        {
+          "c": "git reset --hard origin/<branch>",
+          "n": "The remote is the truth, drop local commits. Your local-only commits are discarded."
+        }
+      ],
+      "intent": "branch-behind-and-ahead",
+      "seealso": [
+        "reset-to-remote"
+      ]
     },
     {
       "id": "ahead-of-origin",
@@ -407,9 +495,16 @@
       "id": "filename-too-long-msg",
       "msg": "error: unable to create file <path>: Filename too long",
       "why": "Windows' 260-character path limit, hit by deep folder structures.",
-      "fix": [],
-      "intent": "filename-too-long",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git config --global core.longpaths true",
+          "n": "Lifts Git's 260-character Windows limit. Some tools that read the files may still have their own limit."
+        }
+      ],
+      "intent": "wsl-git",
+      "seealso": [
+        "first-time-setup"
+      ]
     },
     {
       "id": "invalid-path-windows",
@@ -500,10 +595,22 @@
         {
           "c": "git config --global commit.gpgsign false",
           "n": "Or switch signing off if you never asked for it; some tools enable it silently."
+        },
+        {
+          "c": "echo \"test\" | gpg --clearsign",
+          "n": "Reproduces the failure outside Git. A passphrase prompt that never appears is the usual cause."
+        },
+        {
+          "c": "export GPG_TTY=$(tty)",
+          "n": "Add it to your shell profile so the agent knows where to prompt. On Windows, confirming user.signingkey matches a key gpg --list-secret-keys shows fixes most of the rest."
         }
       ],
-      "intent": "sign-commits",
-      "seealso": []
+      "intent": "signing-choices",
+      "seealso": [
+        "sign-commits",
+        "signing-choices",
+        "ssh-agent-passphrase"
+      ]
     },
     {
       "id": "unmerged-files",
@@ -529,7 +636,7 @@
       ],
       "intent": null,
       "seealso": [
-        "diverged-branches",
+        "branch-behind-and-ahead",
         "update-branch"
       ]
     },
@@ -603,8 +710,7 @@
       ],
       "intent": null,
       "seealso": [
-        "ssh-key-github",
-        "permission-denied-publickey"
+        "ssh-key-github"
       ]
     },
     {
@@ -623,7 +729,7 @@
       ],
       "intent": null,
       "seealso": [
-        "diverged-branches",
+        "branch-behind-and-ahead",
         "update-branch"
       ]
     },
@@ -640,7 +746,7 @@
       "msg": "error: failed to push some refs to '<url>'",
       "why": "The wrapper line under most push rejections; the real reason is the line above it, usually non-fast-forward.",
       "fix": [],
-      "intent": "non-fast-forward",
+      "intent": "force-push-safely",
       "seealso": []
     },
     {
@@ -670,7 +776,7 @@
       ],
       "intent": null,
       "seealso": [
-        "dubious-ownership"
+        "protect-work-on-a-shared-laptop"
       ]
     },
     {
@@ -774,7 +880,7 @@
       ],
       "intent": null,
       "seealso": [
-        "index-lock"
+        "fix-mistake-quickly"
       ]
     },
     {
@@ -878,8 +984,7 @@
       ],
       "intent": null,
       "seealso": [
-        "ssh-key-github",
-        "permission-denied-publickey"
+        "ssh-key-github"
       ]
     },
     {
@@ -925,7 +1030,7 @@
       ],
       "intent": null,
       "seealso": [
-        "file-too-large"
+        "big-files-where"
       ]
     },
     {
@@ -1279,7 +1384,6 @@
       ],
       "intent": null,
       "seealso": [
-        "permission-denied-publickey",
         "ssh-key-github"
       ]
     },
@@ -1325,7 +1429,7 @@
       ],
       "intent": null,
       "seealso": [
-        "index-lock"
+        "fix-mistake-quickly"
       ]
     },
     {
@@ -1361,7 +1465,7 @@
       "msg": "fatal: unsafe repository ('<path>' is owned by someone else)",
       "why": "The older phrasing of the ownership guard, same cause as dubious ownership.",
       "fix": [],
-      "intent": "dubious-ownership",
+      "intent": "protect-work-on-a-shared-laptop",
       "seealso": []
     },
     {
@@ -1376,7 +1480,7 @@
       ],
       "intent": null,
       "seealso": [
-        "file-too-large",
+        "big-files-where",
         "checkout-pr"
       ]
     },
@@ -1416,9 +1520,29 @@
       "id": "file-size-limit-exact",
       "msg": "remote: error: File <name> is <size> MB; this exceeds GitHub's file size limit of 100.00 MB",
       "why": "One specific file crossed the hard limit; the push cannot land while any commit carries it.",
-      "fix": [],
-      "intent": "file-too-large",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git rm --cached <big-file>",
+          "n": "The large file is in your last commit. "
+        },
+        {
+          "c": "printf \"<big-file>\\n\" >> .gitignore",
+          "n": ""
+        },
+        {
+          "c": "git commit --amend --no-edit",
+          "n": "The commit no longer carries the file; push proceeds."
+        },
+        {
+          "c": "git filter-repo --invert-paths --path <big-file>",
+          "n": "It is buried deeper in history. pip install git-filter-repo first. Rewrites history without the file; every hash after it changes. Then push --force-with-lease and have teammates re-clone."
+        }
+      ],
+      "intent": "big-files-where",
+      "seealso": [
+        "git-lfs",
+        "remove-secret-from-history"
+      ]
     },
     {
       "id": "husky-hook-exit",
@@ -1444,9 +1568,25 @@
       "id": "everything-up-to-date-msg",
       "msg": "Everything up-to-date",
       "why": "Not an error: push found nothing to send. The surprise usually means the work is uncommitted or on another branch.",
-      "fix": [],
-      "intent": "everything-up-to-date",
-      "seealso": []
+      "fix": [
+        {
+          "c": "git status",
+          "n": "Uncommitted changes do not push. Commit first."
+        },
+        {
+          "c": "git branch --show-current",
+          "n": "Empty means detached HEAD: your commits are not on any branch. Rescue them: git switch -c <branch>"
+        },
+        {
+          "c": "git log origin/<branch>..HEAD --oneline",
+          "n": "Empty output means the remote truly has everything, and you are likely looking at the wrong branch or repository on the website."
+        }
+      ],
+      "intent": "changes-not-showing-on-github",
+      "seealso": [
+        "detached-head",
+        "push-new-branch"
+      ]
     },
     {
       "id": "nothing-to-commit",
@@ -1780,7 +1920,7 @@
       ],
       "intent": "symlinks",
       "seealso": [
-        "filename-too-long",
+        "wsl-git",
         "filemode"
       ]
     },
@@ -1958,7 +2098,7 @@
           "n": "Delete the stale lock only once you are certain no Git process is alive."
         }
       ],
-      "intent": "index-lock",
+      "intent": "fix-mistake-quickly",
       "seealso": [
         "unlink-of-file-failed",
         "repair-corrupt-repo"
@@ -2058,7 +2198,7 @@
           "n": "In a disposable container image, where ownership checks add nothing."
         }
       ],
-      "intent": "dubious-ownership",
+      "intent": "protect-work-on-a-shared-laptop",
       "seealso": [
         "wsl-git",
         "ci-git-identity"
@@ -2078,7 +2218,7 @@
           "n": "Finds which config file set the blank value."
         }
       ],
-      "intent": "tell-me-who-you-are",
+      "intent": "first-time-setup",
       "seealso": [
         "name-vs-username",
         "config-precedence"
@@ -2181,7 +2321,7 @@
       "intent": "push-to-different-name",
       "seealso": [
         "branch-in-ci",
-        "src-refspec-error"
+        "repo-with-no-commits"
       ]
     },
     {
@@ -2541,7 +2681,7 @@
       "intent": "wsl-git",
       "seealso": [
         "filemode",
-        "dubious-ownership"
+        "protect-work-on-a-shared-laptop"
       ]
     },
     {
@@ -2798,7 +2938,7 @@
           "n": "Shows which file the editor is actually reading."
         }
       ],
-      "intent": "tell-me-who-you-are",
+      "intent": "first-time-setup",
       "seealso": [
         "clone-in-vscode",
         "name-vs-username"
@@ -2898,7 +3038,7 @@
           "n": "Confirms the config still reads correctly afterwards."
         }
       ],
-      "intent": "index-lock",
+      "intent": "fix-mistake-quickly",
       "seealso": [
         "show-config",
         "git-guis"

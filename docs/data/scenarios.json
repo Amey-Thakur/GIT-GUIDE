@@ -12,118 +12,274 @@
     "root": {
       "q": "What went wrong?",
       "opts": [
-        { "label": "A commit is wrong", "next": "committed" },
-        { "label": "I lost work", "next": "lost" },
-        { "label": "Push or pull fails", "next": "sync" },
-        { "label": "My files are a mess", "next": "mess" },
-        { "label": "Wrong branch", "next": "branch" },
-        { "label": "Git is stuck mid-operation", "next": "stuck" }
+        {
+          "label": "A commit is wrong",
+          "next": "committed"
+        },
+        {
+          "label": "I lost work",
+          "next": "lost"
+        },
+        {
+          "label": "Push or pull fails",
+          "next": "sync"
+        },
+        {
+          "label": "My files are a mess",
+          "next": "mess"
+        },
+        {
+          "label": "Wrong branch",
+          "next": "branch"
+        },
+        {
+          "label": "Git is stuck mid-operation",
+          "next": "stuck"
+        }
       ]
     },
     "committed": {
       "q": "Is the commit pushed?",
       "opts": [
-        { "label": "Not pushed", "next": "committed-local" },
-        { "label": "Pushed, only I use this branch", "next": "committed-own" },
-        { "label": "Pushed, teammates have it", "next": "committed-shared" }
+        {
+          "label": "Not pushed",
+          "next": "committed-local"
+        },
+        {
+          "label": "Pushed, only I use this branch",
+          "next": "committed-own"
+        },
+        {
+          "label": "Pushed, teammates have it",
+          "next": "committed-shared"
+        }
       ]
     },
     "committed-local": {
       "q": "What is wrong with it?",
       "opts": [
-        { "label": "The message", "leaf": "edit-commit-message" },
-        { "label": "A file is missing from it", "leaf": "add-to-last-commit" },
-        { "label": "The whole commit", "leaf": "undo-last-commit" },
-        { "label": "It contains a secret", "leaf": "remove-secret-from-history" },
-        { "label": "It sits on the wrong branch", "leaf": "move-commits-to-branch" }
+        {
+          "label": "The message",
+          "leaf": "edit-commit-message"
+        },
+        {
+          "label": "A file is missing from it",
+          "leaf": "add-to-last-commit"
+        },
+        {
+          "label": "The whole commit",
+          "leaf": "undo-last-commit"
+        },
+        {
+          "label": "It contains a secret",
+          "leaf": "remove-secret-from-history"
+        },
+        {
+          "label": "It sits on the wrong branch",
+          "leaf": "move-commits-to-branch"
+        }
       ]
     },
     "committed-own": {
       "q": "What do you need? (Rewrites end with a force-with-lease push.)",
       "opts": [
-        { "label": "Fix the message or content", "leaf": "edit-commit-message" },
-        { "label": "Combine messy commits into one", "leaf": "squash-commits" },
-        { "label": "Remove one commit entirely", "leaf": "delete-commit" },
-        { "label": "It contains a secret", "leaf": "remove-secret-from-history" }
+        {
+          "label": "Fix the message or content",
+          "leaf": "edit-commit-message"
+        },
+        {
+          "label": "Combine messy commits into one",
+          "leaf": "squash-commits"
+        },
+        {
+          "label": "Remove one commit entirely",
+          "leaf": "delete-commit"
+        },
+        {
+          "label": "It contains a secret",
+          "leaf": "remove-secret-from-history"
+        }
       ]
     },
     "committed-shared": {
       "q": "Shared history is never rewritten. These undo by moving forward.",
       "opts": [
-        { "label": "Undo the last commit", "leaf": "undo-last-commit" },
-        { "label": "Undo an older commit", "leaf": "delete-commit" },
-        { "label": "Undo a merge", "leaf": "undo-merge" },
-        { "label": "A secret leaked", "leaf": "remove-secret-from-history" }
+        {
+          "label": "Undo the last commit",
+          "leaf": "undo-last-commit"
+        },
+        {
+          "label": "Undo an older commit",
+          "leaf": "delete-commit"
+        },
+        {
+          "label": "Undo a merge",
+          "leaf": "undo-merge"
+        },
+        {
+          "label": "A secret leaked",
+          "leaf": "remove-secret-from-history"
+        }
       ]
     },
     "lost": {
       "q": "What is missing?",
       "opts": [
-        { "label": "A commit or a whole branch", "leaf": "recover-lost-commit" },
-        { "label": "Everything since a rebase", "leaf": "undo-rebase" },
-        { "label": "A stash", "leaf": "recover-dropped-stash" },
-        { "label": "A file deleted somewhere in history", "leaf": "restore-deleted-file" },
-        { "label": "Edits I discarded before committing", "leaf": "discard-changes" }
+        {
+          "label": "A commit or a whole branch",
+          "leaf": "recover-lost-commit"
+        },
+        {
+          "label": "Everything since a rebase",
+          "leaf": "undo-rebase"
+        },
+        {
+          "label": "A stash",
+          "leaf": "recover-dropped-stash"
+        },
+        {
+          "label": "A file deleted somewhere in history",
+          "leaf": "restore-deleted-file"
+        },
+        {
+          "label": "Edits I discarded before committing",
+          "leaf": "discard-changes"
+        }
       ]
     },
     "sync": {
       "q": "Where does it fail?",
       "opts": [
-        { "label": "Push is rejected", "next": "sync-push" },
-        { "label": "Pull complains", "next": "sync-pull" },
-        { "label": "Authentication fails", "next": "sync-auth" }
+        {
+          "label": "Push is rejected",
+          "next": "sync-push"
+        },
+        {
+          "label": "Pull complains",
+          "next": "sync-pull"
+        },
+        {
+          "label": "Authentication fails",
+          "next": "sync-auth"
+        }
       ]
     },
     "sync-push": {
       "q": "What does the rejection say?",
       "opts": [
-        { "label": "non-fast-forward, or fetch first", "leaf": "non-fast-forward" },
-        { "label": "no upstream branch", "leaf": "push-new-branch" },
-        { "label": "src refspec does not match any", "leaf": "src-refspec-error" },
-        { "label": "a file exceeds 100 MB", "leaf": "file-too-large" }
+        {
+          "label": "non-fast-forward, or fetch first",
+          "errleaf": "non-fast-forward-rejected"
+        },
+        {
+          "label": "no upstream branch",
+          "leaf": "push-new-branch"
+        },
+        {
+          "label": "src refspec does not match any",
+          "errleaf": "src-refspec"
+        },
+        {
+          "label": "a file exceeds 100 MB",
+          "errleaf": "file-size-limit-exact"
+        }
       ]
     },
     "sync-pull": {
       "q": "What does pull say?",
       "opts": [
-        { "label": "Branches have diverged", "leaf": "diverged-branches" },
-        { "label": "Local changes would be overwritten", "leaf": "stash" },
-        { "label": "Cannot rebase, unstaged changes", "leaf": "autostash" },
-        { "label": "Refusing to merge unrelated histories", "leaf": "unrelated-histories" }
+        {
+          "label": "Branches have diverged",
+          "errleaf": "diverged-msg"
+        },
+        {
+          "label": "Local changes would be overwritten",
+          "leaf": "stash"
+        },
+        {
+          "label": "Cannot rebase, unstaged changes",
+          "leaf": "autostash"
+        },
+        {
+          "label": "Refusing to merge unrelated histories",
+          "errleaf": "unrelated-histories"
+        }
       ]
     },
     "sync-auth": {
       "q": "Which flavor?",
       "opts": [
-        { "label": "Permission denied (publickey)", "leaf": "permission-denied-publickey" },
-        { "label": "Authentication failed over HTTPS", "leaf": "stop-password-prompts" }
+        {
+          "label": "Permission denied (publickey)",
+          "errleaf": "publickey-denied"
+        },
+        {
+          "label": "Authentication failed over HTTPS",
+          "leaf": "stop-password-prompts"
+        }
       ]
     },
     "mess": {
       "q": "What kind of mess?",
       "opts": [
-        { "label": "Uncommitted edits I want gone", "leaf": "discard-changes" },
-        { "label": "Untracked files everywhere", "leaf": "remove-untracked" },
-        { "label": "Make my branch match the remote exactly", "leaf": "reset-to-remote" },
-        { "label": "I need these edits later, just not now", "leaf": "stash" },
-        { "label": "Conflict markers inside my files", "leaf": "merge-conflict" }
+        {
+          "label": "Uncommitted edits I want gone",
+          "leaf": "discard-changes"
+        },
+        {
+          "label": "Untracked files everywhere",
+          "leaf": "remove-untracked"
+        },
+        {
+          "label": "Make my branch match the remote exactly",
+          "leaf": "reset-to-remote"
+        },
+        {
+          "label": "I need these edits later, just not now",
+          "leaf": "stash"
+        },
+        {
+          "label": "Conflict markers inside my files",
+          "leaf": "merge-conflict"
+        }
       ]
     },
     "branch": {
       "q": "What happened?",
       "opts": [
-        { "label": "Committed on main instead of a feature branch", "leaf": "move-commits-to-branch" },
-        { "label": "Uncommitted work, wrong branch", "leaf": "move-changes-to-branch" },
-        { "label": "Detached HEAD", "leaf": "detached-head" },
-        { "label": "The branch name is wrong", "leaf": "rename-branch" }
+        {
+          "label": "Committed on main instead of a feature branch",
+          "leaf": "move-commits-to-branch"
+        },
+        {
+          "label": "Uncommitted work, wrong branch",
+          "leaf": "move-changes-to-branch"
+        },
+        {
+          "label": "Detached HEAD",
+          "leaf": "detached-head"
+        },
+        {
+          "label": "The branch name is wrong",
+          "leaf": "rename-branch"
+        }
       ]
     },
     "stuck": {
       "q": "Stuck how?",
       "opts": [
-        { "label": "A rebase, merge, or cherry-pick is in progress", "leaf": "abort-operation" },
-        { "label": "index.lock: another process seems to be running", "leaf": "index-lock" },
-        { "label": "An editor opened and trapped me", "leaf": "exit-vim" }
+        {
+          "label": "A rebase, merge, or cherry-pick is in progress",
+          "leaf": "abort-operation"
+        },
+        {
+          "label": "index.lock: another process seems to be running",
+          "errleaf": "index-lock-exists"
+        },
+        {
+          "label": "An editor opened and trapped me",
+          "leaf": "exit-vim"
+        }
       ]
     }
   }

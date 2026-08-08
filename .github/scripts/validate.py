@@ -73,6 +73,11 @@ def intent_ids():
     return {i["id"] for i in data.get("intents", [])}
 
 
+def error_ids():
+    data = json.loads((DATA / "errors.json").read_text(encoding="utf-8"))
+    return {e["id"] for e in data.get("errors", [])}
+
+
 def check_errors(path, known):
     data = json.loads(path.read_text(encoding="utf-8"))
     seen = set()
@@ -98,7 +103,7 @@ def check_errors(path, known):
     print(f"{path.name}: {len(data.get('errors', []))} errors OK")
 
 
-def check_scenarios(path, known):
+def check_scenarios(path, known, known_errors):
     data = json.loads(path.read_text(encoding="utf-8"))
     nodes = data.get("nodes", {})
     if data.get("start") not in nodes:
@@ -116,11 +121,14 @@ def check_scenarios(path, known):
                     err(f"{path.name}:{nid}: next '{opt['next']}' does not exist")
                 else:
                     stack.append(opt["next"])
+            elif "errleaf" in opt:
+                if opt["errleaf"] not in known_errors:
+                    err(f"{path.name}:{nid}: errleaf '{opt['errleaf']}' does not exist in errors")
             elif "leaf" in opt:
                 if opt["leaf"] not in known:
                     err(f"{path.name}:{nid}: leaf '{opt['leaf']}' does not exist in intents")
             else:
-                err(f"{path.name}:{nid}: option '{opt.get('label')}' has neither next nor leaf")
+                err(f"{path.name}:{nid}: option '{opt.get('label')}' has no next, leaf, or errleaf")
     for nid in nodes:
         if nid not in reachable:
             err(f"{path.name}:{nid}: node is unreachable")
@@ -149,7 +157,7 @@ def main():
             elif path.name == "errors.json":
                 check_errors(path, known or intent_ids())
             elif path.name == "scenarios.json":
-                check_scenarios(path, known or intent_ids())
+                check_scenarios(path, known or intent_ids(), error_ids())
             else:
                 json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as e:

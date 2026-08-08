@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
 
@@ -110,7 +110,7 @@
 <article class="result errcard" id="publickey-denied">
   <h2><code class="errmsg">git@github.com: Permission denied (publickey).</code><a class="anchor" href="#publickey-denied" aria-label="Link to this error">#</a></h2>
   <p class="note">The host never received a key it recognizes: no key loaded, key not added to your account, or an HTTPS problem disguised by an SSH URL.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
 </article>
 <article class="result errcard" id="authentication-failed">
   <h2><code class="errmsg">fatal: Authentication failed for &#x27;https://github.com/...&#x27;</code><a class="anchor" href="#authentication-failed" aria-label="Link to this error">#</a></h2>
@@ -125,22 +125,22 @@
 <article class="result errcard" id="non-fast-forward-rejected">
   <h2><code class="errmsg">! [rejected] main -&gt; main (non-fast-forward)</code><a class="anchor" href="#non-fast-forward-rejected" aria-label="Link to this error">#</a></h2>
   <p class="note">The remote has commits you do not have. Git refuses to overwrite them.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#non-fast-forward">Fix: push rejected, non-fast-forward</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#force-push-safely">Force push without destroying teammates&#x27; work</a></p>
 </article>
 <article class="result errcard" id="fetch-first">
   <h2><code class="errmsg">! [rejected] main -&gt; main (fetch first)</code><a class="anchor" href="#fetch-first" aria-label="Link to this error">#</a></h2>
   <p class="note">Same cause as non-fast-forward: someone pushed before you.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#non-fast-forward">Fix: push rejected, non-fast-forward</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#force-push-safely">Force push without destroying teammates&#x27; work</a></p>
 </article>
 <article class="result errcard" id="src-refspec">
   <h2><code class="errmsg">error: src refspec main does not match any</code><a class="anchor" href="#src-refspec" aria-label="Link to this error">#</a></h2>
   <p class="note">The branch you are pushing does not exist locally, almost always because there is no commit yet.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#src-refspec-error">Fix: src refspec main does not match any</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-with-no-commits">Work with a repository that has no commits yet</a></p>
 </article>
 <article class="result errcard" id="unrelated-histories">
   <h2><code class="errmsg">fatal: refusing to merge unrelated histories</code><a class="anchor" href="#unrelated-histories" aria-label="Link to this error">#</a></h2>
   <p class="note">The two sides share no common commit, typically a fresh git init pulled against a remote that already has commits.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#unrelated-histories">Fix: refusing to merge unrelated histories</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#repo-has-two-histories">The repository seems to have two separate histories</a></p>
 </article>
 <article class="result errcard" id="merge-conflict-marker">
   <h2><code class="errmsg">CONFLICT (content): Merge conflict in &lt;file&gt;</code><a class="anchor" href="#merge-conflict-marker" aria-label="Link to this error">#</a></h2>
@@ -170,7 +170,7 @@
 <article class="result errcard" id="auto-detect-email">
   <h2><code class="errmsg">fatal: unable to auto-detect email address</code><a class="anchor" href="#auto-detect-email" aria-label="Link to this error">#</a></h2>
   <p class="note">Git has no identity to stamp into the commit.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tell-me-who-you-are">Fix: Please tell me who you are</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#first-time-setup">First-time Git setup on a new machine</a></p>
 </article>
 <article class="result errcard" id="cannot-pull-unstaged">
   <h2><code class="errmsg">error: cannot pull with rebase: You have unstaged changes</code><a class="anchor" href="#cannot-pull-unstaged" aria-label="Link to this error">#</a></h2>
@@ -198,22 +198,22 @@
   <p class="note">Raises the HTTP buffer to 150 MB for this repository.</p>
   <div class="cmd"><code>git push origin &lt;branch&gt; --no-thin</code><button class="copy" data-cmd="git push origin &lt;branch&gt; --no-thin" aria-label="Copy command">Copy</button></div>
   <p class="note">If it persists, push over SSH instead; SSH has no such limit.</p>
-  <p class="seealso">See also: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">See also: <a href="index.html#big-files-where">Where large files belong</a></p>
 </article>
 <article class="result errcard" id="gh001-large-files">
   <h2><code class="errmsg">remote: error: GH001: Large files detected.</code><a class="anchor" href="#gh001-large-files" aria-label="Link to this error">#</a></h2>
   <p class="note">GitHub refuses files over 100 MB in normal Git storage.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#big-files-where">Where large files belong</a></p>
 </article>
 <article class="result errcard" id="index-lock-exists">
   <h2><code class="errmsg">fatal: Unable to create &#x27;.git/index.lock&#x27;: File exists.</code><a class="anchor" href="#index-lock-exists" aria-label="Link to this error">#</a></h2>
   <p class="note">Another Git process is running, or one crashed and left its lock behind.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#fix-mistake-quickly">I made a mistake, what do I run</a></p>
 </article>
 <article class="result errcard" id="dubious-ownership-msg">
   <h2><code class="errmsg">fatal: detected dubious ownership in repository</code><a class="anchor" href="#dubious-ownership-msg" aria-label="Link to this error">#</a></h2>
   <p class="note">The repository folder belongs to a different OS user than the one running Git, common in containers, WSL, and network drives.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#protect-work-on-a-shared-laptop">Use Git safely on a machine I share</a></p>
 </article>
 <article class="result errcard" id="lf-crlf-warning">
   <h2><code class="errmsg">warning: LF will be replaced by CRLF the next time Git touches it</code><a class="anchor" href="#lf-crlf-warning" aria-label="Link to this error">#</a></h2>
@@ -270,7 +270,7 @@
 <article class="result errcard" id="diverged-msg">
   <h2><code class="errmsg">Your branch and &#x27;origin/main&#x27; have diverged</code><a class="anchor" href="#diverged-msg" aria-label="Link to this error">#</a></h2>
   <p class="note">Both you and the remote gained different commits since you last synced.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#diverged-branches">Fix: Your branch and origin have diverged</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#branch-behind-and-ahead">Read ahead and behind counts correctly</a></p>
 </article>
 <article class="result errcard" id="ahead-of-origin">
   <h2><code class="errmsg">Your branch is ahead of &#x27;origin/main&#x27; by N commits</code><a class="anchor" href="#ahead-of-origin" aria-label="Link to this error">#</a></h2>
@@ -291,7 +291,7 @@
 <article class="result errcard" id="filename-too-long-msg">
   <h2><code class="errmsg">error: unable to create file &lt;path&gt;: Filename too long</code><a class="anchor" href="#filename-too-long-msg" aria-label="Link to this error">#</a></h2>
   <p class="note">Windows&#x27; 260-character path limit, hit by deep folder structures.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#filename-too-long">Fix: Filename too long on Windows</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#wsl-git">Use Git well between Windows and WSL</a></p>
 </article>
 <article class="result errcard" id="invalid-path-windows">
   <h2><code class="errmsg">error: invalid path &#x27;&lt;name&gt;&#x27;</code><a class="anchor" href="#invalid-path-windows" aria-label="Link to this error">#</a></h2>
@@ -327,7 +327,7 @@
 <article class="result errcard" id="gpg-failed-to-sign">
   <h2><code class="errmsg">error: gpg failed to sign the data</code><a class="anchor" href="#gpg-failed-to-sign" aria-label="Link to this error">#</a></h2>
   <p class="note">Signing is switched on but the signing setup is incomplete or the key is unavailable.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#sign-commits">Sign commits and get the Verified badge</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#signing-choices">SSH, GPG, or gitsign for signing commits</a></p>
 </article>
 <article class="result errcard" id="unmerged-files">
   <h2><code class="errmsg">error: Pulling is not possible because you have unmerged files.</code><a class="anchor" href="#unmerged-files" aria-label="Link to this error">#</a></h2>
@@ -341,7 +341,7 @@
   <p class="note">The usual right answer: remote commits land, yours replay on top, history stays straight.</p>
   <div class="cmd"><code>git config --global pull.ff only</code><button class="copy" data-cmd="git config --global pull.ff only" aria-label="Copy command">Copy</button></div>
   <p class="note">The strict alternative: pull succeeds only when nothing diverged, and asks you to decide otherwise.</p>
-  <p class="seealso">See also: <a href="index.html#diverged-branches">Fix: Your branch and origin have diverged</a></p>
+  <p class="seealso">See also: <a href="index.html#branch-behind-and-ahead">Read ahead and behind counts correctly</a></p>
   <p class="seealso">See also: <a href="index.html#update-branch">Get the latest changes from the remote</a></p>
 </article>
 <article class="result errcard" id="could-not-read-username">
@@ -378,7 +378,6 @@
   <div class="cmd"><code>Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent</code><button class="copy" data-cmd="Get-Service ssh-agent | Set-Service -StartupType Automatic; Start-Service ssh-agent" aria-label="Copy command">Copy</button></div>
   <p class="note">Windows PowerShell, once as administrator; the agent then starts with the system.</p>
   <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
-  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
 </article>
 <article class="result errcard" id="not-possible-fast-forward">
   <h2><code class="errmsg">fatal: Not possible to fast-forward, aborting.</code><a class="anchor" href="#not-possible-fast-forward" aria-label="Link to this error">#</a></h2>
@@ -387,7 +386,7 @@
   <p class="note">The usual answer: remote commits land, yours replay on top.</p>
   <div class="cmd"><code>git pull --no-ff</code><button class="copy" data-cmd="git pull --no-ff" aria-label="Copy command">Copy</button></div>
   <p class="note">Or take a merge commit this once. The strict setting did its job: it made the divergence visible instead of merging silently.</p>
-  <p class="seealso">See also: <a href="index.html#diverged-branches">Fix: Your branch and origin have diverged</a></p>
+  <p class="seealso">See also: <a href="index.html#branch-behind-and-ahead">Read ahead and behind counts correctly</a></p>
   <p class="seealso">See also: <a href="index.html#update-branch">Get the latest changes from the remote</a></p>
 </article>
 <article class="result errcard" id="not-on-branch-pull">
@@ -398,7 +397,7 @@
 <article class="result errcard" id="failed-to-push-some-refs">
   <h2><code class="errmsg">error: failed to push some refs to &#x27;&lt;url&gt;&#x27;</code><a class="anchor" href="#failed-to-push-some-refs" aria-label="Link to this error">#</a></h2>
   <p class="note">The wrapper line under most push rejections; the real reason is the line above it, usually non-fast-forward.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#non-fast-forward">Fix: push rejected, non-fast-forward</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#force-push-safely">Force push without destroying teammates&#x27; work</a></p>
 </article>
 <article class="result errcard" id="worktree-dir-permission">
   <h2><code class="errmsg">fatal: could not create work tree dir &#x27;&lt;name&gt;&#x27;: Permission denied</code><a class="anchor" href="#worktree-dir-permission" aria-label="Link to this error">#</a></h2>
@@ -412,7 +411,7 @@
   <p class="note">Files inside .git belong to another user, typically after running Git with sudo once or sharing a repo folder.</p>
   <div class="cmd"><code>sudo chown -R $(whoami) .git</code><button class="copy" data-cmd="sudo chown -R $(whoami) .git" aria-label="Copy command">Copy</button></div>
   <p class="note">Return the repository to your user, then never run Git with sudo again.</p>
-  <p class="seealso">See also: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+  <p class="seealso">See also: <a href="index.html#protect-work-on-a-shared-laptop">Use Git safely on a machine I share</a></p>
 </article>
 <article class="result errcard" id="cannot-lock-ref-stale">
   <h2><code class="errmsg">error: cannot lock ref &#x27;refs/remotes/origin/&lt;branch&gt;&#x27;: unable to resolve reference</code><a class="anchor" href="#cannot-lock-ref-stale" aria-label="Link to this error">#</a></h2>
@@ -462,7 +461,7 @@
   <p class="note">Something holds the file open: an editor, a running process, or an antivirus scan, most often on Windows.</p>
   <div class="cmd"><code>&lt;close the app using the file, then retry&gt;</code><button class="copy" data-cmd="&lt;close the app using the file, then retry&gt;" aria-label="Copy command">Copy</button></div>
   <p class="note">IDEs and dev servers are the usual holders. Persistent cases are the antivirus; exclude the repository folder from real-time scanning.</p>
-  <p class="seealso">See also: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+  <p class="seealso">See also: <a href="index.html#fix-mistake-quickly">I made a mistake, what do I run</a></p>
 </article>
 <article class="result errcard" id="already-checked-out">
   <h2><code class="errmsg">fatal: &#x27;&lt;branch&gt;&#x27; is already checked out at &#x27;&lt;path&gt;&#x27;</code><a class="anchor" href="#already-checked-out" aria-label="Link to this error">#</a></h2>
@@ -514,7 +513,6 @@
   <div class="cmd"><code>ssh -T git@github.com</code><button class="copy" data-cmd="ssh -T git@github.com" aria-label="Copy command">Copy</button></div>
   <p class="note">Run interactively once and answer yes to store the fingerprint. In CI, pre-seed known_hosts instead of disabling checking.</p>
   <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
-  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
 </article>
 <article class="result errcard" id="ssh-port-22-timeout">
   <h2><code class="errmsg">ssh: connect to host github.com port 22: Connection timed out</code><a class="anchor" href="#ssh-port-22-timeout" aria-label="Link to this error">#</a></h2>
@@ -536,7 +534,7 @@
   <p class="note">The connection died mid-transfer, usually a large push meeting a server or proxy limit.</p>
   <div class="cmd"><code>git config http.postBuffer 157286400</code><button class="copy" data-cmd="git config http.postBuffer 157286400" aria-label="Copy command">Copy</button></div>
   <p class="note">Raises the HTTP buffer to 150 MB for this repository; SSH remotes avoid the limit entirely.</p>
-  <p class="seealso">See also: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">See also: <a href="index.html#big-files-where">Where large files belong</a></p>
 </article>
 <article class="result errcard" id="embedded-repository">
   <h2><code class="errmsg">warning: adding embedded git repository: &lt;folder&gt;</code><a class="anchor" href="#embedded-repository" aria-label="Link to this error">#</a></h2>
@@ -707,7 +705,6 @@
   <p class="note">The generic tail of every SSH failure; the true cause sits in the lines above it.</p>
   <div class="cmd"><code>ssh -T git@github.com</code><button class="copy" data-cmd="ssh -T git@github.com" aria-label="Copy command">Copy</button></div>
   <p class="note">Reproduce the real error alone: publickey, host key, or timeout, each has its own entry here.</p>
-  <p class="seealso">See also: <a href="index.html#permission-denied-publickey">Fix: Permission denied (publickey)</a></p>
   <p class="seealso">See also: <a href="index.html#ssh-key-github">Generate an SSH key and add it to GitHub</a></p>
 </article>
 <article class="result errcard" id="openssl-connection-reset">
@@ -729,7 +726,7 @@
   <p class="note">The index file was damaged, a crash, a full disk, or a sync service writing into .git.</p>
   <div class="cmd"><code>rm .git/index &amp;&amp; git reset</code><button class="copy" data-cmd="rm .git/index &amp;&amp; git reset" aria-label="Copy command">Copy</button></div>
   <p class="note">The index rebuilds from HEAD; your files are untouched. Keep .git out of OneDrive and Dropbox sync.</p>
-  <p class="seealso">See also: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+  <p class="seealso">See also: <a href="index.html#fix-mistake-quickly">I made a mistake, what do I run</a></p>
 </article>
 <article class="result errcard" id="lf-would-be-replaced">
   <h2><code class="errmsg">fatal: LF would be replaced by CRLF in &lt;file&gt;</code><a class="anchor" href="#lf-would-be-replaced" aria-label="Link to this error">#</a></h2>
@@ -749,14 +746,14 @@
 <article class="result errcard" id="unsafe-repository">
   <h2><code class="errmsg">fatal: unsafe repository (&#x27;&lt;path&gt;&#x27; is owned by someone else)</code><a class="anchor" href="#unsafe-repository" aria-label="Link to this error">#</a></h2>
   <p class="note">The older phrasing of the ownership guard, same cause as dubious ownership.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#protect-work-on-a-shared-laptop">Use Git safely on a machine I share</a></p>
 </article>
 <article class="result errcard" id="pre-receive-hook-declined">
   <h2><code class="errmsg">! [remote rejected] &lt;branch&gt; -&gt; &lt;branch&gt; (pre-receive hook declined)</code><a class="anchor" href="#pre-receive-hook-declined" aria-label="Link to this error">#</a></h2>
   <p class="note">The server ran a policy check and said no: a protected branch, an oversized file, or a failed lint, and it printed its reason just above this line.</p>
   <div class="cmd"><code>&lt;read the remote: lines above the rejection&gt;</code><button class="copy" data-cmd="&lt;read the remote: lines above the rejection&gt;" aria-label="Copy command">Copy</button></div>
   <p class="note">The server states its rule there. Protected branch? Open a pull request instead of pushing directly.</p>
-  <p class="seealso">See also: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">See also: <a href="index.html#big-files-where">Where large files belong</a></p>
   <p class="seealso">See also: <a href="index.html#checkout-pr">Check out a pull request locally</a></p>
 </article>
 <article class="result errcard" id="repository-rule-violations">
@@ -778,7 +775,7 @@
 <article class="result errcard" id="file-size-limit-exact">
   <h2><code class="errmsg">remote: error: File &lt;name&gt; is &lt;size&gt; MB; this exceeds GitHub&#x27;s file size limit of 100.00 MB</code><a class="anchor" href="#file-size-limit-exact" aria-label="Link to this error">#</a></h2>
   <p class="note">One specific file crossed the hard limit; the push cannot land while any commit carries it.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#file-too-large">Fix: push rejected because a file exceeds 100 MB</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#big-files-where">Where large files belong</a></p>
 </article>
 <article class="result errcard" id="husky-hook-exit">
   <h2><code class="errmsg">husky - pre-commit hook exited with code 1 (error)</code><a class="anchor" href="#husky-hook-exit" aria-label="Link to this error">#</a></h2>
@@ -793,7 +790,7 @@
 <article class="result errcard" id="everything-up-to-date-msg">
   <h2><code class="errmsg">Everything up-to-date</code><a class="anchor" href="#everything-up-to-date-msg" aria-label="Link to this error">#</a></h2>
   <p class="note">Not an error: push found nothing to send. The surprise usually means the work is uncommitted or on another branch.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#everything-up-to-date">Push says Everything up-to-date but my changes are missing</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#changes-not-showing-on-github">I pushed but GitHub does not show my changes</a></p>
 </article>
 <article class="result errcard" id="nothing-to-commit">
   <h2><code class="errmsg">nothing to commit, working tree clean</code><a class="anchor" href="#nothing-to-commit" aria-label="Link to this error">#</a></h2>
@@ -931,7 +928,7 @@
 <article class="result errcard" id="update-ref-failed">
   <h2><code class="errmsg">fatal: update_ref failed for ref &#x27;refs/heads/main&#x27;: cannot lock ref</code><a class="anchor" href="#update-ref-failed" aria-label="Link to this error">#</a></h2>
   <p class="note">Another Git process holds the reference, or a stale lock file was left behind by one that crashed.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#fix-mistake-quickly">I made a mistake, what do I run</a></p>
 </article>
 <article class="result errcard" id="cherry-pick-empty">
   <h2><code class="errmsg">The previous cherry-pick is now empty, possibly due to conflict resolution.</code><a class="anchor" href="#cherry-pick-empty" aria-label="Link to this error">#</a></h2>
@@ -956,12 +953,12 @@
 <article class="result errcard" id="working-tree-clean-but-diff">
   <h2><code class="errmsg">warning: unable to access &#x27;/root/.gitconfig&#x27;: Permission denied</code><a class="anchor" href="#working-tree-clean-but-diff" aria-label="Link to this error">#</a></h2>
   <p class="note">Git is running as a user whose home directory it cannot read, common inside containers and CI.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#dubious-ownership">Fix: detected dubious ownership in repository</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#protect-work-on-a-shared-laptop">Use Git safely on a machine I share</a></p>
 </article>
 <article class="result errcard" id="empty-ident-name">
   <h2><code class="errmsg">fatal: empty ident name (for &lt;you@example.com&gt;) not allowed</code><a class="anchor" href="#empty-ident-name" aria-label="Link to this error">#</a></h2>
   <p class="note">user.name is set to an empty string, so Git cannot build a valid author line.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tell-me-who-you-are">Fix: Please tell me who you are</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#first-time-setup">First-time Git setup on a new machine</a></p>
 </article>
 <article class="result errcard" id="redirecting-to-https">
   <h2><code class="errmsg">warning: redirecting to https://github.com/&lt;owner&gt;/&lt;repo&gt;.git/</code><a class="anchor" href="#redirecting-to-https" aria-label="Link to this error">#</a></h2>
@@ -1141,7 +1138,7 @@
 <article class="result errcard" id="vscode-configure-user">
   <h2><code class="errmsg">Make sure you configure your &#x27;user.name&#x27; and &#x27;user.email&#x27; in git.</code><a class="anchor" href="#vscode-configure-user" aria-label="Link to this error">#</a></h2>
   <p class="note">VS Code refuses to commit without an identity, and its terminal may not see the shell profile where you set one.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#tell-me-who-you-are">Fix: Please tell me who you are</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#first-time-setup">First-time Git setup on a new machine</a></p>
 </article>
 <article class="result errcard" id="nothing-added-untracked">
   <h2><code class="errmsg">nothing added to commit but untracked files present (use &quot;git add&quot; to track)</code><a class="anchor" href="#nothing-added-untracked" aria-label="Link to this error">#</a></h2>
@@ -1166,7 +1163,7 @@
 <article class="result errcard" id="could-not-lock-config">
   <h2><code class="errmsg">error: could not lock config file .git/config: File exists</code><a class="anchor" href="#could-not-lock-config" aria-label="Link to this error">#</a></h2>
   <p class="note">A stale .git/config.lock is left over from a crashed Git process or an editor holding the file open.</p>
-  <p class="seealso">Full answer with danger level and undo: <a href="index.html#index-lock">Fix: Unable to create .git/index.lock: File exists</a></p>
+  <p class="seealso">Full answer with danger level and undo: <a href="index.html#fix-mistake-quickly">I made a mistake, what do I run</a></p>
 </article>
 <article class="result errcard" id="cannot-open-editor">
   <h2><code class="errmsg">error: cannot run vi: No such file or directory  error: unable to start editor &#x27;vi&#x27;</code><a class="anchor" href="#cannot-open-editor" aria-label="Link to this error">#</a></h2>

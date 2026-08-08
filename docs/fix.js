@@ -4,7 +4,7 @@
   Author: Amey Thakur
   GitHub: https://github.com/Amey-Thakur
   Tech: Vanilla JavaScript
-  Description: Walks the decision tree in data/scenarios.json. Choices build a breadcrumb you can step back through; leaves render the full answer card from intents.json via render.js.
+  Description: Walks the decision tree in data/scenarios.json. Choices build a breadcrumb you can step back through; a leaf renders the full answer card from intents.json, and an errleaf renders the decoded error from errors.json, both via render.js.
   Date: 2026-08-07
 */
 
@@ -18,14 +18,17 @@
   var crumbsEl = document.getElementById("crumbs");
   var TREE = null;
   var INTENTS = null;
+  var ERRORS = null;
   var path = [];
 
   Promise.all([
     fetch("data/scenarios.json").then(function (r) { return r.json(); }),
-    fetch("data/intents.json").then(function (r) { return r.json(); })
+    fetch("data/intents.json").then(function (r) { return r.json(); }),
+    fetch("data/errors.json").then(function (r) { return r.json(); })
   ]).then(function (loaded) {
     TREE = loaded[0];
     INTENTS = loaded[1].intents;
+    ERRORS = loaded[2].errors;
     show(TREE.start);
   });
 
@@ -62,12 +65,37 @@
           show(opt.next);
         } else {
           path.push({ label: opt.label, to: null });
-          leaf(opt.leaf);
+          if (opt.errleaf) errLeaf(opt.errleaf);
+          else leaf(opt.leaf);
         }
       });
       opts.appendChild(b);
     });
     wizard.appendChild(opts);
+  }
+
+  function errLeaf(errorId) {
+    renderCrumbs();
+    clear(wizard);
+    var e = ERRORS.find(function (x) { return x.id === errorId; });
+    var card = GG.el("article", "result errcard");
+    card.appendChild(GG.el("pre", "errmsg", e.msg));
+    card.appendChild(GG.el("p", "note", e.why));
+    (e.fix || []).forEach(function (c) {
+      var row = GG.el("div", "cmdrow");
+      var code = GG.el("code", null, c.c);
+      row.appendChild(code);
+      row.appendChild(GG.copyButton(c.c));
+      card.appendChild(row);
+      if (c.n) card.appendChild(GG.el("p", "cmdnote", c.n));
+    });
+    var more = GG.el("a", "inl", "Open this error on the Errors page");
+    more.href = "errors.html#" + e.id;
+    card.appendChild(more);
+    wizard.appendChild(card);
+    var again = GG.el("button", "wizard-opt restart", "Start over");
+    again.addEventListener("click", function () { path = []; show(TREE.start); });
+    wizard.appendChild(again);
   }
 
   function leaf(intentId) {

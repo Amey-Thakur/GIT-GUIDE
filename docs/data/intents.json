@@ -1866,39 +1866,6 @@
       ]
     },
     {
-      "id": "src-refspec-error",
-      "q": "Fix: src refspec main does not match any",
-      "aka": [
-        "src refspec master does not match any",
-        "error failed to push some refs"
-      ],
-      "variants": [
-        {
-          "when": "Usually there is no commit yet",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git status",
-              "n": "If it says No commits yet, the branch does not exist until the first commit."
-            },
-            {
-              "c": "git add . && git commit -m \"Initial commit\"",
-              "n": ""
-            },
-            {
-              "c": "git push -u origin main",
-              "n": "If your branch is actually named master, push that name or rename with git branch -m master main first."
-            }
-          ],
-          "undo": "Nothing destructive here"
-        }
-      ],
-      "seealso": [
-        "upload-existing-project",
-        "push-new-branch"
-      ]
-    },
-    {
       "id": "ssh-key-github",
       "q": "Generate an SSH key and add it to GitHub",
       "aka": [
@@ -1937,42 +1904,7 @@
         }
       ],
       "seealso": [
-        "permission-denied-publickey",
         "https-vs-ssh"
-      ]
-    },
-    {
-      "id": "permission-denied-publickey",
-      "q": "Fix: Permission denied (publickey)",
-      "aka": [
-        "publickey error",
-        "ssh permission denied",
-        "could not read from remote repository"
-      ],
-      "variants": [
-        {
-          "when": "Diagnose in order",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "ssh -T git@github.com",
-              "n": "If this greets you by name, SSH is fine and the problem is the remote URL."
-            },
-            {
-              "c": "git remote -v",
-              "n": "An https:// URL never uses your SSH key. Switch with git remote set-url origin git@github.com:<user>/<repo>.git"
-            },
-            {
-              "c": "ssh-add -l",
-              "n": "Empty means no key is loaded: run ssh-add ~/.ssh/id_ed25519. No key at all: generate one first."
-            }
-          ],
-          "undo": "Nothing destructive here"
-        }
-      ],
-      "seealso": [
-        "ssh-key-github",
-        "change-remote-url"
       ]
     },
     {
@@ -2068,37 +2000,6 @@
       "seealso": [
         "ssh-key-github",
         "https-vs-ssh"
-      ]
-    },
-    {
-      "id": "tell-me-who-you-are",
-      "q": "Fix: Please tell me who you are",
-      "aka": [
-        "unable to auto-detect email address",
-        "author identity unknown",
-        "empty ident name",
-        "check my git identity"
-      ],
-      "variants": [
-        {
-          "when": "Set your identity once",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git config --global user.name \"<your name>\"",
-              "n": ""
-            },
-            {
-              "c": "git config --global user.email \"<your email>\"",
-              "n": "Use your GitHub email so commits count on your profile. Drop --global to set it for one repository only."
-            }
-          ],
-          "undo": "git config --global --unset user.name (and user.email)"
-        }
-      ],
-      "seealso": [
-        "first-time-setup",
-        "change-commit-author"
       ]
     },
     {
@@ -2343,7 +2244,7 @@
         }
       ],
       "seealso": [
-        "tell-me-who-you-are",
+        "first-time-setup",
         "remove-secret-from-history"
       ]
     },
@@ -2457,85 +2358,6 @@
       ],
       "seealso": [
         "rename-master-to-main"
-      ]
-    },
-    {
-      "id": "dubious-ownership",
-      "q": "Fix: detected dubious ownership in repository",
-      "aka": [
-        "safe.directory",
-        "dubious ownership",
-        "wsl git error",
-        "docker mounted repo error",
-        "git inside a docker container"
-      ],
-      "variants": [
-        {
-          "when": "You trust the folder",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git config --global --add safe.directory <path>",
-              "n": "Common with WSL, containers, network drives, or repos created by another user. The error text prints the exact path to paste."
-            }
-          ],
-          "undo": "git config --global --unset-all safe.directory <path>"
-        }
-      ],
-      "seealso": [
-        "first-time-setup"
-      ]
-    },
-    {
-      "id": "index-lock",
-      "q": "Fix: Unable to create .git/index.lock: File exists",
-      "aka": [
-        "index.lock",
-        "another git process seems to be running",
-        "lock file error",
-        "cannot lock existing info/refs"
-      ],
-      "variants": [
-        {
-          "when": "No other Git process is actually running",
-          "danger": "destructive",
-          "cmds": [
-            {
-              "c": "rm -f .git/index.lock",
-              "n": "Close your editor and any Git GUI first: if something IS mid-operation, deleting the lock can corrupt the index. The file is usually a leftover from a crashed process."
-            }
-          ],
-          "undo": "None needed; the lock is recreated by the next command"
-        }
-      ],
-      "seealso": [
-        "recover-lost-commit"
-      ]
-    },
-    {
-      "id": "filename-too-long",
-      "q": "Fix: Filename too long on Windows",
-      "aka": [
-        "unable to create file filename too long",
-        "longpaths",
-        "path length windows",
-        "reserved file names on windows"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git config --global core.longpaths true",
-              "n": "Lifts Git's 260-character Windows limit. Some tools that read the files may still have their own limit."
-            }
-          ],
-          "undo": "git config --global --unset core.longpaths"
-        }
-      ],
-      "seealso": [
-        "first-time-setup"
       ]
     },
     {
@@ -3377,138 +3199,7 @@
       ],
       "seealso": [
         "compare-branches",
-        "diverged-branches"
-      ]
-    },
-    {
-      "id": "everything-up-to-date",
-      "q": "Push says Everything up-to-date but my changes are missing",
-      "aka": [
-        "push does nothing",
-        "changes not on github",
-        "commit not showing"
-      ],
-      "variants": [
-        {
-          "when": "Diagnose in order",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git status",
-              "n": "Uncommitted changes do not push. Commit first."
-            },
-            {
-              "c": "git branch --show-current",
-              "n": "Empty means detached HEAD: your commits are not on any branch. Rescue them: git switch -c <branch>"
-            },
-            {
-              "c": "git log origin/<branch>..HEAD --oneline",
-              "n": "Empty output means the remote truly has everything, and you are likely looking at the wrong branch or repository on the website."
-            }
-          ],
-          "undo": "Nothing destructive here"
-        }
-      ],
-      "seealso": [
-        "detached-head",
-        "push-new-branch"
-      ]
-    },
-    {
-      "id": "diverged-branches",
-      "q": "Fix: Your branch and origin have diverged",
-      "aka": [
-        "branches diverged",
-        "different commits each",
-        "divergent branches pull",
-        "pulling without specifying how to reconcile divergent branches",
-        "master and origin/master have diverged"
-      ],
-      "variants": [
-        {
-          "when": "Keep both sides, yours replayed on top",
-          "danger": "history",
-          "cmds": [
-            {
-              "c": "git pull --rebase",
-              "n": "The usual right answer: remote commits land, yours follow cleanly on top."
-            }
-          ],
-          "undo": "git reset --hard ORIG_HEAD"
-        },
-        {
-          "when": "The remote is the truth, drop local commits",
-          "danger": "destructive",
-          "cmds": [
-            {
-              "c": "git reset --hard origin/<branch>",
-              "n": "Your local-only commits are discarded."
-            }
-          ],
-          "undo": "git reflog, then git reset --hard <hash>"
-        }
-      ],
-      "seealso": [
-        "non-fast-forward",
-        "reset-to-remote"
-      ]
-    },
-    {
-      "id": "non-fast-forward",
-      "q": "Fix: push rejected, non-fast-forward",
-      "aka": [
-        "updates were rejected",
-        "failed to push some refs",
-        "fetch first",
-        "remote contains work",
-        "tip of your current branch is behind"
-      ],
-      "variants": [
-        {
-          "when": "Someone pushed before you",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git pull --rebase",
-              "n": "Bring their commits in, yours on top."
-            },
-            {
-              "c": "git push",
-              "n": "Never solve this with --force on a shared branch; that erases their work."
-            }
-          ],
-          "undo": "git reset --hard ORIG_HEAD before pushing"
-        }
-      ],
-      "seealso": [
-        "diverged-branches",
-        "force-push-safely"
-      ]
-    },
-    {
-      "id": "unrelated-histories",
-      "q": "Fix: refusing to merge unrelated histories",
-      "aka": [
-        "unrelated histories",
-        "cannot pull new repo",
-        "merge two repositories"
-      ],
-      "variants": [
-        {
-          "when": "You know why they differ (fresh init plus existing remote)",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "git pull origin main --allow-unrelated-histories",
-              "n": "Typical after git init in a folder while the remote already has a README. Resolve any conflicts and commit."
-            }
-          ],
-          "undo": "git merge --abort during conflicts; git reset --hard ORIG_HEAD after"
-        }
-      ],
-      "seealso": [
-        "upload-existing-project",
-        "merge-conflict"
+        "branch-behind-and-ahead"
       ]
     },
     {
@@ -3785,51 +3476,6 @@
       ]
     },
     {
-      "id": "file-too-large",
-      "q": "Fix: push rejected because a file exceeds 100 MB",
-      "aka": [
-        "file too large github",
-        "GH001 large files detected",
-        "remove large file"
-      ],
-      "variants": [
-        {
-          "when": "The large file is in your last commit",
-          "danger": "history",
-          "cmds": [
-            {
-              "c": "git rm --cached <big-file>",
-              "n": ""
-            },
-            {
-              "c": "printf \"<big-file>\\n\" >> .gitignore",
-              "n": ""
-            },
-            {
-              "c": "git commit --amend --no-edit",
-              "n": "The commit no longer carries the file; push proceeds."
-            }
-          ],
-          "undo": "git reflog has the original commit"
-        },
-        {
-          "when": "It is buried deeper in history",
-          "danger": "history",
-          "cmds": [
-            {
-              "c": "git filter-repo --invert-paths --path <big-file>",
-              "n": "pip install git-filter-repo first. Rewrites history without the file; every hash after it changes. Then push --force-with-lease and have teammates re-clone."
-            }
-          ],
-          "undo": "Keep a backup clone until verified; none after force pushing"
-        }
-      ],
-      "seealso": [
-        "git-lfs",
-        "remove-secret-from-history"
-      ]
-    },
-    {
       "id": "git-lfs",
       "q": "Track large files properly (Git LFS)",
       "aka": [
@@ -3855,7 +3501,7 @@
         }
       ],
       "seealso": [
-        "file-too-large",
+        "big-files-where",
         "shrink-repo"
       ]
     },
@@ -3892,7 +3538,7 @@
         }
       ],
       "seealso": [
-        "file-too-large",
+        "big-files-where",
         "ignore-files"
       ]
     },
@@ -4780,7 +4426,7 @@
         }
       ],
       "seealso": [
-        "dubious-ownership",
+        "protect-work-on-a-shared-laptop",
         "line-endings"
       ]
     },
@@ -5165,7 +4811,7 @@
       ],
       "seealso": [
         "clone-branch",
-        "permission-denied-publickey"
+        "ssh-key-github"
       ]
     },
     {
@@ -5668,7 +5314,7 @@
         }
       ],
       "seealso": [
-        "tell-me-who-you-are",
+        "first-time-setup",
         "change-commit-author"
       ]
     },
@@ -6767,7 +6413,7 @@
       ],
       "seealso": [
         "clone-repo",
-        "unrelated-histories"
+        "repo-has-two-histories"
       ]
     },
     {
@@ -8319,7 +7965,7 @@
         }
       ],
       "seealso": [
-        "diverged-branches",
+        "branch-behind-and-ahead",
         "merge-vs-rebase"
       ]
     },
@@ -8778,7 +8424,7 @@
       ],
       "seealso": [
         "bare-repo",
-        "dubious-ownership"
+        "protect-work-on-a-shared-laptop"
       ]
     },
     {
@@ -10123,7 +9769,7 @@
         }
       ],
       "seealso": [
-        "tell-me-who-you-are",
+        "first-time-setup",
         "private-email",
         "multiple-identities"
       ]
@@ -10471,7 +10117,7 @@
       ],
       "seealso": [
         "line-endings",
-        "filename-too-long"
+        "wsl-git"
       ]
     },
     {
@@ -12675,7 +12321,7 @@
         }
       ],
       "seealso": [
-        "unrelated-histories",
+        "repo-has-two-histories",
         "monorepo",
         "split-subfolder-repo"
       ]
@@ -13159,7 +12805,7 @@
         }
       ],
       "seealso": [
-        "file-too-large",
+        "big-files-where",
         "git-lfs",
         "shrink-repo"
       ]
@@ -14369,7 +14015,7 @@
         }
       ],
       "seealso": [
-        "file-too-large",
+        "big-files-where",
         "remove-secret-from-history",
         "git-lfs"
       ]
@@ -15905,7 +15551,7 @@
         }
       ],
       "seealso": [
-        "tell-me-who-you-are",
+        "first-time-setup",
         "contributions-graph",
         "private-email"
       ]
@@ -17817,7 +17463,7 @@
         }
       ],
       "seealso": [
-        "permission-denied-publickey",
+        "ssh-key-github",
         "deploy-ssh-server",
         "push-two-remotes"
       ]
@@ -17856,7 +17502,7 @@
       ],
       "seealso": [
         "filemode",
-        "index-lock",
+        "fix-mistake-quickly",
         "slow-git"
       ]
     },
@@ -18006,7 +17652,7 @@
       "seealso": [
         "pull-rebase",
         "exit-vim",
-        "diverged-branches"
+        "branch-behind-and-ahead"
       ]
     },
     {
@@ -18255,37 +17901,6 @@
       ]
     },
     {
-      "id": "gpg-agent-issues",
-      "q": "Signing fails with gpg failed to sign the data",
-      "aka": [
-        "gpg failed to sign the data",
-        "secret key not available",
-        "commit signing broken"
-      ],
-      "variants": [
-        {
-          "when": "Standard case",
-          "danger": "safe",
-          "cmds": [
-            {
-              "c": "echo \"test\" | gpg --clearsign",
-              "n": "Reproduces the failure outside Git. A passphrase prompt that never appears is the usual cause."
-            },
-            {
-              "c": "export GPG_TTY=$(tty)",
-              "n": "Add it to your shell profile so the agent knows where to prompt. On Windows, confirming user.signingkey matches a key gpg --list-secret-keys shows fixes most of the rest."
-            }
-          ],
-          "undo": "git config --global commit.gpgsign false while you debug"
-        }
-      ],
-      "seealso": [
-        "sign-commits",
-        "signing-choices",
-        "ssh-agent-passphrase"
-      ]
-    },
-    {
       "id": "line-ending-cleanup",
       "q": "Fix a repository with mixed line endings",
       "aka": [
@@ -18342,7 +17957,7 @@
         }
       ],
       "seealso": [
-        "tell-me-who-you-are",
+        "first-time-setup",
         "gh-in-workflows",
         "workflow-permissions"
       ]
@@ -21409,7 +21024,7 @@
       "seealso": [
         "hooks",
         "git-lfs",
-        "file-too-large"
+        "big-files-where"
       ]
     },
     {
@@ -26475,7 +26090,6 @@
         }
       ],
       "seealso": [
-        "unrelated-histories",
         "merge-two-repos",
         "empty-branch"
       ]
@@ -26538,7 +26152,6 @@
       ],
       "seealso": [
         "ahead-behind",
-        "diverged-branches",
         "remote-branch-vs-tracking"
       ]
     },
