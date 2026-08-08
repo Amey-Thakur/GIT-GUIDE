@@ -309,10 +309,10 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .defs b {{ color: {INK}; font-family: Consolas, monospace; }}
 .note {{ color: {MUTED}; font-size: 10.5pt; margin-bottom: 4mm; }}
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
-.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.9mm 0; }}
+.list div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.6mm 0; }}
 .list code {{ font-family: Consolas, monospace; font-size: 10.5pt; display: block; overflow-wrap: anywhere; }}
 .list code.danger {{ color: {DANGER}; }}
-.list span {{ font-size: 9.5pt; color: {MUTED}; display: block; margin-top: 1mm; }}
+.list span {{ font-size: 9.5pt; color: {MUTED}; display: block; margin-top: 0.7mm; }}
 .steps {{ display: grid; grid-template-columns: 1fr 1fr; gap: 7mm 12mm; }}
 .step {{ display: flex; gap: 5mm; align-items: flex-start; }}
 .step > b {{ color: {ACCENT}; font-size: 15pt; min-width: 8mm; }}

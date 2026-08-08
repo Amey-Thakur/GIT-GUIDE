@@ -11,196 +11,558 @@
     {
       "title": "Setup and identity",
       "items": [
-        { "c": "git config --global user.name \"<name>\"", "d": "Name stamped into your commits" },
-        { "c": "git config --global user.email \"<email>\"", "d": "Use your host account email so commits link to your profile" },
-        { "c": "git config --global init.defaultBranch main", "d": "New repositories start on main" },
-        { "c": "git config --global core.editor \"code --wait\"", "d": "Commit messages open in VS Code" },
-        { "c": "git config --global pull.ff only", "d": "Pull never creates surprise merge commits" },
-        { "c": "git config --global fetch.prune true", "d": "Deleted remote branches disappear locally too" },
-        { "c": "git config --global rebase.autoStash true", "d": "Pull with rebase works even with edits in progress" },
-        { "c": "git config --global core.autocrlf true", "d": "Windows line endings handled once; macOS and Linux use input" },
-        { "c": "git config --list --show-origin", "d": "Every setting and the file it comes from" }
-      ]
+        {
+          "c": "git config --global user.name \"<name>\"",
+          "d": "Name stamped into your commits"
+        },
+        {
+          "c": "git config --global user.email \"<email>\"",
+          "d": "Use your host account email so commits link to your profile"
+        },
+        {
+          "c": "git config --global init.defaultBranch main",
+          "d": "New repositories start on main"
+        },
+        {
+          "c": "git config --global core.editor \"code --wait\"",
+          "d": "Commit messages open in VS Code"
+        },
+        {
+          "c": "git config --global pull.ff only",
+          "d": "Pull never creates surprise merge commits"
+        },
+        {
+          "c": "git config --global fetch.prune true",
+          "d": "Deleted remote branches disappear locally too"
+        },
+        {
+          "c": "git config --global rebase.autoStash true",
+          "d": "Pull with rebase works even with edits in progress"
+        },
+        {
+          "c": "git config --global core.autocrlf true",
+          "d": "Windows line endings handled once; macOS and Linux use input"
+        },
+        {
+          "c": "git config --list --show-origin",
+          "d": "Every setting and the file it comes from"
+        }
+      ],
+      "note": "Once per machine; everything else builds on it."
     },
     {
       "title": "Start a project",
       "items": [
-        { "c": "git init -b main", "d": "Turn this folder into a repository" },
-        { "c": "git clone <url>", "d": "Copy a repository, any host, full history" },
-        { "c": "git clone --depth 1 <url>", "d": "Latest snapshot only, fastest" },
-        { "c": "git remote add origin <url>", "d": "Connect a local repository to a host" },
-        { "c": "git push -u origin main", "d": "First push; -u links the branches for good" }
-      ]
+        {
+          "c": "git init -b main",
+          "d": "Turn this folder into a repository"
+        },
+        {
+          "c": "git clone <url>",
+          "d": "Copy a repository, any host, full history"
+        },
+        {
+          "c": "git clone --depth 1 <url>",
+          "d": "Latest snapshot only, fastest"
+        },
+        {
+          "c": "git remote add origin <url>",
+          "d": "Connect a local repository to a host"
+        },
+        {
+          "c": "git push -u origin main",
+          "d": "First push; -u links the branches for good"
+        }
+      ],
+      "note": "From nothing, or from a URL."
     },
     {
       "title": "The daily loop",
       "items": [
-        { "c": "git status -sb", "d": "What changed, one line per file" },
-        { "c": "git diff", "d": "Unstaged edits, line by line" },
-        { "c": "git diff --staged", "d": "What the next commit will contain" },
-        { "c": "git add <file>", "d": "Stage a change; git add -p picks piece by piece" },
-        { "c": "git commit -m \"<message>\"", "d": "Seal the staged snapshot" },
-        { "c": "git commit --amend --no-edit", "d": "Add staged changes to the last commit", "danger": true },
-        { "c": "git fetch", "d": "See what the remote has before touching anything" },
-        { "c": "git pull --rebase", "d": "Get remote commits, replay yours on top" },
-        { "c": "git push", "d": "Publish your commits" }
-      ]
+        {
+          "c": "git status -sb",
+          "d": "What changed, one line per file"
+        },
+        {
+          "c": "git diff",
+          "d": "Unstaged edits, line by line"
+        },
+        {
+          "c": "git diff --staged",
+          "d": "What the next commit will contain"
+        },
+        {
+          "c": "git add <file>",
+          "d": "Stage a change; git add -p picks piece by piece"
+        },
+        {
+          "c": "git commit -m \"<message>\"",
+          "d": "Seal the staged snapshot"
+        },
+        {
+          "c": "git commit --amend --no-edit",
+          "d": "Add staged changes to the last commit",
+          "danger": true
+        },
+        {
+          "c": "git fetch",
+          "d": "See what the remote has before touching anything"
+        },
+        {
+          "c": "git pull --rebase",
+          "d": "Get remote commits, replay yours on top"
+        },
+        {
+          "c": "git push",
+          "d": "Publish your commits"
+        }
+      ],
+      "note": "The eight commands that are most of Git."
     },
     {
       "title": "Branches",
       "items": [
-        { "c": "git switch -c <branch>", "d": "Create and move in one step" },
-        { "c": "git switch <branch>", "d": "Move to an existing branch" },
-        { "c": "git switch -", "d": "Back to the branch you just left" },
-        { "c": "git branch --show-current", "d": "Where am I" },
-        { "c": "git branch -vv", "d": "Every local branch with its remote and ahead-behind state" },
-        { "c": "git branch -a", "d": "Every branch, local and remote" },
-        { "c": "git push -u origin <branch>", "d": "Publish a new branch" },
-        { "c": "git branch -d <branch>", "d": "Delete a merged branch; -D forces", "danger": true },
-        { "c": "git push origin --delete <branch>", "d": "Delete it on the remote too", "danger": true },
-        { "c": "git branch -m <old> <new>", "d": "Rename" }
-      ]
+        {
+          "c": "git switch -c <branch>",
+          "d": "Create and move in one step"
+        },
+        {
+          "c": "git switch <branch>",
+          "d": "Move to an existing branch"
+        },
+        {
+          "c": "git switch -",
+          "d": "Back to the branch you just left"
+        },
+        {
+          "c": "git branch --show-current",
+          "d": "Where am I"
+        },
+        {
+          "c": "git branch -vv",
+          "d": "Every local branch with its remote and ahead-behind state"
+        },
+        {
+          "c": "git branch -a",
+          "d": "Every branch, local and remote"
+        },
+        {
+          "c": "git push -u origin <branch>",
+          "d": "Publish a new branch"
+        },
+        {
+          "c": "git branch -d <branch>",
+          "d": "Delete a merged branch; -D forces",
+          "danger": true
+        },
+        {
+          "c": "git push origin --delete <branch>",
+          "d": "Delete it on the remote too",
+          "danger": true
+        },
+        {
+          "c": "git branch -m <old> <new>",
+          "d": "Rename"
+        }
+      ],
+      "note": "Cheap, fast, and safe to make by the dozen."
     },
     {
       "title": "Merge and rebase",
       "items": [
-        { "c": "git merge <branch>", "d": "Bring a branch in; history stays true" },
-        { "c": "git merge --no-ff <branch>", "d": "Always keep the feature visible as one bubble" },
-        { "c": "git rebase main", "d": "Replay your branch on top of main", "danger": true },
-        { "c": "git rebase -i HEAD~<n>", "d": "Rewrite, reorder, squash your last n commits", "danger": true },
-        { "c": "git cherry-pick <hash>", "d": "Copy one commit onto this branch" },
-        { "c": "git merge --abort", "d": "Back out of a conflicted merge" },
-        { "c": "git rebase --continue", "d": "Resume after resolving a conflict" }
-      ]
+        {
+          "c": "git merge <branch>",
+          "d": "Bring a branch in; history stays true"
+        },
+        {
+          "c": "git merge --no-ff <branch>",
+          "d": "Always keep the feature visible as one bubble"
+        },
+        {
+          "c": "git rebase main",
+          "d": "Replay your branch on top of main",
+          "danger": true
+        },
+        {
+          "c": "git rebase -i HEAD~<n>",
+          "d": "Rewrite, reorder, squash your last n commits",
+          "danger": true
+        },
+        {
+          "c": "git cherry-pick <hash>",
+          "d": "Copy one commit onto this branch"
+        },
+        {
+          "c": "git merge --abort",
+          "d": "Back out of a conflicted merge"
+        },
+        {
+          "c": "git rebase --continue",
+          "d": "Resume after resolving a conflict"
+        }
+      ],
+      "note": "Two ways to bring lines together."
     },
     {
       "title": "Undo and rescue",
       "items": [
-        { "c": "git restore <file>", "d": "Discard edits, back to last commit", "danger": true },
-        { "c": "git restore --staged <file>", "d": "Unstage, keep the edits" },
-        { "c": "git commit --amend -m \"<new message>\"", "d": "Rewrite the last commit message", "danger": true },
-        { "c": "git reset --soft HEAD~1", "d": "Uncommit, keep everything staged" },
-        { "c": "git reset --hard HEAD~1", "d": "Erase the last commit and its work", "danger": true },
-        { "c": "git revert <hash>", "d": "Undo by adding an opposite commit; safe when pushed" },
-        { "c": "git reflog", "d": "Every state you have been in; the safety net" },
-        { "c": "git reset --hard ORIG_HEAD", "d": "Undo the merge, rebase, or pull that just happened", "danger": true },
-        { "c": "git clean -nd", "d": "Preview deleting untracked files; -fd deletes", "danger": true }
-      ]
+        {
+          "c": "git restore <file>",
+          "d": "Discard edits, back to last commit",
+          "danger": true
+        },
+        {
+          "c": "git restore --staged <file>",
+          "d": "Unstage, keep the edits"
+        },
+        {
+          "c": "git commit --amend -m \"<new message>\"",
+          "d": "Rewrite the last commit message",
+          "danger": true
+        },
+        {
+          "c": "git reset --soft HEAD~1",
+          "d": "Uncommit, keep everything staged"
+        },
+        {
+          "c": "git reset --hard HEAD~1",
+          "d": "Erase the last commit and its work",
+          "danger": true
+        },
+        {
+          "c": "git revert <hash>",
+          "d": "Undo by adding an opposite commit; safe when pushed"
+        },
+        {
+          "c": "git reflog",
+          "d": "Every state you have been in; the safety net"
+        },
+        {
+          "c": "git reset --hard ORIG_HEAD",
+          "d": "Undo the merge, rebase, or pull that just happened",
+          "danger": true
+        },
+        {
+          "c": "git clean -nd",
+          "d": "Preview deleting untracked files; -fd deletes",
+          "danger": true
+        }
+      ],
+      "note": "Every mistake has a way back."
     },
     {
       "title": "Stash",
       "items": [
-        { "c": "git stash push -u -m \"<label>\"", "d": "Set everything aside, untracked included" },
-        { "c": "git stash list", "d": "What is shelved" },
-        { "c": "git stash pop", "d": "Bring the newest back and drop it" },
-        { "c": "git stash apply stash@{<n>}", "d": "Bring a specific one back, keep it shelved" },
-        { "c": "git stash show -p", "d": "See inside before applying" }
-      ]
+        {
+          "c": "git stash push -u -m \"<label>\"",
+          "d": "Set everything aside, untracked included"
+        },
+        {
+          "c": "git stash list",
+          "d": "What is shelved"
+        },
+        {
+          "c": "git stash pop",
+          "d": "Bring the newest back and drop it"
+        },
+        {
+          "c": "git stash apply stash@{<n>}",
+          "d": "Bring a specific one back, keep it shelved"
+        },
+        {
+          "c": "git stash show -p",
+          "d": "See inside before applying"
+        }
+      ],
+      "note": "A shelf for work that is not ready."
     },
     {
       "title": "Inspect and search",
       "items": [
-        { "c": "git log --oneline --graph --all", "d": "The whole history as a graph" },
-        { "c": "git log -p -- <file>", "d": "Every change to one file; --follow crosses renames" },
-        { "c": "git log --grep=\"<text>\"", "d": "Find commits by message" },
-        { "c": "git log -S \"<text>\"", "d": "Find commits that added or removed this text" },
-        { "c": "git diff main...<branch>", "d": "What the branch changed since it split; the pull request view" },
-        { "c": "git shortlog -sn --all", "d": "Commits per author, ranked" },
-        { "c": "git blame -w <file>", "d": "Who last touched each line, ignoring whitespace" },
-        { "c": "git show <hash>", "d": "One commit in full; --stat for files only" },
-        { "c": "git bisect start", "d": "Binary-search history for the commit that broke it" },
-        { "c": "git branch -a --contains <hash>", "d": "Which branches carry this commit" }
-      ]
+        {
+          "c": "git log --oneline --graph --all",
+          "d": "The whole history as a graph"
+        },
+        {
+          "c": "git log -p -- <file>",
+          "d": "Every change to one file; --follow crosses renames"
+        },
+        {
+          "c": "git log --grep=\"<text>\"",
+          "d": "Find commits by message"
+        },
+        {
+          "c": "git log -S \"<text>\"",
+          "d": "Find commits that added or removed this text"
+        },
+        {
+          "c": "git diff main...<branch>",
+          "d": "What the branch changed since it split; the pull request view"
+        },
+        {
+          "c": "git shortlog -sn --all",
+          "d": "Commits per author, ranked"
+        },
+        {
+          "c": "git blame -w <file>",
+          "d": "Who last touched each line, ignoring whitespace"
+        },
+        {
+          "c": "git show <hash>",
+          "d": "One commit in full; --stat for files only"
+        },
+        {
+          "c": "git bisect start",
+          "d": "Binary-search history for the commit that broke it"
+        },
+        {
+          "c": "git branch -a --contains <hash>",
+          "d": "Which branches carry this commit"
+        }
+      ],
+      "note": "Read history like a book with an index."
     },
     {
       "title": "Tags and releases",
       "items": [
-        { "c": "git tag -a v1.0.0 -m \"<note>\"", "d": "Mark a release" },
-        { "c": "git push origin v1.0.0", "d": "Tags do not push themselves" },
-        { "c": "git tag -d <tag>", "d": "Delete locally; push origin --delete <tag> for the remote", "danger": true },
-        { "c": "git describe --tags", "d": "Nearest release to where you stand" },
-        { "c": "git switch --detach v1.0.0", "d": "Visit a release; switch - to come back" }
-      ]
+        {
+          "c": "git tag -a v1.0.0 -m \"<note>\"",
+          "d": "Mark a release"
+        },
+        {
+          "c": "git push origin v1.0.0",
+          "d": "Tags do not push themselves"
+        },
+        {
+          "c": "git tag -d <tag>",
+          "d": "Delete locally; push origin --delete <tag> for the remote",
+          "danger": true
+        },
+        {
+          "c": "git describe --tags",
+          "d": "Nearest release to where you stand"
+        },
+        {
+          "c": "git switch --detach v1.0.0",
+          "d": "Visit a release; switch - to come back"
+        }
+      ],
+      "note": "Permanent names on permanent commits."
     },
     {
       "title": "Every platform, same Git",
       "note": "Git is identical everywhere; only the remote URL and sign-in differ. The same SSH public key works on every host.",
       "items": [
-        { "c": "git clone git@github.com:<user>/<repo>.git", "d": "GitHub over SSH" },
-        { "c": "git clone git@gitlab.com:<user>/<repo>.git", "d": "GitLab" },
-        { "c": "git clone git@bitbucket.org:<workspace>/<repo>.git", "d": "Bitbucket" },
-        { "c": "git clone https://dev.azure.com/<org>/<project>/_git/<repo>", "d": "Azure DevOps (Azure Repos)" },
-        { "c": "git clone https://git-codecommit.<region>.amazonaws.com/v1/repos/<repo>", "d": "AWS CodeCommit" },
-        { "c": "git config --global credential.helper manager", "d": "Browser sign-in for HTTPS remotes, all hosts" },
-        { "c": "git remote set-url origin <url>", "d": "Move between hosts or between HTTPS and SSH" },
-        { "c": "git clone --mirror <old> && git push --mirror <new>", "d": "Migrate anywhere with full history" }
+        {
+          "c": "git clone git@github.com:<user>/<repo>.git",
+          "d": "GitHub over SSH"
+        },
+        {
+          "c": "git clone git@gitlab.com:<user>/<repo>.git",
+          "d": "GitLab"
+        },
+        {
+          "c": "git clone git@bitbucket.org:<workspace>/<repo>.git",
+          "d": "Bitbucket"
+        },
+        {
+          "c": "git clone https://dev.azure.com/<org>/<project>/_git/<repo>",
+          "d": "Azure DevOps (Azure Repos)"
+        },
+        {
+          "c": "git clone https://git-codecommit.<region>.amazonaws.com/v1/repos/<repo>",
+          "d": "AWS CodeCommit"
+        },
+        {
+          "c": "git config --global credential.helper manager",
+          "d": "Browser sign-in for HTTPS remotes, all hosts"
+        },
+        {
+          "c": "git remote set-url origin <url>",
+          "d": "Move between hosts or between HTTPS and SSH"
+        },
+        {
+          "c": "git clone --mirror <old> && git push --mirror <new>",
+          "d": "Migrate anywhere with full history"
+        }
       ]
     },
     {
       "title": "No host at all",
       "note": "Git predates the hosts and needs none of them.",
       "items": [
-        { "c": "git init --bare ~/server/repo.git", "d": "Your own remote on any machine or shared drive" },
-        { "c": "git bundle create repo.bundle --all", "d": "The whole repository as one file: USB, email, air gap" },
-        { "c": "git clone repo.bundle -b main <folder>", "d": "Clone from the file, no network" },
-        { "c": "git format-patch -3", "d": "Last three commits as mailable patch files" },
-        { "c": "git am <file>.patch", "d": "Apply mailed patches, authorship intact" },
-        { "c": "git archive --format=zip -o src.zip HEAD", "d": "Clean source export, no .git" }
+        {
+          "c": "git init --bare ~/server/repo.git",
+          "d": "Your own remote on any machine or shared drive"
+        },
+        {
+          "c": "git bundle create repo.bundle --all",
+          "d": "The whole repository as one file: USB, email, air gap"
+        },
+        {
+          "c": "git clone repo.bundle -b main <folder>",
+          "d": "Clone from the file, no network"
+        },
+        {
+          "c": "git format-patch -3",
+          "d": "Last three commits as mailable patch files"
+        },
+        {
+          "c": "git am <file>.patch",
+          "d": "Apply mailed patches, authorship intact"
+        },
+        {
+          "c": "git archive --format=zip -o src.zip HEAD",
+          "d": "Clean source export, no .git"
+        }
       ]
     },
     {
       "title": "Files and ignoring",
       "items": [
-        { "c": "printf \"node_modules/\\n\" >> .gitignore", "d": "Ignore by pattern; affects untracked files only" },
-        { "c": "git rm --cached <file>", "d": "Stop tracking, keep on disk" },
-        { "c": "git mv <old> <new>", "d": "Rename and stage in one step" },
-        { "c": "git update-index --skip-worktree <file>", "d": "Ignore your local edits to a tracked file" },
-        { "c": "printf \"* text=auto\\n\" >> .gitattributes", "d": "Line endings settled for the whole team, committed once" },
-        { "c": "touch <folder>/.gitkeep", "d": "Keep an empty folder" }
-      ]
+        {
+          "c": "printf \"node_modules/\\n\" >> .gitignore",
+          "d": "Ignore by pattern; affects untracked files only"
+        },
+        {
+          "c": "git rm --cached <file>",
+          "d": "Stop tracking, keep on disk"
+        },
+        {
+          "c": "git mv <old> <new>",
+          "d": "Rename and stage in one step"
+        },
+        {
+          "c": "git update-index --skip-worktree <file>",
+          "d": "Ignore your local edits to a tracked file"
+        },
+        {
+          "c": "printf \"* text=auto\\n\" >> .gitattributes",
+          "d": "Line endings settled for the whole team, committed once"
+        },
+        {
+          "c": "touch <folder>/.gitkeep",
+          "d": "Keep an empty folder"
+        }
+      ],
+      "note": "What Git tracks, and what it must never."
     },
     {
       "title": "History surgery",
       "note": "Everything here rewrites history. Fresh clone first, backup kept, force-with-lease after, teammates re-clone.",
       "items": [
-        { "c": "git commit --fixup <hash>", "d": "Mark a fix as belonging to an earlier commit", "danger": true },
-        { "c": "git rebase -i --autosquash <hash>^", "d": "Melt fixups into their targets", "danger": true },
-        { "c": "git filter-repo --invert-paths --path <file>", "d": "Erase a file from all history", "danger": true },
-        { "c": "git filter-repo --strip-blobs-bigger-than 10M", "d": "Erase every giant blob", "danger": true },
-        { "c": "git push --force-with-lease", "d": "The only force push worth typing", "danger": true }
+        {
+          "c": "git commit --fixup <hash>",
+          "d": "Mark a fix as belonging to an earlier commit",
+          "danger": true
+        },
+        {
+          "c": "git rebase -i --autosquash <hash>^",
+          "d": "Melt fixups into their targets",
+          "danger": true
+        },
+        {
+          "c": "git filter-repo --invert-paths --path <file>",
+          "d": "Erase a file from all history",
+          "danger": true
+        },
+        {
+          "c": "git filter-repo --strip-blobs-bigger-than 10M",
+          "d": "Erase every giant blob",
+          "danger": true
+        },
+        {
+          "c": "git push --force-with-lease",
+          "d": "The only force push worth typing",
+          "danger": true
+        }
       ]
     },
     {
       "title": "Scale and speed",
       "items": [
-        { "c": "git clone --filter=blob:none --sparse <url>", "d": "Huge repository, download almost nothing" },
-        { "c": "git sparse-checkout set <folders>", "d": "Materialize only what you work on" },
-        { "c": "git worktree add ../<repo>-review <branch>", "d": "Second folder, second branch, zero stashing" },
-        { "c": "git lfs track \"*.psd\"", "d": "Large binaries stored properly" },
-        { "c": "git count-objects -vH", "d": "How heavy is this repository really" },
-        { "c": "git maintenance start", "d": "Background upkeep keeps big repositories fast" }
-      ]
+        {
+          "c": "git clone --filter=blob:none --sparse <url>",
+          "d": "Huge repository, download almost nothing"
+        },
+        {
+          "c": "git sparse-checkout set <folders>",
+          "d": "Materialize only what you work on"
+        },
+        {
+          "c": "git worktree add ../<repo>-review <branch>",
+          "d": "Second folder, second branch, zero stashing"
+        },
+        {
+          "c": "git lfs track \"*.psd\"",
+          "d": "Large binaries stored properly"
+        },
+        {
+          "c": "git count-objects -vH",
+          "d": "How heavy is this repository really"
+        },
+        {
+          "c": "git maintenance start",
+          "d": "Background upkeep keeps big repositories fast"
+        }
+      ],
+      "note": "Big repositories, kept quick."
     },
     {
       "title": "Submodules",
       "items": [
-        { "c": "git submodule add <url> <path>", "d": "Pin another repository at an exact commit inside yours" },
-        { "c": "git clone --recurse-submodules <url>", "d": "Clone a repo and its submodules in one step" },
-        { "c": "git submodule update --init --recursive", "d": "Fill the empty folders after a plain clone" },
-        { "c": "git submodule update --remote", "d": "Move pins to each submodule's latest commit" }
-      ]
+        {
+          "c": "git submodule add <url> <path>",
+          "d": "Pin another repository at an exact commit inside yours"
+        },
+        {
+          "c": "git clone --recurse-submodules <url>",
+          "d": "Clone a repo and its submodules in one step"
+        },
+        {
+          "c": "git submodule update --init --recursive",
+          "d": "Fill the empty folders after a plain clone"
+        },
+        {
+          "c": "git submodule update --remote",
+          "d": "Move pins to each submodule's latest commit"
+        }
+      ],
+      "note": "A repository pinned inside another."
     },
     {
       "title": "Quality of life",
       "items": [
-        { "c": "git config --global help.autocorrect prompt", "d": "git statsu asks: run git status instead?" },
-        { "c": "git config --global alias.st \"status -sb\"", "d": "git st forever" },
-        { "c": "git config --global alias.lg \"log --oneline --graph --all\"", "d": "git lg: the graph" },
-        { "c": "git config --global rerere.enabled true", "d": "Never resolve the same conflict twice" },
-        { "c": "git config --global gpg.format ssh", "d": "First of three lines to signed, Verified commits" },
-        { "c": "git commit --allow-empty -m \"rerun\"", "d": "Retrigger CI without touching code" },
-        { "c": "git config core.hooksPath .githooks", "d": "Versioned hooks the whole team shares" }
-      ]
+        {
+          "c": "git config --global help.autocorrect prompt",
+          "d": "git statsu asks: run git status instead?"
+        },
+        {
+          "c": "git config --global alias.st \"status -sb\"",
+          "d": "git st forever"
+        },
+        {
+          "c": "git config --global alias.lg \"log --oneline --graph --all\"",
+          "d": "git lg: the graph"
+        },
+        {
+          "c": "git config --global rerere.enabled true",
+          "d": "Never resolve the same conflict twice"
+        },
+        {
+          "c": "git config --global gpg.format ssh",
+          "d": "First of three lines to signed, Verified commits"
+        },
+        {
+          "c": "git commit --allow-empty -m \"rerun\"",
+          "d": "Retrigger CI without touching code"
+        },
+        {
+          "c": "git config core.hooksPath .githooks",
+          "d": "Versioned hooks the whole team shares"
+        }
+      ],
+      "note": "Small settings, daily comfort."
     }
   ]
 }

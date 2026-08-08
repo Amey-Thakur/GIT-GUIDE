@@ -101,6 +101,7 @@
 <nav class="cs-toc" aria-label="Sections"><a href="#setup-and-identity">Setup and identity</a><a href="#start-a-project">Start a project</a><a href="#the-daily-loop">The daily loop</a><a href="#branches">Branches</a><a href="#merge-and-rebase">Merge and rebase</a><a href="#undo-and-rescue">Undo and rescue</a><a href="#stash">Stash</a><a href="#inspect-and-search">Inspect and search</a><a href="#tags-and-releases">Tags and releases</a><a href="#every-platform-same-git">Every platform, same Git</a><a href="#no-host-at-all">No host at all</a><a href="#files-and-ignoring">Files and ignoring</a><a href="#history-surgery">History surgery</a><a href="#scale-and-speed">Scale and speed</a><a href="#submodules">Submodules</a><a href="#quality-of-life">Quality of life</a></nav>
 <section class="cs-section">
   <h2 id="setup-and-identity">Setup and identity</h2>
+  <p class="note">Once per machine; everything else builds on it.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git config --global user.name &quot;&lt;name&gt;&quot;</code>
@@ -151,6 +152,7 @@
 </section>
 <section class="cs-section">
   <h2 id="start-a-project">Start a project</h2>
+  <p class="note">From nothing, or from a URL.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git init -b main</code>
@@ -181,6 +183,7 @@
 </section>
 <section class="cs-section">
   <h2 id="the-daily-loop">The daily loop</h2>
+  <p class="note">The eight commands that are most of Git.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git status -sb</code>
@@ -231,6 +234,7 @@
 </section>
 <section class="cs-section">
   <h2 id="branches">Branches</h2>
+  <p class="note">Cheap, fast, and safe to make by the dozen.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git switch -c &lt;branch&gt;</code>
@@ -286,6 +290,7 @@
 </section>
 <section class="cs-section">
   <h2 id="merge-and-rebase">Merge and rebase</h2>
+  <p class="note">Two ways to bring lines together.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git merge &lt;branch&gt;</code>
@@ -326,6 +331,7 @@
 </section>
 <section class="cs-section">
   <h2 id="undo-and-rescue">Undo and rescue</h2>
+  <p class="note">Every mistake has a way back.</p>
   <div class="cs-rows">
     <div class="cs-row cs-danger">
       <code>git restore &lt;file&gt;</code>
@@ -376,6 +382,7 @@
 </section>
 <section class="cs-section">
   <h2 id="stash">Stash</h2>
+  <p class="note">A shelf for work that is not ready.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git stash push -u -m &quot;&lt;label&gt;&quot;</code>
@@ -406,6 +413,7 @@
 </section>
 <section class="cs-section">
   <h2 id="inspect-and-search">Inspect and search</h2>
+  <p class="note">Read history like a book with an index.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git log --oneline --graph --all</code>
@@ -461,6 +469,7 @@
 </section>
 <section class="cs-section">
   <h2 id="tags-and-releases">Tags and releases</h2>
+  <p class="note">Permanent names on permanent commits.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git tag -a v1.0.0 -m &quot;&lt;note&gt;&quot;</code>
@@ -573,6 +582,7 @@
 </section>
 <section class="cs-section">
   <h2 id="files-and-ignoring">Files and ignoring</h2>
+  <p class="note">What Git tracks, and what it must never.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>printf &quot;node_modules/\n&quot; &gt;&gt; .gitignore</code>
@@ -639,6 +649,7 @@
 </section>
 <section class="cs-section">
   <h2 id="scale-and-speed">Scale and speed</h2>
+  <p class="note">Big repositories, kept quick.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git clone --filter=blob:none --sparse &lt;url&gt;</code>
@@ -674,6 +685,7 @@
 </section>
 <section class="cs-section">
   <h2 id="submodules">Submodules</h2>
+  <p class="note">A repository pinned inside another.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git submodule add &lt;url&gt; &lt;path&gt;</code>
@@ -699,6 +711,7 @@
 </section>
 <section class="cs-section">
   <h2 id="quality-of-life">Quality of life</h2>
+  <p class="note">Small settings, daily comfort.</p>
   <div class="cs-rows">
     <div class="cs-row">
       <code>git config --global help.autocorrect prompt</code>
