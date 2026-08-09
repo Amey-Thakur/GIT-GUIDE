@@ -835,8 +835,8 @@ kbd {
             background: var(--accent); }
 
 .pgraph { border: 1px solid var(--line); border-radius: 10px; background: var(--card);
-          padding: 0.75rem 1rem; overflow-x: auto; }
-#pg { display: block; width: 100%; height: auto; margin: 0 auto; }
+          padding: 0.75rem 1rem; overflow-x: auto; width: fit-content; max-width: 100%; }
+#pg { display: block; height: auto; }
 
 .pedge { stroke: var(--muted); stroke-width: 2; fill: none; }
 .pedge.second { stroke-dasharray: 4 3; }
@@ -892,7 +892,7 @@ kbd {
 .pex { font-family: var(--mono); font-size: 0.85rem; }
 
 .pnotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-          gap: 1.75rem; margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--line); }
+          gap: 1.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 .pnotes h3 { font-size: 1rem; margin: 0 0 0.45rem; }
 .pnotes p { margin: 0; color: var(--muted); font-size: 0.93rem; line-height: 1.6; }
 .pnotes code { font-family: var(--mono); font-size: 0.86rem; color: var(--ink); }

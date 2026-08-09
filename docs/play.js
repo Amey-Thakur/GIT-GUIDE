@@ -458,14 +458,16 @@
       if (gen[id] > maxG) maxG = gen[id];
       if (lane[id] > maxL) maxL = lane[id];
     });
-    var W = Math.max(PADX * 2 + maxG * GX, 620), H = PADY + maxL * GY + 58;
+    // The box hugs its contents and grows rightward as the history does. Clamping
+    // it to a wide minimum left a lone commit stranded in a mostly empty card.
+    // The 44 below is the caption's height plus its descender.
+    var W = Math.max(PADX * 2 + maxG * GX, 150), H = PADY + maxL * GY + 44;
 
-    // Scale up to use the card, but never past a third again over natural size:
-    // stretching a three-commit graph across a wide screen looked absurd.
+    var SCALE = 1.35;   // legible without magnifying a three-commit graph absurdly
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.removeAttribute("width");
     svg.removeAttribute("height");
-    svg.style.maxWidth = Math.round(W * 1.35) + "px";
+    svg.style.width = Math.round(W * SCALE) + "px";
 
     function X(id) { return PADX + gen[id] * GX; }
     function Y(id) { return PADY + lane[id] * GY; }
