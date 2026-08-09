@@ -262,23 +262,31 @@ def sheet_card(sheet, wanted, title):
 
     # The key sits beside the title, where there is room. On the line below it
     # collided with the sentence that explains it.
+    # The key shows the three colours on three real commands, because that is
+    # what a reader is about to look at. Outlined chips promised a green the
+    # sheet does not use: safe is the plain majority here, and painting
+    # ninety-six lines green would leave amber and red nothing to stand out from.
+    KEY = [("git status", "safe", INK),
+           ("git rebase main", "rewrites history", HISTORY),
+           ("git reset --hard", "can lose work", DANGER)]
     key = ""
     kx = SHEET_W - 80
-    for label, colour in [("Destructive", DANGER), ("Rewrites history", HISTORY), ("Safe", SAFE)]:
-        w = 34 + len(label) * 9
-        kx -= w
-        key += (
-            f'<rect x="{kx}" y="78" width="{w}" height="30" rx="6" fill="none" stroke="{colour}" stroke-width="1.6"/>'
-            f'<text x="{kx + w / 2}" y="98" font-size="15" font-weight="700" fill="{colour}" text-anchor="middle">{escape(label.upper())}</text>'
-        )
-        kx -= 12
+    for cmd, label, colour in reversed(KEY):
+        label_w = len(label) * 7.6
+        cmd_w = len(cmd) * 9
+        kx -= label_w
+        key += (f'<text x="{kx:.0f}" y="98" font-size="14.5" fill="{MUTED}">{escape(label)}</text>')
+        kx -= 9 + cmd_w
+        key += (f'<text x="{kx:.0f}" y="98" font-size="15" fill="{colour}" '
+                f'font-family="{MONO}">{escape(cmd)}</text>')
+        kx -= 30
 
     height = y + 130
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{SHEET_W}" height="{height}" viewBox="0 0 {SHEET_W} {height}" font-family="{FONT}">
   <rect width="{SHEET_W}" height="{height}" fill="{PAPER}"/>
   {git_logo(80, 56, 64)}
   <text x="164" y="106" font-size="46" font-weight="700" fill="{INK}">{title}<tspan fill="{ACCENT}">.</tspan></text>
-  <text x="82" y="152" font-size="20" fill="{MUTED}">Colour is the cost: amber rewrites history, red can lose work. Every command here has its own undo at amey-thakur.github.io/GIT-GUIDE</text>
+  <text x="82" y="152" font-size="20" fill="{MUTED}">Colour is the cost. Every command here has its own undo, and its full answer, at amey-thakur.github.io/GIT-GUIDE</text>
   {key}
   {body}
   {footer(y - 20, SHEET_W, "Every Git and GitHub answer in one place.")}
