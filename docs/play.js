@@ -50,6 +50,8 @@
       switches: 0,       // branch switches, for the "move between branches" lesson
       didFF: false, didSoftReset: false, didAmend: false, didRebase: false,
       didCherryPick: false, didStashPop: false, wasDetached: false, didCommit: false,
+      merging: null,     // { from, files: {name: 'conflict'|'resolved'} } mid-conflict
+      didResolveConflict: false,
       remote: null,      // { url, branches: {name: commitId} } once origin exists
       upstream: {},      // local branch -> true when it tracks origin
       prs: {},           // open pull requests, keyed by branch
@@ -145,13 +147,63 @@
     return null;
   }
 
-  function commit(msg, parents) {
+  function commit(msg, parents, files) {
     var id = nextId();
-    S.commits[id] = { id: id, parents: parents, msg: msg };
+    S.commits[id] = { id: id, parents: parents, msg: msg, files: files || [] };
     S.order.push(id);
     if (S.head.type === "branch") S.branches[S.head.name] = id;
     else S.head.id = id;
     return id;
+  }
+
+  /* The most recent commit both branches share. Breadth-first from one side
+     until it meets an ancestor of the other, which is close enough to Git's
+     answer for a teaching model. */
+  function mergeBase(a, b) {
+    var ancA = ancestors(a);
+    var queue = [b], seen = {};
+    while (queue.length) {
+      var c = queue.shift();
+      if (!c || seen[c]) continue;
+      seen[c] = true;
+      if (ancA[c]) return c;
+      var cm = S.commits[c];
+      if (cm) queue.push.apply(queue, cm.parents);
+    }
+    return null;
+  }
+
+  // Which files a side has touched since the two branches parted.
+  function touchedSince(tip, base) {
+    var out = {}, queue = [tip], seen = {};
+    while (queue.length) {
+      var c = queue.shift();
+      if (!c || seen[c] || c === base) continue;
+      seen[c] = true;
+      var cm = S.commits[c];
+      if (!cm) continue;
+      (cm.files || []).forEach(function (f) { out[f] = true; });
+      queue.push.apply(queue, cm.parents);
+    }
+    return out;
+  }
+
+  function conflictFiles() {
+    return S.merging ? Object.keys(S.merging.files) : [];
+  }
+
+  function unresolved() {
+    return conflictFiles().filter(function (f) { return S.merging.files[f] === "conflict"; });
+  }
+
+  // Almost nothing is allowed to proceed while a merge is half-finished, which
+  // is exactly how Git behaves and the part people find bewildering.
+  function blockedByMerge(what) {
+    if (!S.merging) return false;
+    say("You are in the middle of a merge, so <b>" + esc(what) + "</b> will not run. " +
+      "Finish it (<code>git add &lt;file&gt;</code> then <code>git commit</code>) " +
+      "or walk away from it (<code>git merge --abort</code>).", "err");
+    return true;
   }
 
   function dirty() {
@@ -173,6 +225,9 @@
     ["git switch <name>", "move onto a branch"],
     ["git switch -c <name>", "create a branch and move onto it"],
     ["git merge <branch>", "join another branch into this one"],
+    ["git checkout --ours <file>", "in a conflict, keep your side"],
+    ["git checkout --theirs <file>", "in a conflict, take the other side"],
+    ["git merge --abort", "walk away from a conflicted merge"],
     ["git rebase <branch>", "replay your commits onto another base"],
     ["git cherry-pick <hash>", "copy one commit to here"],
     ["git revert HEAD", "add a commit that undoes the last one"],
@@ -434,6 +489,16 @@
   CMDS.status = function () {
     var lines = [];
     lines.push("On branch <b>" + esc(headName()) + "</b>");
+    if (S.merging) {
+      lines.push('<span class="r">You have unmerged paths.</span>');
+      conflictFiles().forEach(function (f) {
+        lines.push("&nbsp;&nbsp;" + (S.merging.files[f] === "resolved"
+          ? '<span class="g">resolved:</span> ' + esc(f)
+          : '<span class="r">both modified:</span> ' + esc(f)));
+      });
+      say(lines.join("<br>"), "out");
+      return;
+    }
     var st = Object.keys(S.staged);
     if (st.length) lines.push('<span class="g">Changes to be committed:</span> ' + st.map(esc).join(", "));
     var mod = Object.keys(S.files).filter(function (f) { return S.files[f] === "modified"; });
@@ -446,6 +511,22 @@
 
   CMDS.add = function (a) {
     if (!a.length) { say("Nothing specified. Use <code>git add .</code> or <code>git add &lt;file&gt;</code>.", "err"); return; }
+
+    // During a conflict, add means "I have settled this file".
+    if (S.merging) {
+      var want = a[0] === "." || a[0] === "-A" ? conflictFiles() : a;
+      var marked = 0;
+      want.forEach(function (f) {
+        if (S.merging.files[f]) { S.merging.files[f] = "resolved"; marked++; }
+      });
+      if (!marked) { say("That file is not one of the conflicted ones.", "err"); return; }
+      var left = unresolved();
+      say("Marked " + marked + " file" + (marked === 1 ? "" : "s") + " as resolved. " +
+        (left.length
+          ? "Still to settle: <b>" + left.map(esc).join("</b>, <b>") + "</b>."
+          : "All conflicts settled. <code>git commit</code> completes the merge."), "out");
+      draw(); return;
+    }
     var names = a[0] === "." || a[0] === "-A" ? Object.keys(S.files) : a;
     var n = 0;
     names.forEach(function (f) {
@@ -459,6 +540,7 @@
   };
 
   CMDS.commit = function (a) {
+    if (S.merging) { finishMerge(); return; }
     var i = a.indexOf("-m");
     var msg = i !== -1 && a[i + 1] ? a[i + 1] : "Update";
     var amend = a.indexOf("--amend") !== -1;
@@ -483,8 +565,9 @@
       say("nothing to commit, working tree clean. Stage something first: <code>edit app.js</code> then <code>git add .</code>", "err");
       return;
     }
+    var touched = Object.keys(S.staged);
     S.staged = {};
-    var id = commit(msg, [headId()]);
+    var id = commit(msg, [headId()], touched);
     S.didCommit = true;
     note("HEAD", "commit: " + msg);
     say("Committed <b>" + id + "</b> " + esc(msg) + ". The branch pointer moved with you.", "out");
@@ -549,10 +632,40 @@
     say("No branch or commit named " + esc(name) + ".", "err");
   }
 
-  CMDS.switch = switchTo;
-  CMDS.checkout = switchTo;
+  CMDS.switch = function (a) {
+    if (blockedByMerge("git switch")) return;
+    switchTo(a);
+  };
+  CMDS.checkout = function (a) {
+    // In a conflict, checkout --ours/--theirs picks a side for one file.
+    var side = a.indexOf("--ours") !== -1 ? "ours" : a.indexOf("--theirs") !== -1 ? "theirs" : null;
+    if (side && S.merging) {
+      var f = a.filter(function (x) { return x[0] !== "-"; })[0];
+      if (!f || !S.merging.files[f]) { say("Which conflicted file? " + conflictFiles().map(esc).join(", "), "err"); return; }
+      S.merging.files[f] = "resolved";
+      say("Took <b>" + (side === "ours" ? "your" : "their") + "</b> version of <code>" + esc(f) + "</code>. " +
+        (side === "ours"
+          ? "Ours means the branch you are on."
+          : "Theirs means the branch you are merging in.") +
+        " Marked resolved." +
+        (unresolved().length ? " Still to settle: " + unresolved().map(esc).join(", ") + "." : " <code>git commit</code> now completes the merge."), "out");
+      draw(); return;
+    }
+    if (side) { say("Nothing is conflicted, so there are no sides to choose.", "err"); return; }
+    switchTo(a);
+  };
 
   CMDS.merge = function (a) {
+    if (a.indexOf("--abort") !== -1) {
+      if (!S.merging) { say("There is no merge in progress.", "err"); return; }
+      S.merging = null;
+      say("Merge aborted. You are back exactly where you started, with nothing half-applied. " +
+        "This is always available, and it is why a conflict is never a trap.", "out");
+      draw(); return;
+    }
+    if (a.indexOf("--continue") !== -1) { finishMerge(); return; }
+    if (blockedByMerge("git merge")) return;
+
     var name = a.filter(function (x) { return x[0] !== "-"; })[0];
     var target = resolve(name);
     if (!target) { say("No branch named " + esc(name || "") + ".", "err"); return; }
@@ -565,13 +678,57 @@
       say("<b>Fast-forward.</b> Your branch had nothing of its own, so Git slid the pointer along. No merge commit exists.", "out");
       draw(); return;
     }
-    var id = commit("Merge branch '" + name + "'", [h, target]);
+    // Both sides moved. If they touched the same file, that is a conflict, and
+    // Git stops and hands the decision to you rather than guessing.
+    var base = mergeBase(h, target);
+    var mine = touchedSince(h, base), theirs = touchedSince(target, base);
+    var clash = Object.keys(mine).filter(function (f) { return theirs[f]; });
+
+    if (clash.length) {
+      S.merging = { from: name, target: target, files: {} };
+      clash.forEach(function (f) { S.merging.files[f] = "conflict"; });
+      say(clash.map(function (f) {
+        return '<span class="r">CONFLICT (content): Merge conflict in ' + esc(f) + "</span>";
+      }).join("<br>") +
+        '<br><span class="r">Automatic merge failed; fix conflicts and then commit the result.</span>' +
+        "<br><br><b>Nothing is broken and nothing is lost.</b> Git changed what it could and stopped " +
+        "at the " + clash.length + " file" + (clash.length === 1 ? "" : "s") + " where both sides " +
+        "edited the same thing, because only you know which version is right.<br>" +
+        "Decide each one: <code>git checkout --ours " + esc(clash[0]) + "</code> to keep yours, " +
+        "<code>git checkout --theirs " + esc(clash[0]) + "</code> to take theirs, or " +
+        "<code>edit " + esc(clash[0]) + "</code> to write the answer yourself. " +
+        "Then <code>git add " + esc(clash[0]) + "</code> to mark it settled.<br>" +
+        "Changed your mind entirely? <code>git merge --abort</code>.", "err");
+      draw(); return;
+    }
+
+    var id = commit("Merge branch '" + name + "'", [h, target], []);
     note("HEAD", "merge " + name + ": merge commit");
     say("Created merge commit <b>" + id + "</b>, with <b>two parents</b>. Both histories are preserved exactly as they happened.", "out");
     draw();
   };
 
+  function finishMerge() {
+    if (!S.merging) { say("There is no merge in progress.", "err"); return; }
+    var left = unresolved();
+    if (left.length) {
+      say("Still unresolved: <b>" + left.map(esc).join("</b>, <b>") + "</b>. " +
+        "Choose a side or edit the file, then <code>git add</code> it.", "err");
+      return;
+    }
+    var from = S.merging.from, target = S.merging.target;
+    var files = conflictFiles();
+    S.merging = null;
+    S.didResolveConflict = true;
+    var id = commit("Merge branch '" + from + "'", [headId(), target], files);
+    note("HEAD", "merge " + from + ": conflicts resolved");
+    say("Merged <b>" + id + "</b>. The conflict is recorded as part of the history: " +
+      "a merge commit with two parents, holding the resolution you chose.", "out");
+    draw();
+  }
+
   CMDS.rebase = function (a) {
+    if (blockedByMerge("git rebase")) return;
     var name = a.filter(function (x) { return x[0] !== "-"; })[0];
     var upstream = resolve(name);
     if (!upstream) { say("No branch named " + esc(name || "") + ".", "err"); return; }
@@ -941,6 +1098,7 @@
     statusEl.innerHTML = "On <b>" + esc(headName()) + "</b> · " +
       nc + (nc === 1 ? " commit" : " commits") + " · " +
       nb + (nb === 1 ? " branch" : " branches") +
+      (S.merging ? ' · <span class="r">merging: ' + unresolved().length + " unresolved</span>" : "") +
       (dirty() ? ' · <span class="r">uncommitted changes</span>' : "") +
       (function () {
         if (!S.remote || S.head.type !== "branch") return "";
@@ -1030,6 +1188,13 @@
           return S.commits[id].parents.length > 1 && isAncestor(id, S.branches.main);
         });
       } },
+
+    { id: "merge-conflict", ch: 2, t: "Resolve a merge conflict",
+      goal: "Make both branches change the same file, merge, and settle the conflict.",
+      why: "A conflict is not a failure. Git changed everything it safely could and stopped where both sides edited the same thing, because only you know which version is right.",
+      hint: "<code>edit shared.js</code> and commit on main, then the same file on a branch, then merge. Settle it with <code>git checkout --ours shared.js</code> or <code>--theirs</code>, then <code>git add shared.js</code> and <code>git commit</code>.",
+      done: "Nothing was lost and nothing was guessed. The resolution you chose is recorded in the merge commit, and git merge --abort was available the whole time.",
+      ok: function () { return !!S.didResolveConflict; } },
 
     { id: "revert", ch: 3, t: "Undo a commit the safe way",
       goal: "Cancel a commit without removing it from history.",
