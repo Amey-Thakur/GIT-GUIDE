@@ -314,6 +314,9 @@ def render(jobs):
              "--hide-scrollbars", wrapper.as_uri()],
             capture_output=True, timeout=60,
         )
+        # The wrapper exists only for Chrome to open. Leaving it behind littered
+        # the assets folder with four stale copies of every render.
+        wrapper.unlink(missing_ok=True)
         print(f"{png_path.name}: {png_path.stat().st_size // 1024} KB")
 
 
