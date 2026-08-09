@@ -1173,6 +1173,22 @@ html::-webkit-scrollbar-corner { background: var(--paper); }
 .lg-chip-branch { border: 1.5px solid var(--muted); color: var(--muted); }
 .lg-chip-tag { border: 1.5px dashed var(--history); color: var(--history); }
 
+/* ---- The page that does not exist ---------------------------------------
+   A 404 on a guide built around a search box should offer the search box.
+   Somebody who followed a broken link wants the answer, not the homepage. */
+.nf-guess { color: var(--history) !important; }
+.nf-guess a { color: var(--history); font-weight: 600; }
+.nf-box { margin: 1.1rem 0 0.5rem; }
+.nf-hits { list-style: none; margin: 0.9rem 0 0; padding: 0; display: grid; gap: 0.55rem; }
+.nf-hits a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.nf-hits a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.nf-hits li { display: flex; align-items: baseline; gap: 0.6rem; }
+/* An error message and a question read differently; the tag says which. */
+.nf-kind { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+           text-transform: uppercase; color: var(--destructive); flex: none; }
+.nf-none { margin: 0.9rem 0 0; color: var(--muted); font-size: 0.93rem; }
+.nf-ways { margin-top: 1.75rem !important; }
+
 /* ---- Filtering a thousand answers by what they cost -----------------------
    "Which of these can lose my work" is a question worth being able to ask, and
    the answer is a few dozen commands rather than the answers that contain one.

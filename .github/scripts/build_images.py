@@ -16,6 +16,8 @@ import sys
 from html import escape
 from pathlib import Path
 
+import danger
+
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
 ASSETS = ROOT / ".github" / "assets"
@@ -180,6 +182,8 @@ def poster(intents, errors):
 </svg>'''
 
 
+LEVEL_COLOUR = {danger.SAFE: INK, danger.HISTORY: HISTORY, danger.DESTRUCTIVE: DANGER}
+
 SHEET_W = 1440          # command column 700, description column 540, 80 either side
 CMD_X, CMD_W = 80, 700
 DESC_X = 820
@@ -220,7 +224,10 @@ def sheet_card(sheet, wanted, title):
         )
         y += 16
         for item in sec["items"]:
-            colour = DANGER if item.get("danger") else INK
+            # Three colours, from the one definition the whole repository uses.
+            # The key above promises three; showing two was a card contradicting
+            # its own legend.
+            colour = LEVEL_COLOUR[danger.level(item["c"])]
             size = fit_mono(item["c"])
             # A quiet stripe carries the eye across the gap between the columns.
             if stripe % 2 == 0:
@@ -256,7 +263,7 @@ def sheet_card(sheet, wanted, title):
   <rect width="{SHEET_W}" height="{height}" fill="{PAPER}"/>
   {git_logo(80, 56, 64)}
   <text x="164" y="106" font-size="46" font-weight="700" fill="{INK}">{title}<tspan fill="{ACCENT}">.</tspan></text>
-  <text x="82" y="152" font-size="20" fill="{MUTED}">Anything in red rewrites history or can lose work. Every command here has its own undo at amey-thakur.github.io/GIT-GUIDE</text>
+  <text x="82" y="152" font-size="20" fill="{MUTED}">Colour is the cost: amber rewrites history, red can lose work. Every command here has its own undo at amey-thakur.github.io/GIT-GUIDE</text>
   {key}
   {body}
   {footer(y - 20, SHEET_W, "Every Git and GitHub answer in one place.")}

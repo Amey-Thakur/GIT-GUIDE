@@ -5,7 +5,7 @@
   Author: Amey Thakur
   GitHub: https://github.com/Amey-Thakur
   Tech: HTML5, GitHub Pages (served automatically for any missing path)
-  Description: A Git-shaped 404: the famous error, rephrased, with two ways back. Absolute URLs throughout because this page renders at arbitrary depths.
+  Description: A Git-shaped 404: the famous error, rephrased, naming the path that failed, guessing the page when the name is a near miss, and searching all thousand answers without leaving. Absolute URLs throughout because this page renders at arbitrary depths.
   Date: 2026-08-07
 -->
 <html lang="en">
@@ -18,7 +18,7 @@
   <meta name="robots" content="noindex">
   <link rel="manifest" href="/GIT-GUIDE/manifest.webmanifest">
   <link rel="icon" href="/GIT-GUIDE/assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/GIT-GUIDE/style.css?v=81">
+  <link rel="stylesheet" href="/GIT-GUIDE/style.css?v=83">
 </head>
 <body>
 
@@ -62,11 +62,23 @@
       <div class="wrap results">
         <article class="result errcard">
           <h2><code class="errmsg">error: pathspec did not match any page known to Git Guide</code></h2>
-          <p class="note">Nothing is lost; nothing here ever is. Every answer is one search away.</p>
-          <div class="cmd"><code>git switch main</code><a class="copy" href="/GIT-GUIDE/">Go</a></div>
-          <p class="note">Back to the finder: ask anything in plain language.</p>
-          <div class="cmd"><code>git reflog</code><a class="copy" href="/GIT-GUIDE/cheatsheet.html">Go</a></div>
-          <p class="note">Or browse the complete cheatsheet and find it by eye.</p>
+          <p class="note">The path Git Guide was asked for:</p>
+          <div class="cmd"><code id="nf-path">/GIT-GUIDE/</code></div>
+          <p class="note nf-guess" id="nf-guess" hidden></p>
+          <p class="note">Nothing is lost; nothing here ever is. Search the thousand answers from
+            right here, without going anywhere first.</p>
+
+          <div class="searchbox nf-box">
+            <input id="nf-q" type="text" enterkeyhint="search" autocomplete="off"
+                   autocapitalize="off" spellcheck="false"
+                   placeholder="undo the last commit, publickey denied, gitignore..."
+                   aria-label="Search every answer">
+          </div>
+          <div id="nf-out" aria-live="polite"></div>
+
+          <p class="note nf-ways">Or take one of the two ways back:</p>
+          <div class="cmd"><code>git switch main</code><a class="copy" href="/GIT-GUIDE/">Finder</a></div>
+          <div class="cmd"><code>git log --all</code><a class="copy" href="/GIT-GUIDE/answers.html">Every answer</a></div>
         </article>
       </div>
     </section>
@@ -88,8 +100,9 @@
 
   <script src="/GIT-GUIDE/theme.js"></script>
   <script src="/GIT-GUIDE/hello.js"></script>
-    <script src="/GIT-GUIDE/keys.js?v=6"></script>
-    <script src="/GIT-GUIDE/totop.js?v=2"></script>
-    <script src="/GIT-GUIDE/offline.js?v=2"></script>
+  <script src="/GIT-GUIDE/notfound.js?v=2"></script>
+  <script src="/GIT-GUIDE/keys.js?v=6"></script>
+  <script src="/GIT-GUIDE/totop.js?v=2"></script>
+  <script src="/GIT-GUIDE/offline.js?v=2"></script>
 </body>
 </html>
