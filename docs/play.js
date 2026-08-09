@@ -44,6 +44,8 @@
       tags: {},
       files: {},
       content: {},        // file -> the line currently in the working tree
+      tracked: {},        // file -> true once Git is following it
+      removed: {},        // file -> true when a deletion is staged
       edits: 0,           // so successive edits are visibly different
       staged: {},
       stash: [],
@@ -317,6 +319,10 @@
   /* ------------------------------------------------------------- commands */
 
   function run(line) {
+    try { runCommand(line); } finally { drawPrompt(); }
+  }
+
+  function runCommand(line) {
     var t = tokenize(line);
     if (!t.length) return;
 
@@ -327,7 +333,7 @@
     if (t[0] === "edit" || t[0] === "touch") {
       snapshot();
       var f = t[1] || "notes.txt";
-      S.files[f] = S.files[f] ? "modified" : "untracked";
+      S.files[f] = (S.tracked[f] || S.files[f] === "modified") ? "modified" : "untracked";
       S.edits += 1;
       var whose = S.head.type === "branch" ? S.head.name : "a detached HEAD";
       S.content[f] = 'title = "written on ' + whose + ', edit ' + S.edits + '"';
@@ -427,8 +433,14 @@
     past = [];
     reset(true);
     S.commits[S.branches.main].msg = "Initial commit";
-    var msgs = ["Add README", "Set up the project"];
-    msgs.forEach(function (m) { commit(m, [headId()]); });
+    /* A clone that arrives empty is no use to ls, cat or blame, and those are
+       among the first things anyone tries after their first clone. */
+    [["README.md", "# GIT-GUIDE", "Add README"],
+     [".gitignore", "node_modules/", "Ignore build output"]].forEach(function (r) {
+      S.content[r[0]] = r[1];
+      S.tracked[r[0]] = true;
+      commit(r[2], [headId()], [r[0]]);
+    });
     S.remote = { url: url, branches: { main: S.branches.main } };
     S.upstream.main = true;
     S.used.clone = true;
@@ -590,13 +602,17 @@
       say(lines.join("<br>"), "out");
       return;
     }
-    var st = Object.keys(S.staged);
+    var st = Object.keys(S.staged).filter(function (f) { return !S.removed[f]; });
+    var rm = Object.keys(S.removed);
     if (st.length) lines.push('<span class="g">Changes to be committed:</span> ' + st.map(esc).join(", "));
+    if (rm.length) lines.push('<span class="g">Deleted, and staged:</span> ' + rm.map(esc).join(", "));
     var mod = Object.keys(S.files).filter(function (f) { return S.files[f] === "modified"; });
     if (mod.length) lines.push('<span class="r">Changes not staged:</span> ' + mod.map(esc).join(", "));
     var un = Object.keys(S.files).filter(function (f) { return S.files[f] === "untracked"; });
     if (un.length) lines.push('<span class="r">Untracked files:</span> ' + un.map(esc).join(", "));
-    if (!st.length && !mod.length && !un.length) lines.push("nothing to commit, working tree clean");
+    if (!st.length && !rm.length && !mod.length && !un.length) {
+      lines.push("nothing to commit, working tree clean");
+    }
     say(lines.join("<br>"), "out");
   };
 
@@ -636,6 +652,7 @@
     names.forEach(function (f) {
       if (S.files[f] == null) return;
       S.staged[f] = true;
+      S.tracked[f] = true;
       delete S.files[f];
       n++;
     });
@@ -673,6 +690,7 @@
     }
     var touched = Object.keys(S.staged);
     S.staged = {};
+    S.removed = {};
     var id = commit(msg, [headId()], touched);
     S.didCommit = true;
     note("HEAD", "commit: " + msg);
@@ -895,6 +913,14 @@
     if (mode === "--hard") {
       S.staged = {};
       S.files = {};
+      S.removed = {};
+      /* The index is whatever the new commit says it is. Rebuilding it here is
+         what makes a file that only ever existed in the commit you just dropped
+         disappear from git ls-files, rather than linger as a ghost entry. */
+      S.tracked = {};
+      Object.keys(ancestors(id)).forEach(function (c) {
+        (S.commits[c].files || []).forEach(function (f) { S.tracked[f] = true; });
+      });
       if (S.merging) {
         S.merging = null;
         say("The conflicted merge went with it: a hard reset abandons a merge in progress, " +
@@ -964,7 +990,7 @@
     }
     if (!dirty()) { say("No local changes to save.", "err"); return; }
     S.stash.unshift(S.files);
-    S.files = {}; S.staged = {};
+    S.files = {}; S.staged = {}; S.removed = {};
     say("Saved your changes on the shelf and cleaned the working tree. <code>git stash pop</code> brings them back.", "out");
   };
 
@@ -1023,12 +1049,24 @@
 
   CMDS.diff = function (a) {
     var staged = a.indexOf("--staged") !== -1 || a.indexOf("--cached") !== -1;
-    var names = staged ? Object.keys(S.staged) : Object.keys(S.files);
+    /* Git compares what it is already following. It says nothing at all about a
+       file it has never seen, and that silence is the commonest reason a diff
+       comes back empty, so it is worth saying out loud. */
+    var names = staged ? Object.keys(S.staged)
+      : Object.keys(S.files).filter(function (f) { return S.files[f] === "modified"; });
+    var newFiles = Object.keys(S.files).filter(function (f) { return S.files[f] === "untracked"; });
     if (!names.length) {
-      say(staged
+      var why = staged
         ? "Nothing is staged, so there is nothing to compare against the last commit."
-        : "No unstaged changes. Whatever you have staged is shown by " +
-          "<code>git diff --staged</code>.", "out");
+        : "No change to a file Git is following. Anything staged is shown by " +
+          "<code>git diff --staged</code>.";
+      if (!staged && newFiles.length) {
+        why += '<br><span class="m">Git has never seen <b>' + newFiles.map(esc).join("</b>, <b>") +
+          "</b>, and <code>git diff</code> never mentions a file it is not following. " +
+          "That is the commonest reason a diff comes back empty. <code>git add</code> " +
+          "them and they appear.</span>";
+      }
+      say(why, "out");
       return;
     }
     var lines = [];
@@ -1062,12 +1100,9 @@
   };
 
   CMDS["ls-files"] = function () {
-    var seen = {};
-    Object.keys(S.commits).forEach(function (id) {
-      (S.commits[id].files || []).forEach(function (f) { seen[f] = true; });
-    });
-    Object.keys(S.staged).forEach(function (f) { seen[f] = true; });
-    var all = Object.keys(seen).sort();
+    // The index as it stands, not everything that has ever been committed. A
+    // file removed two commits ago is still in history and is not in this list.
+    var all = Object.keys(S.tracked).sort();
     if (!all.length) { say("Nothing is tracked yet, because nothing has been committed.", "out"); return; }
     say(all.map(esc).join("<br>") + '<br><span class="m">Every path Git is following. ' +
       "An untracked file is one missing from this list.</span>", "out");
@@ -1195,6 +1230,7 @@
     if (!f) { say("Which file? <code>git rm &lt;file&gt;</code>.", "err"); return; }
     if (!knownAt(f)) { say("<code>" + esc(f) + "</code> is not in this repository.", "err"); return; }
     delete S.staged[f];
+    delete S.tracked[f];
     if (cached) {
       S.files[f] = "untracked";
       say("Stopped tracking <code>" + esc(f) + "</code>. The file stays where it is and Git " +
@@ -1204,6 +1240,7 @@
       delete S.files[f];
       delete S.content[f];
       S.staged[f] = true;
+      S.removed[f] = true;
       say("Deleted <code>" + esc(f) + "</code> and staged the deletion. Commit to record it. " +
         "Every earlier commit still holds the file, so nothing committed is lost.", "out");
     }
@@ -1219,7 +1256,9 @@
     delete S.files[from];
     delete S.staged[from];
     delete S.content[from];
+    delete S.tracked[from];
     S.staged[to] = true;
+    S.tracked[to] = true;
     if (body != null) S.content[to] = body;
     say("Renamed <code>" + esc(from) + "</code> to <code>" + esc(to) + "</code> and staged it." +
       "<br>Git records no rename. It sees one path gone and another arrived, and works out " +
@@ -1312,13 +1351,16 @@
      branch and the mark come from the same state the graph is drawn from, so
      the prompt says what a real one is telling you. */
   function promptHTML() {
+    /* Detached, a real prompt shows the hash, because there is no branch name to
+       show. The state marker is the same idea as the one zsh gives you mid-merge:
+       the prompt is where you find out you are somewhere unusual. */
+    var label = S.head.type === "branch" ? S.head.name : S.head.id;
+    var state = S.merging ? "|MERGING" : S.head.type === "detached" ? "|DETACHED" : "";
     return '<span class="pp-arrow">&#10140;</span>' +
       '<span class="pp-dir">GIT-GUIDE</span>' +
       '<span class="pp-git">git:(</span>' +
-      '<span class="pp-branch">' + esc(headName()) + "</span>" +
-      // A real prompt says so while a merge is unfinished, and that is exactly
-      // when someone needs telling.
-      (S.merging ? '<span class="pp-state">|MERGING</span>' : "") +
+      '<span class="pp-branch">' + esc(label) + "</span>" +
+      (state ? '<span class="pp-state">' + state + "</span>" : "") +
       '<span class="pp-git">)</span>' +
       (dirty() ? '<span class="pp-dirty">&#10007;</span>' : "");
   }
@@ -1345,12 +1387,12 @@
   };
 
   SHELL.ls = function () {
+    // What is on disk: what Git follows, plus anything new, minus what has been
+    // deleted and is only waiting for the commit that records it.
     var seen = {};
-    Object.keys(S.commits).forEach(function (id) {
-      (S.commits[id].files || []).forEach(function (f) { seen[f] = 1; });
-    });
-    Object.keys(S.staged).forEach(function (f) { seen[f] = 1; });
+    Object.keys(S.tracked).forEach(function (f) { seen[f] = 1; });
     Object.keys(S.files).forEach(function (f) { seen[f] = 1; });
+    Object.keys(S.removed).forEach(function (f) { delete seen[f]; });
     var all = Object.keys(seen).sort();
     if (!all.length) {
       say("The folder is empty. <code>edit app.js</code> puts something in it.", "out");
@@ -1504,7 +1546,7 @@
           btn.className = "pcf-btn";
           btn.textContent = pair[0];
           btn.addEventListener("click", function () {
-            say('<span class="p">$</span> ' + esc(pair[1]), "cmd");
+            say('<span class="p">' + promptHTML() + "</span> " + esc(pair[1]), "cmd");
             run(pair[1]);
           });
           row.appendChild(btn);
@@ -2208,7 +2250,6 @@
       inEl.value = "";
       hideSuggestions();
       try { run(v); } catch (err) { say("The sandbox tripped over that one. <code>reset</code> starts fresh.", "err"); }
-      drawPrompt();
     } else if (e.key === "ArrowUp") {
       if (hi + 1 < hist.length) { hi++; inEl.value = hist[hi]; e.preventDefault(); }
     } else if (e.key === "ArrowDown") {
@@ -2240,10 +2281,10 @@
     var runnable = e.target.closest(".lsn-hint-text code, .pnotes code");
     if (runnable) {
       var text = runnable.textContent.trim();
-      if (/^(git|gh|edit|teammate) /.test(text) || text === "teammate") {
+      if (/^(git|gh|edit|ls|cat|pwd) /.test(text) || /^(teammate|ls|pwd|clear)$/.test(text)) {
         inEl.value = text;
         inEl.focus();
-        say('<span class="p">$</span> ' + esc(text), "cmd");
+        say('<span class="p">' + promptHTML() + "</span> " + esc(text), "cmd");
         try { run(text); } catch (err) { say("The sandbox tripped over that one.", "err"); }
         inEl.value = "";
         return;
