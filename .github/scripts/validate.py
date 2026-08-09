@@ -148,6 +148,40 @@ def check_house_style():
 
 
 
+def check_quizzes(path):
+    """Every question needs exactly one correct answer and a reason on each option."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    quizzes = data.get("quizzes", [])
+    if not quizzes:
+        err("quizzes.json: no quizzes")
+        return
+    seen = set()
+    total = 0
+    for quiz in quizzes:
+        qid = quiz.get("id", "")
+        if not re.fullmatch(r"[a-z0-9-]+", qid):
+            err(f"quizzes.json: bad quiz id {qid!r}")
+        if qid in seen:
+            err(f"quizzes.json: duplicate quiz id {qid!r}")
+        seen.add(qid)
+        for q in quiz.get("questions", []):
+            total += 1
+            label = f"quizzes.json/{qid}: {q.get('q', '')[:45]}"
+            options = q.get("a", [])
+            if len(options) < 2:
+                err(f"{label}: needs at least two options")
+            right = [a for a in options if a.get("ok")]
+            if len(right) != 1:
+                err(f"{label}: has {len(right)} correct answers, needs exactly one")
+            for a in options:
+                if not a.get("t"):
+                    err(f"{label}: an option has no text")
+                if not a.get("why"):
+                    err(f"{label}: option {a.get('t', '')!r} has no explanation")
+    print(f"quizzes.json: {total} questions OK")
+
+
+
 def check_links():
     """Every internal href must resolve: the file exists and any #anchor is real.
 
@@ -193,6 +227,8 @@ def main():
                 known = intent_ids()
             elif path.name == "errors.json":
                 check_errors(path, known or intent_ids())
+            elif path.name == "quizzes.json":
+                check_quizzes(path)
             elif path.name == "scenarios.json":
                 check_scenarios(path, known or intent_ids(), error_ids())
             else:

@@ -20,9 +20,22 @@
     return e;
   }
 
-  function mount(id, questions) {
+  /* The questions live in docs/data/quizzes.json, like every other answer on
+     this site, so the page and the structured data in its head are rendered
+     from one source and cannot drift apart. */
+  function mount(id, quizId) {
     var root = document.getElementById(id);
-    if (!root || !questions || !questions.length) return;
+    if (!root) return;
+    fetch("data/quizzes.json")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var quiz = (d.quizzes || []).filter(function (q) { return q.id === quizId; })[0];
+        if (quiz && quiz.questions && quiz.questions.length) start(root, quiz.questions);
+      })
+      .catch(function () { /* no check today; the page above it still teaches */ });
+  }
+
+  function start(root, questions) {
 
     var at = 0;
     var answered = [];

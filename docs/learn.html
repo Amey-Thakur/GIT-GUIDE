@@ -27,7 +27,156 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=43">
+  <link rel="stylesheet" href="style.css?v=45">
+  <!-- quizschema:start -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Quiz",
+  "name": "How Git works: check yourself",
+  "isAccessibleForFree": true,
+  "about": { "@type": "Thing", "name": "Git" },
+  "educationalLevel": "Beginner to advanced",
+  "hasPart": [
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You have edited a file but have not run git add. Where does that change live?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The working tree",
+        "comment": { "@type": "Comment", "text": "Your ordinary files. Git can see the change but has recorded nothing, which is why this is the one state Git cannot get back for you." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The staging area",
+          "comment": { "@type": "Comment", "text": "Not yet. Nothing reaches the staging area until you add it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The local repository",
+          "comment": { "@type": "Comment", "text": "No. The repository only holds what you have committed." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The remote",
+          "comment": { "@type": "Comment", "text": "No. Nothing leaves your machine until you push, and nothing is even committed yet." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Which command moves what you have staged into your history?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "git commit",
+        "comment": { "@type": "Comment", "text": "commit turns the staged snapshot into a permanent one and moves your branch label onto it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "git add",
+          "comment": { "@type": "Comment", "text": "add moves changes into the staging area, one step earlier." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git push",
+          "comment": { "@type": "Comment", "text": "push copies commits you have already made to a remote." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git stash",
+          "comment": { "@type": "Comment", "text": "stash puts changes on a shelf instead of recording them." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A branch, in Git, is best described as:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A movable label pointing at one commit",
+        "comment": { "@type": "Comment", "text": "That is the whole secret. Committing moves the label forward; creating a branch just adds another label." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A copy of your files",
+          "comment": { "@type": "Comment", "text": "Nothing is copied. That is why branching is instant even on a huge repository." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A folder inside .git",
+          "comment": { "@type": "Comment", "text": "There is a file recording where it points, but the branch itself is only that pointer." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A backup of your work",
+          "comment": { "@type": "Comment", "text": "A branch protects nothing on its own; it is a pointer, not a copy." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You run git fetch. What just changed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your record of the remote",
+        "comment": { "@type": "Comment", "text": "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your files were updated",
+          "comment": { "@type": "Comment", "text": "No. That is the point of fetch: your working tree is untouched." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your branch moved forward",
+          "comment": { "@type": "Comment", "text": "No. Your own branch never moves on a fetch." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Nothing at all",
+          "comment": { "@type": "Comment", "text": "Something did change: your origin/* labels now show where the remote actually is." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You ran git reset --hard and lost a commit you wanted. It is:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Still there, and the reflog can find it",
+        "comment": { "@type": "Comment", "text": "Reset moves a label; it does not delete commits. git reflog lists where HEAD has been, and resetting back to that hash brings the work home." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Gone forever",
+          "comment": { "@type": "Comment", "text": "Almost never true, and believing it causes a lot of unnecessary panic." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Only on the remote",
+          "comment": { "@type": "Comment", "text": "It may not have been pushed at all, and you still would not have lost it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Recoverable only from a backup",
+          "comment": { "@type": "Comment", "text": "Git keeps its own safety net. The reflog is that net." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<!-- quizschema:end -->
 </head>
 <body>
 
@@ -237,7 +386,7 @@
   <script src="hello.js"></script>
   <script src="render.js"></script>
   <script src="stepper.js?v=3"></script>
-  <script src="quiz.js?v=1"></script>
+  <script src="quiz.js?v=2"></script>
   <script src="learn.js?v=4"></script>
 </body>
 </html>

@@ -210,7 +210,11 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   margin: 1.1rem 0 0;
 }
 
-.stats strong { color: var(--accent); }
+/* Live counts follow the README badges: answers green, errors decoded in the
+   Git orange. One flat accent for every number told the eye nothing and made
+   the hero read as a single red block. */
+.stats strong { color: var(--safe); font-weight: 700; }
+#stat-e { color: var(--accent); }
 
 .chip.active { border-color: var(--accent); color: var(--accent); }
 
@@ -392,7 +396,8 @@ a.chip { text-decoration: none; }
 
 .muted { color: var(--muted); }
 
-#count, #ecount { color: var(--accent); font-weight: 700; }
+#count { color: var(--safe); font-weight: 700; }
+#ecount { color: var(--accent); font-weight: 700; }
 
 .chapter h2 .num { color: var(--accent); }
 
@@ -985,7 +990,7 @@ kbd {
 .lesson-top { display: flex; align-items: flex-start; justify-content: space-between;
               gap: 1.5rem; flex-wrap: wrap; }
 .lsn-chapter { margin: 0 0 0.3rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
-               text-transform: uppercase; color: var(--accent); }
+               text-transform: uppercase; color: var(--muted); }
 .lesson-top h2 { margin: 0; font-size: 1.4rem; }
 .lsn-state { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
              color: var(--muted); border: 1px solid var(--line); border-radius: 999px;
@@ -995,7 +1000,7 @@ kbd {
 .lsn-goal { display: flex; align-items: baseline; gap: 0.7rem; margin: 1.1rem 0 0.5rem;
             font-size: 1.02rem; }
 .lsn-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-           color: var(--accent); border: 1px solid var(--accent); border-radius: 4px;
+           color: var(--safe); border: 1px solid var(--safe); border-radius: 4px;
            padding: 0.1rem 0.4rem; flex: none; }
 .lsn-why { margin: 0; color: var(--muted); line-height: 1.65; }
 .lsn-hint-text { margin: 1rem 0 0; padding: 0.85rem 1rem; border-radius: 8px;
@@ -1009,7 +1014,7 @@ kbd {
 .lsn-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--code-bg); overflow: hidden;
            min-width: 8rem; }
 .lsn-bar span { display: block; height: 100%; width: 0; border-radius: 999px;
-                background: var(--accent); transition: width 0.45s ease; }
+                background: var(--safe); transition: width 0.45s ease; }
 .lsn-count { font-size: 0.86rem; color: var(--muted); white-space: nowrap; }
 .lesson-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .lsn-primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }

@@ -1,0 +1,216 @@
+{
+  "quizzes": [
+    {
+      "id": "learn",
+      "name": "How Git works: check yourself",
+      "about": "Git",
+      "questions": [
+        {
+          "q": "You have edited a file but have not run git add. Where does that change live?",
+          "a": [
+            {
+              "t": "The working tree",
+              "ok": true,
+              "why": "Your ordinary files. Git can see the change but has recorded nothing, which is why this is the one state Git cannot get back for you."
+            },
+            {
+              "t": "The staging area",
+              "why": "Not yet. Nothing reaches the staging area until you add it."
+            },
+            {
+              "t": "The local repository",
+              "why": "No. The repository only holds what you have committed."
+            },
+            {
+              "t": "The remote",
+              "why": "No. Nothing leaves your machine until you push, and nothing is even committed yet."
+            }
+          ]
+        },
+        {
+          "q": "Which command moves what you have staged into your history?",
+          "a": [
+            {
+              "t": "git add",
+              "why": "add moves changes into the staging area, one step earlier."
+            },
+            {
+              "t": "git commit",
+              "ok": true,
+              "why": "commit turns the staged snapshot into a permanent one and moves your branch label onto it."
+            },
+            {
+              "t": "git push",
+              "why": "push copies commits you have already made to a remote."
+            },
+            {
+              "t": "git stash",
+              "why": "stash puts changes on a shelf instead of recording them."
+            }
+          ]
+        },
+        {
+          "q": "A branch, in Git, is best described as:",
+          "a": [
+            {
+              "t": "A copy of your files",
+              "why": "Nothing is copied. That is why branching is instant even on a huge repository."
+            },
+            {
+              "t": "A movable label pointing at one commit",
+              "ok": true,
+              "why": "That is the whole secret. Committing moves the label forward; creating a branch just adds another label."
+            },
+            {
+              "t": "A folder inside .git",
+              "why": "There is a file recording where it points, but the branch itself is only that pointer."
+            },
+            {
+              "t": "A backup of your work",
+              "why": "A branch protects nothing on its own; it is a pointer, not a copy."
+            }
+          ]
+        },
+        {
+          "q": "You run git fetch. What just changed?",
+          "a": [
+            {
+              "t": "Your files were updated",
+              "why": "No. That is the point of fetch: your working tree is untouched."
+            },
+            {
+              "t": "Your branch moved forward",
+              "why": "No. Your own branch never moves on a fetch."
+            },
+            {
+              "t": "Your record of the remote",
+              "ok": true,
+              "why": "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you."
+            },
+            {
+              "t": "Nothing at all",
+              "why": "Something did change: your origin/* labels now show where the remote actually is."
+            }
+          ]
+        },
+        {
+          "q": "You ran git reset --hard and lost a commit you wanted. It is:",
+          "a": [
+            {
+              "t": "Gone forever",
+              "why": "Almost never true, and believing it causes a lot of unnecessary panic."
+            },
+            {
+              "t": "Still there, and the reflog can find it",
+              "ok": true,
+              "why": "Reset moves a label; it does not delete commits. git reflog lists where HEAD has been, and resetting back to that hash brings the work home."
+            },
+            {
+              "t": "Only on the remote",
+              "why": "It may not have been pushed at all, and you still would not have lost it."
+            },
+            {
+              "t": "Recoverable only from a backup",
+              "why": "Git keeps its own safety net. The reflog is that net."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "name": "GitHub: check yourself",
+      "about": "GitHub",
+      "questions": [
+        {
+          "q": "What does a pull request actually contain?",
+          "a": [
+            {
+              "t": "A copy of your changed files",
+              "why": "No copying happens. The commits are already on GitHub before the pull request exists."
+            },
+            {
+              "t": "A request to merge a branch that is already pushed",
+              "ok": true,
+              "why": "That is all it is: your branch, proposed into another, with somewhere for people to talk about it."
+            },
+            {
+              "t": "A patch file emailed to the maintainer",
+              "why": "That is the older mailing-list workflow. Git supports it, but it is not what a pull request is."
+            },
+            {
+              "t": "A backup of your branch",
+              "why": "A pull request protects nothing. Your branch is safe because you pushed it, not because you proposed it."
+            }
+          ]
+        },
+        {
+          "q": "Your pull request was merged on GitHub. Your local main now:",
+          "a": [
+            {
+              "t": "Has the change already",
+              "why": "It does not. Nothing reaches your machine on its own."
+            },
+            {
+              "t": "Does not have it until you pull",
+              "ok": true,
+              "why": "Two different places moved: GitHub's main, and later yours. This is the step people forget, and then wonder why their main looks stale."
+            },
+            {
+              "t": "Is broken and needs a fresh clone",
+              "why": "Nothing is broken. It is simply behind."
+            },
+            {
+              "t": "Updates the next time you commit",
+              "why": "Committing adds to your history; it never brings anything down from GitHub."
+            }
+          ]
+        },
+        {
+          "q": "Your push is rejected as non-fast-forward. The right first move is:",
+          "a": [
+            {
+              "t": "git push --force",
+              "why": "This is the answer that loses somebody's work. Force overwrites the commits you have not seen."
+            },
+            {
+              "t": "git pull, then push again",
+              "ok": true,
+              "why": "The rejection means origin has work you do not. Bring it in, resolve anything that conflicts, then push."
+            },
+            {
+              "t": "Delete the branch and start over",
+              "why": "Nothing is wrong with your branch; it is just missing a commit from someone else."
+            },
+            {
+              "t": "Clone the repository again",
+              "why": "A fresh clone throws away your work to avoid a one-command fix."
+            }
+          ]
+        },
+        {
+          "q": "A fork is:",
+          "a": [
+            {
+              "t": "A branch with a different name",
+              "why": "A branch lives in one repository. A fork is a separate repository."
+            },
+            {
+              "t": "Your own copy of someone else's repository, on GitHub",
+              "ok": true,
+              "why": "It is a server-side copy under your account, which is how you contribute somewhere you cannot push to directly."
+            },
+            {
+              "t": "A clone on your machine",
+              "why": "That is a clone. A fork exists on GitHub, and you usually clone your fork afterwards."
+            },
+            {
+              "t": "A permanent split from the original",
+              "why": "It can be, but usually a fork stays connected: you sync from upstream and send pull requests back."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

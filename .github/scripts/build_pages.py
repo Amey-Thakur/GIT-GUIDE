@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
 START, END = "<!-- errors:start -->", "<!-- errors:end -->"
 CS_START, CS_END = "<!-- cheatsheet:start -->", "<!-- cheatsheet:end -->"
+QZ_START, QZ_END = "<!-- quizschema:start -->", "<!-- quizschema:end -->"
 
 
 def replace_block(page, start, end, body):
@@ -23,6 +24,53 @@ def replace_block(page, start, end, body):
     head, rest = html.split(start)
     _, tail = rest.split(end)
     page.write_text(head + start + "\n" + body + "\n" + end + tail, encoding="utf-8", newline="\n")
+
+
+
+def quiz_schema(quiz):
+    """Schema.org Quiz for one self-check, rendered from the same data the page uses.
+
+    Written by hand rather than json.dumps so the output is indented like the
+    other JSON-LD blocks on the site and diffs stay readable.
+    """
+    lines = ['<script type="application/ld+json">', "{",
+             '  "@context": "https://schema.org",',
+             '  "@type": "Quiz",',
+             f'  "name": {json.dumps(quiz["name"])},',
+             '  "isAccessibleForFree": true,',
+             f'  "about": {{ "@type": "Thing", "name": {json.dumps(quiz["about"])} }},',
+             '  "educationalLevel": "Beginner to advanced",',
+             '  "hasPart": [']
+    parts = []
+    for q in quiz["questions"]:
+        right = [a for a in q["a"] if a.get("ok")][0]
+        wrong = [a for a in q["a"] if not a.get("ok")]
+        one = ["    {",
+               '      "@type": "Question",',
+               '      "eduQuestionType": "Multiple choice",',
+               f'      "name": {json.dumps(q["q"])},',
+               "      \"acceptedAnswer\": {",
+               '        "@type": "Answer",',
+               f'        "text": {json.dumps(right["t"])},',
+               f'        "comment": {{ "@type": "Comment", "text": {json.dumps(right["why"])} }}',
+               "      },",
+               '      "suggestedAnswer": [']
+        sug = []
+        for a in wrong:
+            sug.append("        {\n"
+                       '          "@type": "Answer",\n'
+                       f'          "text": {json.dumps(a["t"])},\n'
+                       f'          "comment": {{ "@type": "Comment", "text": {json.dumps(a["why"])} }}\n'
+                       "        }")
+        one.append(",\n".join(sug))
+        one.append("      ]")
+        one.append("    }")
+        parts.append("\n".join(one))
+    lines.append(",\n".join(parts))
+    lines.append("  ]")
+    lines.append("}")
+    lines.append("</script>")
+    return "\n".join(lines)
 
 
 def error_card(err, intents):
@@ -98,6 +146,13 @@ def main():
     replace_block(DOCS / "cheatsheet.html", CS_START, CS_END, cs_body)
     total = sum(len(s["items"]) for s in sheet)
     print(f"cheatsheet.html: {len(sheet)} sections, {total} commands rendered")
+
+    quizzes = json.loads((DOCS / "data" / "quizzes.json").read_text(encoding="utf-8"))["quizzes"]
+    for quiz in quizzes:
+        page = DOCS / ({"learn": "learn.html", "github": "github.html"}[quiz["id"]])
+        if QZ_START in page.read_text(encoding="utf-8"):
+            replace_block(page, QZ_START, QZ_END, quiz_schema(quiz))
+            print(f'{page.name}: Quiz schema rendered, {len(quiz["questions"])} questions')
 
 
 if __name__ == "__main__":
