@@ -1369,3 +1369,9 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 @media (max-width: 40rem) {
   .tips li { grid-template-columns: 1fr; gap: 0.2rem; }
 }
+
+/* Filtering to nothing must say so. A blank page reads as a broken one, and the
+   next step should be offered rather than left for the reader to work out. */
+.nomatch { margin: 1.5rem 0; padding: 1.25rem 1.5rem; color: var(--muted);
+           border: 1px dashed var(--line); border-radius: 10px; line-height: 1.7; }
+.nomatch b { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }

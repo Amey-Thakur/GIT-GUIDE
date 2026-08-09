@@ -22,6 +22,12 @@
 
   var blobs = cards.map(function (c) { return c.textContent.toLowerCase(); });
 
+  /* An empty result has to say so; a blank page reads as a broken one. */
+  var empty = document.createElement("p");
+  empty.className = "nomatch";
+  empty.hidden = true;
+  list.appendChild(empty);
+
   input.addEventListener("input", function () {
     var q = input.value.trim().toLowerCase();
     var shown = 0;
@@ -31,6 +37,12 @@
       if (hit) shown++;
     });
     if (count) count.textContent = String(shown);
+    empty.hidden = shown !== 0;
+    if (!shown) {
+      empty.innerHTML = "No answer here matches <b>" + q.replace(/[<>&]/g, "") + "</b>." +
+        ' Try fewer words, or ask it in your own language on <a href="./">the finder</a>.' +
+        ' Genuinely missing? <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Ask for it</a>.';
+    }
   });
 
   document.addEventListener("keydown", function (e) {

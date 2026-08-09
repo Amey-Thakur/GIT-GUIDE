@@ -19,11 +19,30 @@
   var count = document.getElementById("ecount");
   if (count) count.textContent = String(cards.length);
 
+  /* Filtering to nothing used to leave a blank page with no explanation, which
+     reads as a broken site rather than an empty result. */
+  var empty = document.createElement("p");
+  empty.className = "nomatch";
+  empty.hidden = true;
+  var list = document.getElementById("error-list");
+  if (list) list.appendChild(empty);
+
   input.addEventListener("input", function () {
     var q = input.value.toLowerCase().trim();
+    var shown = 0;
     cards.forEach(function (card) {
-      card.style.display = !q || card.textContent.toLowerCase().indexOf(q) !== -1 ? "" : "none";
+      var hit = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
+      card.style.display = hit ? "" : "none";
+      if (hit) shown++;
     });
+    if (count) count.textContent = String(shown);
+    empty.hidden = shown !== 0;
+    if (!shown) {
+      empty.innerHTML = "Nothing here matches <b>" + q.replace(/[<>&]/g, "") + "</b>." +
+        " Paste more of the message, or fewer words of it." +
+        ' Still nothing? <a href="https://github.com/Amey-Thakur/GIT-GUIDE/discussions">Post the error</a>' +
+        " and it will be added.";
+    }
   });
 
   document.querySelectorAll(".chip").forEach(function (chip) {
