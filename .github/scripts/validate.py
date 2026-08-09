@@ -15,6 +15,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "docs" / "data"
+# Tab, newline and carriage return are the only control characters allowed.
+ALLOWED_CONTROL = chr(9) + chr(10) + chr(13)
 DANGER = {"safe", "history", "destructive"}
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 TEXT_SUFFIXES = {".md", ".html", ".css", ".js", ".json", ".txt", ".yml", ".yaml", ".py", ".svg"}
@@ -182,6 +184,27 @@ def check_quizzes(path):
 
 
 
+def check_control_chars():
+    """No stray control characters in shipped files.
+
+    A generator script once wrote \1 into a replacement string, Python read it
+    as an octal escape, and every page shipped two invisible control characters
+    that browsers drew as empty boxes in the footer. Cheap to check, easy to miss.
+    """
+    for path in sorted((ROOT / "docs").glob("*.*")):
+        if path.suffix in {".png", ".jpg", ".jpeg", ".pdf", ".ico", ".woff", ".woff2"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        bad = {c for c in text if ord(c) < 32 and c not in ALLOWED_CONTROL}
+        if bad:
+            names = ", ".join(f"U+{ord(c):04X}" for c in sorted(bad))
+            err(f"{path.name}: contains control characters ({names})")
+
+
+
 def check_links():
     """Every internal href must resolve: the file exists and any #anchor is real.
 
@@ -237,6 +260,7 @@ def main():
             err(f"{path.name}: invalid JSON: {e}")
     check_house_style()
     check_links()
+    check_control_chars()
     if errors:
         print("\n".join(errors), file=sys.stderr)
         sys.exit(1)
