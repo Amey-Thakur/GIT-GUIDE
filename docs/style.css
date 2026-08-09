@@ -290,7 +290,18 @@ a.chip { text-decoration: none; }
 
 /* Results */
 
-.results { padding: 0.5rem 1.25rem 3rem; display: grid; gap: 1rem; }
+.results { padding: 0.5rem 1.25rem 3rem; display: grid; gap: 1rem;
+           grid-template-columns: minmax(0, 1fr); }
+/* Cards must be allowed to shrink; without this one long command in one
+   card widened the whole column and pushed the page off a phone screen. */
+.results > * { min-width: 0; }
+
+/* Long tokens live in this content: workflow paths, URLs, refs like
+   owner/repo/.github/workflows/build.yml@main. Prose defaults to never breaking
+   inside a word, so one of those overflowed its card silently. anywhere breaks
+   only when a word genuinely will not fit, and unlike break-word it also lowers
+   the intrinsic width a grid track measures. */
+.result p, .result code, .result li, .errcard p, .errcard code { overflow-wrap: anywhere; }
 /* With no search running the container held 3.5rem of empty padding. */
 .results:empty { padding: 0; }
 
@@ -351,7 +362,10 @@ a.chip { text-decoration: none; }
   margin: 0.4rem 0;
 }
 
-.cmd code { flex: 1; white-space: pre-wrap; word-break: break-word; }
+/* overflow-wrap:anywhere, not break-word: only anywhere reduces the element's
+   min-content width, which is what a grid track measures. With break-word a
+   single long URL in one command sized the column for all 1000 cards. */
+.cmd code { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .oslabel {
   color: var(--muted);
@@ -813,6 +827,7 @@ kbd {
   .results {
     grid-template-columns: repeat(auto-fill, minmax(29rem, 1fr));
     align-items: start;
+    min-width: 0;
   }
   .cs-rows { grid-template-columns: 1fr 1fr; align-items: start; }
   #error-list { display: block; columns: 2; column-gap: 1rem; }

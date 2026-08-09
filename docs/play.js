@@ -407,6 +407,7 @@
   };
 
   CMDS.pull = function () {
+    if (blockedByMerge("git pull")) return;
     if (!S.remote) { say("No remote to pull from.", "err"); return; }
     if (S.head.type !== "branch") { say("You are not on a branch.", "err"); return; }
     var b = S.head.name;
@@ -652,6 +653,7 @@
       draw(); return;
     }
     if (side) { say("Nothing is conflicted, so there are no sides to choose.", "err"); return; }
+    if (blockedByMerge("git checkout")) return;
     switchTo(a);
   };
 
@@ -777,7 +779,15 @@
     if (S.head.type === "branch") S.branches[S.head.name] = id; else S.head.id = id;
     note("HEAD", "reset: moving to " + ref);
     if (mode === "--soft" && id !== was) S.didSoftReset = true;
-    if (mode === "--hard") { S.staged = {}; S.files = {}; }
+    if (mode === "--hard") {
+      S.staged = {};
+      S.files = {};
+      if (S.merging) {
+        S.merging = null;
+        say("The conflicted merge went with it: a hard reset abandons a merge in progress, " +
+          "the same as <code>git merge --abort</code> would have.", "sys");
+      }
+    }
     say("Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
       (mode === "--hard" ? " Working tree wiped too." : mode === "--soft" ? " Your changes are still staged." : " Your changes are kept, unstaged.") +
       "<br>" + was + " is <b>not deleted</b>, only unreferenced. <code>git reflog</code> still knows it.", "out");
@@ -785,6 +795,7 @@
   };
 
   CMDS.revert = function (a) {
+    if (blockedByMerge("git revert")) return;
     var id = resolve(a[0] || "HEAD");
     if (!id) { say("Cannot resolve " + esc(a[0] || "HEAD") + ".", "err"); return; }
     var nid = commit('Revert "' + S.commits[id].msg + '"', [headId()]);
@@ -795,6 +806,7 @@
   };
 
   CMDS["cherry-pick"] = function (a) {
+    if (blockedByMerge("git cherry-pick")) return;
     var id = resolve(a[0]);
     if (!id) { say("Cannot resolve " + esc(a[0] || "") + ".", "err"); return; }
     var nid = commit(S.commits[id].msg, [headId()]);
@@ -829,6 +841,7 @@
   };
 
   CMDS.stash = function (a) {
+    if (blockedByMerge("git stash")) return;
     if (a[0] === "pop" || a[0] === "apply") {
       if (!S.stash.length) { say("No stash entries found.", "err"); return; }
       var e = a[0] === "pop" ? S.stash.shift() : S.stash[0];
