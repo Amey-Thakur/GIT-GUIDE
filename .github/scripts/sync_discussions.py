@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 OWNER, REPO = "Amey-Thakur", "GIT-GUIDE"
 SITE = "https://amey-thakur.github.io/GIT-GUIDE/"
-SLEEP = 3
+SLEEP = 7
 
 DANGER_LABEL = {"safe": "Safe", "history": "Rewrites history", "destructive": "Destructive"}
 
@@ -28,13 +28,13 @@ def gql(query, **variables):
     for k, v in variables.items():
         cmd += ["-f", f"{k}={v}"]
     stderr = ""
-    for attempt in range(6):
+    for attempt in range(10):
         out = subprocess.run(cmd, capture_output=True, text=True)
         if out.returncode == 0:
             return json.loads(out.stdout)
         stderr = out.stderr.strip()
         if "too quickly" in stderr or "rate limit" in stderr.lower():
-            wait = 60 * (attempt + 1)
+            wait = min(900, 60 * (attempt + 1))
             print(f"  rate limited, waiting {wait}s")
             time.sleep(wait)
             continue
