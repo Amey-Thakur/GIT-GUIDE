@@ -25,7 +25,7 @@ Include what you found, the page or file, and what an attacker could do with it.
 
 ## What happens next
 
-You will get a reply within seven days, and an assessment within fourteen. Anything confirmed is fixed on the default branch and deployed the same day, because deployment here is one push.
+Reports are read and answered. Anything confirmed is fixed on the default branch, and the site updates on the next push.
 
 You will be credited in the advisory unless you would rather not be.
 
