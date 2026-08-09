@@ -1272,3 +1272,40 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 .stepcap code.danger-safe { color: var(--safe); }
 .stepcap code.danger-history { color: var(--history); }
 .stepcap code.danger-destructive { color: var(--destructive); }
+
+/* ---- The colour system -------------------------------------------------
+   Five roles, and nothing is coloured for decoration. Learned once on the
+   danger badges, then true everywhere else on the site.
+
+     green   --safe         safe, done, achieved, read-only. Nothing can be lost.
+                            Safe commands, completed lessons, correct answers,
+                            the lesson Goal, the progress bar, the answer count,
+                            reads in the command visualiser, copy and footer hovers.
+
+     amber   --history      consequential but reversible. Coordinate first, but
+                            nothing is destroyed. History rewrites in the sandbox,
+                            tags, abandoned-yet-recoverable commits, a near-miss
+                            answer in the quiz.
+
+     red     --destructive  work can be lost for good. reset --hard, restore over
+                            an uncommitted edit, real error messages, conflicts.
+
+     accent  --accent       Git orange. Brand, and "you are here" or "act here".
+                            Never danger. HEAD, the current lesson, primary
+                            buttons, the errors-decoded count.
+
+     grey    --muted/--line untouched, context, secondary text.
+   ---------------------------------------------------------------------- */
+
+/* Abandoned commits are the clearest case of the amber tier: nothing points at
+   them, which sounds alarming, and yet the reflog gets every one of them back. */
+.pnode.ghost circle { stroke: color-mix(in srgb, var(--history) 62%, transparent); }
+.pnode.ghost .phash, .pnode.ghost .pmsg { fill: color-mix(in srgb, var(--history) 72%, transparent); }
+.pedge.ghost { stroke: color-mix(in srgb, var(--history) 45%, transparent); }
+.lg-ghost svg { color: color-mix(in srgb, var(--history) 70%, transparent) !important; }
+
+/* The marker every history-rewriting command carries in the sandbox. */
+.rw { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--history); border: 1px solid var(--history);
+      border-radius: 4px; padding: 0.05rem 0.35rem; margin-right: 0.45rem;
+      vertical-align: 1px; }

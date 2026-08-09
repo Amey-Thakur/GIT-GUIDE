@@ -557,7 +557,7 @@
       S.staged = {};
       S.didAmend = true;
       note("HEAD", "commit (amend): " + S.commits[nid].msg);
-      say("Amended. <b>This is a new commit</b> (" + nid + "), not an edited one. " +
+      say(REWRITES + "Amended. <b>This is a new commit</b> (" + nid + "), not an edited one. " +
         old + " is now unreferenced, which is why amending after a push needs a force.", "out");
       draw(); return;
     }
@@ -753,7 +753,7 @@
     S.branches[S.head.name] = base;
     S.didRebase = true;
     note("HEAD", "rebase onto " + name);
-    say("Replayed " + mine.length + " commit" + (mine.length === 1 ? "" : "s") + " onto " + esc(name) +
+    say(REWRITES + "Replayed " + mine.length + " commit" + (mine.length === 1 ? "" : "s") + " onto " + esc(name) +
       ". The new ones are <b>" + made.join(", ") + "</b>: different hashes, same changes. " +
       "The originals (" + mine.join(", ") + ") are now unreferenced, shown faded. " +
       "<b>That is why you never rebase a branch someone else has.</b>", "out");
@@ -788,7 +788,7 @@
           "the same as <code>git merge --abort</code> would have.", "sys");
       }
     }
-    say("Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
+    say(REWRITES + "Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
       (mode === "--hard" ? " Working tree wiped too." : mode === "--soft" ? " Your changes are still staged." : " Your changes are kept, unstaged.") +
       "<br>" + was + " is <b>not deleted</b>, only unreferenced. <code>git reflog</code> still knows it.", "out");
     draw();
@@ -1499,6 +1499,8 @@
     if (cur) out.push(cur);
     return out;
   }
+
+  var REWRITES = '<span class="rw">rewrites history</span> ';
 
   function say(html, kind) {
     var d = document.createElement("div");
