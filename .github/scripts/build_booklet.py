@@ -185,7 +185,8 @@ def start():
         ("3", "One key, every host", "Add the public key to GitHub, GitLab, Bitbucket, Azure: the same key works on all", 'ssh-keygen -t ed25519 -C "<email>"'),
         ("4", "First repository", "Joining: git clone <url> · Publishing a folder of yours:", "gh repo create <name> --public --source . --push"),
         ("5", "The loop you will run forever", "Edit, stage, commit, push. Everything else is a variation", 'git add <file> && git commit -m "<message>" && git push'),
-        ("6", "When it goes wrong", "It will, for everyone. Ask the site in plain language, or paste the exact error", "amey-thakur.github.io/GIT-GUIDE"),
+        ("6", "Keep the noise out", "Ignore build output and dependencies from the first commit, not the tenth", "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore"),
+        ("7", "When it goes wrong", "It will, for everyone. Ask the site in plain language, or paste the exact error", "amey-thakur.github.io/GIT-GUIDE"),
     ]
     items = "".join(
         f'<div class="step"><b>{n}</b><div><strong>{escape(t)}</strong><span>{escape(d)}</span><code>' + (f'<a class="codelink" href="https://amey-thakur.github.io/GIT-GUIDE/">{escape(c)}</a>' if 'GIT-GUIDE' in c else escape(c)) + '</code></div></div>'
@@ -340,18 +341,7 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .legend span {{ border: 0.55mm solid; border-radius: 2mm; padding: 2.2mm 5mm; font-weight: 700; font-size: 11pt; }}
 
 
-.page {{ display: flex; flex-direction: column; }}
-.pbody {{ flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }}
-.pbody > .undos, .pbody > .steps, .pbody > .safeties, .pbody > .defs, .pbody > .list {{
-  flex: 1 1 auto; align-content: space-between; }}
-.pbody > .cols {{ flex: 1 1 auto; }}
-.pbody > .cols > div {{ display: flex; flex-direction: column; }}
-.pbody > .cols .errs, .pbody > .cols .list {{ flex: 1 1 auto; display: flex; flex-direction: column;
-  justify-content: space-between; }}
-.pbody > .rules {{ margin-top: auto; padding-top: 7mm; }}
-.pbody > .diag {{ flex: 0 0 auto; }}
-.pbody > .prose {{ flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }}
-.pbody > .prose p:last-of-type {{ margin-bottom: 0; }}
+.pbody {{ display: block; }}
 .undos {{ display: grid; gap: 2.2mm; margin-top: 3mm; }}
 .undo {{ display: grid; grid-template-columns: 52mm 1fr 26mm; align-items: center; gap: 4mm;
         border-bottom: 0.3mm solid {LINE}; padding-bottom: 2.2mm; }}
@@ -367,6 +357,10 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .safety {{ border-left: 1.2mm solid; padding-left: 5mm; }}
 .safety strong {{ display: block; font-size: 13pt; }}
 .safety span {{ display: block; color: {MUTED}; font-size: 10.5pt; margin: 1mm 0 1.5mm; }}
+.subh {{ font-size: 13pt; margin: 7mm 0 2.5mm; color: {MUTED}; }}
+.rehearse div {{ display: flex; gap: 4mm; align-items: baseline; }}
+.rehearse code {{ display: inline; min-width: 62mm; color: {INK}; }}
+.rehearse span {{ display: inline; margin: 0; }}
 .safety code {{ font-family: Consolas, monospace; font-size: 10pt; color: {INK}; }}
 .legend em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 11pt; }}
 '''
@@ -399,9 +393,8 @@ ERROR_PICKS = [
     "index-lock-exists", "detached-head-msg", "diverged-msg", "src-refspec",
     "unrelated-histories", "dubious-ownership-msg", "file-size-limit-exact",
     "could-not-read-username", "no-upstream", "nothing-to-commit",
-    "cannot-pull-unstaged", "remote-hung-up", "repository-not-found",
-    "host-key-verification", "lf-crlf-warning", "filename-too-long-msg",
-    "everything-up-to-date-msg", "resolve-index-first",
+    "remote-hung-up", "repository-not-found",
+    "host-key-verification", "lf-crlf-warning",
 ]
 
 
@@ -451,7 +444,7 @@ def essential_errors(errs):
     by = {e["id"]: e for e in errs}
     picks = [by[i] for i in ERROR_PICKS if i in by]
     out = []
-    per = 8
+    per = 10
     for n in range(0, len(picks), per):
         part = picks[n:n + per]
         half = (len(part) + 1) // 2
@@ -484,9 +477,18 @@ def safety_page():
     items = "".join(
         f'<div class="safety d-{k}"><strong>{escape(t)}</strong><span>{escape(d)}</span><code>{escape(c)}</code></div>'
         for k, (t, d, c) in zip(("safe", "history", "destructive"), rows))
+    rehearse = [
+        ("git clean -n -d", "before git clean -f -d, because cleaned files were never Git's to return"),
+        ("git status", "before git reset --hard, so you know what is about to go"),
+        ("git log --oneline HEAD..origin/main", "before any force push: anything listed is work you would erase"),
+    ]
+    dry = "".join(
+        f'<div><code>{escape(c)}</code><span>{escape(d)}</span></div>' for c, d in rehearse)
     return page(f'<h2>How much does this command cost</h2>'
                 f'<p class="note">Every answer in this guide carries one of these three marks, and its own undo.</p>'
                 f'<div class="safeties">{items}</div>'
+                f'<h3 class="subh">Rehearse first</h3>'
+                f'<div class="list rehearse">{dry}</div>'
                 f'<p class="rules"><b>Two commands hold nothing back.</b> git clean deletes files Git never tracked, '
                 f'and git reset --hard discards edits that were never committed. Everything else, the reflog can usually reach.</p>',
                 "Danger")
@@ -495,16 +497,15 @@ def safety_page():
 def main():
     sheet, errs, ints = data()
     by = {s["title"]: s for s in sheet}
-    pairs = [
-        ("Setup and identity", "Start a project", "Setup"),
-        ("The daily loop", "Branches", "Daily work"),
-        ("Merge and rebase", "Undo and rescue", "Undo"),
-        ("Stash", "Inspect and search", "Inspect"),
-        ("Tags and releases", "Files and ignoring", "Files"),
-        ("Every platform, same Git", "No host at all", "Everywhere"),
-        ("History surgery", "Scale and speed", "Deep water"),
-        ("Submodules", "Quality of life", "Comfort"),
-    ]
+    order = sorted(sheet, key=lambda x: -len(x["items"]))
+    pairs = []
+    lo, hi = 0, len(order) - 1
+    while lo < hi:
+        a, b = order[lo], order[hi]
+        pairs.append((a["title"], b["title"], a["title"]))
+        lo += 1
+        hi -= 1
+
     pages = [cover(), foreword(), model(), graph(), start()]
     pages += [pair_page(by[a], by[b], t) for a, b, t in pairs]
     pages += [workflows(), github_page()]
