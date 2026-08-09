@@ -101,7 +101,7 @@
       prev.addEventListener("click", function () { if (at > 0) { at -= 1; render(); } });
       foot.appendChild(prev);
 
-      var next = el("button", "qz-next", at === questions.length - 1 ? "Finish" : "Next question");
+      var next = el("button", "qz-next", at === questions.length - 1 ? "Finish" : "Next");
       next.type = "button";
       next.disabled = answered[at] === undefined;
       next.addEventListener("click", function () {

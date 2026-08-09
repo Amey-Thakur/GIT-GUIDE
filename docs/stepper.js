@@ -78,6 +78,10 @@
         if (e) e.classList.add("on");
       });
       cmd.textContent = step.cmd;
+      // The same three levels the rest of the guide uses, so a command shown in
+      // a diagram is coloured exactly like the same command in an answer card.
+      // Unmarked steps are safe, and safe reads green everywhere on this site.
+      cmd.className = "danger-" + (step.danger || "safe");
       text.textContent = step.text;
       prev.disabled = i === 0;
       next.disabled = i === cfg.steps.length - 1;

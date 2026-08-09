@@ -1220,6 +1220,7 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 .touch-picker { padding: 0 0 1.25rem; }
 .touch-chip { font-family: var(--mono); font-size: 0.84rem; }
 .touch-chip.active { border-color: var(--accent); color: var(--accent); }
+.touch-chip.is-danger { color: var(--destructive); }
 .touch-chip.is-danger.active { border-color: var(--destructive); color: var(--destructive); }
 
 .touch-diagram svg { display: block; width: 100%; height: auto; }
@@ -1228,23 +1229,46 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 .tztitle { font-size: 15px; font-weight: 600; fill: var(--ink); }
 .tzsub { font-size: 12.5px; fill: var(--muted); }
 
-/* Written to: the command changes this place. Only read: it looks and moves on. */
+/* Four states, four colours, each meaning one thing:
+     grey   untouched, the command never looks here
+     green  read only, and reading can never cost you anything
+     accent written to, so this place changes
+     red    can destroy work you never committed, the only true danger
+   A single accent for all of it said nothing and read as one flat wash. */
+.tzone.reads rect { stroke: var(--safe); stroke-width: 2; stroke-dasharray: 5 3;
+                    fill: color-mix(in srgb, var(--safe) 7%, var(--card)); }
 .tzone.writes rect { stroke: var(--accent); stroke-width: 2.5;
                      fill: color-mix(in srgb, var(--accent) 9%, var(--card)); }
-.tzone.reads rect { stroke: var(--muted); stroke-dasharray: 5 3; }
+.tzone.destroys rect { stroke: var(--destructive); stroke-width: 3;
+                       fill: color-mix(in srgb, var(--destructive) 12%, var(--card)); }
+.tzone.reads .tztitle { fill: var(--safe); }
+.tzone.writes .tztitle { fill: var(--accent); }
+.tzone.destroys .tztitle { fill: var(--destructive); }
 
 .tarrow line, .tarrow path { stroke: var(--accent); stroke-width: 2.5; fill: none; }
 .tarrow polygon { fill: var(--accent); }
-.tarrow.reads line, .tarrow.reads path { stroke: var(--muted); stroke-dasharray: 5 4; }
-.tarrow.reads polygon { fill: var(--muted); }
+.tarrow.reads line, .tarrow.reads path { stroke: var(--safe); stroke-dasharray: 5 4; }
+.tarrow.reads polygon { fill: var(--safe); }
+.tarrow.destroys line, .tarrow.destroys path { stroke: var(--destructive); }
+.tarrow.destroys polygon { fill: var(--destructive); }
 .tlabel { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
 
 .touch-read { margin-top: 1.25rem; }
 .touch-cmd { margin: 0 0 0.4rem; }
 .touch-cmd code { font-family: var(--mono); font-size: 1rem; color: var(--accent); }
 #touch-says { margin: 0; color: var(--muted); line-height: 1.7; max-width: 60rem; }
-.touch-legend { margin: 1rem 0 0; font-size: 0.85rem; color: var(--muted);
-                display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.tk { display: inline-block; width: 26px; height: 0; border-top: 2.5px solid var(--accent);
-      margin-right: 0.15rem; }
-.tk-read { border-top-style: dashed; border-top-color: var(--muted); margin-left: 1rem; }
+.touch-legend { margin: 1.25rem 0 0; font-size: 0.85rem; color: var(--muted);
+                display: flex; align-items: center; gap: 0.4rem 1.5rem; flex-wrap: wrap; }
+.tk { display: inline-block; width: 24px; height: 0; border-top: 2.5px solid var(--accent);
+      margin-right: 0.1rem; }
+.tk-read { border-top-style: dashed; border-top-color: var(--safe); }
+.tk-write { border-top-color: var(--accent); }
+.tk-destroy { border-top-color: var(--destructive); border-top-width: 3px; }
+.tk-idle { border-top-color: var(--line); }
+
+/* One danger language everywhere. A command shown in a diagram caption is
+   coloured exactly as the same command would be in an answer card, so the
+   three levels are learned once and recognised anywhere on the site. */
+.stepcap code.danger-safe { color: var(--safe); }
+.stepcap code.danger-history { color: var(--history); }
+.stepcap code.danger-destructive { color: var(--destructive); }

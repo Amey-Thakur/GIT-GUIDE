@@ -23,7 +23,7 @@
       { on: ["a-merge", "z-wt"], cmd: "git merge  (git pull = fetch + merge)", text: "merge brings the fetched commits into your branch and updates your files. pull does fetch and merge in one step." },
       { on: ["a-restore", "z-wt"], cmd: "git restore <file>", text: "restore copies the recorded version back over your file: the everyday undo for edits you regret." },
       { on: ["z-wt"], show: ["g-stash"], cmd: "git stash", text: "stash slides your uncommitted work onto a local shelf and hands you a clean tree. git stash pop brings it back. The shelf never leaves your machine." },
-      { on: ["z-local"], show: ["g-reset"], cmd: "git reset", text: "reset moves the branch pointer itself to an older commit. Nothing is deleted at first; commits stop being part of the branch. This is where history is un-happened, so it gets danger badges." }
+      { on: ["z-local"], show: ["g-reset"], cmd: "git reset", danger: "history", text: "reset moves the branch pointer itself to an older commit. Nothing is deleted at first; commits stop being part of the branch. This is where history is un-happened, so it gets danger badges." }
     ]
   };
 
@@ -38,8 +38,8 @@
       { show: BASE.concat(["b-main", "b-c4", "b-e34", "b-feat4"]), on: ["b-c4", "b-feat4"], cmd: "git commit  (on feature)", text: "Committing on feature adds a snapshot and slides the feature label forward. main has not moved." },
       { show: BASE.concat(["b-main5", "b-c4", "b-e34", "b-feat4", "b-c5", "b-e35"]), on: ["b-c5", "b-main5"], cmd: "git commit  (on main)", text: "Meanwhile main gains its own commit. The lines have split: this is divergence, and it is normal." },
       { show: BASE.concat(["b-c4", "b-e34", "b-feat4", "b-c5", "b-e35", "b-m", "b-e5m", "b-e4m", "b-mainm"]), on: ["b-m", "b-mainm"], cmd: "git merge feature", text: "A merge commit has two parents and joins the lines. History shows exactly what happened. Always safe on shared branches." },
-      { show: BASE.concat(["b-c4", "b-e34", "b-c5", "b-e35", "b-main5", "b-c4p", "b-e5c4p", "b-featp"]), on: ["b-c4p", "b-featp"], cmd: "git rebase main  (on feature)", text: "Rebase instead replays your commit on top of main as a new commit, c4 prime. The line is straight, but history was rewritten, which is why rebase is for unshared work." },
-      { show: BASE.concat(["b-main", "b-head"]), on: ["b-head"], cmd: "git switch --detach <hash>", text: "HEAD is where you stand, normally attached to a branch. Check out a commit directly and HEAD detaches: not an error, just you visiting a snapshot." }
+      { show: BASE.concat(["b-c4", "b-e34", "b-c5", "b-e35", "b-main5", "b-c4p", "b-e5c4p", "b-featp"]), on: ["b-c4p", "b-featp"], cmd: "git rebase main  (on feature)", danger: "history", text: "Rebase instead replays your commit on top of main as a new commit, c4 prime. The line is straight, but history was rewritten, which is why rebase is for unshared work." },
+      { show: BASE.concat(["b-main", "b-head"]), on: ["b-head"], cmd: "git switch --detach <hash>", danger: "history", text: "HEAD is where you stand, normally attached to a branch. Check out a commit directly and HEAD detaches: not an error, just you visiting a snapshot." }
     ]
   };
 
@@ -77,7 +77,7 @@
         says: "Fetch, then merge. It reaches all the way to your files, and that second half is what can surprise you." },
       { c: "git merge", from: LO, to: WT, through: IX,
         says: "Combines another branch into yours, writing a commit and updating your files to match." },
-      { c: "git restore <file>", from: LO, to: WT,
+      { c: "git restore <file>", from: LO, to: WT, danger: true,
         says: "Overwrites the file in your working tree with the committed version. The uncommitted edit is gone for good." },
       { c: "git restore --staged", from: LO, to: IX,
         says: "Takes a file back out of the staging area. Your edits stay in the working tree; only the staging choice is undone." },
@@ -110,10 +110,10 @@
       };
     }
 
-    function arrow(fromId, toId, dashed, label) {
+    function arrow(fromId, toId, dashed, label, danger) {
       var a = centre(fromId), b = centre(toId);
       var g = document.createElementNS(SVGNS, "g");
-      g.setAttribute("class", "tarrow" + (dashed ? " reads" : ""));
+      g.setAttribute("class", "tarrow" + (dashed ? " reads" : "") + (danger ? " destroys" : ""));
 
       if (fromId === toId) {
         // A loop, for the commands that only move a label within one place.
@@ -160,17 +160,17 @@
 
       [WT, IX, LO, RM].forEach(function (id) {
         var z = document.getElementById(id);
-        z.classList.remove("writes", "reads");
+        z.classList.remove("writes", "reads", "destroys");
       });
       document.getElementById(m.from).classList.add("reads");
       if (m.through) document.getElementById(m.through).classList.add("writes");
-      document.getElementById(m.to).classList.add("writes");
+      document.getElementById(m.to).classList.add(m.danger ? "destroys" : "writes");
 
       if (m.through) {
         arrow(m.from, m.through, true, null);
-        arrow(m.through, m.to, false, m.label || null);
+        arrow(m.through, m.to, false, m.label || null, m.danger);
       } else {
-        arrow(m.from, m.to, false, m.label || null);
+        arrow(m.from, m.to, false, m.label || null, m.danger);
       }
 
       document.getElementById("touch-cmd").textContent = m.c;
