@@ -1,1 +1,9 @@
+# Intermediate HTML the image and booklet builders render before converting.
 .github/assets/*.html
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Runtime artefacts from the Discussions sync
+*.lock

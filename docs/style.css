@@ -285,6 +285,8 @@ a.chip { text-decoration: none; }
 /* Results */
 
 .results { padding: 0.5rem 1.25rem 3rem; display: grid; gap: 1rem; }
+/* With no search running the container held 3.5rem of empty padding. */
+.results:empty { padding: 0; }
 
 .result {
   border: 1px solid var(--line);
@@ -812,3 +814,113 @@ kbd {
 .cv-undo code { font-family: var(--mono); font-size: 0.92rem; color: var(--accent); overflow-wrap: anywhere; }
 .cv-more { display: inline-block; margin-top: 0.8rem; font-size: 0.92rem; }
 .cv-none { color: var(--muted); }
+
+/* The sandbox: a real Git engine with its graph, terminal, and challenge ladder. */
+.play { padding: 0 0 3.5rem; }
+
+.ptaskbar { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between;
+            flex-wrap: wrap; border: 1px solid var(--line); border-left: 4px solid var(--accent);
+            border-radius: 10px; background: var(--card); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.ptaskmain { flex: 1 1 22rem; }
+.ptasklabel { margin: 0 0 0.2rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
+              text-transform: uppercase; color: var(--muted); }
+#ptask { margin: 0 0 0.35rem; font-size: 1.05rem; }
+.phint { margin: 0; color: var(--muted); font-size: 0.94rem; }
+.phint .g { color: var(--safe); }
+.ptaskside { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.pdots { display: inline-flex; gap: 5px; margin-right: 0.3rem; }
+.pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); display: block; }
+.pdot.done { background: var(--safe); }
+.pdot.now { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+            background: var(--accent); }
+
+.pgraph { border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+          padding: 0.75rem 1rem; overflow-x: auto; }
+#pg { display: block; width: 100%; height: auto; margin: 0 auto; }
+
+.pedge { stroke: var(--muted); stroke-width: 2; fill: none; }
+.pedge.second { stroke-dasharray: 4 3; }
+/* Abandoned commits must read as faded yet legible. The border colour was
+   near-invisible on white, so this is mixed from the muted ink instead. */
+.pedge.ghost { stroke: color-mix(in srgb, var(--muted) 42%, transparent); }
+.pnode circle { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.pnode.merge circle { stroke: var(--accent); stroke-width: 2.5; }
+.pnode.ghost circle { stroke: color-mix(in srgb, var(--muted) 50%, transparent);
+                      stroke-dasharray: 3 2.5; fill: transparent; }
+.pnode.ghost .phash, .pnode.ghost .pmsg { fill: color-mix(in srgb, var(--muted) 65%, transparent); }
+.phash { font-family: var(--mono); font-size: 10px; fill: var(--ink); }
+.pmsg { font-family: var(--sans); font-size: 10.5px; fill: var(--muted); }
+
+.pbranch rect { fill: var(--card); stroke: var(--muted); stroke-width: 1.5; }
+.pbranch text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.pbranch.on rect { stroke: var(--accent); }
+.pbranch.on text { fill: var(--accent); }
+.phead rect { fill: var(--accent); stroke: var(--accent); }
+.phead text { font-family: var(--mono); font-size: 11px; fill: #fff; font-weight: 700; }
+.ptag rect { fill: transparent; stroke: var(--history); stroke-dasharray: 3 2; }
+.ptag text { font-family: var(--mono); font-size: 11px; fill: var(--history); }
+
+.pstatus { margin: 0.7rem 0 1.25rem; font-size: 0.9rem; color: var(--muted); }
+.pstatus .r { color: var(--accent); }
+
+.pterm { border: 1px solid var(--line); border-radius: 10px; background: var(--code-bg);
+         overflow: hidden; }
+.pout { max-height: 17rem; overflow-y: auto; padding: 0.9rem 1rem; font-size: 0.92rem;
+        line-height: 1.55; }
+.pline { margin-bottom: 0.55rem; }
+.pline:last-child { margin-bottom: 0; }
+.pline code { font-family: var(--mono); font-size: 0.88rem; background: var(--card);
+              padding: 0.05rem 0.3rem; border-radius: 4px; }
+.pline.cmd { font-family: var(--mono); color: var(--ink); }
+.pline.err { color: var(--accent); }
+.pline.sys { color: var(--muted); }
+.pline.win { border-left: 3px solid var(--safe); padding-left: 0.7rem; }
+.pline .g { color: var(--safe); }
+.pline .r { color: var(--accent); }
+.pline .y { font-family: var(--mono); color: var(--history); }
+.pline .m { color: var(--muted); }
+.pline .p { color: var(--accent); font-weight: 700; }
+
+.pinrow { display: flex; align-items: center; gap: 0.6rem; border-top: 1px solid var(--line);
+          padding: 0.6rem 1rem; background: var(--card); }
+.pinrow .p { color: var(--accent); font-family: var(--mono); font-weight: 700; }
+#pin { flex: 1; border: 0; background: transparent; color: var(--ink);
+       font-family: var(--mono); font-size: 0.95rem; padding: 0.2rem 0; }
+#pin:focus { outline: none; }
+.pterm:focus-within { border-color: var(--accent); }
+
+.pex { font-family: var(--mono); font-size: 0.85rem; }
+
+.pnotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+          gap: 1.75rem; margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--line); }
+.pnotes h3 { font-size: 1rem; margin: 0 0 0.45rem; }
+.pnotes p { margin: 0; color: var(--muted); font-size: 0.93rem; line-height: 1.6; }
+.pnotes code { font-family: var(--mono); font-size: 0.86rem; color: var(--ink); }
+
+@media (max-width: 40rem) {
+  .ptaskside { width: 100%; }
+  .pout { max-height: 13rem; }
+}
+
+/* Homepage band for the sandbox: the one thing here nobody else offers. */
+.hookband { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+            background: var(--card); margin: 1.75rem 0 0; padding: 2.75rem 0; }
+.hookgrid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+            gap: 3rem; align-items: center; }
+.hooktag { margin: 0 0 0.4rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.07em;
+           text-transform: uppercase; color: var(--accent); }
+.hooktext h2 { margin: 0 0 0.7rem; }
+.hooktext p { margin: 0; color: var(--muted); line-height: 1.65; }
+.hookcta { margin-top: 1.4rem !important; display: flex; align-items: center; gap: 1rem;
+           flex-wrap: wrap; }
+.hookgo { display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+          font-weight: 600; padding: 0.6rem 1.3rem; border-radius: 8px; }
+.hookgo:hover { filter: brightness(1.08); }
+.hooknote { font-size: 0.88rem; color: var(--muted); }
+.hookart { display: flex; justify-content: center; }
+.hookart svg { max-width: 100%; height: auto; }
+
+@media (max-width: 52rem) {
+  .hookgrid { grid-template-columns: 1fr; gap: 2rem; }
+  .hookart { order: -1; }
+}

@@ -343,7 +343,8 @@ def error_pages(errs):
 
 def closing():
     doors = [("Finder", "ask anything, or paste the error", ""), ("Start", "zero to first push", "setup.html"),
-             ("Learn", "the model, step by step", "learn.html"), ("Fix", "guided rescue", "fix.html"),
+             ("Learn", "the model, step by step", "learn.html"), ("Practise", "a real Git graph to play on", "play.html"),
+             ("Fix", "guided rescue", "fix.html"),
              ("Errors", "Git's messages, decoded", "errors.html"), ("GitHub", "first repo to branch protection", "github.html"),
              ("Workflows", "how teams run Git", "workflows.html"), ("Cheatsheet", "everything, one line each", "cheatsheet.html")]
     items = "".join(f'<a href="https://amey-thakur.github.io/GIT-GUIDE/{u}"><b>{n}</b><span>{d}</span></a>' for n, d, u in doors)
@@ -354,7 +355,7 @@ def closing():
               f'<em>every answer carries its danger level and its undo</em></div>')
     return page(f'''
 <h2>The living version</h2>
-<p class="note bignote">Eight doors, one address: <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a></p>
+<p class="note bignote">Nine doors, one address: <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a></p>
 <div class="doors">{items}</div>
 {legend}
 <p class="note bignote">Every answer also lives in the repository's Discussions; a question the guide cannot answer becomes its next addition. MIT licensed, no trackers, works offline.</p>''', "Closing")
@@ -417,18 +418,18 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .step code {{ font-family: Consolas, monospace; font-size: 10.5pt; background: #23211d; border-radius: 2mm; padding: 1.6mm 3mm; display: inline-block; }}
 .rules {{ font-size: 11.5pt; color: {MUTED}; line-height: 1.75; margin-top: 8mm; max-width: 250mm; }}
 .rules b {{ color: {INK}; }}
-.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.2mm 0; }}
+.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.9mm 0; }}
 .errs code {{ font-family: Consolas, monospace; font-size: 10pt; color: {DANGER}; overflow-wrap: anywhere; }}
 .errs p {{ font-size: 9.3pt; color: {MUTED}; margin-top: 0.8mm; }}
 .list.inline code {{ display: inline; }}
 .list.inline span {{ display: inline; margin-left: 2.5mm; }}
-.doors {{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6.5mm; margin: 8mm 0 9mm; }}
-.doors a {{ display: block; color: inherit; text-decoration: none;  border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 7.5mm 6.5mm; background: {CARD};
+.doors {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4.5mm; margin: 6mm 0 6.5mm; }}
+.doors a {{ display: block; color: inherit; text-decoration: none;  border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 5mm 5.5mm; background: {CARD};
   border-left: 1.4mm solid {ACCENT}; }}
-.doors b {{ color: {ACCENT}; font-size: 15.5pt; display: block; margin-bottom: 2.5mm; }}
-.doors span {{ color: {MUTED}; font-size: 12pt; }}
+.doors b {{ color: {ACCENT}; font-size: 14.5pt; display: block; margin-bottom: 1.6mm; }}
+.doors span {{ color: {MUTED}; font-size: 11.5pt; }}
 .bignote {{ font-size: 12.5pt; }}
-.legend {{ display: flex; align-items: center; gap: 6mm; margin: 0 0 9mm; }}
+.legend {{ display: flex; align-items: center; gap: 6mm; margin: 0 0 6.5mm; }}
 .legend span {{ border: 0.55mm solid; border-radius: 2mm; padding: 2.2mm 5mm; font-weight: 700; font-size: 11pt; }}
 
 

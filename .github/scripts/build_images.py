@@ -102,21 +102,23 @@ def poster(intents, errors):
         ("Finder", "Ask plain, or paste the error"),
         ("Start", "Zero to first push, six steps"),
         ("Learn", "What each command moves"),
+        ("Practise", "Run Git on a graph, break nothing"),
         ("Fix", "Questions to the way out"),
         ("Errors", "Git's messages, decoded"),
         ("GitHub", "First repo to protection"),
         ("Workflows", "Solo, fork, trunk, release"),
         ("Cheatsheet", "All commands, one line each"),
     ]
+    # Nine doors sit three by three; four across left the last row ragged.
     boxes = ""
     for i, (name, desc) in enumerate(doors):
-        x = 80 + (i % 4) * 320
-        y = 316 + (i // 4) * 158
+        x = 80 + (i % 3) * 430
+        y = 300 + (i // 3) * 128
         boxes += (
-            f'<rect x="{x}" y="{y}" width="300" height="130" rx="12" fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>'
-            f'<rect x="{x}" y="{y + 22}" width="5" height="86" fill="{ACCENT}"/>'
-            f'<text x="{x + 26}" y="{y + 54}" font-size="26" font-weight="700" fill="{ACCENT}">{escape(name)}</text>'
-            f'<text x="{x + 26}" y="{y + 92}" font-size="18" fill="{MUTED}">{escape(desc)}</text>'
+            f'<rect x="{x}" y="{y}" width="410" height="110" rx="12" fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>'
+            f'<rect x="{x}" y="{y + 18}" width="5" height="74" fill="{ACCENT}"/>'
+            f'<text x="{x + 26}" y="{y + 46}" font-size="26" font-weight="700" fill="{ACCENT}">{escape(name)}</text>'
+            f'<text x="{x + 26}" y="{y + 80}" font-size="18" fill="{MUTED}">{escape(desc)}</text>'
         )
     legend = ""
     x = 80

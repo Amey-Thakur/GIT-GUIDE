@@ -17,7 +17,7 @@ how dangerous it is, and how to undo it.
 
 <br><br>
 
-[<img src="docs/assets/poster.png" alt="Git Guide: the eight doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
+[<img src="docs/assets/poster.png" alt="Git Guide: the nine doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
 
 </div>
 
@@ -28,6 +28,41 @@ how dangerous it is, and how to undo it.
 Four of the ten highest-voted questions on all of Stack Overflow are Git questions. The top thirty alone have been read about 180 million times. People do not struggle to find Git tutorials; they struggle to find the right command at the moment they need it, and to know whether running it is safe.
 
 This guide answers that, for everyone from a student's first push to an engineer rewriting history.
+
+<br>
+
+## The whole model, in one diagram
+
+Almost every Git command is movement between four places. Learn the four, and the commands stop needing memorising.
+
+```mermaid
+flowchart LR
+    WT["Working tree<br/>your files"]
+    IDX["Staging area<br/>the next commit, drafted"]
+    LOC["Local repository<br/>.git, your full history"]
+    REM["Remote<br/>GitHub, GitLab, anywhere"]
+
+    WT -->|git add| IDX
+    IDX -->|git commit| LOC
+    LOC -->|git push| REM
+    REM -->|git fetch| LOC
+    IDX -.->|git restore --staged| WT
+    LOC -.->|git merge, or git pull for both steps| WT
+```
+
+And when something has gone wrong, the question is only ever how far the mistake has travelled.
+
+```mermaid
+flowchart TD
+    Q{"Where is the mistake?"}
+    Q -->|Not committed yet| A["git restore &lt;file&gt;<br/>or git stash to park it"]
+    Q -->|Committed, not pushed| B["git reset --soft HEAD~1<br/>keeps the work, drops the commit"]
+    Q -->|Already pushed| C["git revert &lt;hash&gt;<br/>a new commit that undoes it, safe for everyone"]
+    Q -->|Thought it was lost| D["git reflog<br/>then reset --hard onto the hash"]
+```
+
+> [!TIP]
+> You can run every one of these against a real commit graph, with nothing at stake, in the **[sandbox](https://amey-thakur.github.io/GIT-GUIDE/play.html)**.
 
 <br>
 
@@ -49,6 +84,7 @@ This guide answers that, for everyone from a student's first push to an engineer
 | [Finder](https://amey-thakur.github.io/GIT-GUIDE/) | Ask anything in plain language, or paste an error. Copy the answer. |
 | [Start](https://amey-thakur.github.io/GIT-GUIDE/setup.html) | Zero to first push in six ordered steps. |
 | [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html) | Interactive diagrams: where code lives, what each command moves, branches and HEAD. |
+| [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html) | A real Git engine in the page. Run commands, watch the graph, recover what you break. |
 | [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html) | A few questions, then the exact way out of any mess. |
 | [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html) | Git's real error messages, decoded, with fixes. |
 | [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html) | Pull requests, forks, Actions, releases, Pages, and the power moves, with the PR lifecycle as an interactive diagram. |
@@ -77,6 +113,7 @@ Every answer carries one of three danger levels.
 - **An undo for every command.** Where no undo exists, it says so up front.
 - **Current Git, not 2015 Git.** `git switch` and `git restore` first, `--force-with-lease` instead of `--force`.
 - **Real situations, not abstract syntax.** Answers split by the case you are in: not pushed, already pushed, teammates have it.
+- **Somewhere to practise.** A working Git engine in the browser: branch, merge, rebase, and recover a commit you thought you had destroyed, on a graph that redraws as you type.
 - **No dependencies, no ads, no tracking.** The site makes zero external requests, loads instantly, and keeps working offline and behind corporate proxies.
 
 > [!NOTE]
@@ -99,7 +136,7 @@ Each of these downloads in one click and is generated from the repository's live
 - **[The PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**: the complete guide, printable. The model, every command section, every error, the chapters.
 - **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**: the commands you will use every day, on one page.
 - **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**: everything past the daily, on the next.
-- **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**: the eight doors and the three danger levels, one sheet.
+- **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**: the nine doors and the three danger levels, one sheet.
 
 <br>
 

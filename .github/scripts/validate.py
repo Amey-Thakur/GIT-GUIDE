@@ -147,6 +147,43 @@ def check_house_style():
                 err(f"{p.relative_to(ROOT)}:{line}: em dash found, house style forbids it")
 
 
+
+def check_links():
+    """Every internal href must resolve: the file exists and any #anchor is real.
+
+    The finder and the errors page render most of their anchors from JSON at
+    runtime, so those ids come from the data rather than the static markup.
+    """
+    docs = ROOT / "docs"
+    pages = sorted(docs.glob("*.html"))
+    if not pages:
+        return
+
+    intent_id_set = intent_ids()
+    error_id_set = error_ids()
+
+    ids = {}
+    for page in pages:
+        ids[page.name] = set(re.findall(r'id="([^"]+)"', page.read_text(encoding="utf-8")))
+    ids.setdefault("index.html", set()).update(intent_id_set)
+    ids.setdefault("errors.html", set()).update(error_id_set)
+
+    for page in pages:
+        for href in re.findall(r'href="([^"]+)"', page.read_text(encoding="utf-8")):
+            if href.startswith(("http://", "https://", "mailto:", "data:", "#!")):
+                continue
+            clean = href.replace("/GIT-GUIDE/", "").split("?")[0]
+            target, _, frag = clean.partition("#")
+            if not target:
+                target = page.name          # a bare #anchor points at this page
+            elif target == "./":
+                target = "index.html"
+            if not (docs / target).exists():
+                err(f"{page.name}: link to a file that does not exist: {href}")
+            elif frag and frag not in ids.get(target, set()):
+                err(f"{page.name}: link to an anchor that does not exist: {href}")
+
+
 def main():
     known = set()
     for path in sorted(DATA.glob("*.json")):
@@ -163,6 +200,7 @@ def main():
         except json.JSONDecodeError as e:
             err(f"{path.name}: invalid JSON: {e}")
     check_house_style()
+    check_links()
     if errors:
         print("\n".join(errors), file=sys.stderr)
         sys.exit(1)
