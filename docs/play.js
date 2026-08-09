@@ -49,7 +49,7 @@
       used: {},          // which commands have been run at least once
       switches: 0,       // branch switches, for the "move between branches" lesson
       didFF: false, didSoftReset: false, didAmend: false, didRebase: false,
-      didCherryPick: false, didStashPop: false, wasDetached: false,
+      didCherryPick: false, didStashPop: false, wasDetached: false, didCommit: false,
       remote: null,      // { url, branches: {name: commitId} } once origin exists
       upstream: {},      // local branch -> true when it tracks origin
       prs: {},           // open pull requests, keyed by branch
@@ -182,6 +182,7 @@
     ["git stash", "shelve your changes"],
     ["git stash pop", "take them back off the shelf"],
     ["git tag <name>", "a label that does not move"],
+    ["git clone <url>", "copy an existing repository, history and all"],
     ["git remote add origin <url>", "connect a GitHub repository"],
     ["git push -u origin <branch>", "publish a branch and track it"],
     ["git fetch", "update your origin labels, change nothing else"],
@@ -274,6 +275,30 @@
       "Your local branch has not moved, so the two have now diverged.", "out");
     draw();
   }
+
+  CMDS.clone = function (a) {
+    var url = a.filter(function (x) { return x[0] !== "-"; })[0] ||
+              "https://github.com/you/project.git";
+    // Cloning replaces whatever is here, exactly as it would in a fresh folder.
+    past = [];
+    reset(true);
+    S.commits[S.branches.main].msg = "Initial commit";
+    var msgs = ["Add README", "Set up the project"];
+    msgs.forEach(function (m) { commit(m, [headId()]); });
+    S.remote = { url: url, branches: { main: S.branches.main } };
+    S.upstream.main = true;
+    S.used.clone = true;
+    note("HEAD", "clone: from " + url);
+    clear();
+    say("Cloned <b>" + esc(url) + "</b>.<br>" +
+      "You did not download a snapshot: you have <b>the entire history</b>, every commit, " +
+      "and you can work offline from here.<br>" +
+      "Notice what came with it: <b>origin</b> is already configured, <b>origin/main</b> marks where " +
+      "the server was, and your <b>main</b> is already tracking it. This is why cloning is the " +
+      "easiest way to start, and <code>git init</code> plus <code>git remote add</code> is the " +
+      "longer road to the same place.", "out");
+    draw();
+  };
 
   CMDS.remote = function (a) {
     if (!a.length || a[0] === "-v") {
@@ -460,6 +485,7 @@
     }
     S.staged = {};
     var id = commit(msg, [headId()]);
+    S.didCommit = true;
     note("HEAD", "commit: " + msg);
     say("Committed <b>" + id + "</b> " + esc(msg) + ". The branch pointer moved with you.", "out");
     draw();
@@ -947,28 +973,28 @@
   ];
 
   var LESSONS = [
-    { ch: 1, t: "Make your first commit",
+    { id: "first-commit", ch: 1, t: "Make your first commit",
       goal: "Get one change of your own into the history.",
       why: "A commit is a snapshot plus a message. Nothing enters history until you make one.",
       hint: "Three moves: <code>edit app.js</code>, then <code>git add .</code>, then <code>git commit -m \"Add app\"</code>.",
       done: "That is the whole loop: change, stage, commit. Everything else is built on it.",
-      ok: function () { return Object.keys(S.commits).length >= 2; } },
+      ok: function () { return !!S.didCommit; } },
 
-    { ch: 1, t: "Look before you leap",
+    { id: "status-and-log", ch: 1, t: "Look before you leap",
       goal: "Run the two commands that tell you where you stand.",
       why: "status answers what is changed right now; log answers what happened before. Between them you are never lost.",
       hint: "<code>git status</code> and <code>git log</code>.",
       done: "Those two are your compass. When Git confuses you, reach for them first.",
       ok: function () { return S.used.status && S.used.log; } },
 
-    { ch: 1, t: "Throw away an uncommitted change",
+    { id: "restore-uncommitted", ch: 1, t: "Throw away an uncommitted change",
       goal: "Edit a file, then discard that edit without committing it.",
       why: "Work that was never committed is the one thing Git cannot get back for you. Learn where that line sits.",
       hint: "<code>edit notes.txt</code>, then <code>git restore notes.txt</code>.",
       done: "Note the asymmetry: committed work is nearly always recoverable, uncommitted work is not.",
       ok: function () { return !!S.used.restore; } },
 
-    { ch: 2, t: "Start a branch and commit on it",
+    { id: "branch-and-commit", ch: 2, t: "Start a branch and commit on it",
       goal: "Create a branch, move onto it, and add a commit there.",
       why: "A branch is a movable label pointing at one commit. Creating one copies nothing and costs nothing.",
       hint: "<code>git switch -c feature</code>, then edit, add, and commit.",
@@ -980,21 +1006,21 @@
         });
       } },
 
-    { ch: 2, t: "Move between branches",
+    { id: "switch-branches", ch: 2, t: "Move between branches",
       goal: "Switch to another branch and back again.",
       why: "Switching points HEAD at a different label. Your other work is not lost, it is simply not checked out.",
       hint: "<code>git switch main</code> and <code>git switch feature</code>. Clicking a branch label in the graph does the same.",
       done: "HEAD is just which label you are standing on.",
       ok: function () { return (S.switches || 0) >= 2; } },
 
-    { ch: 2, t: "Merge with a fast-forward",
+    { id: "fast-forward", ch: 2, t: "Merge with a fast-forward",
       goal: "Merge a branch into main while main has no commits of its own.",
       why: "When nothing has diverged, Git slides the label forward and creates no merge commit. People are often surprised by that.",
       hint: "From an unchanged main: <code>git merge feature</code>.",
       done: "A fast-forward is less a merge than a catch-up.",
       ok: function () { return !!S.didFF; } },
 
-    { ch: 2, t: "Make a real merge commit",
+    { id: "real-merge", ch: 2, t: "Make a real merge commit",
       goal: "Let main and a branch each gain a commit, then merge them.",
       why: "When both sides have moved, Git records a commit with two parents. That is what preserves the true shape of the work.",
       hint: "Commit on main, commit on the branch, then <code>git merge feature</code> from main.",
@@ -1005,7 +1031,7 @@
         });
       } },
 
-    { ch: 3, t: "Undo a commit the safe way",
+    { id: "revert", ch: 3, t: "Undo a commit the safe way",
       goal: "Cancel a commit without removing it from history.",
       why: "revert adds a commit that reverses an old one. It rewrites nothing, which makes it the only safe undo once others have your work.",
       hint: "<code>git revert HEAD</code>.",
@@ -1014,84 +1040,91 @@
         return Object.keys(S.commits).some(function (id) { return /^Revert /.test(S.commits[id].msg); });
       } },
 
-    { ch: 3, t: "Uncommit, but keep the work",
+    { id: "soft-reset", ch: 3, t: "Uncommit, but keep the work",
       goal: "Drop the last commit while keeping its changes.",
       why: "Committed too early, or with the wrong message? A soft reset moves the label back and leaves everything else alone.",
       hint: "<code>git reset --soft HEAD~1</code>.",
       done: "The commit is gone from the branch; the work is not gone from you.",
       ok: function () { return !!S.didSoftReset; } },
 
-    { ch: 3, t: "Abandon a commit, then rescue it",
+    { id: "rescue-with-reflog", ch: 3, t: "Abandon a commit, then rescue it",
       goal: "Throw a commit away with a hard reset, then bring it back.",
       why: "The most reassuring fact in Git: a hard reset does not delete commits, it stops pointing at them.",
       hint: "<code>git reset --hard HEAD~1</code>, then <code>git reflog</code>. <code>HEAD@{0}</code> is where you are now, so the hash you want is below it.",
       done: "Nothing was destroyed. The reflog is the safety net under almost every Git mistake.",
       ok: function () { return !!S.rescued; } },
 
-    { ch: 4, t: "Amend the last commit",
+    { id: "amend", ch: 4, t: "Amend the last commit",
       goal: "Change the most recent commit instead of adding another.",
       why: "Amend does not edit a commit. It builds a replacement and abandons the original, which is why amending after a push needs a force.",
       hint: "<code>git commit --amend -m \"A better message\"</code>.",
       done: "Look at the hash: it changed. That is exactly why amend counts as rewriting history.",
       ok: function () { return !!S.didAmend; } },
 
-    { ch: 4, t: "Rebase instead of merging",
+    { id: "rebase", ch: 4, t: "Rebase instead of merging",
       goal: "Replay a branch on top of main so the history is a straight line.",
       why: "Rebase copies your commits onto a new base. Same changes, new hashes, originals left behind.",
       hint: "From a branch that has diverged: <code>git rebase main</code>.",
       done: "The faded circles are your originals. Because the hashes changed, never rebase work someone else already has.",
       ok: function () { return !!S.didRebase; } },
 
-    { ch: 4, t: "Take one commit from elsewhere",
+    { id: "cherry-pick", ch: 4, t: "Take one commit from elsewhere",
       goal: "Copy a single commit onto your current branch.",
       why: "Cherry-pick is the answer to work committed on the wrong branch. It copies the change and leaves the original in place.",
       hint: "<code>git log</code> for a hash, then <code>git cherry-pick &lt;hash&gt;</code>.",
       done: "One commit, copied. The everyday use is a hotfix, or a commit that landed in the wrong place.",
       ok: function () { return !!S.didCherryPick; } },
 
-    { ch: 5, t: "Park work you cannot commit yet",
+    { id: "stash", ch: 5, t: "Park work you cannot commit yet",
       goal: "Stash a change, then bring it back.",
       why: "A stash is a shelf. It gets you to a clean tree without inventing a commit you did not mean to make.",
       hint: "Edit a file, then <code>git stash</code>, then <code>git stash pop</code>.",
       done: "Label your stashes in real life. An unnamed stash is a mystery by Thursday.",
       ok: function () { return !!S.didStashPop; } },
 
-    { ch: 5, t: "Mark a release with a tag",
+    { id: "tag", ch: 5, t: "Mark a release with a tag",
       goal: "Put a tag on a commit.",
       why: "A tag is a label that does not move. A branch follows you forward; a tag stays where you put it.",
       hint: "<code>git tag v1.0</code>.",
       done: "That is the distinction worth keeping: branches move, tags do not.",
       ok: function () { return Object.keys(S.tags).length > 0; } },
 
-    { ch: 5, t: "Detach HEAD, and get back",
+    { id: "detached-head", ch: 5, t: "Detach HEAD, and get back",
       goal: "Check out a commit directly, then return to a branch.",
       why: "Detached HEAD is not an error. You are standing on a commit rather than a branch, and commits made there belong to nothing.",
       hint: "<code>git switch HEAD~1</code> to detach, then <code>git switch main</code> to return.",
       done: "Just a place to visit. Commit while detached and you need a branch to keep the work.",
       ok: function () { return !!S.wasDetached && S.head.type === "branch"; } },
 
-    { ch: 6, t: "Connect your repository to GitHub",
+    { id: "clone", ch: 6, t: "Start from a repository that already exists",
+      goal: "Clone a repository and see what you were given.",
+      why: "Most people meet Git by cloning, not by starting empty. A clone brings the whole history, not a snapshot, and configures the remote and tracking for you.",
+      hint: "<code>git clone https://github.com/you/project.git</code>, then <code>git log</code> to see the history came too.",
+      done: "Everything a new repository needs, in one command: full history, origin configured, and main already tracking origin/main.",
+      ok: function () { return !!S.used.clone; } },
+
+    { id: "remote-add", ch: 6, t: "Connect your repository to GitHub",
       goal: "Add a remote called origin.",
       why: "Git works perfectly with no server at all. A remote is just an address you have given a nickname, and adding one sends nothing.",
       hint: "<code>git remote add origin https://github.com/you/project.git</code>, then <code>git remote -v</code> to see it.",
       done: "origin is only a nickname for a URL. Your history is still entirely local until you push.",
       ok: function () { return !!S.remote; } },
 
-    { ch: 6, t: "Publish your work",
+    { id: "push", ch: 6, t: "Publish your work",
       goal: "Push a branch to GitHub and set it to track.",
       why: "Pushing copies commits to the remote and moves the remote's branch label. The origin/main you see is your record of where GitHub was.",
       hint: "<code>git push -u origin main</code>.",
       done: "The -u sets tracking, so plain git push and git pull know where to go from now on.",
       ok: function () { return !!S.didPush; } },
 
-    { ch: 6, t: "Open a pull request",
+    { id: "pull-request", ch: 6, t: "Open a pull request",
       goal: "Push a branch, then propose it into main.",
       why: "A pull request is not a Git command. The commits are already on GitHub; a pull request asks for them to be merged, and gives people somewhere to talk about it.",
       hint: "<code>git switch -c feature</code>, commit something, <code>git push -u origin feature</code>, then <code>gh pr create</code>.",
       done: "Review happens on the branch you pushed. New commits pushed to that branch join the same pull request.",
       ok: function () { return !!S.didOpenPR; } },
 
-    { ch: 6, t: "Merge it, and bring it home",
+    { id: "merge-pr", ch: 6, t: "Merge it, and bring it home",
       goal: "Merge the pull request, then get the result into your local main.",
       why: "Merging on GitHub moves origin/main. Your own main knows nothing about it until you pull. This is the step people forget.",
       hint: "<code>gh pr merge</code>, then <code>git switch main</code> and <code>git pull</code>.",
@@ -1100,7 +1133,7 @@
         return !!S.didMergePR && S.remote && S.branches.main === S.remote.branches.main;
       } },
 
-    { ch: 6, t: "Survive a rejected push",
+    { id: "rejected-push", ch: 6, t: "Survive a rejected push",
       goal: "Let a teammate push, watch your push be refused, then resolve it.",
       why: "The most common wall in real work. Git refuses because origin has a commit you do not, and forcing would erase it.",
       hint: "<code>teammate</code> pushes for you. Commit something yourself, try <code>git push</code>, then <code>git pull</code> and push again.",
@@ -1112,22 +1145,29 @@
 
   var STORE = "gg-play-progress";
 
+  /* Progress is stored against each lesson's id, never its position. Storing
+     positions meant that inserting a lesson silently reassigned everyone's
+     completed work to the wrong lessons. */
   function loadProgress() {
     try {
       var raw = window.localStorage.getItem(STORE);
       if (!raw) return;
       var saved = JSON.parse(raw);
       if (Object.prototype.toString.call(saved) === "[object Array]") {
-        saved.forEach(function (v, i) { if (v) solved[i] = true; });
+        // The old format was an array of flags by position. Read it once so
+        // nobody loses progress in the upgrade, then it is rewritten by id.
+        saved.forEach(function (v, i) { if (v && LESSONS[i]) solved[i] = true; });
+        return;
       }
+      LESSONS.forEach(function (l, i) { if (saved[l.id]) solved[i] = true; });
     } catch (e) { /* private mode or a corrupt value: just start fresh */ }
   }
 
   function saveProgress() {
     try {
-      window.localStorage.setItem(STORE, JSON.stringify(LESSONS.map(function (_, i) {
-        return solved[i] ? 1 : 0;
-      })));
+      var byId = {};
+      LESSONS.forEach(function (l, i) { if (solved[i]) byId[l.id] = 1; });
+      window.localStorage.setItem(STORE, JSON.stringify(byId));
     } catch (e) { /* progress simply will not persist */ }
   }
 

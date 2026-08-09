@@ -374,7 +374,9 @@ a.chip { text-decoration: none; }
   flex-shrink: 0;
 }
 
-.copy:hover { color: var(--accent); border-color: var(--accent); }
+/* Copying is a safe, positive action and it confirms in green, so the hover
+   leads there rather than through the accent. */
+.copy:hover { color: var(--safe); border-color: var(--safe); }
 .copy.done { color: var(--safe); border-color: var(--safe); }
 
 .note { color: var(--muted); font-size: 0.92rem; margin: 0.15rem 0 0.6rem; }
@@ -462,7 +464,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: var(--muted);
 }
 
-a.footer-tag:hover { color: var(--accent); text-decoration: none; }
+/* The tagline is a signature, not a call to action; green keeps it distinct
+   from every other link on the page. */
+a.footer-tag:hover { color: var(--safe); text-decoration: none; }
 
 
 /* Error decoder */

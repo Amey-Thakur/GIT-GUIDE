@@ -20,17 +20,27 @@
   var DATA = null;
   var ERRORS = [];
 
+  /* The answers arrive first and the page becomes usable straight away. The
+     error decoder is another 73KB on the wire and is only needed once someone
+     pastes an error, so it loads alongside rather than blocking the finder. */
+  fetch("data/errors.json")
+    .then(function (r) { return r.json(); })
+    .then(function (loaded) {
+      ERRORS = loaded.errors;
+      var statE = document.getElementById("stat-e");
+      if (statE) statE.textContent = String(ERRORS.length);
+      // If someone searched before this landed, run it again now it can match.
+      if (input && input.value.trim()) search(input.value);
+    })
+    .catch(function () { /* the answers still work without the decoder */ });
+
   Promise.all([
-    fetch("data/intents.json").then(function (r) { return r.json(); }),
-    fetch("data/errors.json").then(function (r) { return r.json(); })
+    fetch("data/intents.json").then(function (r) { return r.json(); })
   ]).then(function (loaded) {
     DATA = loaded[0].intents;
-    ERRORS = loaded[1].errors;
     renderIndex();
     var statA = document.getElementById("stat-a");
-    var statE = document.getElementById("stat-e");
     if (statA) statA.textContent = String(DATA.length);
-    if (statE) statE.textContent = String(ERRORS.length);
     var initial = decodeURIComponent(location.hash.replace("#", ""));
     if (initial) showById(initial);
   });
