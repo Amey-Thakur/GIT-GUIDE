@@ -1138,3 +1138,46 @@ kbd {
   .pundo span { display: none; }
   .psug { padding: 0.5rem 1rem; flex-wrap: wrap; gap: 0.25rem 0.6rem; }
 }
+
+/* ---- Check yourself: a short recall test, not an exam --------------------- */
+.quiz-section { padding: 0 0 3rem; }
+.quiz-section h2 { font-size: 1.4rem; margin: 0 0 0.4rem; }
+.quiz-section .note { margin: 0 0 1.5rem; }
+
+.quiz { border: 1px solid var(--line); border-radius: 12px; background: var(--card);
+        padding: 1.5rem 1.75rem; }
+.qz-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+           margin-bottom: 1rem; }
+.qz-step { margin: 0; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
+           text-transform: uppercase; color: var(--muted); }
+.qz-dots { display: inline-flex; gap: 6px; }
+.qz-dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line); display: block; }
+.qz-dot.is-now { border-color: var(--accent); }
+.qz-dot.is-right { background: var(--safe); border-color: var(--safe); }
+.qz-dot.is-wrong { background: var(--history); border-color: var(--history); }
+
+.qz-q { margin: 0 0 1.1rem; font-size: 1.1rem; line-height: 1.5; }
+.qz-opts { display: grid; gap: 0.6rem; }
+.qz-opt { text-align: left; font: inherit; font-size: 0.96rem; color: var(--ink);
+          background: transparent; border: 1px solid var(--line); border-radius: 9px;
+          padding: 0.7rem 0.95rem; cursor: pointer; transition: border-color 0.18s, color 0.18s; }
+.qz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.qz-opt:disabled { cursor: default; }
+.qz-opt.is-right { border-color: var(--safe); color: var(--safe); }
+.qz-opt.is-chosen:not(.is-right) { border-color: var(--history); color: var(--history); }
+
+.qz-why { margin: 1.1rem 0 0; padding: 0; color: var(--muted); line-height: 1.7; display: none; }
+.qz-why.is-shown { display: block; }
+.qz-yes { color: var(--safe); }
+.qz-no { color: var(--history); }
+
+.qz-foot { margin-top: 1.25rem; }
+.qz-next { font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+           color: var(--accent); background: transparent; border: 1px solid var(--accent);
+           border-radius: 8px; padding: 0.5rem 1.1rem; }
+.qz-next:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.qz-next:disabled { color: var(--muted); border-color: var(--line); cursor: default; }
+
+.qz-done { text-align: center; padding: 1rem 0 0.5rem; }
+.qz-score { margin: 0 0 0.3rem; font-size: 2rem; font-weight: 700; color: var(--accent); }
+.qz-note { margin: 0 0 1.25rem; color: var(--muted); }

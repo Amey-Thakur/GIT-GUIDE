@@ -46,6 +46,62 @@
   var d1 = window.GGStepper(D1);
   window.GGStepper(D2);
 
+
+  /* A short check. Answering is the point: recall fixes a model in a way that
+     rereading never does, and every option explains itself when chosen. */
+  window.GGQuiz("learn-quiz", [
+    {
+      q: "You have edited a file but have not run git add. Where does that change live?",
+      a: [
+        { t: "The working tree", ok: true,
+          why: "Your ordinary files. Git can see the change but has recorded nothing, which is why this is the one state Git cannot get back for you." },
+        { t: "The staging area", why: "Not yet. Nothing reaches the staging area until you add it." },
+        { t: "The local repository", why: "No. The repository only holds what you have committed." },
+        { t: "The remote", why: "No. Nothing leaves your machine until you push, and nothing is even committed yet." }
+      ]
+    },
+    {
+      q: "Which command moves what you have staged into your history?",
+      a: [
+        { t: "git add", why: "add moves changes into the staging area, one step earlier." },
+        { t: "git commit", ok: true,
+          why: "commit turns the staged snapshot into a permanent one and moves your branch label onto it." },
+        { t: "git push", why: "push copies commits you have already made to a remote." },
+        { t: "git stash", why: "stash puts changes on a shelf instead of recording them." }
+      ]
+    },
+    {
+      q: "A branch, in Git, is best described as:",
+      a: [
+        { t: "A copy of your files", why: "Nothing is copied. That is why branching is instant even on a huge repository." },
+        { t: "A movable label pointing at one commit", ok: true,
+          why: "That is the whole secret. Committing moves the label forward; creating a branch just adds another label." },
+        { t: "A folder inside .git", why: "There is a file recording where it points, but the branch itself is only that pointer." },
+        { t: "A backup of your work", why: "A branch protects nothing on its own; it is a pointer, not a copy." }
+      ]
+    },
+    {
+      q: "You run git fetch. What just changed?",
+      a: [
+        { t: "Your files were updated", why: "No. That is the point of fetch: your working tree is untouched." },
+        { t: "Your branch moved forward", why: "No. Your own branch never moves on a fetch." },
+        { t: "Your record of the remote", ok: true,
+          why: "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you." },
+        { t: "Nothing at all", why: "Something did change: your origin/* labels now show where the remote actually is." }
+      ]
+    },
+    {
+      q: "You ran git reset --hard and lost a commit you wanted. It is:",
+      a: [
+        { t: "Gone forever", why: "Almost never true, and believing it causes a lot of unnecessary panic." },
+        { t: "Still there, and the reflog can find it", ok: true,
+          why: "Reset moves a label; it does not delete commits. git reflog lists where HEAD has been, and resetting back to that hash brings the work home." },
+        { t: "Only on the remote", why: "It may not have been pushed at all, and you still would not have lost it." },
+        { t: "Recoverable only from a backup", why: "Git keeps its own safety net. The reflog is that net." }
+      ]
+    }
+  ]);
+
   /* Click any zone or arrow to jump straight to its step. */
   var JUMP = { "z-wt": 0, "a-add": 1, "z-stage": 1, "a-commit": 2, "z-local": 2,
                "a-push": 3, "z-remote": 3, "a-fetch": 4, "a-merge": 5, "a-restore": 6 };
