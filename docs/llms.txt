@@ -20,6 +20,7 @@ License: MIT
 - [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html): the visual model: where code lives, what each command moves, branches and HEAD.
 - [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html): an in-browser Git engine; real commands against a live commit graph, with six challenges from a first commit to recovering an abandoned one.
 - [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html): guided rescue triage from panic to recipe.
+- [Answers](https://amey-thakur.github.io/GIT-GUIDE/answers.html): every answer rendered as static HTML, no JavaScript required: question, variants, exact commands, danger level and undo for each.
 - [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html): every common Git error, decoded, statically rendered.
 - [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html): the GitHub chapter: pull requests, forks, Issues, Actions, releases, Pages, gh CLI, power moves.
 - [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html): the complete cheatsheet, one line per command, every platform and no platform.

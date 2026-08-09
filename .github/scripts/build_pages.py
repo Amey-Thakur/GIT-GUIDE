@@ -17,6 +17,7 @@ DOCS = ROOT / "docs"
 START, END = "<!-- errors:start -->", "<!-- errors:end -->"
 CS_START, CS_END = "<!-- cheatsheet:start -->", "<!-- cheatsheet:end -->"
 QZ_START, QZ_END = "<!-- quizschema:start -->", "<!-- quizschema:end -->"
+AN_START, AN_END = "<!-- answers:start -->", "<!-- answers:end -->"
 
 
 def replace_block(page, start, end, body):
@@ -71,6 +72,49 @@ def quiz_schema(quiz):
     lines.append("}")
     lines.append("</script>")
     return "\n".join(lines)
+
+
+
+DANGER_LABEL = {"safe": "Safe", "history": "Rewrites history", "destructive": "Destructive"}
+
+
+def answer_card(intent):
+    """One answer, matching what render.js builds in the finder.
+
+    The finder draws these client side for speed; this renders the same thing at
+    build time so the answers exist as HTML for anyone, and anything, without
+    JavaScript. The two must look the same, hence the shared class names.
+    """
+    out = [f'<article class="result" id="{escape(intent["id"])}">']
+    out.append(
+        f'  <h2>{escape(intent["q"])}'
+        f'<a class="anchor" href="#{escape(intent["id"])}" aria-label="Link to this answer">#</a></h2>'
+    )
+    if intent.get("aka"):
+        out.append(f'  <p class="aka">Also asked as: {escape(", ".join(intent["aka"]))}</p>')
+    for v in intent["variants"]:
+        danger = v.get("danger", "safe")
+        out.append('  <div class="variant">')
+        out.append(
+            f'    <p class="when">{escape(v["when"])}'
+            f'<span class="badge {escape(danger)}">{DANGER_LABEL[danger]}</span></p>'
+        )
+        for c in v["cmds"]:
+            out.append(
+                f'    <div class="cmd"><code>{escape(c["c"])}</code>'
+                f'<button class="copy" type="button" data-cmd="{escape(c["c"])}">Copy</button></div>'
+            )
+            if c.get("n"):
+                out.append(f'    <p class="note">{escape(c["n"])}</p>')
+        out.append(f'    <p class="undo"><span>Undo</span> {escape(v["undo"])}</p>')
+        out.append("  </div>")
+    if intent.get("seealso"):
+        links = ", ".join(
+            f'<a href="#{escape(sid)}">{escape(sid.replace("-", " "))}</a>' for sid in intent["seealso"]
+        )
+        out.append(f'  <p class="seealso">See also: {links}</p>')
+    out.append("</article>")
+    return "\n".join(out)
 
 
 def error_card(err, intents):
@@ -146,6 +190,13 @@ def main():
     replace_block(DOCS / "cheatsheet.html", CS_START, CS_END, cs_body)
     total = sum(len(s["items"]) for s in sheet)
     print(f"cheatsheet.html: {len(sheet)} sections, {total} commands rendered")
+
+    intents_full = json.loads((DOCS / "data" / "intents.json").read_text(encoding="utf-8"))["intents"]
+    answers_page = DOCS / "answers.html"
+    if answers_page.exists():
+        cards = "\n".join(answer_card(i) for i in intents_full)
+        replace_block(answers_page, AN_START, AN_END, cards)
+        print(f"answers.html: {len(intents_full)} answers rendered")
 
     quizzes = json.loads((DOCS / "data" / "quizzes.json").read_text(encoding="utf-8"))["quizzes"]
     for quiz in quizzes:
