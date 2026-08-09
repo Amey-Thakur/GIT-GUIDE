@@ -1045,3 +1045,22 @@ kbd {
   .lesson-btns { width: 100%; }
   .lesson-btns .wizard-opt { flex: 1; }
 }
+
+/* GitHub's side of the graph: where origin was when you last looked. */
+.premote rect { fill: transparent; stroke: #8250df; stroke-width: 1.5; stroke-dasharray: 5 3; }
+.premote text { font-family: var(--mono); font-size: 11px; fill: #8250df; }
+.lg-chip-remote { border: 1.5px dashed #8250df; color: #8250df; }
+@media (prefers-color-scheme: dark) {
+  .premote rect { stroke: #a371f7; }
+  .premote text { fill: #a371f7; }
+  .lg-chip-remote { border-color: #a371f7; color: #a371f7; }
+}
+:root[data-theme="dark"] .premote rect { stroke: #a371f7; }
+:root[data-theme="dark"] .premote text { fill: #a371f7; }
+:root[data-theme="dark"] .lg-chip-remote { border-color: #a371f7; color: #a371f7; }
+
+/* Commands inside a hint are buttons: click one and it runs. */
+.lsn-hint-text code, .pnotes code { cursor: pointer; border-bottom: 1px dashed transparent; }
+.lsn-hint-text code:hover, .pnotes code:hover {
+  color: var(--accent); border-bottom-color: var(--accent);
+}

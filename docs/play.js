@@ -49,7 +49,12 @@
       used: {},          // which commands have been run at least once
       switches: 0,       // branch switches, for the "move between branches" lesson
       didFF: false, didSoftReset: false, didAmend: false, didRebase: false,
-      didCherryPick: false, didStashPop: false, wasDetached: false
+      didCherryPick: false, didStashPop: false, wasDetached: false,
+      remote: null,      // { url, branches: {name: commitId} } once origin exists
+      upstream: {},      // local branch -> true when it tracks origin
+      prs: {},           // open pull requests, keyed by branch
+      didPush: false, didFetch: false, didPullAfterReject: false,
+      pushRejected: false, didOpenPR: false, didMergePR: false
     };
     S.commits[root] = { id: root, parents: [], msg: "Initial commit" };
     S.order.push(root);
@@ -149,7 +154,25 @@
       return;
     }
 
-    if (t[0] !== "git") { say("Only <code>git</code> commands, plus <code>edit &lt;file&gt;</code> and <code>clear</code>.", "err"); return; }
+    // A stand-in for a colleague pushing to the shared repository. Not a real
+    // command, and labelled as such, but there is no other way to feel what a
+    // rejected push is like.
+    if (t[0] === "teammate") { teammatePushes(); return; }
+
+    if (t[0] === "gh") {
+      var g = GH[t[1]];
+      if (!g) { say("This sandbox models <code>gh pr create</code> and <code>gh pr merge</code>.", "err"); return; }
+      S.used["gh " + t[1]] = true;
+      g(t.slice(2));
+      checkLessons();
+      return;
+    }
+
+    if (t[0] !== "git") {
+      say("Commands start with <code>git</code> or <code>gh</code>. There is also <code>edit &lt;file&gt;</code>, " +
+        "<code>teammate</code>, and <code>clear</code>.", "err");
+      return;
+    }
 
     var cmd = t[1], a = t.slice(2);
     var fn = CMDS[cmd];
@@ -162,6 +185,137 @@
   }
 
   var CMDS = {};
+
+  function remoteTip(b) {
+    return S.remote && S.remote.branches[b] != null ? S.remote.branches[b] : null;
+  }
+
+  // A colleague pushes one commit on top of whatever origin already has.
+  function teammatePushes() {
+    if (!S.remote) { say("There is no remote yet. <code>git remote add origin &lt;url&gt;</code> first.", "err"); return; }
+    var b = S.head.type === "branch" ? S.head.name : "main";
+    var base = remoteTip(b);
+    if (base == null) { say("Nothing is on origin/" + esc(b) + " yet. Push first, then try again.", "err"); return; }
+    var id = nextId();
+    S.commits[id] = { id: id, parents: [base], msg: "Teammate's fix" };
+    S.order.push(id);
+    S.remote.branches[b] = id;
+    say("A teammate pushed <b>" + id + "</b> to <b>origin/" + esc(b) + "</b>. " +
+      "Your local branch has not moved, so the two have now diverged.", "out");
+    draw();
+  }
+
+  CMDS.remote = function (a) {
+    if (!a.length || a[0] === "-v") {
+      if (!S.remote) { say("No remotes yet. <code>git remote add origin &lt;url&gt;</code> connects one.", "out"); return; }
+      say("origin&nbsp;&nbsp;" + esc(S.remote.url) + " (fetch)<br>origin&nbsp;&nbsp;" + esc(S.remote.url) + " (push)", "out");
+      return;
+    }
+    if (a[0] === "add") {
+      var url = a[2] || "https://github.com/you/project.git";
+      S.remote = { url: url, branches: {} };
+      say("Added <b>origin</b> pointing at " + esc(url) + ". Nothing has been sent yet: " +
+        "a remote is only an address until you push.", "out");
+      draw(); return;
+    }
+    say("This sandbox models <code>git remote add</code> and <code>git remote -v</code>.", "err");
+  };
+
+  CMDS.push = function (a) {
+    if (!S.remote) { say("No remote. <code>git remote add origin &lt;url&gt;</code> first.", "err"); return; }
+    if (S.head.type !== "branch") { say("You are not on a branch, so there is nothing to push.", "err"); return; }
+    var b = S.head.name;
+    var mine = S.branches[b];
+    var theirs = remoteTip(b);
+
+    if (theirs != null && theirs === mine) { say("Everything up-to-date.", "out"); return; }
+
+    // The rejection everyone meets: origin has a commit you do not.
+    if (theirs != null && !isAncestor(theirs, mine)) {
+      S.pushRejected = true;
+      say('<span class="r">! [rejected]&nbsp;&nbsp;' + esc(b) + " -> " + esc(b) + " (non-fast-forward)</span><br>" +
+        "origin has work you do not. Git refuses rather than throwing it away. " +
+        "<b>Do not force.</b> Run <code>git pull</code> to bring it in, then push again.", "err");
+      return;
+    }
+
+    S.remote.branches[b] = mine;
+    if (a.indexOf("-u") !== -1 || a.indexOf("--set-upstream") !== -1) S.upstream[b] = true;
+    S.didPush = true;
+    if (S.pushRejected) S.didPullAfterReject = true;
+    say("Pushed <b>" + esc(b) + "</b> to origin. <b>origin/" + esc(b) + "</b> now points where you do." +
+      (S.upstream[b] ? " Tracking is set, so plain <code>git push</code> works from here." : ""), "out");
+    draw();
+  };
+
+  CMDS.fetch = function () {
+    if (!S.remote) { say("No remote to fetch from.", "err"); return; }
+    S.didFetch = true;
+    say("Fetched from origin. Your <b>origin/*</b> labels are up to date, and <b>nothing in your own work moved</b>. " +
+      "That is the whole difference between fetch and pull.", "out");
+    draw();
+  };
+
+  CMDS.pull = function () {
+    if (!S.remote) { say("No remote to pull from.", "err"); return; }
+    if (S.head.type !== "branch") { say("You are not on a branch.", "err"); return; }
+    var b = S.head.name;
+    var theirs = remoteTip(b);
+    if (theirs == null) { say("origin has no " + esc(b) + " yet.", "err"); return; }
+    var mine = S.branches[b];
+    S.didFetch = true;
+    if (isAncestor(theirs, mine)) { say("Already up to date.", "out"); return; }
+    if (isAncestor(mine, theirs)) {
+      S.branches[b] = theirs;
+      note("HEAD", "pull " + b + ": fast-forward");
+      say("<b>Fast-forward.</b> You had nothing of your own, so your branch slid up to origin.", "out");
+      draw(); return;
+    }
+    var id = commit("Merge branch '" + b + "' of origin", [mine, theirs]);
+    note("HEAD", "pull " + b + ": merge");
+    say("Pulled and merged: <b>" + id + "</b> joins your work to your teammate's. " +
+      "A pull is a fetch and a merge in one step, which is why it can surprise you.", "out");
+    draw();
+  };
+
+  /* ---------------------------------------------------------- GitHub, gh */
+
+  var GH = {};
+
+  GH.pr = function (a) {
+    var verb = a[0];
+    var b = S.head.type === "branch" ? S.head.name : null;
+
+    if (verb === "create") {
+      if (!S.remote) { say("Push to GitHub before opening a pull request.", "err"); return; }
+      if (!b || b === "main") { say("A pull request proposes a branch into main, so make one and switch to it first.", "err"); return; }
+      if (remoteTip(b) == null) { say("Push the branch first: <code>git push -u origin " + esc(b) + "</code>.", "err"); return; }
+      S.prs[b] = { open: true };
+      S.didOpenPR = true;
+      say("Opened a pull request: <b>" + esc(b) + "</b> into <b>main</b>. " +
+        "A pull request is a conversation about a branch, not a Git command: the commits are already on GitHub, " +
+        "this asks for them to be merged.", "out");
+      draw(); return;
+    }
+
+    if (verb === "merge") {
+      var open = b && S.prs[b] && S.prs[b].open ? b : Object.keys(S.prs).filter(function (x) { return S.prs[x].open; })[0];
+      if (!open) { say("No open pull request. <code>gh pr create</code> opens one.", "err"); return; }
+      var head = remoteTip(open), base = remoteTip("main");
+      if (base == null) { say("main is not on origin yet. Push it first.", "err"); return; }
+      var id = nextId();
+      S.commits[id] = { id: id, parents: [base, head], msg: "Merge pull request from " + open };
+      S.order.push(id);
+      S.remote.branches.main = id;
+      S.prs[open].open = false;
+      S.didMergePR = true;
+      say("Merged the pull request. <b>origin/main</b> now has your work, but <b>your local main does not</b>. " +
+        "That is the step people forget: <code>git switch main</code> then <code>git pull</code>.", "out");
+      draw(); return;
+    }
+
+    say("This sandbox models <code>gh pr create</code> and <code>gh pr merge</code>.", "err");
+  };
 
   CMDS.restore = function (a) {
     var f = a.filter(function (x) { return x[0] !== "-"; })[0];
@@ -517,6 +671,12 @@
       var ha = ancestors(S.head.id);
       Object.keys(ha).forEach(function (id) { live[id] = true; });
     }
+    if (S.remote) {
+      Object.keys(S.remote.branches).forEach(function (b) {
+        var anc = ancestors(S.remote.branches[b]);
+        Object.keys(anc).forEach(function (id) { live[id] = true; });
+      });
+    }
 
     // Generation gives the x position, so parents always sit left of children.
     var gen = {};
@@ -537,6 +697,9 @@
     });
     var tips = names.map(function (n) { return S.branches[n]; });
     if (S.head.type === "detached") tips.push(S.head.id);
+    if (S.remote) {
+      Object.keys(S.remote.branches).forEach(function (b) { tips.push(S.remote.branches[b]); });
+    }
     tips.forEach(function (tip) {
       var chain = [], cur = tip;
       while (cur && lane[cur] == null) { chain.push(cur); cur = S.commits[cur].parents[0]; }
@@ -639,6 +802,12 @@
       }
       svg.appendChild(gl);
     }
+    if (S.remote) {
+      Object.keys(S.remote.branches).forEach(function (b) {
+        var at = S.remote.branches[b];
+        if (S.commits[at]) label(at, "origin/" + b, "premote");
+      });
+    }
     Object.keys(S.tags).forEach(function (t) { label(S.tags[t], t, "ptag"); });
     names.forEach(function (n) {
       var on = S.head.type === "branch" && S.head.name === n;
@@ -657,7 +826,15 @@
     statusEl.innerHTML = "On <b>" + esc(headName()) + "</b> · " +
       nc + (nc === 1 ? " commit" : " commits") + " · " +
       nb + (nb === 1 ? " branch" : " branches") +
-      (dirty() ? ' · <span class="r">uncommitted changes</span>' : "");
+      (dirty() ? ' · <span class="r">uncommitted changes</span>' : "") +
+      (function () {
+        if (!S.remote || S.head.type !== "branch") return "";
+        var b = S.head.name, t = remoteTip(b);
+        if (t == null) return ' · <span class="r">not on GitHub yet</span>';
+        if (t === S.branches[b]) return " · in sync with origin";
+        if (isAncestor(t, S.branches[b])) return ' · <span class="r">ahead of origin</span>';
+        return ' · <span class="r">behind origin</span>';
+      })();
 
     checkLessons();
   }
@@ -673,7 +850,8 @@
     { n: 2, name: "Branching",       blurb: "Working on more than one thing" },
     { n: 3, name: "Undoing safely",  blurb: "Three undos, and when each is right" },
     { n: 4, name: "Rewriting",       blurb: "Changing history, and the rule that governs it" },
-    { n: 5, name: "Everyday extras", blurb: "The rest of what you will reach for" }
+    { n: 5, name: "Everyday extras", blurb: "The rest of what you will reach for" },
+    { n: 6, name: "Git meets GitHub", blurb: "Publishing, pull requests, and the push that gets rejected" }
   ];
 
   var LESSONS = [
@@ -798,7 +976,44 @@
       why: "Detached HEAD is not an error. You are standing on a commit rather than a branch, and commits made there belong to nothing.",
       hint: "<code>git switch HEAD~1</code> to detach, then <code>git switch main</code> to return.",
       done: "Just a place to visit. Commit while detached and you need a branch to keep the work.",
-      ok: function () { return !!S.wasDetached && S.head.type === "branch"; } }
+      ok: function () { return !!S.wasDetached && S.head.type === "branch"; } },
+
+    { ch: 6, t: "Connect your repository to GitHub",
+      goal: "Add a remote called origin.",
+      why: "Git works perfectly with no server at all. A remote is just an address you have given a nickname, and adding one sends nothing.",
+      hint: "<code>git remote add origin https://github.com/you/project.git</code>, then <code>git remote -v</code> to see it.",
+      done: "origin is only a nickname for a URL. Your history is still entirely local until you push.",
+      ok: function () { return !!S.remote; } },
+
+    { ch: 6, t: "Publish your work",
+      goal: "Push a branch to GitHub and set it to track.",
+      why: "Pushing copies commits to the remote and moves the remote's branch label. The origin/main you see is your record of where GitHub was.",
+      hint: "<code>git push -u origin main</code>.",
+      done: "The -u sets tracking, so plain git push and git pull know where to go from now on.",
+      ok: function () { return !!S.didPush; } },
+
+    { ch: 6, t: "Open a pull request",
+      goal: "Push a branch, then propose it into main.",
+      why: "A pull request is not a Git command. The commits are already on GitHub; a pull request asks for them to be merged, and gives people somewhere to talk about it.",
+      hint: "<code>git switch -c feature</code>, commit something, <code>git push -u origin feature</code>, then <code>gh pr create</code>.",
+      done: "Review happens on the branch you pushed. New commits pushed to that branch join the same pull request.",
+      ok: function () { return !!S.didOpenPR; } },
+
+    { ch: 6, t: "Merge it, and bring it home",
+      goal: "Merge the pull request, then get the result into your local main.",
+      why: "Merging on GitHub moves origin/main. Your own main knows nothing about it until you pull. This is the step people forget.",
+      hint: "<code>gh pr merge</code>, then <code>git switch main</code> and <code>git pull</code>.",
+      done: "Two separate places moved: GitHub's main, then yours. They are never the same thing.",
+      ok: function () {
+        return !!S.didMergePR && S.remote && S.branches.main === S.remote.branches.main;
+      } },
+
+    { ch: 6, t: "Survive a rejected push",
+      goal: "Let a teammate push, watch your push be refused, then resolve it.",
+      why: "The most common wall in real work. Git refuses because origin has a commit you do not, and forcing would erase it.",
+      hint: "<code>teammate</code> pushes for you. Commit something yourself, try <code>git push</code>, then <code>git pull</code> and push again.",
+      done: "Rejection is Git protecting someone else's work. Pull, resolve, push. Force is almost never the answer.",
+      ok: function () { return !!S.didPullAfterReject; } }
   ];
 
   /* --------------------------------------------------------------- progress */
@@ -914,22 +1129,28 @@
   }
 
   function checkLessons() {
-    var justSolved = -1;
+    var fresh = [];
     LESSONS.forEach(function (l, i) {
       var pass = false;
       try { pass = !!l.ok(); } catch (e) { pass = false; }
-      if (!solved[i] && pass) { solved[i] = true; if (justSolved === -1) justSolved = i; }
+      if (!solved[i] && pass) { solved[i] = true; fresh.push(i); }
     });
-    if (justSolved !== -1) {
+    if (fresh.length) {
       saveProgress();
-      var l = LESSONS[justSolved];
+      // One command can satisfy more than one lesson. Say so for each, or the
+      // learner silently loses credit they earned.
+      fresh.forEach(function (i) {
+        say('<b class="g">Lesson ' + (i + 1) + " done: " + esc(LESSONS[i].t) + ".</b> " + LESSONS[i].done, "win");
+      });
       var n = doneCount();
-      say('<b class="g">Lesson ' + (justSolved + 1) + " done: " + esc(l.t) + ".</b> " + l.done, "win");
       if (n === LESSONS.length) {
-        say('<b class="g">All ' + LESSONS.length + " complete.</b> You have branched, merged, reverted, reset, " +
-            "rescued, rebased, cherry-picked, stashed, tagged and detached HEAD, by hand. That is more of Git " +
-            "than most people touch in a year of using it.", "win");
-      } else if (justSolved === task) {
+        say('<b class="g">All ' + LESSONS.length + " lessons complete.</b> You have committed, branched, merged, " +
+            "reverted, reset, rescued abandoned work, rebased, cherry-picked, stashed, tagged, detached HEAD, " +
+            "published to GitHub, opened and merged a pull request, and recovered from a rejected push. " +
+            "By hand, on a real graph. That is more of Git than most people touch in a year of using it.", "win");
+      } else if (fresh.indexOf(task) !== -1) {
+        // Only move on if the lesson they were actually looking at is the one
+        // that landed; otherwise leave them where they are.
         var nxt = firstUnsolved();
         if (nxt !== -1) task = nxt;
       }
@@ -1002,6 +1223,21 @@
       if (task > 0) { task -= 1; renderLesson(); }
       return;
     }
+    // Any command shown in a hint runs on click. It is the difference between
+    // reading a tutorial and doing one.
+    var runnable = e.target.closest(".lsn-hint-text code, .pnotes code");
+    if (runnable) {
+      var text = runnable.textContent.trim();
+      if (/^(git|gh|edit|teammate) /.test(text) || text === "teammate") {
+        inEl.value = text;
+        inEl.focus();
+        say('<span class="p">$</span> ' + esc(text), "cmd");
+        try { run(text); } catch (err) { say("The sandbox tripped over that one.", "err"); }
+        inEl.value = "";
+        return;
+      }
+    }
+
     if (e.target.closest("#lsn-hint")) {
       var box = document.getElementById("lsn-hint-text");
       var btn = document.getElementById("lsn-hint");

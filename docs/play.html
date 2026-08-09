@@ -14,10 +14,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
-  <title>Learn Git by doing it: 16 interactive lessons | Git Guide</title>
-  <meta name="description" content="Sixteen interactive Git lessons with a real Git engine in the page. Commit, branch, merge, rebase, reset, and recover lost work, watching the commit graph answer every command. Free, no sign-in, nothing to install.">
+  <title>Learn Git and GitHub by doing it: 21 interactive lessons | Git Guide</title>
+  <meta name="description" content="Twenty-one interactive Git and GitHub lessons with a real Git engine in the page. Commit, branch, merge, rebase, push, open a pull request, and fix a rejected push, watching the commit graph answer every command. Free, no sign-in, nothing to install.">
   <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/play.html">
-  <meta property="og:title" content="Learn Git by doing it: 16 interactive lessons">
+  <meta property="og:title" content="Learn Git and GitHub by doing it: 21 interactive lessons">
   <meta property="og:description" content="A real Git engine in the page. Sixteen lessons, from your first commit to rescuing work you thought you had lost.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/play.html">
@@ -27,14 +27,14 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=37">
+  <link rel="stylesheet" href="style.css?v=38">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LearningResource",
-    "name": "Learn Git by doing it",
+    "name": "Learn Git and GitHub by doing it",
     "url": "https://amey-thakur.github.io/GIT-GUIDE/play.html",
-    "description": "Sixteen interactive Git lessons driven by a real Git engine in the browser.",
+    "description": "Twenty-one interactive Git and GitHub lessons driven by a real Git engine in the browser.",
     "learningResourceType": "Interactive simulation",
     "educationalLevel": "Beginner to advanced",
     "isAccessibleForFree": true,
@@ -75,8 +75,8 @@
   <main id="main">
     <section class="hero">
       <div class="wrap">
-        <h1>Learn Git by doing it<span class="dot">.</span></h1>
-        <p class="lede">A real Git engine runs in this page. Sixteen lessons take you from your first commit to rescuing work you thought you had destroyed, and the commit graph answers every command as you type it. Nothing to install, nothing you can break.</p>
+        <h1>Learn Git and GitHub by doing it<span class="dot">.</span></h1>
+        <p class="lede">A real Git engine runs in this page, with a GitHub to push to. Twenty-one lessons take you from your first commit to opening a pull request and surviving the push that gets rejected. The graph answers every command as you type it. Nothing to install, nothing you can break.</p>
       </div>
     </section>
 
@@ -120,6 +120,7 @@
           <span><b>Click a commit</b> to see what it is and what points at it</span>
           <span><b>Click a branch label</b> to switch onto that branch</span>
           <span><b>Drag the canvas</b> to move around a wide history</span>
+          <span><b>Click a command</b> in any hint to run it</span>
         </p>
 
         <ul class="plegend" aria-label="What the graph symbols mean">
@@ -129,6 +130,7 @@
           <li class="lg-head"><span class="lg-chip lg-chip-head">HEAD</span><span>Where you are standing</span></li>
           <li class="lg-branch"><span class="lg-chip lg-chip-branch">main</span><span>A branch: a label that moves</span></li>
           <li class="lg-tag"><span class="lg-chip lg-chip-tag">v1.0</span><span>A tag: a label that does not</span></li>
+          <li class="lg-remote"><span class="lg-chip lg-chip-remote">origin/main</span><span>Where GitHub was when you last looked</span></li>
         </ul>
 
         <div class="pterm">
@@ -152,6 +154,11 @@
           <button class="chip pex" type="button">git revert HEAD</button>
           <button class="chip pex" type="button">git reflog</button>
           <button class="chip pex" type="button">git log</button>
+          <button class="chip pex" type="button">git remote add origin https://github.com/you/project.git</button>
+          <button class="chip pex" type="button">git push -u origin main</button>
+          <button class="chip pex" type="button">gh pr create</button>
+          <button class="chip pex" type="button">teammate</button>
+          <button class="chip pex" type="button">git pull</button>
         </div>
 
         <div class="coursewrap">
@@ -169,7 +176,7 @@
         <div class="pnotes">
           <div>
             <h2>What it understands</h2>
-            <p><code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>restore</code>, <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>log</code>, <code>reflog</code>, <code>status</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash. <code>edit &lt;file&gt;</code> stands in for changing a file in your editor.</p>
+            <p><code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>restore</code>, <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>log</code>, <code>reflog</code>, <code>status</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash. <code>edit &lt;file&gt;</code> stands in for changing a file in your editor, and <code>teammate</code> stands in for a colleague pushing to the shared repository. On the GitHub side: <code>git remote add</code>, <code>git push</code>, <code>git fetch</code>, <code>git pull</code>, <code>gh pr create</code>, <code>gh pr merge</code>.</p>
           </div>
           <div>
             <h2>Why the faded circles matter</h2>
@@ -201,6 +208,6 @@
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
-  <script src="play.js?v=6"></script>
+  <script src="play.js?v=8"></script>
 </body>
 </html>
