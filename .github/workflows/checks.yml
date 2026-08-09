@@ -3,7 +3,7 @@
 # Author: Amey Thakur
 # GitHub: https://github.com/Amey-Thakur
 # Tech: GitHub Actions, Python 3 on ubuntu-latest, actions pinned to commit SHAs
-# Description: Single job that checks out the repository and runs .github/scripts/validate.py. A red check means the data contract or house style is broken.
+# Description: Single job that runs .github/scripts/validate.py, then rebuilds every generated page and fails on any difference. A red check means the data contract is broken, a danger level is graded below the worst command on its card, house style has slipped, or a page has drifted from its data.
 # Date: 2026-08-07
 
 name: Checks
@@ -26,4 +26,4 @@ jobs:
       - name: Static pages match their data
         run: |
           python3 .github/scripts/build_pages.py
-          git diff --exit-code -- docs/errors.html docs/cheatsheet.html
+          git diff --exit-code -- docs/errors.html docs/cheatsheet.html docs/answers.html docs/learn.html docs/github.html

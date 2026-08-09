@@ -17,7 +17,7 @@ how dangerous it is, and how to undo it.
 
 <br><br>
 
-[<img src="docs/assets/poster.png" alt="Git Guide: the nine doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
+[<img src="docs/assets/poster.png?v=2" alt="Git Guide: the nine doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
 
 </div>
 
@@ -118,6 +118,9 @@ Every answer carries one of three danger levels.
 - **No dependencies, no ads, no tracking.** The site makes zero external requests, so it loads instantly and works behind corporate proxies.
 - **It genuinely works offline.** A service worker caches the finder and all 1000 answers on your first visit, so the guide opens on a plane, on a train, or on a machine with no network at all. It is installable as an app too.
 
+> [!CAUTION]
+> The reflog is the safety net under almost every Git mistake, and it only holds commits. Work you have never committed is not in Git at all, so `git restore`, `git checkout -- <file>` and `git clean -fd` have no way back from anywhere. Committing early is the cheapest insurance in software.
+
 > [!NOTE]
 > Git is not GitHub. Everything here works the same on GitLab, Bitbucket, Azure DevOps, and AWS CodeCommit, and much of Git needs no host at all: patches by mail, repositories over USB, air-gapped machines. The guide covers that world too.
 
@@ -145,9 +148,9 @@ Four things to keep. Click any one to open it. Each is generated from this repos
 
 | | |
 | :---: | :---: |
-| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
+| [<img src="docs/assets/pdf-cover.png?v=2" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png?v=2" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
 | **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>23 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
-| [<img src="docs/assets/cheatsheet-card.png" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
+| [<img src="docs/assets/cheatsheet-card.png?v=2" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png?v=2" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
 | **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**<br>The commands you reach for every day, on one page. The one to pin up. | **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**<br>Everything past the daily: history surgery, submodules, scale, recovery. |
 
 </div>
