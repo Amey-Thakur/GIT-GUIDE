@@ -40,6 +40,10 @@
               // git fetch must not inherit the warning from the hard reset that
               // followed it on somebody else's card.
               solo: v.cmds.length === 1,
+              // A chained recipe is indexed by its first command, so it can win
+              // a match it should not: typing git stash deserves the answer
+              // about git stash, not one that happens to start with it.
+              chained: c.c.indexOf("&&") !== -1,
               words: (i.q + " " + i.aka.join(" ")).toLowerCase()
             });
           });
@@ -64,6 +68,22 @@
 
   function isFlag(t) { return t.charAt(0) === "-"; }
 
+  /* Only some Git commands take a second-level subcommand. Everywhere else the
+     third word is a branch or a path, and two cards are allowed to differ on it.
+     Reading "feature" in git merge feature as a subcommand would make the
+     checker complain about every ordinary command. */
+  var TAKES_SUBCOMMAND = {
+    stash: 1, remote: 1, submodule: 1, worktree: 1, bisect: 1, notes: 1,
+    lfs: 1, "sparse-checkout": 1, maintenance: 1, reflog: 1, bundle: 1
+  };
+
+  function word(tokens) {
+    if (!TAKES_SUBCOMMAND[tokens[1]]) return null;
+    return tokens.slice(2).filter(function (t) {
+      return !isFlag(t) && /^[a-z][a-z-]*$/.test(t);
+    })[0] || null;
+  }
+
   // The subcommand must match, then flags decide. An entry that demands flags the
   // user did not type is a worse answer than one that matches the flags they did.
   function score(typed, e) {
@@ -79,6 +99,13 @@
     // Prefer the answer that is actually about this command.
     if (e.words.indexOf(typed[1]) !== -1) s += 8;
     if (e.solo) s += 12;
+    if (e.chained) s -= 20;
+    /* stash pop and stash drop are not variations of one command, they are two
+       commands that share a word. Agreeing on the second word outranks every
+       other signal, including how short the recipe is. */
+    var ts = word(typed), es = word(e.tokens);
+    if (ts && es) s += ts === es ? 25 : -30;
+    else if (ts !== es) s -= 15;      // one names a subcommand and the other does not
     return s;
   }
 
@@ -117,14 +144,8 @@
     var entryFlags = best.tokens.filter(isFlag);
     var off = typed.filter(isFlag).filter(function (t) { return entryFlags.indexOf(t) === -1; });
 
-    // A bare word in third place is a subcommand. Anything with a slash, a tilde
-    // or a digit is an argument, and arguments are expected to differ.
-    function subcommand(tokens) {
-      var w = tokens.slice(2).filter(function (t) { return !isFlag(t) && /^[a-z][a-z-]*$/.test(t); })[0];
-      return w || null;
-    }
-    var mine = subcommand(typed), theirs = subcommand(best.tokens);
-    if (mine && theirs && mine !== theirs) off.push(mine);
+    var mine = word(typed), theirs = word(best.tokens);
+    if (mine && mine !== theirs) off.push(mine);
 
     if (off.length) {
       card.appendChild(GG.el("p", "cv-approx",

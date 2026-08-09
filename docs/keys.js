@@ -115,6 +115,7 @@
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
     if (e.key === "Escape") {
+      if (shareBox && shareBox.classList.contains("show")) { toggleShare(false); return; }
       if (sheet && sheet.classList.contains("show")) { toggleSheet(false); return; }
       var box = searchBox();
       if (box && document.activeElement === box && box.value) {
@@ -159,11 +160,112 @@
     }
   });
 
-  /* Nobody presses a key they were never told about. One quiet line in the
-     footer, on every page, opening the same sheet the ? key does. */
+  /* ------------------------------------------------------------ sharing it
+
+     Every answer already has its own link; almost nobody knows that, and there
+     was nothing on the site itself that said so. The panel is the same shape as
+     the shortcut sheet, because two different modals for two small jobs is one
+     modal too many. */
+
+  var shareBox = null;
+
+  function shareUrl() {
+    // The page you are on, without a stale query or a fragment from a search.
+    return location.origin + location.pathname;
+  }
+
+  function shareLinks(url) {
+    var text = "Every Git command with a danger level and its undo.";
+    var u = encodeURIComponent(url), t = encodeURIComponent(text);
+    return [
+      ["LinkedIn", "https://www.linkedin.com/sharing/share-offsite/?url=" + u],
+      ["X", "https://twitter.com/intent/tweet?text=" + t + "&url=" + u],
+      ["WhatsApp", "https://wa.me/?text=" + encodeURIComponent(text + " " + url)],
+      ["Reddit", "https://www.reddit.com/submit?url=" + u + "&title=" + t],
+      ["Email", "mailto:?subject=" + encodeURIComponent("A Git guide worth keeping") +
+        "&body=" + encodeURIComponent(text + "\n" + url)]
+    ];
+  }
+
+  /* Instagram accepts no share link. There is no URL that opens it with a page
+     attached, the way the others do, because Instagram takes links only in a
+     bio, a story sticker or a message. So this opens the phone's own share sheet
+     where Instagram is listed, and falls back to copying the link with the
+     reason said out loud rather than handing over a button that goes nowhere. */
+  function shareToInstagram(button) {
+    var url = shareUrl();
+    var text = "Every Git command with a danger level and its undo.";
+    if (navigator.share) {
+      navigator.share({ title: "Git Guide", text: text, url: url }).catch(function () {});
+      return;
+    }
+    var done = function (label) {
+      button.textContent = label;
+      setTimeout(function () { button.textContent = "Instagram"; }, 2600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(
+        function () { done("Copied, paste it in a story or bio"); },
+        function () { done("Copy the link above"); }
+      );
+      return;
+    }
+    done("Copy the link above");
+  }
+
+  function toggleShare(force) {
+    if (!shareBox) {
+      shareBox = document.createElement("div");
+      shareBox.className = "keys";
+      shareBox.setAttribute("role", "dialog");
+      shareBox.setAttribute("aria-modal", "true");
+      shareBox.setAttribute("aria-label", "Share this");
+      var url = shareUrl();
+      shareBox.innerHTML =
+        '<div class="keys-card">' +
+          '<div class="keys-head"><h2>Share this</h2>' +
+          '<button type="button" class="keys-x" aria-label="Close">Close</button></div>' +
+          '<p class="keys-note share-lead">Send somebody the exact fix, not the front page. ' +
+          "Every answer and every decoded error has its own link: click the " +
+          "<b>#</b> beside any heading to copy it.</p>" +
+          '<div class="cmd share-cmd"><code id="share-url"></code>' +
+          '<button class="copy" type="button" data-cmd="' + url + '">Copy</button></div>' +
+          '<div class="share-row">' +
+            shareLinks(url).map(function (l) {
+              return '<a class="chip" target="_blank" rel="noopener noreferrer" href="' +
+                l[1] + '">' + l[0] + "</a>";
+            }).join("") +
+            '<button type="button" class="chip" id="share-ig">Instagram</button>' +
+          "</div>" +
+        "</div>";
+      shareBox.querySelector("#share-url").textContent = url;
+      shareBox.querySelector("#share-ig").addEventListener("click", function () {
+        shareToInstagram(this);
+      });
+      document.body.appendChild(shareBox);
+      shareBox.addEventListener("click", function (e) {
+        if (e.target === shareBox || e.target.classList.contains("keys-x")) toggleShare(false);
+      });
+    }
+    var show = force === undefined ? !shareBox.classList.contains("show") : force;
+    shareBox.classList.toggle("show", show);
+    if (show) shareBox.querySelector(".keys-x").focus();
+  }
+
+  /* Nobody presses a key they were never told about, and nobody shares a page
+     that never offers to be shared. One quiet line in the footer, every page. */
   function addHint() {
     var links = document.querySelector(".footer-links");
     if (!links || document.querySelector(".keyhint")) return;
+
+    links.appendChild(document.createTextNode(" · "));
+    var sh = document.createElement("button");
+    sh.type = "button";
+    sh.className = "keyhint sharehint";
+    sh.textContent = "Share";
+    sh.addEventListener("click", function () { toggleShare(true); });
+    links.appendChild(sh);
+
     links.appendChild(document.createTextNode(" · "));
     var b = document.createElement("button");
     b.type = "button";

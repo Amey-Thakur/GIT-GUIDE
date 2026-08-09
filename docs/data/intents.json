@@ -607,7 +607,11 @@
           "cmds": [
             {
               "c": "git restore <file>",
-              "n": "The file returns to its last committed state. Legacy form: git checkout -- <file>"
+              "n": "The file returns to its last committed state."
+            },
+            {
+              "c": "git checkout -- <file>",
+              "n": "The same thing, in the older spelling. Still everywhere in tutorials and in muscle memory."
             }
           ],
           "undo": "None. The edits were never committed, so Git has no copy."

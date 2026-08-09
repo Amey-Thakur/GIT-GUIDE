@@ -1593,6 +1593,12 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
             min-width: 1.5rem; text-align: center; }
 .keys-note { margin: 0; font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
 
+/* Sharing borrows the shortcut sheet's shell: one modal shape for the site. */
+.share-lead { margin: 1.25rem 0 1rem; }
+.share-lead b { color: var(--accent); font-family: var(--mono); }
+.share-cmd { margin-bottom: 1.1rem; }
+.share-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
 /* Nobody uses a shortcut they were never told about, so the footer carries one
    quiet line on every page. Hidden on narrow screens, where there is no
    keyboard to press and the line would only take up room. */
