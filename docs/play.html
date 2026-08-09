@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=68">
+  <link rel="stylesheet" href="style.css?v=69">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -117,6 +117,8 @@
         </div>
         <p id="pstatus" class="pstatus"></p>
 
+        <div id="pconflict" class="pconflict" aria-live="polite" hidden></div>
+
         <p class="pgraph-help">
           <span><b>Click a commit</b> to see what it is and what points at it</span>
           <span><b>Click a branch label</b> to switch onto that branch</span>
@@ -195,7 +197,7 @@
           </div>
           <div>
             <h2>Where it stops</h2>
-            <p>File contents are not modelled, so a conflict here is about which side wins rather than editing the text between the markers. Everything else is real: history, branches, remotes, pull requests, and conflicts. For the messages Git prints see <a href="errors.html#merge-conflict-marker">the conflict errors</a>, and for the underlying model see <a href="learn.html">the diagrams</a>.</p>
+            <p>There are no remotes beyond the one modelled here, and no file contents beyond a single line each, which is enough to make a conflict real without turning this into a text editor. Everything else is: history, branches, remotes, pull requests, and conflicts. For the messages Git prints see <a href="errors.html#merge-conflict-marker">the conflict errors</a>, and for the underlying model see <a href="learn.html">the diagrams</a>.</p>
           </div>
         </div>
 
@@ -219,7 +221,7 @@
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
-  <script src="play.js?v=17"></script>
+  <script src="play.js?v=19"></script>
   <script src="keys.js?v=1"></script>
   <script src="totop.js?v=2"></script>
   <script src="offline.js?v=2"></script>

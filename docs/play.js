@@ -42,6 +42,8 @@
       head: { type: "branch", name: "main" },
       tags: {},
       files: {},
+      content: {},        // file -> the line currently in the working tree
+      edits: 0,           // so successive edits are visibly different
       staged: {},
       stash: [],
       reflog: [],
@@ -149,7 +151,9 @@
 
   function commit(msg, parents, files) {
     var id = nextId();
-    S.commits[id] = { id: id, parents: parents, msg: msg, files: files || [] };
+    var snap = {};
+    (files || []).forEach(function (f) { if (S.content[f] != null) snap[f] = S.content[f]; });
+    S.commits[id] = { id: id, parents: parents, msg: msg, files: files || [], snap: snap };
     S.order.push(id);
     if (S.head.type === "branch") S.branches[S.head.name] = id;
     else S.head.id = id;
@@ -186,6 +190,37 @@
       queue.push.apply(queue, cm.parents);
     }
     return out;
+  }
+
+  /* The most recent version of a file reachable from a commit. Walks first
+     parents, which is enough for the shapes this sandbox can build. */
+  function contentAt(tip, file) {
+    var seen = {}, queue = [tip];
+    while (queue.length) {
+      var id = queue.shift();
+      if (!id || seen[id]) continue;
+      seen[id] = true;
+      var c = S.commits[id];
+      if (!c) continue;
+      if (c.snap && c.snap[file] != null) return c.snap[file];
+      queue.push.apply(queue, c.parents);
+    }
+    return null;
+  }
+
+  var NL = String.fromCharCode(10);
+  var MARK_START = "<<<<<<< HEAD";
+  var MARK_MID = "=======";
+
+  function markerText(file, ours, theirs, from) {
+    return MARK_START + "\n" + (ours == null ? "" : ours) + "\n" +
+           MARK_MID + "\n" + (theirs == null ? "" : theirs) + "\n" +
+           ">>>>>>> " + from;
+  }
+
+  function stillMarked(text) {
+    return text.indexOf(MARK_START) !== -1 || text.indexOf(MARK_MID) !== -1 ||
+           text.indexOf(">>>>>>>") !== -1;
   }
 
   function conflictFiles() {
@@ -271,7 +306,12 @@
       snapshot();
       var f = t[1] || "notes.txt";
       S.files[f] = S.files[f] ? "modified" : "untracked";
-      say("Edited <code>" + esc(f) + "</code>. Not a Git command: this stands for changing the file in your editor.", "sys");
+      S.edits += 1;
+      var whose = S.head.type === "branch" ? S.head.name : "a detached HEAD";
+      S.content[f] = 'title = "written on ' + whose + ', edit ' + S.edits + '"';
+      say("Edited <code>" + esc(f) + "</code>, which now reads:<br>" +
+        "<code>" + esc(S.content[f]) + "</code><br>" +
+        "Not a Git command: this stands for changing the file in your editor.", "sys");
       return;
     }
 
@@ -516,10 +556,23 @@
     // During a conflict, add means "I have settled this file".
     if (S.merging) {
       var want = a[0] === "." || a[0] === "-A" ? conflictFiles() : a;
-      var marked = 0;
+      var marked = 0, refused = [];
       want.forEach(function (f) {
-        if (S.merging.files[f]) { S.merging.files[f] = "resolved"; marked++; }
+        if (!S.merging.files[f]) return;
+        if (stillMarked(S.merging.body[f] || "")) { refused.push(f); return; }
+        S.merging.files[f] = "resolved";
+        S.content[f] = S.merging.body[f];
+        marked++;
       });
+      if (refused.length) {
+        say("<b>" + refused.map(esc).join("</b>, <b>") + "</b> still contains conflict markers." +
+          " Delete the <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> and " +
+          "<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> lines, and leave the version you want." +
+          "<br><b>Real Git would let you commit them.</b> That is exactly how conflict markers " +
+          "reach production, so this sandbox stops you instead.", "err");
+        draw();
+        return;
+      }
       if (!marked) { say("That file is not one of the conflicted ones.", "err"); return; }
       var left = unresolved();
       say("Marked " + marked + " file" + (marked === 1 ? "" : "s") + " as resolved. " +
@@ -644,6 +697,11 @@
       var f = a.filter(function (x) { return x[0] !== "-"; })[0];
       if (!f || !S.merging.files[f]) { say("Which conflicted file? " + conflictFiles().map(esc).join(", "), "err"); return; }
       S.merging.files[f] = "resolved";
+      var pick = side === "ours"
+        ? contentAt(headId(), f)
+        : contentAt(S.merging.target, f);
+      S.merging.body[f] = pick == null ? "" : pick;
+      S.content[f] = S.merging.body[f];
       say("Took <b>" + (side === "ours" ? "your" : "their") + "</b> version of <code>" + esc(f) + "</code>. " +
         (side === "ours"
           ? "Ours means the branch you are on."
@@ -687,8 +745,11 @@
     var clash = Object.keys(mine).filter(function (f) { return theirs[f]; });
 
     if (clash.length) {
-      S.merging = { from: name, target: target, files: {} };
-      clash.forEach(function (f) { S.merging.files[f] = "conflict"; });
+      S.merging = { from: name, target: target, files: {}, body: {} };
+      clash.forEach(function (f) {
+        S.merging.files[f] = "conflict";
+        S.merging.body[f] = markerText(f, contentAt(h, f), contentAt(target, f), name);
+      });
       say(clash.map(function (f) {
         return '<span class="r">CONFLICT (content): Merge conflict in ' + esc(f) + "</span>";
       }).join("<br>") +
@@ -917,6 +978,96 @@
     }, true);
   })();
 
+  /* --------------------------------------------------- the conflict editor
+
+     A conflict is the one moment where Git hands you a file and asks you to
+     decide. Reading the markers and deleting them is the skill; picking a side
+     from a button is not. So the marked-up file is shown, and it is editable. */
+  var editor = document.getElementById("pconflict");
+
+  function renderConflictEditor() {
+    if (!editor) return;
+    if (!S.merging) { editor.hidden = true; editor.innerHTML = ""; return; }
+
+    var files = conflictFiles();
+    var open = editor.querySelector(".pcf-body");
+    var keepFocus = open && document.activeElement === open ? open.dataset.file : null;
+    var caret = keepFocus ? open.selectionStart : null;
+
+    editor.hidden = false;
+    editor.innerHTML = "";
+
+    var head = document.createElement("p");
+    head.className = "pcf-head";
+    head.innerHTML = "<b>" + files.length + " file" + (files.length === 1 ? "" : "s") +
+      " to settle.</b> Git changed everything it safely could and stopped here, because only " +
+      "you know which version is right. Edit the text, delete the marker lines, then " +
+      "<code>git add</code> the file.";
+    editor.appendChild(head);
+
+    files.forEach(function (f) {
+      var done = S.merging.files[f] === "resolved";
+      var wrap = document.createElement("div");
+      wrap.className = "pcf" + (done ? " is-done" : "");
+
+      var name = document.createElement("div");
+      name.className = "pcf-name";
+      name.innerHTML = "<code>" + esc(f) + "</code><span>" +
+        (done ? "resolved" : "both branches changed this") + "</span>";
+      wrap.appendChild(name);
+
+      var box = document.createElement("textarea");
+      box.className = "pcf-body";
+      box.dataset.file = f;
+      box.spellcheck = false;
+      box.rows = Math.max(5, (S.merging.body[f] || "").split(NL).length + 1);
+      box.value = S.merging.body[f] || "";
+      box.setAttribute("aria-label", "Contents of " + f);
+      box.disabled = done;
+      box.addEventListener("input", function () {
+        S.merging.body[f] = box.value;
+        var warn = wrap.querySelector(".pcf-warn");
+        if (warn) warn.hidden = !stillMarked(box.value);
+      });
+      wrap.appendChild(box);
+
+      var warn = document.createElement("p");
+      warn.className = "pcf-warn";
+      warn.hidden = done || !stillMarked(S.merging.body[f] || "");
+      warn.textContent = "Conflict markers are still in this file.";
+      wrap.appendChild(warn);
+
+      if (!done) {
+        var row = document.createElement("div");
+        row.className = "pcf-acts";
+        [["Keep ours", "git checkout --ours " + f],
+         ["Take theirs", "git checkout --theirs " + f],
+         ["Mark resolved", "git add " + f]].forEach(function (pair) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pcf-btn";
+          btn.textContent = pair[0];
+          btn.addEventListener("click", function () {
+            say('<span class="p">$</span> ' + esc(pair[1]), "cmd");
+            run(pair[1]);
+          });
+          row.appendChild(btn);
+        });
+        wrap.appendChild(row);
+      }
+
+      editor.appendChild(wrap);
+    });
+
+    if (keepFocus) {
+      var again = editor.querySelector('.pcf-body[data-file="' + keepFocus + '"]');
+      if (again && !again.disabled) {
+        again.focus();
+        if (caret != null) again.setSelectionRange(caret, caret);
+      }
+    }
+  }
+
   /* --------------------------------------------------------------- layout */
 
   var SVGNS = "http://www.w3.org/2000/svg";
@@ -1125,6 +1276,7 @@
     drawnBefore = {};
     S.order.forEach(function (id) { drawnBefore[id] = true; });
 
+    renderConflictEditor();
     checkLessons();
   }
 
@@ -1205,7 +1357,7 @@
     { id: "merge-conflict", ch: 2, t: "Resolve a merge conflict",
       goal: "Make both branches change the same file, merge, and settle the conflict.",
       why: "A conflict is not a failure. Git changed everything it safely could and stopped where both sides edited the same thing, because only you know which version is right.",
-      hint: "<code>edit shared.js</code> and commit on main, then the same file on a branch, then merge. Settle it with <code>git checkout --ours shared.js</code> or <code>--theirs</code>, then <code>git add shared.js</code> and <code>git commit</code>.",
+      hint: "<code>edit shared.js</code> and commit on main, then the same file on a branch, then merge. A pane appears with the marked-up file: delete the marker lines and leave the version you want, then <code>git add shared.js</code> and <code>git commit</code>.",
       done: "Nothing was lost and nothing was guessed. The resolution you chose is recorded in the merge commit, and git merge --abort was available the whole time.",
       ok: function () { return !!S.didResolveConflict; } },
 

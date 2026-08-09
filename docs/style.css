@@ -1460,3 +1460,35 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
   .keyhint kbd { font-family: var(--mono); font-size: 0.76rem; background: var(--code-bg);
                  border: 1px solid var(--line); border-radius: 4px; padding: 0.02rem 0.3rem; }
 }
+
+/* ---- The conflict editor ------------------------------------------------
+   The one moment Git hands the decision back to you. Reading the markers and
+   deleting them is the skill, so the file is shown and it is editable. */
+.pconflict { margin: 1.5rem 0 0; border: 1px solid var(--destructive); border-radius: 12px;
+             background: color-mix(in srgb, var(--destructive) 5%, var(--card));
+             padding: 1.25rem 1.5rem; }
+.pcf-head { margin: 0 0 1.1rem; color: var(--muted); line-height: 1.65; }
+.pcf-head b { color: var(--destructive); }
+.pcf-head code { font-family: var(--mono); font-size: 0.88rem; color: var(--ink); }
+
+.pcf { border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 1rem; }
+.pcf:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.pcf-name { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 0.55rem; }
+.pcf-name code { font-family: var(--mono); font-size: 0.95rem; color: var(--ink); }
+.pcf-name span { font-size: 0.78rem; color: var(--destructive); }
+.pcf.is-done .pcf-name span { color: var(--safe); }
+
+.pcf-body { width: 100%; box-sizing: border-box; resize: vertical;
+            font-family: var(--mono); font-size: 0.88rem; line-height: 1.6;
+            color: var(--ink); background: var(--code-bg);
+            border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 0.95rem; }
+.pcf-body:focus { outline: none; border-color: var(--accent); }
+.pcf-body:disabled { color: var(--muted); opacity: 1; }
+
+.pcf-warn { margin: 0.55rem 0 0; font-size: 0.85rem; color: var(--history); }
+.pcf-acts { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.pcf-btn { font: inherit; font-size: 0.84rem; cursor: pointer; color: var(--muted);
+           background: transparent; border: 1px solid var(--line);
+           border-radius: 7px; padding: 0.35rem 0.75rem; }
+.pcf-btn:hover { color: var(--accent); border-color: var(--accent); }
+.pcf-btn:last-child:hover { color: var(--safe); border-color: var(--safe); }
