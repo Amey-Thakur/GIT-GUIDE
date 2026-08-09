@@ -159,6 +159,14 @@ def main():
         answer_thread(existing[title]["id"], answer_md)
         print(f"[repair {n}/{len(unanswered)}] {title}")
 
+    cap = None
+    for a in sys.argv[1:]:
+        if a.startswith("--max="):
+            cap = int(a.split("=", 1)[1])
+    if cap:
+        missing = missing[:cap]
+        print(f"this run will create at most {len(missing)}")
+
     for n, (title, body, answer_md) in enumerate(missing, 1):
         # Re-check immediately before creating. A concurrent run may have created
         # this thread since the listing above, and creating it twice is the one
@@ -174,7 +182,11 @@ def main():
         answer_thread(created["data"]["createDiscussion"]["discussion"]["id"], answer_md)
         print(f"[{n}/{len(missing)}] {title}")
 
-    print("Discussions are in sync.")
+    remaining = len(desired) - len(existing) - len(missing)
+    if remaining > 0:
+        print(f"batch done. {remaining} threads still to create: run again.")
+    else:
+        print("Discussions are in sync.")
 
 
 if __name__ == "__main__":
