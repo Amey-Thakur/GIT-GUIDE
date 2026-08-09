@@ -8,16 +8,20 @@
   Date: 2026-08-07
 */
 
+/* Light values are tuned to clear WCAG AA (4.5:1) against all three
+   backgrounds, including the code background, where the old accent and
+   amber fell to 4.45 and 4.19. The change is about two percent and is not
+   visible; the failure was. */
 :root {
   --paper: #faf9f7;
   --card: #ffffff;
   --ink: #1c1b19;
   --muted: #6b675f;
   --line: #e2ded6;
-  --accent: #c7401f;
+  --accent: #c33e1e;
   --code-bg: #f3f1ec;
   --safe: #2e7d43;
-  --history: #9a6a00;
+  --history: #936500;
   --destructive: #b3261e;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "Cascadia Code", Consolas, "SF Mono", Menlo, monospace;
@@ -44,10 +48,10 @@
   --ink: #1c1b19;
   --muted: #6b675f;
   --line: #e2ded6;
-  --accent: #c7401f;
+  --accent: #c33e1e;
   --code-bg: #f3f1ec;
   --safe: #2e7d43;
-  --history: #9a6a00;
+  --history: #936500;
   --destructive: #b3261e;
 }
 
