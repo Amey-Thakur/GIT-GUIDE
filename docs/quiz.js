@@ -164,7 +164,7 @@
         box.appendChild(el("p", "qz-bank",
           "Drawn from " + bank.length + " questions, so the next five will be different."));
       }
-      var again = el("button", "qz-next", bank.length > ROUND ? "Five more" : "Try again");
+      var again = el("button", "qz-next", bank.length > ROUND ? "Ask me another five" : "Try again");
       again.type = "button";
       again.addEventListener("click", function () {
         questions = deal(bank);

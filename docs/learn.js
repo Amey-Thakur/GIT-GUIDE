@@ -49,6 +49,151 @@
 
   /* A short check. Answering is the point: recall fixes a model in a way that
      rereading never does, and every option explains itself when chosen. */
+
+  /* ------------------------------------------------- what each command touches
+
+     The first diagram shows where code lives. This one turns that around: given
+     a command, which of those places does it read, and which does it change?
+     That is the question people actually hold in their heads, and the answer is
+     what makes commands stop feeling arbitrary. */
+  (function () {
+    var picker = document.querySelector(".touch-picker");
+    var arrows = document.getElementById("t-arrows");
+    if (!picker || !arrows) return;
+
+    var WT = "t-wt", IX = "t-index", LO = "t-local", RM = "t-remote";
+
+    // from, to, and whether the source is only read
+    var MOVES = [
+      { c: "git add", from: WT, to: IX,
+        says: "Copies your current file contents into the staging area. Your files are untouched; you are choosing what the next commit will contain." },
+      { c: "git commit", from: IX, to: LO,
+        says: "Turns whatever is staged into a permanent snapshot and moves your branch label onto it. Unstaged edits are left exactly where they are." },
+      { c: "git push", from: LO, to: RM,
+        says: "Sends commits you have already made to the remote and moves the remote's branch. It never looks at your working tree." },
+      { c: "git fetch", from: RM, to: LO,
+        says: "Brings down commits and updates your origin/* labels. Nothing of yours moves, which is exactly why it is the safe half of pull." },
+      { c: "git pull", from: RM, to: WT, through: LO,
+        says: "Fetch, then merge. It reaches all the way to your files, and that second half is what can surprise you." },
+      { c: "git merge", from: LO, to: WT, through: IX,
+        says: "Combines another branch into yours, writing a commit and updating your files to match." },
+      { c: "git restore <file>", from: LO, to: WT,
+        says: "Overwrites the file in your working tree with the committed version. The uncommitted edit is gone for good." },
+      { c: "git restore --staged", from: LO, to: IX,
+        says: "Takes a file back out of the staging area. Your edits stay in the working tree; only the staging choice is undone." },
+      { c: "git reset --soft", from: LO, to: LO, label: "moves the branch",
+        says: "Moves your branch label back. The staging area and your files are untouched, so the work stays exactly where it was." },
+      { c: "git reset --mixed", from: LO, to: IX,
+        says: "Moves the branch label back and clears the staging area. Your files still hold every change." },
+      { c: "git reset --hard", from: LO, to: WT, through: IX, danger: true,
+        says: "Moves the branch, clears staging, and overwrites your files. The one variant that can destroy uncommitted work." },
+      { c: "git stash", from: WT, to: LO, label: "onto the shelf",
+        says: "Puts your uncommitted changes aside in your own repository and leaves the working tree clean." },
+      { c: "git switch", from: LO, to: WT,
+        says: "Points HEAD at another branch and rewrites your files to match it. Nothing is lost; the other branch still exists." },
+      { c: "git clone", from: RM, to: LO, label: "everything",
+        says: "Copies an entire repository: all the history, plus a working tree, plus origin already configured." },
+      { c: "git revert", from: LO, to: LO, label: "adds a commit",
+        says: "Writes a new commit that undoes an old one. History only ever grows, which is what makes it safe to share." }
+    ];
+
+    var SVGNS = "http://www.w3.org/2000/svg";
+    var current = 0;
+
+    function centre(id) {
+      var r = document.getElementById(id).querySelector("rect");
+      return {
+        x: +r.getAttribute("x") + +r.getAttribute("width") / 2,
+        y: +r.getAttribute("y") + +r.getAttribute("height") / 2,
+        left: +r.getAttribute("x"),
+        right: +r.getAttribute("x") + +r.getAttribute("width")
+      };
+    }
+
+    function arrow(fromId, toId, dashed, label) {
+      var a = centre(fromId), b = centre(toId);
+      var g = document.createElementNS(SVGNS, "g");
+      g.setAttribute("class", "tarrow" + (dashed ? " reads" : ""));
+
+      if (fromId === toId) {
+        // A loop, for the commands that only move a label within one place.
+        var p = document.createElementNS(SVGNS, "path");
+        p.setAttribute("d", "M" + (a.x - 34) + ",188 q34,34 68,0");
+        p.setAttribute("fill", "none");
+        g.appendChild(p);
+      } else {
+        // The verticals drop from box centres, so the horizontal has to join
+        // those centres too. Spanning box edges left an 18px stub.
+        var line = document.createElementNS(SVGNS, "line");
+        line.setAttribute("x1", a.x); line.setAttribute("y1", 200);
+        line.setAttribute("x2", b.x); line.setAttribute("y2", 200);
+        g.appendChild(line);
+        var v1 = document.createElementNS(SVGNS, "line");
+        v1.setAttribute("x1", a.x); v1.setAttribute("y1", 170);
+        v1.setAttribute("x2", a.x); v1.setAttribute("y2", 200);
+        g.appendChild(v1);
+        var v2 = document.createElementNS(SVGNS, "line");
+        v2.setAttribute("x1", b.x); v2.setAttribute("y1", 200);
+        v2.setAttribute("x2", b.x); v2.setAttribute("y2", 170);
+        g.appendChild(v2);
+        var head = document.createElementNS(SVGNS, "polygon");
+        head.setAttribute("points", b.x + ",168 " + (b.x - 6) + ",180 " + (b.x + 6) + ",180");
+        g.appendChild(head);
+      }
+
+      if (label) {
+        var t = document.createElementNS(SVGNS, "text");
+        t.setAttribute("x", (a.x + b.x) / 2);
+        t.setAttribute("y", fromId === toId ? 238 : 220);
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("class", "tlabel");
+        t.textContent = label;
+        g.appendChild(t);
+      }
+      arrows.appendChild(g);
+    }
+
+    function show(i) {
+      current = i;
+      var m = MOVES[i];
+      while (arrows.firstChild) arrows.removeChild(arrows.firstChild);
+
+      [WT, IX, LO, RM].forEach(function (id) {
+        var z = document.getElementById(id);
+        z.classList.remove("writes", "reads");
+      });
+      document.getElementById(m.from).classList.add("reads");
+      if (m.through) document.getElementById(m.through).classList.add("writes");
+      document.getElementById(m.to).classList.add("writes");
+
+      if (m.through) {
+        arrow(m.from, m.through, true, null);
+        arrow(m.through, m.to, false, m.label || null);
+      } else {
+        arrow(m.from, m.to, false, m.label || null);
+      }
+
+      document.getElementById("touch-cmd").textContent = m.c;
+      document.getElementById("touch-says").textContent = m.says;
+      Array.prototype.forEach.call(picker.children, function (b, n) {
+        b.classList.toggle("active", n === i);
+        b.setAttribute("aria-pressed", n === i ? "true" : "false");
+      });
+    }
+
+    MOVES.forEach(function (m, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip touch-chip" + (m.danger ? " is-danger" : "");
+      b.textContent = m.c;
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function () { show(i); });
+      picker.appendChild(b);
+    });
+
+    show(0);
+  })();
+
   window.GGQuiz("learn-quiz", "learn");
 
   /* Click any zone or arrow to jump straight to its step. */

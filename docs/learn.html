@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=51">
+  <link rel="stylesheet" href="style.css?v=54">
   <!-- quizschema:start -->
 <script type="application/ld+json">
 {
@@ -1575,6 +1575,48 @@
       </div>
     </section>
 
+
+    <section class="diagram-section" aria-label="What each command touches">
+      <div class="wrap">
+        <h2>What each command touches</h2>
+        <p class="note">The four places again, but now from the command's point of view. Pick any command: solid means it writes there, dashed means it only reads.</p>
+
+        <div class="chips touch-picker" role="list" aria-label="Pick a command"></div>
+
+        <div class="diagram touch-diagram">
+          <svg viewBox="0 0 900 250" role="img" aria-label="Four boxes for the working tree, staging area, local repository and remote, with arrows showing what the selected command reads and writes">
+            <g class="tzone" id="t-wt">
+              <rect x="20" y="60" width="180" height="110" rx="10"></rect>
+              <text x="110" y="50" text-anchor="middle" class="tztitle">Working tree</text>
+              <text x="110" y="120" text-anchor="middle" class="tzsub">your files</text>
+            </g>
+            <g class="tzone" id="t-index">
+              <rect x="240" y="60" width="180" height="110" rx="10"></rect>
+              <text x="330" y="50" text-anchor="middle" class="tztitle">Staging area</text>
+              <text x="330" y="120" text-anchor="middle" class="tzsub">the next commit</text>
+            </g>
+            <g class="tzone" id="t-local">
+              <rect x="460" y="60" width="180" height="110" rx="10"></rect>
+              <text x="550" y="50" text-anchor="middle" class="tztitle">Local repository</text>
+              <text x="550" y="120" text-anchor="middle" class="tzsub">your history</text>
+            </g>
+            <g class="tzone" id="t-remote">
+              <rect x="680" y="60" width="180" height="110" rx="10"></rect>
+              <text x="770" y="50" text-anchor="middle" class="tztitle">Remote</text>
+              <text x="770" y="120" text-anchor="middle" class="tzsub">the shared copy</text>
+            </g>
+            <g id="t-arrows"></g>
+          </svg>
+        </div>
+
+        <div class="touch-read" aria-live="polite">
+          <p class="touch-cmd"><code id="touch-cmd"></code></p>
+          <p id="touch-says"></p>
+          <p class="touch-legend"><span class="tk tk-write"></span> writes here <span class="tk tk-read"></span> only reads</p>
+        </div>
+      </div>
+    </section>
+
     <section class="quiz-section" aria-label="Check yourself">
       <div class="wrap">
         <h2>Check yourself</h2>
@@ -1602,6 +1644,6 @@
   <script src="hello.js"></script>
   <script src="render.js"></script>
   <script src="stepper.js?v=3"></script>
-  <script src="quiz.js?v=3"></script>
-  <script src="learn.js?v=4"></script>  <script src="offline.js?v=2"></script></body>
+  <script src="quiz.js?v=4"></script>
+  <script src="learn.js?v=6"></script>  <script src="offline.js?v=2"></script></body>
 </html>

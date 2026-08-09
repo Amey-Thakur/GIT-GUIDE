@@ -1180,14 +1180,18 @@ kbd {
 .qz-yes { color: var(--safe); }
 .qz-no { color: var(--history); }
 
-.qz-foot { margin-top: 1.25rem; }
+/* Back on the left edge, Next on the right: the two directions sit where the
+   eye expects them, and the card stays symmetric. */
+.qz-foot { margin-top: 1.5rem; display: flex; align-items: center;
+           justify-content: space-between; gap: 1rem; }
 .qz-next { font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer;
            color: var(--accent); background: transparent; border: 1px solid var(--accent);
            border-radius: 8px; padding: 0.5rem 1.1rem; }
 .qz-next:hover:not(:disabled) { background: var(--accent); color: #fff; }
 .qz-next:disabled { color: var(--muted); border-color: var(--line); cursor: default; }
 
-.qz-done { text-align: center; padding: 1rem 0 0.5rem; }
+.qz-done { text-align: center; padding: 1.5rem 0 1rem; }
+.qz-done .qz-next { margin: 1.5rem auto 0; }
 .qz-score { margin: 0 0 0.3rem; font-size: 2rem; font-weight: 700; color: var(--accent); }
 .qz-note { margin: 0 0 1.25rem; color: var(--muted); }
 
@@ -1207,7 +1211,40 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 /* Back sits beside Next without competing with it. */
 .qz-back { font: inherit; font-size: 0.95rem; cursor: pointer; color: var(--muted);
            background: transparent; border: 1px solid var(--line); border-radius: 8px;
-           padding: 0.5rem 1.1rem; margin-right: 0.6rem; }
+           padding: 0.5rem 1.1rem; }
 .qz-back:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
 .qz-back:disabled { opacity: 0.4; cursor: default; }
-.qz-bank { margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--muted); }
+.qz-bank { margin: 0.9rem 0 0; font-size: 0.85rem; color: var(--muted); }
+
+/* ---- What each command touches ----------------------------------------- */
+.touch-picker { padding: 0 0 1.25rem; }
+.touch-chip { font-family: var(--mono); font-size: 0.84rem; }
+.touch-chip.active { border-color: var(--accent); color: var(--accent); }
+.touch-chip.is-danger.active { border-color: var(--destructive); color: var(--destructive); }
+
+.touch-diagram svg { display: block; width: 100%; height: auto; }
+.tzone rect { fill: var(--card); stroke: var(--line); stroke-width: 1.5;
+              transition: stroke 0.25s, fill 0.25s; }
+.tztitle { font-size: 15px; font-weight: 600; fill: var(--ink); }
+.tzsub { font-size: 12.5px; fill: var(--muted); }
+
+/* Written to: the command changes this place. Only read: it looks and moves on. */
+.tzone.writes rect { stroke: var(--accent); stroke-width: 2.5;
+                     fill: color-mix(in srgb, var(--accent) 9%, var(--card)); }
+.tzone.reads rect { stroke: var(--muted); stroke-dasharray: 5 3; }
+
+.tarrow line, .tarrow path { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.tarrow polygon { fill: var(--accent); }
+.tarrow.reads line, .tarrow.reads path { stroke: var(--muted); stroke-dasharray: 5 4; }
+.tarrow.reads polygon { fill: var(--muted); }
+.tlabel { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+
+.touch-read { margin-top: 1.25rem; }
+.touch-cmd { margin: 0 0 0.4rem; }
+.touch-cmd code { font-family: var(--mono); font-size: 1rem; color: var(--accent); }
+#touch-says { margin: 0; color: var(--muted); line-height: 1.7; max-width: 60rem; }
+.touch-legend { margin: 1rem 0 0; font-size: 0.85rem; color: var(--muted);
+                display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.tk { display: inline-block; width: 26px; height: 0; border-top: 2.5px solid var(--accent);
+      margin-right: 0.15rem; }
+.tk-read { border-top-style: dashed; border-top-color: var(--muted); margin-left: 1rem; }
