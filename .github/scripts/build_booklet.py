@@ -64,7 +64,7 @@ FOOT = f'''<div class="pfoot">
 def page(body, title=""):
     head = (f'<div class="phead"><a class="pbrand" href="https://amey-thakur.github.io/GIT-GUIDE/">{logo(27)}<span>Git Guide<i>.</i></span></a><em>{escape(title)}</em></div>'
             if title else "")
-    return f'<section class="page">{head}{body}{FOOT}</section>'
+    return f'<section class="page">{head}<div class="pbody">{body}</div>{FOOT}</section>'
 
 
 def col(section):
@@ -339,6 +339,19 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .legend {{ display: flex; align-items: center; gap: 6mm; margin: 0 0 9mm; }}
 .legend span {{ border: 0.55mm solid; border-radius: 2mm; padding: 2.2mm 5mm; font-weight: 700; font-size: 11pt; }}
 
+
+.page {{ display: flex; flex-direction: column; }}
+.pbody {{ flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }}
+.pbody > .undos, .pbody > .steps, .pbody > .safeties, .pbody > .defs, .pbody > .list {{
+  flex: 1 1 auto; align-content: space-between; }}
+.pbody > .cols {{ flex: 1 1 auto; }}
+.pbody > .cols > div {{ display: flex; flex-direction: column; }}
+.pbody > .cols .errs, .pbody > .cols .list {{ flex: 1 1 auto; display: flex; flex-direction: column;
+  justify-content: space-between; }}
+.pbody > .rules {{ margin-top: auto; padding-top: 7mm; }}
+.pbody > .diag {{ flex: 0 0 auto; }}
+.pbody > .prose {{ flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }}
+.pbody > .prose p:last-of-type {{ margin-bottom: 0; }}
 .undos {{ display: grid; gap: 2.2mm; margin-top: 3mm; }}
 .undo {{ display: grid; grid-template-columns: 52mm 1fr 26mm; align-items: center; gap: 4mm;
         border-bottom: 0.3mm solid {LINE}; padding-bottom: 2.2mm; }}
