@@ -958,3 +958,90 @@ kbd {
 .pgraph { cursor: grab; overflow: auto; overscroll-behavior: contain; }
 .pgraph.dragging { cursor: grabbing; user-select: none; }
 .pgraph.dragging .pnode, .pgraph.dragging .pclick { cursor: grabbing; }
+
+/* ---- The course: lesson panel, legend, and map -------------------------- */
+
+.lesson { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px;
+          background: var(--card); padding: 1.5rem 1.75rem; margin-bottom: 2rem; }
+.lesson-top { display: flex; align-items: flex-start; justify-content: space-between;
+              gap: 1.5rem; flex-wrap: wrap; }
+.lsn-chapter { margin: 0 0 0.3rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
+               text-transform: uppercase; color: var(--accent); }
+.lesson-top h2 { margin: 0; font-size: 1.4rem; }
+.lsn-state { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+             color: var(--muted); border: 1px solid var(--line); border-radius: 999px;
+             padding: 0.25rem 0.7rem; white-space: nowrap; }
+.lsn-state.is-done { color: var(--safe); border-color: var(--safe); }
+
+.lsn-goal { display: flex; align-items: baseline; gap: 0.7rem; margin: 1.1rem 0 0.5rem;
+            font-size: 1.02rem; }
+.lsn-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+           color: var(--accent); border: 1px solid var(--accent); border-radius: 4px;
+           padding: 0.1rem 0.4rem; flex: none; }
+.lsn-why { margin: 0; color: var(--muted); line-height: 1.65; }
+.lsn-hint-text { margin: 1rem 0 0; padding: 0.85rem 1rem; border-radius: 8px;
+                 background: var(--code-bg); color: var(--ink); line-height: 1.7; }
+.lsn-hint-text code { font-family: var(--mono); font-size: 0.88rem; color: var(--accent); }
+
+.lesson-foot { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+               flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.25rem;
+               border-top: 1px solid var(--line); }
+.lesson-progress { display: flex; align-items: center; gap: 0.9rem; flex: 1 1 14rem; }
+.lsn-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--code-bg); overflow: hidden;
+           min-width: 8rem; }
+.lsn-bar span { display: block; height: 100%; width: 0; border-radius: 999px;
+                background: var(--accent); transition: width 0.45s ease; }
+.lsn-count { font-size: 0.86rem; color: var(--muted); white-space: nowrap; }
+.lesson-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.lsn-primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.lsn-primary:hover:not(:disabled) { background: var(--accent); color: #fff; }
+
+.pgraph-help { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin: 0.9rem 0 0;
+               font-size: 0.88rem; color: var(--muted); }
+.pgraph-help b { color: var(--ink); font-weight: 600; }
+
+.plegend { list-style: none; margin: 1.25rem 0 2rem; padding: 1.1rem 1.25rem; display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.8rem 1.75rem;
+           border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.plegend li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.9rem; color: var(--muted); }
+.plegend svg { color: var(--ink); flex: none; }
+.plegend .lg-merge svg { color: var(--accent); }
+.plegend .lg-ghost svg { color: color-mix(in srgb, var(--muted) 55%, transparent); }
+.lg-chip { font-family: var(--mono); font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 5px;
+           flex: none; min-width: 3.4rem; text-align: center; }
+.lg-chip-head { background: var(--accent); color: #fff; font-weight: 700; }
+.lg-chip-branch { border: 1.5px solid var(--muted); color: var(--muted); }
+.lg-chip-tag { border: 1.5px dashed var(--history); color: var(--history); }
+
+.coursewrap { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.course-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem;
+               flex-wrap: wrap; }
+.course-head h2 { margin: 0; font-size: 1.3rem; }
+.course-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.course-note { margin: 0.5rem 0 1.5rem; color: var(--muted); font-size: 0.92rem; }
+
+.lsn-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.75rem; }
+/* Five chapters wrapped 4 + 1 and looked lopsided; give them their own row. */
+@media (min-width: 64rem) { .lsn-map { grid-template-columns: repeat(5, 1fr); gap: 1.1rem; } }
+.lsn-chap-h { margin: 0 0 0.15rem; font-size: 0.95rem; font-weight: 700; }
+.lsn-chap-h.is-done { color: var(--safe); }
+.lsn-chap-h.is-done::after { content: " \2713"; }
+.lsn-chap-b { margin: 0 0 0.7rem; font-size: 0.82rem; color: var(--muted); }
+.lsn-step { display: block; width: 100%; text-align: left; margin-bottom: 0.4rem; cursor: pointer;
+            font: inherit; font-size: 0.88rem; color: var(--muted); background: transparent;
+            border: 1px solid var(--line); border-radius: 7px; padding: 0.45rem 0.6rem 0.45rem 1.8rem;
+            position: relative; transition: border-color 0.2s, color 0.2s; }
+.lsn-step::before { content: ""; position: absolute; left: 0.6rem; top: 50%; width: 9px; height: 9px;
+                    margin-top: -4.5px; border-radius: 50%; border: 1.5px solid var(--line); }
+.lsn-step:hover { border-color: var(--accent); color: var(--ink); }
+.lsn-step.is-done { color: var(--ink); }
+.lsn-step.is-done::before { background: var(--safe); border-color: var(--safe); }
+.lsn-step.is-now { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.lsn-step.is-now::before { border-color: var(--accent); box-shadow: 0 0 0 3px
+                           color-mix(in srgb, var(--accent) 22%, transparent); }
+
+@media (max-width: 40rem) {
+  .lesson { padding: 1.25rem; }
+  .lesson-btns { width: 100%; }
+  .lesson-btns .wizard-opt { flex: 1; }
+}

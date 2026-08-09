@@ -18,9 +18,6 @@
   var outEl = document.getElementById("pout");
   var inEl = document.getElementById("pin");
   var statusEl = document.getElementById("pstatus");
-  var taskEl = document.getElementById("ptask");
-  var hintEl = document.getElementById("phint");
-  var dotsEl = document.getElementById("pdots");
 
   /* ---------------------------------------------------------------- state */
 
@@ -48,7 +45,11 @@
       staged: {},
       stash: [],
       reflog: [],
-      rescued: false
+      rescued: false,
+      used: {},          // which commands have been run at least once
+      switches: 0,       // branch switches, for the "move between branches" lesson
+      didFF: false, didSoftReset: false, didAmend: false, didRebase: false,
+      didCherryPick: false, didStashPop: false, wasDetached: false
     };
     S.commits[root] = { id: root, parents: [], msg: "Initial commit" };
     S.order.push(root);
@@ -152,11 +153,34 @@
 
     var cmd = t[1], a = t.slice(2);
     var fn = CMDS[cmd];
+    if (fn) S.used[cmd] = true;
     if (!fn) { say("<code>git " + esc(cmd || "") + "</code> is not something this sandbox models. Try the examples below.", "err"); return; }
     fn(a);
+    // Read-only commands like status and log never redraw, so the lesson check
+    // has to run here too or those lessons only register a command later.
+    checkLessons();
   }
 
   var CMDS = {};
+
+  CMDS.restore = function (a) {
+    var f = a.filter(function (x) { return x[0] !== "-"; })[0];
+    var staged = a.indexOf("--staged") !== -1;
+    if (staged) {
+      var n = Object.keys(S.staged).length;
+      if (!n) { say("Nothing is staged.", "err"); return; }
+      Object.keys(S.staged).forEach(function (x) { S.files[x] = "modified"; });
+      S.staged = {};
+      say("Unstaged " + n + " file" + (n === 1 ? "" : "s") + ". The changes are still in your working tree.", "out");
+      draw(); return;
+    }
+    if (!f) { say("Which file? <code>git restore &lt;file&gt;</code>.", "err"); return; }
+    if (S.files[f] == null) { say("No uncommitted change to <code>" + esc(f) + "</code>.", "err"); return; }
+    delete S.files[f];
+    say("Discarded your changes to <code>" + esc(f) + "</code>. " +
+      "<b>This one is not recoverable</b>: the work was never committed, so Git never had a copy.", "out");
+    draw();
+  };
 
   CMDS.status = function () {
     var lines = [];
@@ -199,6 +223,7 @@
       S.order.push(nid);
       if (S.head.type === "branch") S.branches[S.head.name] = nid; else S.head.id = nid;
       S.staged = {};
+      S.didAmend = true;
       note("HEAD", "commit (amend): " + S.commits[nid].msg);
       say("Amended. <b>This is a new commit</b> (" + nid + "), not an edited one. " +
         old + " is now unreferenced, which is why amending after a push needs a force.", "out");
@@ -257,6 +282,7 @@
     }
     if (S.branches[name] != null) {
       S.head = { type: "branch", name: name };
+      S.switches = (S.switches || 0) + 1;
       note("HEAD", "checkout: moving to " + name);
       say("Switched to <b>" + esc(name) + "</b>.", "out");
       draw(); return;
@@ -264,6 +290,7 @@
     var id = resolve(name);
     if (id) {
       S.head = { type: "detached", id: id };
+      S.wasDetached = true;
       note("HEAD", "checkout: moving to " + id);
       say("You are in <b>detached HEAD</b> at " + id + ". Commits here belong to no branch. " +
         "<code>git switch -c &lt;name&gt;</code> keeps them; <code>git switch main</code> walks away.", "out");
@@ -283,6 +310,7 @@
     if (isAncestor(target, h)) { say("Already up to date. Everything in " + esc(name) + " is already here.", "out"); return; }
     if (isAncestor(h, target)) {
       if (S.head.type === "branch") S.branches[S.head.name] = target; else S.head.id = target;
+      S.didFF = true;
       note("HEAD", "merge " + name + ": fast-forward");
       say("<b>Fast-forward.</b> Your branch had nothing of its own, so Git slid the pointer along. No merge commit exists.", "out");
       draw(); return;
@@ -314,6 +342,7 @@
       base = id;
     });
     S.branches[S.head.name] = base;
+    S.didRebase = true;
     note("HEAD", "rebase onto " + name);
     say("Replayed " + mine.length + " commit" + (mine.length === 1 ? "" : "s") + " onto " + esc(name) +
       ". The new ones are <b>" + made.join(", ") + "</b>: different hashes, same changes. " +
@@ -340,6 +369,7 @@
 
     if (S.head.type === "branch") S.branches[S.head.name] = id; else S.head.id = id;
     note("HEAD", "reset: moving to " + ref);
+    if (mode === "--soft" && id !== was) S.didSoftReset = true;
     if (mode === "--hard") { S.staged = {}; S.files = {}; }
     say("Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
       (mode === "--hard" ? " Working tree wiped too." : mode === "--soft" ? " Your changes are still staged." : " Your changes are kept, unstaged.") +
@@ -361,6 +391,7 @@
     var id = resolve(a[0]);
     if (!id) { say("Cannot resolve " + esc(a[0] || "") + ".", "err"); return; }
     var nid = commit(S.commits[id].msg, [headId()]);
+    S.didCherryPick = true;
     note("HEAD", "cherry-pick " + id);
     say("Copied " + id + " here as <b>" + nid + "</b>. Same change, new commit, and the original stays where it is.", "out");
     draw();
@@ -395,6 +426,7 @@
       if (!S.stash.length) { say("No stash entries found.", "err"); return; }
       var e = a[0] === "pop" ? S.stash.shift() : S.stash[0];
       Object.keys(e).forEach(function (f) { S.files[f] = e[f]; });
+      if (a[0] === "pop") S.didStashPop = true;
       say("Restored your changes to the working tree.", "out"); return;
     }
     if (!dirty()) { say("No local changes to save.", "err"); return; }
@@ -514,14 +546,14 @@
 
     // GY clears a commit's caption before the next lane's branch label starts;
     // PADY leaves room for two pointers stacked above the top lane.
-    var GX = 140, GY = 118, PADX = 74, PADY = 84;
+    var GX = 150, GY = 132, PADX = 80, PADY = 100;
     var maxG = 0, maxL = 0;
     S.order.forEach(function (id) {
       if (gen[id] > maxG) maxG = gen[id];
       if (lane[id] > maxL) maxL = lane[id];
     });
     // The 48 below is the caption's height plus its descender.
-    var W = Math.max(PADX * 2 + maxG * GX, 190), H = PADY + maxL * GY + 56;
+    var W = Math.max(PADX * 2 + maxG * GX, 200), H = PADY + maxL * GY + 66;
 
     var SCALE = 1.45;   // legible without magnifying a three-commit graph absurdly
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
@@ -542,11 +574,11 @@
         var x1 = X(p), y1 = Y(p), x2 = X(id), y2 = Y(id);
         var cls = "pedge" + (live[id] ? "" : " ghost") + (i > 0 ? " second" : "");
         if (y1 === y2) {
-          svg.appendChild(el("line", { x1: x1 + 15, y1: y1, x2: x2 - 15, y2: y2, class: cls }));
+          svg.appendChild(el("line", { x1: x1 + 20, y1: y1, x2: x2 - 20, y2: y2, class: cls }));
         } else {
           var mx = (x1 + x2) / 2;
           svg.appendChild(el("path", {
-            d: "M" + (x1 + 13) + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + (x2 - 13) + "," + y2,
+            d: "M" + (x1 + 18) + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + (x2 - 18) + "," + y2,
             class: cls, fill: "none"
           }));
         }
@@ -557,11 +589,11 @@
     S.order.forEach(function (id) {
       var c = S.commits[id];
       var gnode = el("g", { class: "pnode" + (live[id] ? "" : " ghost") + (c.parents.length > 1 ? " merge" : "") });
-      gnode.appendChild(el("circle", { cx: X(id), cy: Y(id), r: 15 }));
-      var t = el("text", { x: X(id), y: Y(id) + 4, "text-anchor": "middle", class: "phash" });
+      gnode.appendChild(el("circle", { cx: X(id), cy: Y(id), r: 19 }));
+      var t = el("text", { x: X(id), y: Y(id) + 5, "text-anchor": "middle", class: "phash" });
       t.textContent = id.slice(0, 4);
       gnode.appendChild(t);
-      var m = el("text", { x: X(id), y: Y(id) + 34, "text-anchor": "middle", class: "pmsg" });
+      var m = el("text", { x: X(id), y: Y(id) + 42, "text-anchor": "middle", class: "pmsg" });
       m.textContent = c.msg.length > 16 ? c.msg.slice(0, 15) + "…" : c.msg;
       gnode.appendChild(m);
       var title = el("title");
@@ -569,7 +601,7 @@
       gnode.appendChild(title);
 
       // A generous invisible target, so the commit is easy to hit by mouse.
-      var hit = el("circle", { cx: X(id), cy: Y(id), r: 30, fill: "transparent", class: "phit" });
+      var hit = el("circle", { cx: X(id), cy: Y(id), r: 36, fill: "transparent", class: "phit" });
       gnode.insertBefore(hit, gnode.firstChild);
       gnode.setAttribute("tabindex", "0");
       gnode.setAttribute("role", "button");
@@ -586,10 +618,10 @@
     function label(id, text, cls, onPick) {
       var k = id;
       stack[k] = (stack[k] || 0) + 1;
-      var y = Y(id) - 26 - (stack[k] - 1) * 22;
-      var w = Math.max(34, text.length * 7.6 + 12);
+      var y = Y(id) - 38 - (stack[k] - 1) * 30;
+      var w = Math.max(42, text.length * 8.4 + 18);
       var gl = el("g", { class: cls });
-      gl.appendChild(el("rect", { x: X(id) - w / 2, y: y - 13, width: w, height: 20, rx: 5 }));
+      gl.appendChild(el("rect", { x: X(id) - w / 2, y: y - 16, width: w, height: 26, rx: 6 }));
       var tx = el("text", { x: X(id), y: y + 2, "text-anchor": "middle" });
       tx.textContent = text;
       gl.appendChild(tx);
@@ -612,6 +644,7 @@
       var on = S.head.type === "branch" && S.head.name === n;
       label(S.branches[n], n, "pbranch" + (on ? " on" : ""), on ? null : function () {
         S.head = { type: "branch", name: n };
+        S.switches = (S.switches || 0) + 1;
         note("HEAD", "checkout: moving to " + n);
         say("Switched to <b>" + esc(n) + "</b>, the same as <code>git switch " + esc(n) + "</code>.", "out");
         draw();
@@ -626,88 +659,284 @@
       nb + (nb === 1 ? " branch" : " branches") +
       (dirty() ? ' · <span class="r">uncommitted changes</span>' : "");
 
-    checkTask();
+    checkLessons();
   }
 
-  /* ----------------------------------------------------------- challenges */
+  /* ------------------------------------------------------------- the course */
 
-  var TASKS = [
-    {
-      t: "Make a commit",
-      h: "Nothing is staged yet. <code>edit app.js</code>, then <code>git add .</code>, then <code>git commit -m \"Add app\"</code>.",
-      d: "Watch the branch pointer move with you. That is all a commit does to the graph.",
-      ok: function () { return Object.keys(S.commits).length >= 2; }
-    },
-    {
-      t: "Start a branch and commit on it",
-      h: "<code>git switch -c feature</code>, then edit, add, and commit again.",
-      d: "The branch is a pointer, not a copy. Nothing was duplicated.",
+  /* Sixteen lessons in five chapters, ordered so nothing depends on something
+     you have not met yet. Each states its goal in plain language, says why it is
+     worth knowing, and checks the repository rather than the typing, so any
+     route to the right end state counts. */
+  var CHAPTERS = [
+    { n: 1, name: "First steps",     blurb: "What a commit actually is" },
+    { n: 2, name: "Branching",       blurb: "Working on more than one thing" },
+    { n: 3, name: "Undoing safely",  blurb: "Three undos, and when each is right" },
+    { n: 4, name: "Rewriting",       blurb: "Changing history, and the rule that governs it" },
+    { n: 5, name: "Everyday extras", blurb: "The rest of what you will reach for" }
+  ];
+
+  var LESSONS = [
+    { ch: 1, t: "Make your first commit",
+      goal: "Get one change of your own into the history.",
+      why: "A commit is a snapshot plus a message. Nothing enters history until you make one.",
+      hint: "Three moves: <code>edit app.js</code>, then <code>git add .</code>, then <code>git commit -m \"Add app\"</code>.",
+      done: "That is the whole loop: change, stage, commit. Everything else is built on it.",
+      ok: function () { return Object.keys(S.commits).length >= 2; } },
+
+    { ch: 1, t: "Look before you leap",
+      goal: "Run the two commands that tell you where you stand.",
+      why: "status answers what is changed right now; log answers what happened before. Between them you are never lost.",
+      hint: "<code>git status</code> and <code>git log</code>.",
+      done: "Those two are your compass. When Git confuses you, reach for them first.",
+      ok: function () { return S.used.status && S.used.log; } },
+
+    { ch: 1, t: "Throw away an uncommitted change",
+      goal: "Edit a file, then discard that edit without committing it.",
+      why: "Work that was never committed is the one thing Git cannot get back for you. Learn where that line sits.",
+      hint: "<code>edit notes.txt</code>, then <code>git restore notes.txt</code>.",
+      done: "Note the asymmetry: committed work is nearly always recoverable, uncommitted work is not.",
+      ok: function () { return !!S.used.restore; } },
+
+    { ch: 2, t: "Start a branch and commit on it",
+      goal: "Create a branch, move onto it, and add a commit there.",
+      why: "A branch is a movable label pointing at one commit. Creating one copies nothing and costs nothing.",
+      hint: "<code>git switch -c feature</code>, then edit, add, and commit.",
+      done: "Nothing was duplicated. You added a second label and moved it forward.",
       ok: function () {
-        return Object.keys(S.branches).length >= 2 && Object.keys(S.branches).some(function (b) {
-          return b !== "main" && S.branches[b] !== S.branches.main && !isAncestor(S.branches[b], S.branches.main);
+        return Object.keys(S.branches).some(function (b) {
+          return b !== "main" && S.branches[b] !== S.branches.main &&
+                 !isAncestor(S.branches[b], S.branches.main);
         });
-      }
-    },
-    {
-      t: "Merge it back without a fast-forward",
-      h: "Switch to main, commit once there so the branches diverge, then <code>git merge feature</code>.",
-      d: "A real merge commit has two parents. Both histories survive intact.",
+      } },
+
+    { ch: 2, t: "Move between branches",
+      goal: "Switch to another branch and back again.",
+      why: "Switching points HEAD at a different label. Your other work is not lost, it is simply not checked out.",
+      hint: "<code>git switch main</code> and <code>git switch feature</code>. Clicking a branch label in the graph does the same.",
+      done: "HEAD is just which label you are standing on.",
+      ok: function () { return (S.switches || 0) >= 2; } },
+
+    { ch: 2, t: "Merge with a fast-forward",
+      goal: "Merge a branch into main while main has no commits of its own.",
+      why: "When nothing has diverged, Git slides the label forward and creates no merge commit. People are often surprised by that.",
+      hint: "From an unchanged main: <code>git merge feature</code>.",
+      done: "A fast-forward is less a merge than a catch-up.",
+      ok: function () { return !!S.didFF; } },
+
+    { ch: 2, t: "Make a real merge commit",
+      goal: "Let main and a branch each gain a commit, then merge them.",
+      why: "When both sides have moved, Git records a commit with two parents. That is what preserves the true shape of the work.",
+      hint: "Commit on main, commit on the branch, then <code>git merge feature</code> from main.",
+      done: "Two parents. Both histories survive exactly as they happened.",
       ok: function () {
         return Object.keys(S.commits).some(function (id) {
           return S.commits[id].parents.length > 1 && isAncestor(id, S.branches.main);
         });
-      }
-    },
-    {
-      t: "Undo a commit the safe way",
-      h: "<code>git revert HEAD</code>. It adds a commit rather than removing one.",
-      d: "This is the undo that is safe after pushing, because it rewrites nothing.",
+      } },
+
+    { ch: 3, t: "Undo a commit the safe way",
+      goal: "Cancel a commit without removing it from history.",
+      why: "revert adds a commit that reverses an old one. It rewrites nothing, which makes it the only safe undo once others have your work.",
+      hint: "<code>git revert HEAD</code>.",
+      done: "This is the undo for a shared branch. It is honest: the mistake and its reversal both stay visible.",
       ok: function () {
         return Object.keys(S.commits).some(function (id) { return /^Revert /.test(S.commits[id].msg); });
-      }
-    },
-    {
-      t: "Abandon a commit, then rescue it",
-      h: "<code>git reset --hard HEAD~1</code> to drop one. Then <code>git reflog</code>, and reset back onto the abandoned hash. Note that <code>HEAD@{0}</code> is where you are <em>now</em>, so the one you want is below it.",
-      d: "Nothing was ever deleted. The reflog is the safety net under almost every Git mistake.",
-      ok: function () { return !!S.rescued; }
-    },
-    {
-      t: "Rebase instead of merging",
-      h: "Make a branch that diverges from main, then <code>git rebase main</code> on it.",
-      d: "Same changes, new hashes, straight line. The faded commits are the originals you left behind.",
-      ok: function () {
-        return S.reflog.some(function (r) { return /^rebase/.test(r.what); });
-      }
-    }
+      } },
+
+    { ch: 3, t: "Uncommit, but keep the work",
+      goal: "Drop the last commit while keeping its changes.",
+      why: "Committed too early, or with the wrong message? A soft reset moves the label back and leaves everything else alone.",
+      hint: "<code>git reset --soft HEAD~1</code>.",
+      done: "The commit is gone from the branch; the work is not gone from you.",
+      ok: function () { return !!S.didSoftReset; } },
+
+    { ch: 3, t: "Abandon a commit, then rescue it",
+      goal: "Throw a commit away with a hard reset, then bring it back.",
+      why: "The most reassuring fact in Git: a hard reset does not delete commits, it stops pointing at them.",
+      hint: "<code>git reset --hard HEAD~1</code>, then <code>git reflog</code>. <code>HEAD@{0}</code> is where you are now, so the hash you want is below it.",
+      done: "Nothing was destroyed. The reflog is the safety net under almost every Git mistake.",
+      ok: function () { return !!S.rescued; } },
+
+    { ch: 4, t: "Amend the last commit",
+      goal: "Change the most recent commit instead of adding another.",
+      why: "Amend does not edit a commit. It builds a replacement and abandons the original, which is why amending after a push needs a force.",
+      hint: "<code>git commit --amend -m \"A better message\"</code>.",
+      done: "Look at the hash: it changed. That is exactly why amend counts as rewriting history.",
+      ok: function () { return !!S.didAmend; } },
+
+    { ch: 4, t: "Rebase instead of merging",
+      goal: "Replay a branch on top of main so the history is a straight line.",
+      why: "Rebase copies your commits onto a new base. Same changes, new hashes, originals left behind.",
+      hint: "From a branch that has diverged: <code>git rebase main</code>.",
+      done: "The faded circles are your originals. Because the hashes changed, never rebase work someone else already has.",
+      ok: function () { return !!S.didRebase; } },
+
+    { ch: 4, t: "Take one commit from elsewhere",
+      goal: "Copy a single commit onto your current branch.",
+      why: "Cherry-pick is the answer to work committed on the wrong branch. It copies the change and leaves the original in place.",
+      hint: "<code>git log</code> for a hash, then <code>git cherry-pick &lt;hash&gt;</code>.",
+      done: "One commit, copied. The everyday use is a hotfix, or a commit that landed in the wrong place.",
+      ok: function () { return !!S.didCherryPick; } },
+
+    { ch: 5, t: "Park work you cannot commit yet",
+      goal: "Stash a change, then bring it back.",
+      why: "A stash is a shelf. It gets you to a clean tree without inventing a commit you did not mean to make.",
+      hint: "Edit a file, then <code>git stash</code>, then <code>git stash pop</code>.",
+      done: "Label your stashes in real life. An unnamed stash is a mystery by Thursday.",
+      ok: function () { return !!S.didStashPop; } },
+
+    { ch: 5, t: "Mark a release with a tag",
+      goal: "Put a tag on a commit.",
+      why: "A tag is a label that does not move. A branch follows you forward; a tag stays where you put it.",
+      hint: "<code>git tag v1.0</code>.",
+      done: "That is the distinction worth keeping: branches move, tags do not.",
+      ok: function () { return Object.keys(S.tags).length > 0; } },
+
+    { ch: 5, t: "Detach HEAD, and get back",
+      goal: "Check out a commit directly, then return to a branch.",
+      why: "Detached HEAD is not an error. You are standing on a commit rather than a branch, and commits made there belong to nothing.",
+      hint: "<code>git switch HEAD~1</code> to detach, then <code>git switch main</code> to return.",
+      done: "Just a place to visit. Commit while detached and you need a branch to keep the work.",
+      ok: function () { return !!S.wasDetached && S.head.type === "branch"; } }
   ];
 
-  function renderTask() {
-    var k = TASKS[task];
-    taskEl.innerHTML = "<b>" + (task + 1) + ". " + k.t + "</b>";
-    hintEl.innerHTML = solved[task] ? '<span class="g">' + k.d + "</span>" : k.h;
-    dotsEl.innerHTML = TASKS.map(function (_, i) {
-      return '<span class="pdot' + (solved[i] ? " done" : "") + (i === task ? " now" : "") + '"></span>';
-    }).join("");
+  /* --------------------------------------------------------------- progress */
+
+  var STORE = "gg-play-progress";
+
+  function loadProgress() {
+    try {
+      var raw = window.localStorage.getItem(STORE);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      if (Object.prototype.toString.call(saved) === "[object Array]") {
+        saved.forEach(function (v, i) { if (v) solved[i] = true; });
+      }
+    } catch (e) { /* private mode or a corrupt value: just start fresh */ }
   }
 
-  function checkTask() {
-    var moved = false;
-    TASKS.forEach(function (k, i) {
-      if (!solved[i] && k.ok()) { solved[i] = true; if (i === task) moved = true; }
-    });
-    if (moved) {
-      say("<b class=\"g\">Done: " + TASKS[task].t + ".</b> " + TASKS[task].d, "win");
-      var nextUp = TASKS.findIndex(function (_, i) { return !solved[i]; });
-      if (nextUp === -1) {
-        renderTask();
-        say("<b class=\"g\">That is all six.</b> You have just done, by hand, what most people avoid for years: branch, merge, revert, reset, recover, and rebase.", "win");
-        return;
-      }
-      task = nextUp;
-    }
-    renderTask();
+  function saveProgress() {
+    try {
+      window.localStorage.setItem(STORE, JSON.stringify(LESSONS.map(function (_, i) {
+        return solved[i] ? 1 : 0;
+      })));
+    } catch (e) { /* progress simply will not persist */ }
   }
+
+  function doneCount() {
+    return LESSONS.reduce(function (n, _, i) { return n + (solved[i] ? 1 : 0); }, 0);
+  }
+
+  function firstUnsolved() {
+    for (var i = 0; i < LESSONS.length; i++) if (!solved[i]) return i;
+    return -1;
+  }
+
+  /* ------------------------------------------------------------- lesson view */
+
+  function set(id, text) {
+    var e = document.getElementById(id);
+    if (e) e.textContent = text;
+  }
+
+  function renderLesson() {
+    var k = LESSONS[task];
+    var ch = CHAPTERS[k.ch - 1];
+    var n = doneCount();
+
+    set("lsn-chapter", "Chapter " + ch.n + " of " + CHAPTERS.length + ": " + ch.name);
+    set("lsn-title", (task + 1) + ". " + k.t);
+    set("lsn-goal", k.goal);
+    set("lsn-why", k.why);
+    set("lsn-count", n + " of " + LESSONS.length);
+
+    var fill = document.getElementById("lsn-fill");
+    if (fill) fill.style.width = Math.round(n / LESSONS.length * 100) + "%";
+    var bar = document.getElementById("lsn-bar");
+    if (bar) {
+      bar.setAttribute("aria-valuenow", n);
+      bar.setAttribute("aria-valuemax", LESSONS.length);
+    }
+
+    var hint = document.getElementById("lsn-hint-text");
+    if (hint) { hint.innerHTML = k.hint; hint.hidden = true; }
+    var hbtn = document.getElementById("lsn-hint");
+    if (hbtn) { hbtn.textContent = "Show me how"; hbtn.setAttribute("aria-expanded", "false"); }
+
+    var badge = document.getElementById("lsn-state");
+    if (badge) {
+      badge.textContent = solved[task] ? "Done" : "Not yet";
+      badge.className = "lsn-state" + (solved[task] ? " is-done" : "");
+    }
+
+    var prev = document.getElementById("lsn-prev");
+    var next = document.getElementById("lsn-next");
+    if (prev) prev.disabled = task === 0;
+    if (next) next.disabled = task === LESSONS.length - 1;
+
+    renderMap();
+  }
+
+  function renderMap() {
+    var map = document.getElementById("lsn-map");
+    if (!map) return;
+    map.innerHTML = "";
+    CHAPTERS.forEach(function (ch) {
+      var col = document.createElement("div");
+      col.className = "lsn-chap";
+
+      var mine = LESSONS.filter(function (l) { return l.ch === ch.n; });
+      var mineDone = LESSONS.filter(function (l, i) { return l.ch === ch.n && solved[i]; }).length;
+
+      var h = document.createElement("p");
+      h.className = "lsn-chap-h" + (mineDone === mine.length ? " is-done" : "");
+      h.textContent = ch.n + ". " + ch.name;
+      col.appendChild(h);
+
+      var sub = document.createElement("p");
+      sub.className = "lsn-chap-b";
+      sub.textContent = ch.blurb;
+      col.appendChild(sub);
+
+      LESSONS.forEach(function (l, i) {
+        if (l.ch !== ch.n) return;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "lsn-step" + (solved[i] ? " is-done" : "") + (i === task ? " is-now" : "");
+        b.textContent = l.t;
+        if (i === task) b.setAttribute("aria-current", "step");
+        b.addEventListener("click", function () { task = i; renderLesson(); });
+        col.appendChild(b);
+      });
+      map.appendChild(col);
+    });
+  }
+
+  function checkLessons() {
+    var justSolved = -1;
+    LESSONS.forEach(function (l, i) {
+      var pass = false;
+      try { pass = !!l.ok(); } catch (e) { pass = false; }
+      if (!solved[i] && pass) { solved[i] = true; if (justSolved === -1) justSolved = i; }
+    });
+    if (justSolved !== -1) {
+      saveProgress();
+      var l = LESSONS[justSolved];
+      var n = doneCount();
+      say('<b class="g">Lesson ' + (justSolved + 1) + " done: " + esc(l.t) + ".</b> " + l.done, "win");
+      if (n === LESSONS.length) {
+        say('<b class="g">All ' + LESSONS.length + " complete.</b> You have branched, merged, reverted, reset, " +
+            "rescued, rebased, cherry-picked, stashed, tagged and detached HEAD, by hand. That is more of Git " +
+            "than most people touch in a year of using it.", "win");
+      } else if (justSolved === task) {
+        var nxt = firstUnsolved();
+        if (nxt !== -1) task = nxt;
+      }
+    }
+    renderLesson();
+  }
+
 
   /* ------------------------------------------------------------------- io */
 
@@ -763,13 +992,40 @@
       inEl.focus();
       return;
     }
-    if (e.target.closest("#preset")) { reset(); draw(); }
-    if (e.target.closest("#pskip")) {
-      task = (task + 1) % TASKS.length;
-      renderTask();
+    if (e.target.closest("#preset")) { reset(); draw(); return; }
+
+    if (e.target.closest("#lsn-next")) {
+      if (task < LESSONS.length - 1) { task += 1; renderLesson(); }
+      return;
+    }
+    if (e.target.closest("#lsn-prev")) {
+      if (task > 0) { task -= 1; renderLesson(); }
+      return;
+    }
+    if (e.target.closest("#lsn-hint")) {
+      var box = document.getElementById("lsn-hint-text");
+      var btn = document.getElementById("lsn-hint");
+      if (box) {
+        box.hidden = !box.hidden;
+        btn.textContent = box.hidden ? "Show me how" : "Hide the hint";
+        btn.setAttribute("aria-expanded", box.hidden ? "false" : "true");
+      }
+      return;
+    }
+    if (e.target.closest("#lsn-clear")) {
+      solved = [];
+      saveProgress();
+      task = 0;
+      reset();
+      draw();
+      say("Progress cleared. Starting again from lesson one.", "sys");
+      return;
     }
   });
 
+  loadProgress();
+  var resume = firstUnsolved();
+  task = resume === -1 ? 0 : resume;
   reset();
   draw();
 })();

@@ -14,11 +14,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
-  <title>Git sandbox: practise Git safely | Git Guide</title>
-  <meta name="description" content="Run real Git commands and watch the commit graph change. Branch, merge, rebase, reset, and recover lost commits with the reflog. Nothing installed, nothing to break.">
+  <title>Learn Git by doing it: 16 interactive lessons | Git Guide</title>
+  <meta name="description" content="Sixteen interactive Git lessons with a real Git engine in the page. Commit, branch, merge, rebase, reset, and recover lost work, watching the commit graph answer every command. Free, no sign-in, nothing to install.">
   <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/play.html">
-  <meta property="og:title" content="Git sandbox: practise Git safely">
-  <meta property="og:description" content="Type real Git commands, watch the graph move, and break nothing.">
+  <meta property="og:title" content="Learn Git by doing it: 16 interactive lessons">
+  <meta property="og:description" content="A real Git engine in the page. Sixteen lessons, from your first commit to rescuing work you thought you had lost.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/play.html">
   <meta property="og:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
@@ -27,14 +27,14 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=37">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "LearningResource",
-    "name": "Git sandbox",
+    "name": "Learn Git by doing it",
     "url": "https://amey-thakur.github.io/GIT-GUIDE/play.html",
-    "description": "An interactive Git sandbox: run real commands and watch the commit graph respond.",
+    "description": "Sixteen interactive Git lessons driven by a real Git engine in the browser.",
     "learningResourceType": "Interactive simulation",
     "educationalLevel": "Beginner to advanced",
     "isAccessibleForFree": true,
@@ -75,24 +75,39 @@
   <main id="main">
     <section class="hero">
       <div class="wrap">
-        <h1>Practise Git without the fear<span class="dot">.</span></h1>
-        <p class="lede">A real Git engine, running in this page. Type actual commands and watch the commit graph answer. Merge makes a second parent, rebase abandons the originals, reset leaves them recoverable. Break whatever you like.</p>
+        <h1>Learn Git by doing it<span class="dot">.</span></h1>
+        <p class="lede">A real Git engine runs in this page. Sixteen lessons take you from your first commit to rescuing work you thought you had destroyed, and the commit graph answers every command as you type it. Nothing to install, nothing you can break.</p>
       </div>
     </section>
 
-    <section class="play" aria-label="Git sandbox">
+    <section class="play" aria-label="Git course and sandbox">
       <div class="wrap">
 
-        <div class="ptaskbar">
-          <div class="ptaskmain">
-            <p class="ptasklabel">Challenge</p>
-            <p id="ptask"></p>
-            <p id="phint" class="phint"></p>
+        <div class="lesson">
+          <div class="lesson-top">
+            <div class="lesson-id">
+              <p class="lsn-chapter" id="lsn-chapter"></p>
+              <h2 id="lsn-title"></h2>
+            </div>
+            <span class="lsn-state" id="lsn-state"></span>
           </div>
-          <div class="ptaskside">
-            <span id="pdots" class="pdots" aria-hidden="true"></span>
-            <button id="pskip" class="wizard-opt" type="button">Skip</button>
-            <button id="preset" class="wizard-opt" type="button">Start over</button>
+
+          <p class="lsn-goal"><span class="lsn-tag">Goal</span><span id="lsn-goal"></span></p>
+          <p class="lsn-why" id="lsn-why"></p>
+          <p class="lsn-hint-text" id="lsn-hint-text" hidden></p>
+
+          <div class="lesson-foot">
+            <div class="lesson-progress">
+              <div class="lsn-bar" id="lsn-bar" role="progressbar" aria-valuemin="0" aria-valuenow="0"
+                   aria-label="Lessons complete"><span id="lsn-fill"></span></div>
+              <span class="lsn-count" id="lsn-count"></span>
+            </div>
+            <div class="lesson-btns">
+              <button id="lsn-prev" class="wizard-opt" type="button">Back</button>
+              <button id="lsn-hint" class="wizard-opt" type="button"
+                      aria-controls="lsn-hint-text" aria-expanded="false">Show me how</button>
+              <button id="lsn-next" class="wizard-opt lsn-primary" type="button">Next challenge</button>
+            </div>
           </div>
         </div>
 
@@ -100,6 +115,21 @@
           <svg id="pg" role="img" aria-label="The commit graph as you build it: commits as circles, branch pointers above them, and faded circles for commits nothing points at any more"></svg>
         </div>
         <p id="pstatus" class="pstatus"></p>
+
+        <p class="pgraph-help">
+          <span><b>Click a commit</b> to see what it is and what points at it</span>
+          <span><b>Click a branch label</b> to switch onto that branch</span>
+          <span><b>Drag the canvas</b> to move around a wide history</span>
+        </p>
+
+        <ul class="plegend" aria-label="What the graph symbols mean">
+          <li><svg viewBox="0 0 34 34" width="30" height="30" aria-hidden="true"><circle cx="17" cy="17" r="12" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>A commit</span></li>
+          <li class="lg-merge"><svg viewBox="0 0 34 34" width="30" height="30" aria-hidden="true"><circle cx="17" cy="17" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/></svg><span>A merge, with two parents</span></li>
+          <li class="lg-ghost"><svg viewBox="0 0 34 34" width="30" height="30" aria-hidden="true"><circle cx="17" cy="17" r="12" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2.5"/></svg><span>Nothing points at it: still recoverable</span></li>
+          <li class="lg-head"><span class="lg-chip lg-chip-head">HEAD</span><span>Where you are standing</span></li>
+          <li class="lg-branch"><span class="lg-chip lg-chip-branch">main</span><span>A branch: a label that moves</span></li>
+          <li class="lg-tag"><span class="lg-chip lg-chip-tag">v1.0</span><span>A tag: a label that does not</span></li>
+        </ul>
 
         <div class="pterm">
           <div id="pout" class="pout" aria-live="polite"></div>
@@ -114,6 +144,7 @@
           <button class="chip pex" type="button">edit app.js</button>
           <button class="chip pex" type="button">git add .</button>
           <button class="chip pex" type="button">git commit -m "Add app"</button>
+          <button class="chip pex" type="button">git status</button>
           <button class="chip pex" type="button">git switch -c feature</button>
           <button class="chip pex" type="button">git merge feature</button>
           <button class="chip pex" type="button">git rebase main</button>
@@ -123,13 +154,25 @@
           <button class="chip pex" type="button">git log</button>
         </div>
 
+        <div class="coursewrap">
+          <div class="course-head">
+            <h2>The course</h2>
+            <div class="course-btns">
+              <button id="preset" class="wizard-opt" type="button">Reset the sandbox</button>
+              <button id="lsn-clear" class="wizard-opt" type="button">Clear my progress</button>
+            </div>
+          </div>
+          <p class="course-note">Jump to any lesson. Your progress is remembered on this device, so you can leave and come back.</p>
+          <div class="lsn-map" id="lsn-map"></div>
+        </div>
+
         <div class="pnotes">
           <div>
             <h2>What it understands</h2>
-            <p><code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>log</code>, <code>reflog</code>, <code>status</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash.</p>
+            <p><code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>restore</code>, <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>log</code>, <code>reflog</code>, <code>status</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash. <code>edit &lt;file&gt;</code> stands in for changing a file in your editor.</p>
           </div>
           <div>
-            <h2>What the faded circles mean</h2>
+            <h2>Why the faded circles matter</h2>
             <p>A commit nothing points at any more. Reset and rebase both leave them behind. They are not gone, and that is the single most reassuring fact in Git: <code>git reflog</code> still lists them, and a reset back to that hash brings the work home.</p>
           </div>
           <div>
@@ -158,6 +201,6 @@
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
-  <script src="play.js?v=4"></script>
+  <script src="play.js?v=6"></script>
 </body>
 </html>
