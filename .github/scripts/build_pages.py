@@ -163,8 +163,10 @@ def cheatsheet_section(sec):
         out.append(f'  <p class="note">{escape(sec["note"])}</p>')
     out.append('  <div class="cs-rows">')
     for item in sec["items"]:
-        danger = " cs-danger" if item.get("danger") else ""
-        out.append(f'    <div class="cs-row{danger}">')
+        # The site's own sheet grades the same three ways the cards and the PDF
+        # do. It used to show one shade of red for two different levels.
+        level = item.get("level", "safe")
+        out.append(f'    <div class="cs-row cs-{level}">')
         out.append(f"      <code>{escape(item['c'])}</code>")
         out.append(f"      <span>{escape(item['d'])}</span>")
         out.append(

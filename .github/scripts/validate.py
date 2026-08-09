@@ -4,7 +4,7 @@ Purpose: The CI gate. Fails the build if the data breaks its contract or the pro
 Author: Amey Thakur
 GitHub: https://github.com/Amey-Thakur
 Tech: Python 3 standard library only
-Description: Validates every JSON file under docs/data (unique kebab-case ids, known danger levels, non-empty commands and undo, resolvable see-also references) and rejects em dashes in any tracked text file.
+Description: Validates every JSON file under docs/data: unique kebab-case ids, non-empty commands and undo, resolvable see-also references, and the rule that no answer may be graded below the worst command it contains. The cheat sheet's levels are recomputed and compared. Internal links and anchors are resolved, stray control characters rejected, and house style enforced.
 Date: 2026-08-07
 """
 
@@ -13,11 +13,12 @@ import re
 import sys
 from pathlib import Path
 
+import danger
+
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "docs" / "data"
 # Tab, newline and carriage return are the only control characters allowed.
 ALLOWED_CONTROL = chr(9) + chr(10) + chr(13)
-import danger
 
 DANGER = {danger.SAFE, danger.HISTORY, danger.DESTRUCTIVE}
 RANK = danger.RANK
@@ -124,6 +125,36 @@ def check_errors(path, known):
             if ref not in known:
                 err(f"{where}: seealso '{ref}' does not exist")
     print(f"{path.name}: {len(data.get('errors', []))} errors OK")
+
+
+def check_cheatsheet(path):
+    """Every command carries the level the shared rule gives it, or none at all.
+
+    The sheet used to carry a boolean, which cannot express three levels, so the
+    printable cards showed two colours under a key that promised three.
+    """
+    data = json.loads(path.read_text(encoding="utf-8"))
+    sections = data.get("sections", [])
+    if not sections:
+        err(f"{path.name}: no sections")
+        return
+    n = 0
+    for sec in sections:
+        if not sec.get("title"):
+            err(f"{path.name}: section without a title")
+        for item in sec.get("items", []):
+            n += 1
+            cmd = item.get("c", "")
+            if not cmd or not item.get("d"):
+                err(f"{path.name}: item missing c or d: {item}")
+            if "danger" in item:
+                err(f"{path.name}:{cmd}: carries the old danger flag; use level")
+            want = danger.level(cmd)
+            got = item.get("level", danger.SAFE)
+            if got != want:
+                err(f"{path.name}:{cmd}: level is '{got}' but the rule says '{want}'")
+    print(f"{path.name}: {len(sections)} sections, {n} commands OK" if not errors
+          else f"{path.name}: checked")
 
 
 def check_scenarios(path, known, known_errors):
@@ -273,6 +304,8 @@ def main():
                 check_errors(path, known or intent_ids())
             elif path.name == "quizzes.json":
                 check_quizzes(path)
+            elif path.name == "cheatsheet.json":
+                check_cheatsheet(path)
             elif path.name == "scenarios.json":
                 check_scenarios(path, known or intent_ids(), error_ids())
             else:

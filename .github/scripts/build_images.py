@@ -70,14 +70,29 @@ def avatar(x, y, size, clip_id):
 
 
 def footer(y, width, provenance):
+    """The same signature line on every image.
+
+    The mark used to sit high and the tagline low, so the right-hand side read as
+    two things that had missed each other. Both are now centred on the same line
+    as the avatar, which is how the PDF footer has always done it.
+    """
     right = width - 80
+    mid = y + 56                 # the centre of the avatar, and of everything else
+    mark = 22                    # the GitHub mark, drawn from a 24 unit path
+    gap = 12
+    # The mark leads the tagline, the way it does in the PDF footer. SVG has no
+    # layout, so the mark is placed from the measured advance of this typeface at
+    # this size; the text stays anchored to the right edge, which is the position
+    # that has to be exact.
+    text_w = len(provenance) * 9.5
+    mark_x = right - text_w - gap - mark
     return (
         f'<line x1="80" y1="{y}" x2="{right}" y2="{y}" stroke="{LINE}" stroke-width="2"/>'
         + avatar(80, y + 28, 56, f"av{y}")
-        + f'<text x="156" y="{y + 53}" font-size="26" font-weight="600" fill="{INK}">Amey Thakur</text>'
-        + f'<a href="https://amey-thakur.github.io/GIT-GUIDE/"><text x="156" y="{y + 81}" font-size="21" fill="{MUTED}">amey-thakur.github.io/GIT-GUIDE</text></a>'
-        + f'<g transform="translate({right - 44},{y + 34}) scale(1.83)" fill="{MUTED}"><path d="{GITHUB_MARK}"/></g>'
-        + f'<text x="{right - 64}" y="{y + 81}" font-size="21" fill="{MUTED}" text-anchor="end">{escape(provenance)}</text>'
+        + f'<text x="156" y="{mid - 8}" font-size="26" font-weight="600" fill="{INK}">Amey Thakur</text>'
+        + f'<a href="https://amey-thakur.github.io/GIT-GUIDE/"><text x="156" y="{mid + 20}" font-size="21" fill="{MUTED}">amey-thakur.github.io/GIT-GUIDE</text></a>'
+        + f'<g transform="translate({mark_x:.0f},{mid - mark / 2}) scale({mark / 24:.4f})" fill="{MUTED}"><path d="{GITHUB_MARK}"/></g>'
+        + f'<text x="{right}" y="{mid + 7}" font-size="21" fill="{MUTED}" text-anchor="end">{escape(provenance)}</text>'
     )
 
 

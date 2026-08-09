@@ -102,7 +102,7 @@
         {
           "c": "git commit --amend --no-edit",
           "d": "Add staged changes to the last commit",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git fetch",
@@ -110,7 +110,8 @@
         },
         {
           "c": "git pull --rebase",
-          "d": "Get remote commits, replay yours on top"
+          "d": "Get remote commits, replay yours on top",
+          "level": "history"
         },
         {
           "c": "git push",
@@ -152,13 +153,12 @@
         },
         {
           "c": "git branch -d <branch>",
-          "d": "Delete a merged branch; -D forces",
-          "danger": true
+          "d": "Delete a merged branch; -D forces"
         },
         {
           "c": "git push origin --delete <branch>",
           "d": "Delete it on the remote too",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git branch -m <old> <new>",
@@ -181,12 +181,12 @@
         {
           "c": "git rebase main",
           "d": "Replay your branch on top of main",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git rebase -i HEAD~<n>",
           "d": "Rewrite, reorder, squash your last n commits",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git cherry-pick <hash>",
@@ -198,7 +198,8 @@
         },
         {
           "c": "git rebase --continue",
-          "d": "Resume after resolving a conflict"
+          "d": "Resume after resolving a conflict",
+          "level": "history"
         }
       ],
       "note": "Two ways to bring lines together."
@@ -209,7 +210,7 @@
         {
           "c": "git restore <file>",
           "d": "Discard edits, back to last commit",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git restore --staged <file>",
@@ -218,7 +219,7 @@
         {
           "c": "git commit --amend -m \"<new message>\"",
           "d": "Rewrite the last commit message",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git reset --soft HEAD~1",
@@ -227,7 +228,7 @@
         {
           "c": "git reset --hard HEAD~1",
           "d": "Erase the last commit and its work",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git revert <hash>",
@@ -240,12 +241,11 @@
         {
           "c": "git reset --hard ORIG_HEAD",
           "d": "Undo the merge, rebase, or pull that just happened",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git clean -nd",
-          "d": "Preview deleting untracked files; -fd deletes",
-          "danger": true
+          "d": "Preview deleting untracked files; -fd deletes"
         }
       ],
       "note": "Every mistake has a way back."
@@ -335,8 +335,7 @@
         },
         {
           "c": "git tag -d <tag>",
-          "d": "Delete locally; push origin --delete <tag> for the remote",
-          "danger": true
+          "d": "Delete locally; push origin --delete <tag> for the remote"
         },
         {
           "c": "git describe --tags",
@@ -454,27 +453,27 @@
         {
           "c": "git commit --fixup <hash>",
           "d": "Mark a fix as belonging to an earlier commit",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git rebase -i --autosquash <hash>^",
           "d": "Melt fixups into their targets",
-          "danger": true
+          "level": "history"
         },
         {
           "c": "git filter-repo --invert-paths --path <file>",
           "d": "Erase a file from all history",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git filter-repo --strip-blobs-bigger-than 10M",
           "d": "Erase every giant blob",
-          "danger": true
+          "level": "destructive"
         },
         {
           "c": "git push --force-with-lease",
           "d": "The only force push worth typing",
-          "danger": true
+          "level": "history"
         }
       ]
     },

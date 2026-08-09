@@ -732,7 +732,9 @@ g.on .tagtext, g.on .clabel { fill: var(--accent); }
 .cheatsheet .cs-row .copy { grid-column: 2; grid-row: 1; }
 .cheatsheet .cs-row span { grid-column: 1 / -1; grid-row: 2; margin-top: 0.35rem; }
 
-.cs-row.cs-danger { border-left: 3px solid var(--destructive); }
+/* Three levels on the sheet, the same three the cards and the PDF use. */
+.cs-row.cs-history { border-left: 3px solid var(--history); }
+.cs-row.cs-destructive { border-left: 3px solid var(--destructive); }
 .cs-row.cs-danger code { color: var(--destructive); }
 
 .cs-toc {

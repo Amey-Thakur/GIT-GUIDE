@@ -17,7 +17,7 @@ how dangerous it is, and how to undo it.
 
 <br><br>
 
-[<img src="docs/assets/poster.png?v=2" alt="Git Guide: the nine doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
+[<img src="docs/assets/poster.png?v=4" alt="Git Guide: the nine doors and the three danger levels">](https://amey-thakur.github.io/GIT-GUIDE/)
 
 </div>
 
@@ -148,9 +148,9 @@ Four things to keep. Click any one to open it. Each is generated from this repos
 
 | | |
 | :---: | :---: |
-| [<img src="docs/assets/pdf-cover.png?v=2" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png?v=2" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
+| [<img src="docs/assets/pdf-cover.png?v=4" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png?v=4" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
 | **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>23 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
-| [<img src="docs/assets/cheatsheet-card.png?v=2" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png?v=2" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
+| [<img src="docs/assets/cheatsheet-card.png?v=4" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png?v=4" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
 | **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**<br>The commands you reach for every day, on one page. The one to pin up. | **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**<br>Everything past the daily: history surgery, submodules, scale, recovery. |
 
 </div>
