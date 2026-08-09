@@ -564,10 +564,13 @@ a.footer-tag:hover { color: var(--safe); text-decoration: none; }
 .zfile { fill: var(--code-bg); stroke: var(--line); }
 .zdot { fill: var(--muted); opacity: 0.55; }
 .zedge { stroke: var(--muted); opacity: 0.55; stroke-width: 1.5; }
-.ztag { fill: var(--card); stroke: var(--accent); }
-.ztagtext { font-size: 10px; fill: var(--accent); }
-.zshelf { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 3; }
-.zshelfarrow { fill: var(--muted); }
+/* The branch label that reset drags backwards: a history move, so amber. */
+.ztag { fill: var(--card); stroke: var(--history); }
+.ztagtext { font-size: 10px; fill: var(--history); }
+/* The stash shelf holds your work safely, so green. */
+.zshelf { fill: none; stroke: var(--safe); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.zshelfarrow { fill: var(--safe); }
+#g-stash .ztagtext { fill: var(--safe); }
 
 .arrow line, .arrow path { stroke: var(--muted); stroke-width: 2.5; opacity: 0.45; transition: opacity 0.25s; }
 .arrow polygon { fill: var(--muted); opacity: 0.45; transition: opacity 0.25s; }
@@ -576,15 +579,23 @@ a.footer-tag:hover { color: var(--safe); text-decoration: none; }
 .arrow.on polygon { fill: var(--accent); opacity: 1; }
 .arrow.on text { fill: var(--accent); opacity: 1; }
 
+/* The commit graph speaks the same three levels as everything else.
+     green   a merge: both histories kept, nothing rewritten, entirely safe
+     amber   a rebase copy: same change, new hash, the original left behind
+     accent  HEAD, meaning you are standing here
+     grey    ordinary commits and the branch labels on them */
 .commit { fill: var(--card); stroke: var(--muted); stroke-width: 2.5; transition: stroke 0.25s; }
-.commit.merge { stroke-dasharray: none; }
-.commit.ghost { stroke-dasharray: 4 3; }
+.commit.merge { stroke-dasharray: none; stroke: var(--safe); }
+.commit.ghost { stroke-dasharray: 4 3; stroke: var(--history); }
 .edge { stroke: var(--muted); stroke-width: 2; opacity: 0.7; }
-.edge.ghost { stroke-dasharray: 4 3; }
+.edge.ghost { stroke-dasharray: 4 3; stroke: var(--history); }
 .clabel { font-size: 12px; fill: var(--muted); }
+.commit.ghost + .clabel, .ghost .clabel { fill: var(--history); }
 .tag { fill: var(--card); stroke: var(--muted); stroke-width: 1.5; transition: stroke 0.25s; }
-.tag.head { stroke: var(--history); }
-.tag.ghost { stroke-dasharray: 4 3; }
+.tag.head { stroke: var(--accent); }
+.tag.head + .tagtext, .head .tagtext { fill: var(--accent); }
+.tag.ghost { stroke-dasharray: 4 3; stroke: var(--history); }
+.ghost .tagtext { fill: var(--history); }
 .tagtext { font-size: 12px; font-weight: 600; fill: var(--ink); }
 .tick { stroke: var(--muted); stroke-width: 1.5; }
 
@@ -1309,3 +1320,8 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
       text-transform: uppercase; color: var(--history); border: 1px solid var(--history);
       border-radius: 4px; padding: 0.05rem 0.35rem; margin-right: 0.45rem;
       vertical-align: 1px; }
+
+/* Release tags on the workflows diagram are the same kind of thing as tags in
+   the sandbox and the commit graph, so they take the same amber. */
+#w-2 .tag, #w-5 .tag { stroke: var(--history); }
+#w-2 .tagtext, #w-5 .tagtext { fill: var(--history); }
