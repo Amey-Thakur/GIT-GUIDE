@@ -132,12 +132,18 @@ The whole knowledge base is plain JSON, served raw, with an [llms.txt](docs/llms
 
 ## Take it with you
 
-Each of these downloads in one click and is generated from the repository's live data.
+Four things to keep. Click any one to open it. Each is generated from this repository's live data, so none of them can go out of date.
 
-- **[The PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**: the complete guide, printable. The model, every command section, every error, the chapters.
-- **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**: the commands you will use every day, on one page.
-- **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**: everything past the daily, on the next.
-- **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**: the nine doors and the three danger levels, one sheet.
+<div align="center">
+
+| | |
+| :---: | :---: |
+| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
+| **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>23 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
+| [<img src="docs/assets/cheatsheet-card.png" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
+| **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**<br>The commands you reach for every day, on one page. The one to pin up. | **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**<br>Everything past the daily: history surgery, submodules, scale, recovery. |
+
+</div>
 
 <br>
 
