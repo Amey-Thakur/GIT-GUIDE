@@ -78,13 +78,14 @@ def footer(y, width, provenance):
     """
     right = width - 80
     mid = y + 56                 # the centre of the avatar, and of everything else
-    mark = 22                    # the GitHub mark, drawn from a 24 unit path
-    gap = 12
+    mark = 26                    # the GitHub mark, drawn from a 24 unit path
+    size = 23                    # the tagline, sized to hold its own against the name
+    gap = 13
     # The mark leads the tagline, the way it does in the PDF footer. SVG has no
     # layout, so the mark is placed from the measured advance of this typeface at
     # this size; the text stays anchored to the right edge, which is the position
     # that has to be exact.
-    text_w = len(provenance) * 9.5
+    text_w = len(provenance) * size * 0.452
     mark_x = right - text_w - gap - mark
     return (
         f'<line x1="80" y1="{y}" x2="{right}" y2="{y}" stroke="{LINE}" stroke-width="2"/>'
@@ -92,7 +93,7 @@ def footer(y, width, provenance):
         + f'<text x="156" y="{mid - 8}" font-size="26" font-weight="600" fill="{INK}">Amey Thakur</text>'
         + f'<a href="https://amey-thakur.github.io/GIT-GUIDE/"><text x="156" y="{mid + 20}" font-size="21" fill="{MUTED}">amey-thakur.github.io/GIT-GUIDE</text></a>'
         + f'<g transform="translate({mark_x:.0f},{mid - mark / 2}) scale({mark / 24:.4f})" fill="{MUTED}"><path d="{GITHUB_MARK}"/></g>'
-        + f'<text x="{right}" y="{mid + 7}" font-size="21" fill="{MUTED}" text-anchor="end">{escape(provenance)}</text>'
+        + f'<text x="{right}" y="{mid + 8}" font-size="{size}" fill="{MUTED}" text-anchor="end">{escape(provenance)}</text>'
     )
 
 
