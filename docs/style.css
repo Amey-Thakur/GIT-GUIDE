@@ -777,6 +777,24 @@ kbd {
    them in one rule is deliberate: the practise canvas and its terminal were
    added later and shipped with the browser's default bars, which looked like a
    different site. Anything scrollable added in future belongs on this list. */
+/* The window's own scrollbar. Without color-scheme the browser paints its
+   native scrollbar, form controls and overscroll in light grey regardless of
+   the theme, which is the white bar down the side of a dark page. */
+:root { color-scheme: dark light; }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) var(--paper);
+}
+html::-webkit-scrollbar { width: 13px; height: 13px; }
+html::-webkit-scrollbar-track { background: var(--paper); }
+html::-webkit-scrollbar-thumb { background: var(--line); border-radius: 7px;
+                                border: 3px solid var(--paper); background-clip: content-box; }
+html::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: content-box; }
+html::-webkit-scrollbar-corner { background: var(--paper); }
+
 .diagram,
 .site-nav,
 .pgraph,
