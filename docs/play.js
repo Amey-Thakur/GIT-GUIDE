@@ -452,18 +452,16 @@
 
     // GY clears a commit's caption before the next lane's branch label starts;
     // PADY leaves room for two pointers stacked above the top lane.
-    var GX = 96, GY = 88, PADX = 54, PADY = 66;
+    var GX = 108, GY = 96, PADX = 60, PADY = 70;
     var maxG = 0, maxL = 0;
     S.order.forEach(function (id) {
       if (gen[id] > maxG) maxG = gen[id];
       if (lane[id] > maxL) maxL = lane[id];
     });
-    // The box hugs its contents and grows rightward as the history does. Clamping
-    // it to a wide minimum left a lone commit stranded in a mostly empty card.
-    // The 44 below is the caption's height plus its descender.
-    var W = Math.max(PADX * 2 + maxG * GX, 150), H = PADY + maxL * GY + 44;
+    // The 48 below is the caption's height plus its descender.
+    var W = Math.max(PADX * 2 + maxG * GX, 150), H = PADY + maxL * GY + 48;
 
-    var SCALE = 1.35;   // legible without magnifying a three-commit graph absurdly
+    var SCALE = 1.45;   // legible without magnifying a three-commit graph absurdly
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.removeAttribute("width");
     svg.removeAttribute("height");
