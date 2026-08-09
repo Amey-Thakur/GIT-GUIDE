@@ -861,24 +861,9 @@ kbd {
 /* The sandbox: a real Git engine with its graph, terminal, and challenge ladder. */
 .play { padding: 0.5rem 0 5rem; }
 
-.ptaskbar { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between;
-            flex-wrap: wrap; border: 1px solid var(--line); border-left: 4px solid var(--accent);
-            border-radius: 12px; background: var(--card); padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
-.ptaskmain { flex: 1 1 22rem; }
-.ptasklabel { margin: 0 0 0.2rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
-              text-transform: uppercase; color: var(--muted); }
-#ptask { margin: 0 0 0.35rem; font-size: 1.05rem; }
-.phint { margin: 0; color: var(--muted); font-size: 0.94rem; }
-.phint .g { color: var(--safe); }
-.ptaskside { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.pdots { display: inline-flex; gap: 5px; margin-right: 0.3rem; }
-.pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); display: block; }
-.pdot.done { background: var(--safe); }
-.pdot.now { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
-            background: var(--accent); }
-
-.pgraph { border: 1px solid var(--line); border-radius: 12px; overflow-x: auto;
+.pgraph { border: 1px solid var(--line); border-radius: 12px;
           padding: 1.75rem 2rem; min-height: 16rem; display: flex; align-items: center;
+          overflow: auto; overscroll-behavior: contain; cursor: grab;
           background:
             radial-gradient(circle, color-mix(in srgb, var(--muted) 16%, transparent) 1px,
                             transparent 1px) 0 0 / 24px 24px,
@@ -945,7 +930,6 @@ kbd {
 .pnotes code { font-family: var(--mono); font-size: 0.86rem; color: var(--ink); }
 
 @media (max-width: 40rem) {
-  .ptaskside { width: 100%; }
   .pout { max-height: 13rem; }
 }
 
@@ -991,7 +975,6 @@ kbd {
 .pclick:hover text { fill: var(--accent); }
 
 /* The canvas is draggable, so say so with the cursor. */
-.pgraph { cursor: grab; overflow: auto; overscroll-behavior: contain; }
 .pgraph.dragging { cursor: grabbing; user-select: none; }
 .pgraph.dragging .pnode, .pgraph.dragging .pclick { cursor: grabbing; }
 

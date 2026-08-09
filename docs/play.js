@@ -779,9 +779,24 @@
     });
     S.order.forEach(function (id) { if (lane[id] == null) lane[id] = next++; });
 
-    // GY clears a commit's caption before the next lane's branch label starts;
-    // PADY leaves room for two pointers stacked above the top lane.
-    var GX = 150, GY = 132, PADX = 80, PADY = 100;
+    // A commit can carry several pointers at once: HEAD, its branch, the matching
+    // origin/branch, and any tags. They stack upward, so the top padding and the
+    // lane spacing both have to be sized from the tallest stack actually present,
+    // or the topmost label is clipped off the canvas.
+    var stackAt = {};
+    function bump(id) { if (id != null) stackAt[id] = (stackAt[id] || 0) + 1; }
+    Object.keys(S.tags).forEach(function (t) { bump(S.tags[t]); });
+    if (S.remote) Object.keys(S.remote.branches).forEach(function (b) { bump(S.remote.branches[b]); });
+    Object.keys(S.branches).forEach(function (b) { bump(S.branches[b]); });
+    bump(S.head.type === "branch" ? S.branches[S.head.name] : S.head.id);
+    var maxStack = 1;
+    Object.keys(stackAt).forEach(function (id) { if (stackAt[id] > maxStack) maxStack = stackAt[id]; });
+
+    var LABEL_H = 30;                                   // one pointer and its gap
+    var GX = 150;
+    var PADY = 58 + (maxStack - 1) * LABEL_H;           // room above the top lane
+    var GY = Math.max(132, maxStack * LABEL_H + 62);    // room between lanes
+    var PADX = 80;
     var maxG = 0, maxL = 0;
     S.order.forEach(function (id) {
       if (gen[id] > maxG) maxG = gen[id];
