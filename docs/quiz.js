@@ -35,10 +35,32 @@
       .catch(function () { /* no check today; the page above it still teaches */ });
   }
 
-  function start(root, questions) {
+  var ROUND = 5;   // how many to ask at a time; the bank is far larger
 
+  function shuffled(list) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* A different five each round, and the options in a different order every
+     time, so the answer cannot be remembered by its position. Recall is the
+     point; recognising "it was the second one" is not. */
+  function deal(bank) {
+    return shuffled(bank).slice(0, Math.min(ROUND, bank.length)).map(function (q) {
+      return { q: q.q, a: shuffled(q.a) };
+    });
+  }
+
+  function start(root, bank) {
+
+    var questions = deal(bank);
     var at = 0;
     var answered = [];
+    var picked = [];     // which option index was chosen, so Back can replay it
 
     function render() {
       root.innerHTML = "";
@@ -71,22 +93,37 @@
       root.appendChild(el("p", "qz-why"));
 
       var foot = el("div", "qz-foot");
+
+      // Back matters: going over one you got wrong is where the learning is.
+      var prev = el("button", "qz-back", "Back");
+      prev.type = "button";
+      prev.disabled = at === 0;
+      prev.addEventListener("click", function () { if (at > 0) { at -= 1; render(); } });
+      foot.appendChild(prev);
+
       var next = el("button", "qz-next", at === questions.length - 1 ? "Finish" : "Next question");
       next.type = "button";
-      next.disabled = true;
+      next.disabled = answered[at] === undefined;
       next.addEventListener("click", function () {
         if (at < questions.length - 1) { at += 1; render(); }
         else { finish(); }
       });
       foot.appendChild(next);
       root.appendChild(foot);
+
+      // Coming back to a question you already answered shows your answer again,
+      // rather than pretending you never saw it.
+      if (picked[at] !== undefined) {
+        choose(picked[at], opts, opts.children[picked[at]], true);
+      }
     }
 
-    function choose(i, opts, btn) {
+    function choose(i, opts, btn, replaying) {
       var q = questions[at];
       var right = q.a[i].ok === true;
       // Answer once: after that the options are a reference, not a game to retry.
       if (answered[at] === undefined) answered[at] = right;
+      if (!replaying) picked[at] = i;
 
       Array.prototype.forEach.call(opts.children, function (b, j) {
         b.disabled = true;
@@ -123,9 +160,17 @@
           : right >= questions.length - 1
             ? "Close to all of it. The one you missed is the one worth rereading above."
             : "Worth another pass over the diagram above; these answers are all in it."));
-      var again = el("button", "qz-next", "Try again");
+      if (bank.length > ROUND) {
+        box.appendChild(el("p", "qz-bank",
+          "Drawn from " + bank.length + " questions, so the next five will be different."));
+      }
+      var again = el("button", "qz-next", bank.length > ROUND ? "Five more" : "Try again");
       again.type = "button";
-      again.addEventListener("click", function () { at = 0; answered = []; render(); });
+      again.addEventListener("click", function () {
+        questions = deal(bank);
+        at = 0; answered = []; picked = [];
+        render();
+      });
       box.appendChild(again);
       root.appendChild(box);
     }

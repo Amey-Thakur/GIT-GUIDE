@@ -1190,3 +1190,24 @@ kbd {
 .qz-done { text-align: center; padding: 1rem 0 0.5rem; }
 .qz-score { margin: 0 0 0.3rem; font-size: 2rem; font-weight: 700; color: var(--accent); }
 .qz-note { margin: 0 0 1.25rem; color: var(--muted); }
+
+/* Buttons that happen to be links must not sprout an underline on hover: it
+   reads as a text link inside a solid button, which looks like a mistake. */
+.hookgo:hover, .hookgo:focus-visible,
+a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
+.site-nav a:hover, a.gh-link:hover, a.qz-next:hover {
+  text-decoration: none;
+}
+
+/* The footer is a signature line, not a set of calls to action. Green on hover
+   keeps it calm and distinct from the accent used everywhere else. */
+.footer-name a:hover { color: var(--safe); text-decoration: none; }
+.footer-links a:hover { color: var(--safe); text-decoration: none; }
+
+/* Back sits beside Next without competing with it. */
+.qz-back { font: inherit; font-size: 0.95rem; cursor: pointer; color: var(--muted);
+           background: transparent; border: 1px solid var(--line); border-radius: 8px;
+           padding: 0.5rem 1.1rem; margin-right: 0.6rem; }
+.qz-back:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
+.qz-back:disabled { opacity: 0.4; cursor: default; }
+.qz-bank { margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--muted); }

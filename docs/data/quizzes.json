@@ -23,7 +23,7 @@
             },
             {
               "t": "The remote",
-              "why": "No. Nothing leaves your machine until you push, and nothing is even committed yet."
+              "why": "No. Nothing leaves your machine until you push."
             }
           ]
         },
@@ -31,13 +31,13 @@
           "q": "Which command moves what you have staged into your history?",
           "a": [
             {
-              "t": "git add",
-              "why": "add moves changes into the staging area, one step earlier."
-            },
-            {
               "t": "git commit",
               "ok": true,
               "why": "commit turns the staged snapshot into a permanent one and moves your branch label onto it."
+            },
+            {
+              "t": "git add",
+              "why": "add moves changes into the staging area, one step earlier."
             },
             {
               "t": "git push",
@@ -53,13 +53,13 @@
           "q": "A branch, in Git, is best described as:",
           "a": [
             {
-              "t": "A copy of your files",
-              "why": "Nothing is copied. That is why branching is instant even on a huge repository."
-            },
-            {
               "t": "A movable label pointing at one commit",
               "ok": true,
               "why": "That is the whole secret. Committing moves the label forward; creating a branch just adds another label."
+            },
+            {
+              "t": "A copy of your files",
+              "why": "Nothing is copied. That is why branching is instant even on a huge repository."
             },
             {
               "t": "A folder inside .git",
@@ -75,17 +75,17 @@
           "q": "You run git fetch. What just changed?",
           "a": [
             {
+              "t": "Your record of where the remote is",
+              "ok": true,
+              "why": "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you."
+            },
+            {
               "t": "Your files were updated",
               "why": "No. That is the point of fetch: your working tree is untouched."
             },
             {
               "t": "Your branch moved forward",
               "why": "No. Your own branch never moves on a fetch."
-            },
-            {
-              "t": "Your record of the remote",
-              "ok": true,
-              "why": "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you."
             },
             {
               "t": "Nothing at all",
@@ -97,13 +97,13 @@
           "q": "You ran git reset --hard and lost a commit you wanted. It is:",
           "a": [
             {
-              "t": "Gone forever",
-              "why": "Almost never true, and believing it causes a lot of unnecessary panic."
-            },
-            {
               "t": "Still there, and the reflog can find it",
               "ok": true,
               "why": "Reset moves a label; it does not delete commits. git reflog lists where HEAD has been, and resetting back to that hash brings the work home."
+            },
+            {
+              "t": "Gone forever",
+              "why": "Almost never true, and believing it causes a lot of unnecessary panic."
             },
             {
               "t": "Only on the remote",
@@ -112,6 +112,996 @@
             {
               "t": "Recoverable only from a backup",
               "why": "Git keeps its own safety net. The reflog is that net."
+            }
+          ]
+        },
+        {
+          "q": "What does HEAD point at, normally?",
+          "a": [
+            {
+              "t": "The branch you are currently on",
+              "ok": true,
+              "why": "HEAD is where you are standing. Usually it points at a branch, and that branch points at a commit."
+            },
+            {
+              "t": "The newest commit in the repository",
+              "why": "Not necessarily. Another branch may be far ahead of you."
+            },
+            {
+              "t": "The first commit",
+              "why": "That is the root commit, and HEAD rarely sits there."
+            },
+            {
+              "t": "The remote's latest commit",
+              "why": "HEAD is entirely local. It knows nothing about the remote."
+            }
+          ]
+        },
+        {
+          "q": "What makes a merge commit different from an ordinary one?",
+          "a": [
+            {
+              "t": "It has two parents",
+              "ok": true,
+              "why": "That second parent is what records that two lines of history joined here."
+            },
+            {
+              "t": "It has no parent",
+              "why": "Only the very first commit in a repository has no parent."
+            },
+            {
+              "t": "It contains no changes",
+              "why": "It often does contain changes: the resolution of any conflicts."
+            },
+            {
+              "t": "It cannot be reverted",
+              "why": "It can, with git revert -m to say which parent to keep."
+            }
+          ]
+        },
+        {
+          "q": "git rebase gives your commits new hashes. Why?",
+          "a": [
+            {
+              "t": "Each replayed commit has a different parent, and the parent is part of the hash",
+              "ok": true,
+              "why": "A commit's identity includes its parent, so replaying onto a new base necessarily creates new commits."
+            },
+            {
+              "t": "Because rebase compresses them",
+              "why": "Rebase does not compress anything; squashing is a separate choice."
+            },
+            {
+              "t": "Because Git randomises hashes",
+              "why": "Hashes are entirely determined by content, never random."
+            },
+            {
+              "t": "Because the message changes",
+              "why": "The message is usually identical. The parent is what changed."
+            }
+          ]
+        },
+        {
+          "q": "Why should you not rebase a branch other people already have?",
+          "a": [
+            {
+              "t": "Their copies point at commits that no longer exist on yours",
+              "ok": true,
+              "why": "You replaced the commits with new ones. Everyone else still has the originals, and reconciling that is painful."
+            },
+            {
+              "t": "Rebase is slower on shared branches",
+              "why": "Speed has nothing to do with it."
+            },
+            {
+              "t": "Git blocks it outright",
+              "why": "Git will happily let you. That is precisely the danger."
+            },
+            {
+              "t": "It deletes their local work",
+              "why": "It does not touch their machine at all, which is part of the confusion."
+            }
+          ]
+        },
+        {
+          "q": "git reset --soft HEAD~1 does what?",
+          "a": [
+            {
+              "t": "Moves the branch back one commit and keeps the changes staged",
+              "ok": true,
+              "why": "The commit is undone; the work is not. This is the fix for committing too early."
+            },
+            {
+              "t": "Deletes the last commit and its changes",
+              "why": "That is --hard. Soft keeps everything."
+            },
+            {
+              "t": "Creates a commit that undoes the last one",
+              "why": "That is revert, which adds rather than removes."
+            },
+            {
+              "t": "Unstages everything",
+              "why": "It stages the undone commit's changes rather than unstaging them."
+            }
+          ]
+        },
+        {
+          "q": "Which undo is safe on a branch other people are using?",
+          "a": [
+            {
+              "t": "git revert",
+              "ok": true,
+              "why": "It adds a new commit that reverses the old one, so nobody's history is rewritten."
+            },
+            {
+              "t": "git reset --hard",
+              "why": "That rewrites where the branch points, which breaks everyone else."
+            },
+            {
+              "t": "git commit --amend",
+              "why": "Amend replaces the last commit, so it rewrites history too."
+            },
+            {
+              "t": "git rebase",
+              "why": "Rebase replaces a whole run of commits."
+            }
+          ]
+        },
+        {
+          "q": "What is the staging area for?",
+          "a": [
+            {
+              "t": "Choosing exactly what goes into the next commit",
+              "ok": true,
+              "why": "It lets you commit some of your changes and not others, so a commit can be one coherent idea."
+            },
+            {
+              "t": "Backing up files before committing",
+              "why": "It is not a backup; it is a draft of the next commit."
+            },
+            {
+              "t": "Storing files Git should ignore",
+              "why": "That is .gitignore, which is unrelated."
+            },
+            {
+              "t": "Holding files while you switch branches",
+              "why": "That is closer to what stash does."
+            }
+          ]
+        },
+        {
+          "q": "git stash does what to your working tree?",
+          "a": [
+            {
+              "t": "Saves your changes away and leaves the tree clean",
+              "ok": true,
+              "why": "It gets you to a clean state without inventing a commit you did not mean to make."
+            },
+            {
+              "t": "Commits your changes on a hidden branch",
+              "why": "It stores them, but not as a commit on a branch you use."
+            },
+            {
+              "t": "Deletes your changes",
+              "why": "Nothing is deleted; git stash pop brings them back."
+            },
+            {
+              "t": "Pushes them to the remote",
+              "why": "A stash never leaves your machine."
+            }
+          ]
+        },
+        {
+          "q": "A tag differs from a branch because:",
+          "a": [
+            {
+              "t": "A tag does not move when you commit",
+              "ok": true,
+              "why": "A branch follows you forward. A tag stays where you put it, which is what makes it useful for releases."
+            },
+            {
+              "t": "A tag cannot be deleted",
+              "why": "It can, locally and on the remote."
+            },
+            {
+              "t": "A tag stores the files separately",
+              "why": "It stores nothing extra; it points at a commit."
+            },
+            {
+              "t": "A tag is only for remote use",
+              "why": "Tags work perfectly well in a repository with no remote at all."
+            }
+          ]
+        },
+        {
+          "q": "You are in detached HEAD. What does that mean?",
+          "a": [
+            {
+              "t": "HEAD points straight at a commit rather than at a branch",
+              "ok": true,
+              "why": "Not an error. Commits made here belong to no branch, so you need one to keep them."
+            },
+            {
+              "t": "Your repository is corrupt",
+              "why": "Nothing is wrong. It is a normal state to visit."
+            },
+            {
+              "t": "You have unsaved changes",
+              "why": "It says nothing about your working tree."
+            },
+            {
+              "t": "The remote is unreachable",
+              "why": "It is entirely local and unrelated to the remote."
+            }
+          ]
+        },
+        {
+          "q": "What does .gitignore do about a file already committed?",
+          "a": [
+            {
+              "t": "Nothing: it only affects untracked files",
+              "ok": true,
+              "why": "You must untrack it first with git rm --cached, or Git keeps following it regardless."
+            },
+            {
+              "t": "It removes it from history",
+              "why": "Nothing in .gitignore touches history."
+            },
+            {
+              "t": "It stops tracking it from now on",
+              "why": "It does not. The file stays tracked until you untrack it."
+            },
+            {
+              "t": "It deletes it from your disk",
+              "why": "It never deletes anything."
+            }
+          ]
+        },
+        {
+          "q": "git pull is equivalent to:",
+          "a": [
+            {
+              "t": "git fetch followed by a merge",
+              "ok": true,
+              "why": "Which is why a pull can create a merge commit you did not ask for, and why fetch first is often calmer."
+            },
+            {
+              "t": "git fetch followed by a reset",
+              "why": "Reset is not part of pull, and would throw work away."
+            },
+            {
+              "t": "git push in reverse",
+              "why": "Push and pull are not symmetrical operations."
+            },
+            {
+              "t": "git clone for an existing repository",
+              "why": "Clone creates a repository; pull updates one."
+            }
+          ]
+        },
+        {
+          "q": "You cloned a repository. How much history did you get?",
+          "a": [
+            {
+              "t": "All of it, every commit",
+              "ok": true,
+              "why": "Unless you asked for a shallow clone, you have the entire history and can work offline."
+            },
+            {
+              "t": "Only the latest commit",
+              "why": "That is a shallow clone, which you have to request."
+            },
+            {
+              "t": "Only the default branch's files",
+              "why": "You get the files and the full history behind them."
+            },
+            {
+              "t": "Only what the server chooses to send",
+              "why": "The server sends everything for a normal clone."
+            }
+          ]
+        },
+        {
+          "q": "What is origin?",
+          "a": [
+            {
+              "t": "The default nickname for the remote you cloned from",
+              "ok": true,
+              "why": "It is only a name. You can rename it, have several remotes, or none at all."
+            },
+            {
+              "t": "The first commit in the repository",
+              "why": "That is the root commit."
+            },
+            {
+              "t": "The main branch",
+              "why": "The branch is usually main; origin is the remote."
+            },
+            {
+              "t": "A GitHub-specific concept",
+              "why": "It is plain Git and works with any host, or none."
+            }
+          ]
+        },
+        {
+          "q": "git cherry-pick does what?",
+          "a": [
+            {
+              "t": "Copies one commit onto your current branch",
+              "ok": true,
+              "why": "The original stays where it is; you get a new commit with the same change."
+            },
+            {
+              "t": "Moves a commit between branches",
+              "why": "It copies. The original is untouched."
+            },
+            {
+              "t": "Merges only part of a branch",
+              "why": "It applies whole commits, not partial merges."
+            },
+            {
+              "t": "Selects which files to commit",
+              "why": "That is what staging does."
+            }
+          ]
+        },
+        {
+          "q": "Your push is rejected as non-fast-forward. What does that mean?",
+          "a": [
+            {
+              "t": "The remote has commits you do not have",
+              "ok": true,
+              "why": "Git refuses rather than discarding them. Pull, reconcile, then push."
+            },
+            {
+              "t": "Your commit message is invalid",
+              "why": "Git does not judge messages."
+            },
+            {
+              "t": "You lack permission",
+              "why": "That is a different error about access."
+            },
+            {
+              "t": "Your branch does not exist remotely",
+              "why": "That gives a no upstream error instead."
+            }
+          ]
+        },
+        {
+          "q": "What does git log show you?",
+          "a": [
+            {
+              "t": "The commits reachable from where you are",
+              "ok": true,
+              "why": "It walks backwards from HEAD, so commits on other branches are not listed unless you ask."
+            },
+            {
+              "t": "Every commit in the repository",
+              "why": "Only those reachable from your current position, by default."
+            },
+            {
+              "t": "Your uncommitted changes",
+              "why": "That is git status and git diff."
+            },
+            {
+              "t": "The remote's history",
+              "why": "Only what you have fetched, and only from your position."
+            }
+          ]
+        },
+        {
+          "q": "A conflict happens when:",
+          "a": [
+            {
+              "t": "Both sides changed the same part of the same file",
+              "ok": true,
+              "why": "Git merges everything it safely can and stops only where it would have to guess."
+            },
+            {
+              "t": "Two branches have the same name",
+              "why": "Names never conflict in that sense."
+            },
+            {
+              "t": "You forgot to pull",
+              "why": "Being behind causes a rejected push, not a conflict."
+            },
+            {
+              "t": "A file was deleted",
+              "why": "That can conflict, but only if the other side also changed it."
+            }
+          ]
+        },
+        {
+          "q": "git commit --amend does what to the previous commit?",
+          "a": [
+            {
+              "t": "Replaces it with a new commit",
+              "ok": true,
+              "why": "The hash changes, which is why amending something already pushed requires a force."
+            },
+            {
+              "t": "Edits it in place",
+              "why": "Commits are immutable. A replacement is built instead."
+            },
+            {
+              "t": "Adds a second commit",
+              "why": "It replaces rather than adds."
+            },
+            {
+              "t": "Only changes the message",
+              "why": "It can change the content too, and either way the hash changes."
+            }
+          ]
+        },
+        {
+          "q": "What is the reflog?",
+          "a": [
+            {
+              "t": "A record of everywhere HEAD has been",
+              "ok": true,
+              "why": "It includes positions you abandoned, which is exactly why it can rescue them."
+            },
+            {
+              "t": "A log of remote activity",
+              "why": "It is entirely local and private to your clone."
+            },
+            {
+              "t": "The same as git log",
+              "why": "log walks history; reflog records your movements, including undone ones."
+            },
+            {
+              "t": "A list of conflicts",
+              "why": "It has nothing to do with conflicts."
+            }
+          ]
+        },
+        {
+          "q": "Fast-forward means:",
+          "a": [
+            {
+              "t": "Your branch label slid forward because it had nothing of its own",
+              "ok": true,
+              "why": "No merge commit is created, which surprises people expecting one."
+            },
+            {
+              "t": "Git skipped some commits",
+              "why": "Nothing is skipped."
+            },
+            {
+              "t": "The merge was forced",
+              "why": "Nothing is forced; it was simply unambiguous."
+            },
+            {
+              "t": "History was rewritten",
+              "why": "Nothing was rewritten; a label moved."
+            }
+          ]
+        },
+        {
+          "q": "git switch -c feature does what?",
+          "a": [
+            {
+              "t": "Creates a branch at your current commit and moves onto it",
+              "ok": true,
+              "why": "Two things at once: the label is created, and HEAD starts following it."
+            },
+            {
+              "t": "Copies the current branch's files",
+              "why": "Nothing is copied."
+            },
+            {
+              "t": "Creates a branch on the remote",
+              "why": "It is local until you push it."
+            },
+            {
+              "t": "Switches only if the branch exists",
+              "why": "The -c is precisely for creating it."
+            }
+          ]
+        },
+        {
+          "q": "Which of these can lose uncommitted work permanently?",
+          "a": [
+            {
+              "t": "git reset --hard",
+              "ok": true,
+              "why": "It discards your working tree, and Git never had a copy of uncommitted work to give back."
+            },
+            {
+              "t": "git revert",
+              "why": "Revert only adds a commit."
+            },
+            {
+              "t": "git branch",
+              "why": "Creating a label changes nothing."
+            },
+            {
+              "t": "git fetch",
+              "why": "Fetch touches nothing of yours."
+            }
+          ]
+        },
+        {
+          "q": "What does git diff show by default?",
+          "a": [
+            {
+              "t": "Changes in your working tree that are not staged",
+              "ok": true,
+              "why": "Add --staged to see what you have staged instead, which trips people up constantly."
+            },
+            {
+              "t": "All changes since the last commit",
+              "why": "Only the unstaged ones, by default."
+            },
+            {
+              "t": "Differences between branches",
+              "why": "That needs branch names as arguments."
+            },
+            {
+              "t": "What you are about to push",
+              "why": "That is a comparison with the remote branch."
+            }
+          ]
+        },
+        {
+          "q": "A shallow clone gives you:",
+          "a": [
+            {
+              "t": "Truncated history, but complete current files",
+              "ok": true,
+              "why": "Useful in CI. It becomes a problem the moment you need older commits."
+            },
+            {
+              "t": "Fewer files",
+              "why": "Every file is present; only history is shortened."
+            },
+            {
+              "t": "A read-only copy",
+              "why": "You can commit and push normally."
+            },
+            {
+              "t": "Only one branch's files",
+              "why": "Branch limiting is a separate option."
+            }
+          ]
+        },
+        {
+          "q": "Where does git stash store your changes?",
+          "a": [
+            {
+              "t": "Locally, in your own repository",
+              "ok": true,
+              "why": "A stash never travels. It is not pushed and a colleague cannot see it."
+            },
+            {
+              "t": "On the remote",
+              "why": "Stashes are never pushed."
+            },
+            {
+              "t": "In a temporary file outside Git",
+              "why": "Git stores them as objects in your repository."
+            },
+            {
+              "t": "In the staging area",
+              "why": "The staging area is cleared, not used as storage."
+            }
+          ]
+        },
+        {
+          "q": "What happens to commits on a branch you delete?",
+          "a": [
+            {
+              "t": "They survive until Git garbage-collects unreachable objects",
+              "ok": true,
+              "why": "Deleting a branch removes a label. The reflog can still find the commits for a while."
+            },
+            {
+              "t": "They are deleted immediately",
+              "why": "Nothing is deleted at the moment you delete a label."
+            },
+            {
+              "t": "They move to main",
+              "why": "Commits never move on their own."
+            },
+            {
+              "t": "They are pushed to the remote",
+              "why": "Deleting a branch pushes nothing."
+            }
+          ]
+        },
+        {
+          "q": "git push -u origin feature does what the -u adds?",
+          "a": [
+            {
+              "t": "Sets the branch to track origin/feature",
+              "ok": true,
+              "why": "After that, plain git push and git pull know where to go."
+            },
+            {
+              "t": "Forces the push",
+              "why": "Forcing is --force, and is a very different thing."
+            },
+            {
+              "t": "Creates the remote repository",
+              "why": "The repository must already exist."
+            },
+            {
+              "t": "Uploads untracked files",
+              "why": "Push only ever sends commits."
+            }
+          ]
+        },
+        {
+          "q": "If two branches never touched the same file, merging them will:",
+          "a": [
+            {
+              "t": "Combine both sets of changes with no conflict",
+              "ok": true,
+              "why": "Git merges by content, so unrelated changes combine cleanly."
+            },
+            {
+              "t": "Always conflict",
+              "why": "Conflicts need overlapping edits."
+            },
+            {
+              "t": "Keep only the newer branch",
+              "why": "Nothing is discarded."
+            },
+            {
+              "t": "Require a rebase first",
+              "why": "No it does not."
+            }
+          ]
+        },
+        {
+          "q": "What is a fork, on GitHub?",
+          "a": [
+            {
+              "t": "Your own copy of someone else's repository, on the server",
+              "ok": true,
+              "why": "It is how you contribute to a project you cannot push to directly."
+            },
+            {
+              "t": "A branch in the original repository",
+              "why": "A fork is a separate repository."
+            },
+            {
+              "t": "A clone on your machine",
+              "why": "That is a clone; a fork lives on GitHub."
+            },
+            {
+              "t": "A permanent split",
+              "why": "Usually it stays connected: you sync and send pull requests back."
+            }
+          ]
+        },
+        {
+          "q": "git rm --cached <file> does what?",
+          "a": [
+            {
+              "t": "Stops tracking the file but leaves it on disk",
+              "ok": true,
+              "why": "This is the command that finally makes .gitignore apply to something already committed."
+            },
+            {
+              "t": "Deletes the file",
+              "why": "Plain git rm does that; --cached keeps it."
+            },
+            {
+              "t": "Removes it from history",
+              "why": "History is untouched."
+            },
+            {
+              "t": "Unstages a change",
+              "why": "That is git restore --staged."
+            }
+          ]
+        },
+        {
+          "q": "Which is true of git checkout compared with switch and restore?",
+          "a": [
+            {
+              "t": "checkout does the jobs of both, which is why the newer pair exists",
+              "ok": true,
+              "why": "switch changes branches, restore changes files. Splitting them removed a lot of ambiguity."
+            },
+            {
+              "t": "checkout is deprecated and removed",
+              "why": "It still works and is not going anywhere."
+            },
+            {
+              "t": "checkout only changes branches",
+              "why": "It also restores files, which is the confusing part."
+            },
+            {
+              "t": "switch can restore files too",
+              "why": "It cannot; that is restore's job."
+            }
+          ]
+        },
+        {
+          "q": "What does origin/main represent in your repository?",
+          "a": [
+            {
+              "t": "Where main was on the remote the last time you looked",
+              "ok": true,
+              "why": "It is a local record, updated by fetch, not a live view of the server."
+            },
+            {
+              "t": "The live state of the server",
+              "why": "It only updates when you fetch or pull."
+            },
+            {
+              "t": "Your own main branch",
+              "why": "That is just main, and the two can differ."
+            },
+            {
+              "t": "A branch you can commit to directly",
+              "why": "You commit to main and push; you do not commit to origin/main."
+            }
+          ]
+        },
+        {
+          "q": "You committed a secret and pushed it. What is the honest first step?",
+          "a": [
+            {
+              "t": "Rotate the secret, because it must be considered compromised",
+              "ok": true,
+              "why": "Rewriting history is worth doing, but the key is already out. Revoking it is what actually protects you."
+            },
+            {
+              "t": "Delete the commit and move on",
+              "why": "The secret was public; removing it does not un-share it."
+            },
+            {
+              "t": "Force push immediately",
+              "why": "Do that too, but it is not the first thing that matters."
+            },
+            {
+              "t": "Make the repository private",
+              "why": "Anyone who saw it still has it."
+            }
+          ]
+        },
+        {
+          "q": "git merge --abort during a conflict does what?",
+          "a": [
+            {
+              "t": "Returns you to exactly where you were before the merge",
+              "ok": true,
+              "why": "This is why a conflict is never a trap: the way out is always available."
+            },
+            {
+              "t": "Keeps the resolved files",
+              "why": "It abandons the whole attempt."
+            },
+            {
+              "t": "Deletes the other branch",
+              "why": "It touches no branches."
+            },
+            {
+              "t": "Commits what has been resolved so far",
+              "why": "It commits nothing."
+            }
+          ]
+        },
+        {
+          "q": "Why does Git store snapshots rather than differences?",
+          "a": [
+            {
+              "t": "It makes reading any version fast and simple",
+              "ok": true,
+              "why": "Diffs are computed when you ask for them; storage is content-addressed snapshots with shared unchanged files."
+            },
+            {
+              "t": "It uses less space",
+              "why": "Snapshots plus deduplication is efficient, but speed and simplicity are the point."
+            },
+            {
+              "t": "Because diffs are unreliable",
+              "why": "Diffs are perfectly reliable; they are just derived."
+            },
+            {
+              "t": "To support conflicts",
+              "why": "Conflict handling does not depend on it."
+            }
+          ]
+        },
+        {
+          "q": "Two people clone the same repository. Whose is the real one?",
+          "a": [
+            {
+              "t": "All of them: every clone is a complete repository",
+              "ok": true,
+              "why": "That is what distributed means. The server copy is only special by agreement."
+            },
+            {
+              "t": "The one on the server",
+              "why": "It is a clone like any other, conventionally treated as canonical."
+            },
+            {
+              "t": "The first one cloned",
+              "why": "Order confers nothing."
+            },
+            {
+              "t": "Whichever has the most commits",
+              "why": "Size confers nothing either."
+            }
+          ]
+        },
+        {
+          "q": "git restore <file> does what?",
+          "a": [
+            {
+              "t": "Throws away your uncommitted changes to that file",
+              "ok": true,
+              "why": "One of the few genuinely unrecoverable commands, because the work was never recorded."
+            },
+            {
+              "t": "Restores a deleted commit",
+              "why": "It works on files, not commits."
+            },
+            {
+              "t": "Unstages the file",
+              "why": "That needs --staged."
+            },
+            {
+              "t": "Pulls the file from the remote",
+              "why": "It restores from your own repository."
+            }
+          ]
+        },
+        {
+          "q": "What does the index refer to in Git?",
+          "a": [
+            {
+              "t": "Another name for the staging area",
+              "ok": true,
+              "why": "Index, staging area, and cache are three names for the same thing, which does not help newcomers."
+            },
+            {
+              "t": "A list of all files in history",
+              "why": "There is no such single list."
+            },
+            {
+              "t": "The commit graph",
+              "why": "That is the object database."
+            },
+            {
+              "t": "A search index",
+              "why": "Git has no search index."
+            }
+          ]
+        },
+        {
+          "q": "Why might git status show a file as both staged and unstaged?",
+          "a": [
+            {
+              "t": "You staged it, then changed it again",
+              "ok": true,
+              "why": "The staged snapshot and the current file differ, so both states are true at once."
+            },
+            {
+              "t": "Git is confused",
+              "why": "It is precise; it is describing two different snapshots."
+            },
+            {
+              "t": "The file is corrupt",
+              "why": "Nothing is wrong with the file."
+            },
+            {
+              "t": "It is in .gitignore",
+              "why": "Ignored files are not listed like that."
+            }
+          ]
+        },
+        {
+          "q": "git branch -d refuses to delete a branch. Why?",
+          "a": [
+            {
+              "t": "It has commits that are not merged anywhere else",
+              "ok": true,
+              "why": "Git is protecting work. -D overrides it, and should make you pause."
+            },
+            {
+              "t": "The branch is checked out on the remote",
+              "why": "That is not something -d checks."
+            },
+            {
+              "t": "You lack permission",
+              "why": "Local branches have no permissions."
+            },
+            {
+              "t": "The branch has a tag",
+              "why": "Tags do not block deletion."
+            }
+          ]
+        },
+        {
+          "q": "What is the practical difference between merge and rebase?",
+          "a": [
+            {
+              "t": "Merge preserves what happened; rebase rewrites it into a straight line",
+              "ok": true,
+              "why": "Neither is correct in general. It is a choice between an honest record and a readable one."
+            },
+            {
+              "t": "Rebase is faster",
+              "why": "Speed is irrelevant at normal scale."
+            },
+            {
+              "t": "Merge loses commits",
+              "why": "Merge loses nothing."
+            },
+            {
+              "t": "Rebase is safer",
+              "why": "Rebase is the riskier of the two, because it rewrites."
+            }
+          ]
+        },
+        {
+          "q": "You want the exact state of the remote, discarding local commits. Which?",
+          "a": [
+            {
+              "t": "git reset --hard origin/main",
+              "ok": true,
+              "why": "It moves your branch to match the remote and discards anything of your own."
+            },
+            {
+              "t": "git pull",
+              "why": "Pull would merge your commits in rather than discard them."
+            },
+            {
+              "t": "git fetch",
+              "why": "Fetch changes nothing of yours."
+            },
+            {
+              "t": "git clean",
+              "why": "Clean removes untracked files, not commits."
+            }
+          ]
+        },
+        {
+          "q": "git clean -fd removes:",
+          "a": [
+            {
+              "t": "Untracked files and directories",
+              "ok": true,
+              "why": "Git never had copies of them, so this is genuinely unrecoverable. Run it with -n first."
+            },
+            {
+              "t": "Ignored files only",
+              "why": "Those need -x as well."
+            },
+            {
+              "t": "Staged changes",
+              "why": "Staged changes are not touched."
+            },
+            {
+              "t": "Old branches",
+              "why": "It works on files, not refs."
+            }
+          ]
+        },
+        {
+          "q": "What does a commit hash actually describe?",
+          "a": [
+            {
+              "t": "The content, the parents, the author and the message together",
+              "ok": true,
+              "why": "Change any one of them and you get a different commit, which is why rewriting always produces new hashes."
+            },
+            {
+              "t": "A random unique number",
+              "why": "Nothing about it is random."
+            },
+            {
+              "t": "The time it was made",
+              "why": "Time is part of it, but only part."
+            },
+            {
+              "t": "Its position in the branch",
+              "why": "Position is not stored; parents are."
             }
           ]
         }
@@ -126,21 +1116,21 @@
           "q": "What does a pull request actually contain?",
           "a": [
             {
-              "t": "A copy of your changed files",
-              "why": "No copying happens. The commits are already on GitHub before the pull request exists."
-            },
-            {
               "t": "A request to merge a branch that is already pushed",
               "ok": true,
               "why": "That is all it is: your branch, proposed into another, with somewhere for people to talk about it."
             },
             {
+              "t": "A copy of your changed files",
+              "why": "No copying happens. The commits are already on GitHub."
+            },
+            {
               "t": "A patch file emailed to the maintainer",
-              "why": "That is the older mailing-list workflow. Git supports it, but it is not what a pull request is."
+              "why": "That is the older mailing-list workflow."
             },
             {
               "t": "A backup of your branch",
-              "why": "A pull request protects nothing. Your branch is safe because you pushed it, not because you proposed it."
+              "why": "It protects nothing; pushing did that."
             }
           ]
         },
@@ -148,13 +1138,13 @@
           "q": "Your pull request was merged on GitHub. Your local main now:",
           "a": [
             {
-              "t": "Has the change already",
-              "why": "It does not. Nothing reaches your machine on its own."
-            },
-            {
               "t": "Does not have it until you pull",
               "ok": true,
-              "why": "Two different places moved: GitHub's main, and later yours. This is the step people forget, and then wonder why their main looks stale."
+              "why": "Two different places moved: GitHub's main, and later yours. This is the step people forget."
+            },
+            {
+              "t": "Has the change already",
+              "why": "Nothing reaches your machine on its own."
             },
             {
               "t": "Is broken and needs a fresh clone",
@@ -162,7 +1152,7 @@
             },
             {
               "t": "Updates the next time you commit",
-              "why": "Committing adds to your history; it never brings anything down from GitHub."
+              "why": "Committing never brings anything down."
             }
           ]
         },
@@ -170,21 +1160,21 @@
           "q": "Your push is rejected as non-fast-forward. The right first move is:",
           "a": [
             {
-              "t": "git push --force",
-              "why": "This is the answer that loses somebody's work. Force overwrites the commits you have not seen."
-            },
-            {
               "t": "git pull, then push again",
               "ok": true,
-              "why": "The rejection means origin has work you do not. Bring it in, resolve anything that conflicts, then push."
+              "why": "The rejection means origin has work you do not. Bring it in, resolve, then push."
+            },
+            {
+              "t": "git push --force",
+              "why": "This is the answer that loses somebody's work."
             },
             {
               "t": "Delete the branch and start over",
-              "why": "Nothing is wrong with your branch; it is just missing a commit from someone else."
+              "why": "Nothing is wrong with your branch."
             },
             {
               "t": "Clone the repository again",
-              "why": "A fresh clone throws away your work to avoid a one-command fix."
+              "why": "That throws away your work to avoid a one-command fix."
             }
           ]
         },
@@ -192,21 +1182,373 @@
           "q": "A fork is:",
           "a": [
             {
-              "t": "A branch with a different name",
-              "why": "A branch lives in one repository. A fork is a separate repository."
-            },
-            {
               "t": "Your own copy of someone else's repository, on GitHub",
               "ok": true,
-              "why": "It is a server-side copy under your account, which is how you contribute somewhere you cannot push to directly."
+              "why": "A server-side copy under your account, which is how you contribute where you cannot push."
+            },
+            {
+              "t": "A branch with a different name",
+              "why": "A branch lives in one repository."
             },
             {
               "t": "A clone on your machine",
-              "why": "That is a clone. A fork exists on GitHub, and you usually clone your fork afterwards."
+              "why": "That is a clone; you usually clone your fork afterwards."
             },
             {
               "t": "A permanent split from the original",
-              "why": "It can be, but usually a fork stays connected: you sync from upstream and send pull requests back."
+              "why": "Usually it stays connected."
+            }
+          ]
+        },
+        {
+          "q": "What is a protected branch for?",
+          "a": [
+            {
+              "t": "Stopping direct pushes so changes arrive by pull request",
+              "ok": true,
+              "why": "It is a rule on the server. Your local Git knows nothing about it until a push is refused."
+            },
+            {
+              "t": "Making a branch read-only forever",
+              "why": "You can still change it, through review."
+            },
+            {
+              "t": "Backing up the branch",
+              "why": "It provides no backup."
+            },
+            {
+              "t": "Preventing merge conflicts",
+              "why": "It has no effect on conflicts."
+            }
+          ]
+        },
+        {
+          "q": "GitHub Actions runs your workflow. Where does it run?",
+          "a": [
+            {
+              "t": "On a fresh machine GitHub provides, per job",
+              "ok": true,
+              "why": "Nothing persists between jobs unless you cache it or pass an artifact, which explains a lot of confusing failures."
+            },
+            {
+              "t": "On your own machine",
+              "why": "It runs on GitHub's runners unless you host your own."
+            },
+            {
+              "t": "Inside your repository",
+              "why": "The repository holds the definition, not the execution."
+            },
+            {
+              "t": "On the branch's server",
+              "why": "Branches have no server of their own."
+            }
+          ]
+        },
+        {
+          "q": "A workflow fails with permission denied to github-actions. The usual cause is:",
+          "a": [
+            {
+              "t": "The job's token is read-only by default",
+              "ok": true,
+              "why": "Grant only what the job needs, at job level, with a permissions block."
+            },
+            {
+              "t": "Your account lacks access",
+              "why": "The bot's token is the one being refused, not you."
+            },
+            {
+              "t": "The runner is offline",
+              "why": "That produces a queued job, not a permission error."
+            },
+            {
+              "t": "The branch is protected",
+              "why": "That gives a different, clearer refusal."
+            }
+          ]
+        },
+        {
+          "q": "What does a GitHub release add on top of a tag?",
+          "a": [
+            {
+              "t": "Notes and downloadable assets attached to that tag",
+              "ok": true,
+              "why": "The tag is the Git part; the release is GitHub's layer on top of it."
+            },
+            {
+              "t": "Nothing, they are the same",
+              "why": "A release is built on a tag but is not the tag."
+            },
+            {
+              "t": "A protected branch",
+              "why": "Unrelated."
+            },
+            {
+              "t": "A new branch",
+              "why": "No branch is created."
+            }
+          ]
+        },
+        {
+          "q": "Pages is not showing your latest push. The first thing worth checking is:",
+          "a": [
+            {
+              "t": "Whether the deploy actually ran and succeeded",
+              "ok": true,
+              "why": "A failed or missing workflow is far more common than a caching problem."
+            },
+            {
+              "t": "Your DNS settings",
+              "why": "Only relevant with a custom domain."
+            },
+            {
+              "t": "Your browser cache",
+              "why": "Worth clearing, but rarely the real cause."
+            },
+            {
+              "t": "Whether the repository is public",
+              "why": "Pages works on private repositories on paid plans too."
+            }
+          ]
+        },
+        {
+          "q": "You opened a pull request and then pushed another commit to the branch. What happens?",
+          "a": [
+            {
+              "t": "The pull request updates to include it",
+              "ok": true,
+              "why": "A pull request tracks the branch, so it always shows the branch's current state."
+            },
+            {
+              "t": "Nothing until you reopen it",
+              "why": "It updates automatically."
+            },
+            {
+              "t": "A second pull request is created",
+              "why": "One branch, one open pull request."
+            },
+            {
+              "t": "The pull request closes",
+              "why": "It stays open."
+            }
+          ]
+        },
+        {
+          "q": "What does gh pr checkout do?",
+          "a": [
+            {
+              "t": "Fetches someone's pull request branch onto your machine",
+              "ok": true,
+              "why": "The fastest way to actually run a contribution before approving it."
+            },
+            {
+              "t": "Merges the pull request",
+              "why": "That is gh pr merge."
+            },
+            {
+              "t": "Approves it",
+              "why": "That is gh pr review."
+            },
+            {
+              "t": "Creates a pull request",
+              "why": "That is gh pr create."
+            }
+          ]
+        },
+        {
+          "q": "Squash merging a pull request produces:",
+          "a": [
+            {
+              "t": "One commit on the target branch",
+              "ok": true,
+              "why": "The branch's individual commits are collapsed, which is why the branch history disappears."
+            },
+            {
+              "t": "A merge commit with two parents",
+              "why": "That is an ordinary merge."
+            },
+            {
+              "t": "The branch's commits, replayed",
+              "why": "That is a rebase merge."
+            },
+            {
+              "t": "No commit at all",
+              "why": "Something must land, or nothing merged."
+            }
+          ]
+        },
+        {
+          "q": "Why does your fork say it is behind by dozens of commits?",
+          "a": [
+            {
+              "t": "The original repository moved on and your fork did not follow",
+              "ok": true,
+              "why": "A fork is a snapshot in time. Syncing is your job, not GitHub's."
+            },
+            {
+              "t": "You deleted commits",
+              "why": "Nothing was deleted."
+            },
+            {
+              "t": "Your clone is broken",
+              "why": "It is perfectly healthy, just out of date."
+            },
+            {
+              "t": "The original was force pushed",
+              "why": "Possible, but being behind is simply normal drift."
+            }
+          ]
+        },
+        {
+          "q": "What does CODEOWNERS do?",
+          "a": [
+            {
+              "t": "Requests review automatically from the right people for changed paths",
+              "ok": true,
+              "why": "It routes review by file path, which is how large repositories stay reviewable."
+            },
+            {
+              "t": "Locks files to their owner",
+              "why": "It requests review; it does not lock."
+            },
+            {
+              "t": "Transfers ownership of the repository",
+              "why": "It does nothing of the sort."
+            },
+            {
+              "t": "Lists contributors",
+              "why": "That is generated from history."
+            }
+          ]
+        },
+        {
+          "q": "A GitHub Issue and a pull request are related how?",
+          "a": [
+            {
+              "t": "A pull request is an issue that also proposes a change",
+              "ok": true,
+              "why": "They share numbering and much of their machinery, which is why a pull request can close an issue."
+            },
+            {
+              "t": "They are entirely separate systems",
+              "why": "They share the same underlying model."
+            },
+            {
+              "t": "An issue becomes a pull request automatically",
+              "why": "It does not."
+            },
+            {
+              "t": "A pull request must have an issue",
+              "why": "It is a convention in some projects, not a rule."
+            }
+          ]
+        },
+        {
+          "q": "What does the .github directory do in a repository?",
+          "a": [
+            {
+              "t": "Holds GitHub's own configuration: workflows, templates, and community files",
+              "ok": true,
+              "why": "It is where GitHub looks; Git itself attaches no meaning to it."
+            },
+            {
+              "t": "Stores Git's internal data",
+              "why": "That is .git, which is different."
+            },
+            {
+              "t": "Is ignored by Git",
+              "why": "It is tracked like any other directory."
+            },
+            {
+              "t": "Contains your Pages site",
+              "why": "Pages usually serves from docs or a branch."
+            }
+          ]
+        },
+        {
+          "q": "Secret scanning blocked your push. What has actually happened?",
+          "a": [
+            {
+              "t": "GitHub recognised a credential in the commits you tried to push",
+              "ok": true,
+              "why": "The push never landed, which is the good news. Remove it from the commits and rotate it anyway."
+            },
+            {
+              "t": "Your account was compromised",
+              "why": "Nothing about your account is implied."
+            },
+            {
+              "t": "The repository is now public",
+              "why": "Visibility did not change."
+            },
+            {
+              "t": "Your token expired",
+              "why": "That is an authentication error instead."
+            }
+          ]
+        },
+        {
+          "q": "What is the difference between a draft pull request and an ordinary one?",
+          "a": [
+            {
+              "t": "A draft cannot be merged and signals it is not ready",
+              "ok": true,
+              "why": "Useful for showing work early without inviting a final review."
+            },
+            {
+              "t": "A draft is private",
+              "why": "Anyone who can see the repository can see it."
+            },
+            {
+              "t": "A draft does not run checks",
+              "why": "Checks usually still run."
+            },
+            {
+              "t": "A draft expires",
+              "why": "It stays until you mark it ready or close it."
+            }
+          ]
+        },
+        {
+          "q": "Someone force pushed to a shared branch you are working on. You should:",
+          "a": [
+            {
+              "t": "Fetch, then reset your branch onto the new remote state, keeping your own work aside",
+              "ok": true,
+              "why": "Their history is now the truth. Rebase or cherry-pick your commits onto it rather than merging the old shape back in."
+            },
+            {
+              "t": "Force push your version back",
+              "why": "That starts a fight and loses somebody's work."
+            },
+            {
+              "t": "Pull normally",
+              "why": "Pull would merge two now-divergent histories into a mess."
+            },
+            {
+              "t": "Delete your clone",
+              "why": "Drastic and unnecessary."
+            }
+          ]
+        },
+        {
+          "q": "What does gh repo fork --clone do?",
+          "a": [
+            {
+              "t": "Forks the repository on GitHub and clones your fork locally",
+              "ok": true,
+              "why": "The two steps most contributions start with, in one command."
+            },
+            {
+              "t": "Clones the original repository",
+              "why": "It clones your fork, not the original."
+            },
+            {
+              "t": "Creates a branch",
+              "why": "No branch is created."
+            },
+            {
+              "t": "Opens a pull request",
+              "why": "That comes later."
             }
           ]
         }

@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=50">
+  <link rel="stylesheet" href="style.css?v=51">
   <!-- quizschema:start -->
 <script type="application/ld+json">
 {
@@ -62,7 +62,7 @@
         {
           "@type": "Answer",
           "text": "The remote",
-          "comment": { "@type": "Comment", "text": "No. Nothing leaves your machine until you push, and nothing is even committed yet." }
+          "comment": { "@type": "Comment", "text": "No. Nothing leaves your machine until you push." }
         }
       ]
     },
@@ -126,7 +126,7 @@
       "name": "You run git fetch. What just changed?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Your record of the remote",
+        "text": "Your record of where the remote is",
         "comment": { "@type": "Comment", "text": "Fetch updates your origin/* labels and nothing else. Pull is fetch plus a merge, which is the part that can surprise you." }
       },
       "suggestedAnswer": [
@@ -171,6 +171,1221 @@
           "@type": "Answer",
           "text": "Recoverable only from a backup",
           "comment": { "@type": "Comment", "text": "Git keeps its own safety net. The reflog is that net." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does HEAD point at, normally?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The branch you are currently on",
+        "comment": { "@type": "Comment", "text": "HEAD is where you are standing. Usually it points at a branch, and that branch points at a commit." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The newest commit in the repository",
+          "comment": { "@type": "Comment", "text": "Not necessarily. Another branch may be far ahead of you." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The first commit",
+          "comment": { "@type": "Comment", "text": "That is the root commit, and HEAD rarely sits there." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The remote's latest commit",
+          "comment": { "@type": "Comment", "text": "HEAD is entirely local. It knows nothing about the remote." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What makes a merge commit different from an ordinary one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It has two parents",
+        "comment": { "@type": "Comment", "text": "That second parent is what records that two lines of history joined here." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "It has no parent",
+          "comment": { "@type": "Comment", "text": "Only the very first commit in a repository has no parent." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It contains no changes",
+          "comment": { "@type": "Comment", "text": "It often does contain changes: the resolution of any conflicts." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It cannot be reverted",
+          "comment": { "@type": "Comment", "text": "It can, with git revert -m to say which parent to keep." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git rebase gives your commits new hashes. Why?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each replayed commit has a different parent, and the parent is part of the hash",
+        "comment": { "@type": "Comment", "text": "A commit's identity includes its parent, so replaying onto a new base necessarily creates new commits." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Because rebase compresses them",
+          "comment": { "@type": "Comment", "text": "Rebase does not compress anything; squashing is a separate choice." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Because Git randomises hashes",
+          "comment": { "@type": "Comment", "text": "Hashes are entirely determined by content, never random." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Because the message changes",
+          "comment": { "@type": "Comment", "text": "The message is usually identical. The parent is what changed." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Why should you not rebase a branch other people already have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Their copies point at commits that no longer exist on yours",
+        "comment": { "@type": "Comment", "text": "You replaced the commits with new ones. Everyone else still has the originals, and reconciling that is painful." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Rebase is slower on shared branches",
+          "comment": { "@type": "Comment", "text": "Speed has nothing to do with it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Git blocks it outright",
+          "comment": { "@type": "Comment", "text": "Git will happily let you. That is precisely the danger." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It deletes their local work",
+          "comment": { "@type": "Comment", "text": "It does not touch their machine at all, which is part of the confusion." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git reset --soft HEAD~1 does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Moves the branch back one commit and keeps the changes staged",
+        "comment": { "@type": "Comment", "text": "The commit is undone; the work is not. This is the fix for committing too early." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Deletes the last commit and its changes",
+          "comment": { "@type": "Comment", "text": "That is --hard. Soft keeps everything." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Creates a commit that undoes the last one",
+          "comment": { "@type": "Comment", "text": "That is revert, which adds rather than removes." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Unstages everything",
+          "comment": { "@type": "Comment", "text": "It stages the undone commit's changes rather than unstaging them." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Which undo is safe on a branch other people are using?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "git revert",
+        "comment": { "@type": "Comment", "text": "It adds a new commit that reverses the old one, so nobody's history is rewritten." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "git reset --hard",
+          "comment": { "@type": "Comment", "text": "That rewrites where the branch points, which breaks everyone else." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git commit --amend",
+          "comment": { "@type": "Comment", "text": "Amend replaces the last commit, so it rewrites history too." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git rebase",
+          "comment": { "@type": "Comment", "text": "Rebase replaces a whole run of commits." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is the staging area for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choosing exactly what goes into the next commit",
+        "comment": { "@type": "Comment", "text": "It lets you commit some of your changes and not others, so a commit can be one coherent idea." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Backing up files before committing",
+          "comment": { "@type": "Comment", "text": "It is not a backup; it is a draft of the next commit." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Storing files Git should ignore",
+          "comment": { "@type": "Comment", "text": "That is .gitignore, which is unrelated." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Holding files while you switch branches",
+          "comment": { "@type": "Comment", "text": "That is closer to what stash does." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git stash does what to your working tree?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Saves your changes away and leaves the tree clean",
+        "comment": { "@type": "Comment", "text": "It gets you to a clean state without inventing a commit you did not mean to make." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Commits your changes on a hidden branch",
+          "comment": { "@type": "Comment", "text": "It stores them, but not as a commit on a branch you use." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Deletes your changes",
+          "comment": { "@type": "Comment", "text": "Nothing is deleted; git stash pop brings them back." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Pushes them to the remote",
+          "comment": { "@type": "Comment", "text": "A stash never leaves your machine." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A tag differs from a branch because:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A tag does not move when you commit",
+        "comment": { "@type": "Comment", "text": "A branch follows you forward. A tag stays where you put it, which is what makes it useful for releases." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A tag cannot be deleted",
+          "comment": { "@type": "Comment", "text": "It can, locally and on the remote." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A tag stores the files separately",
+          "comment": { "@type": "Comment", "text": "It stores nothing extra; it points at a commit." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A tag is only for remote use",
+          "comment": { "@type": "Comment", "text": "Tags work perfectly well in a repository with no remote at all." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You are in detached HEAD. What does that mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "HEAD points straight at a commit rather than at a branch",
+        "comment": { "@type": "Comment", "text": "Not an error. Commits made here belong to no branch, so you need one to keep them." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your repository is corrupt",
+          "comment": { "@type": "Comment", "text": "Nothing is wrong. It is a normal state to visit." }
+        },
+        {
+          "@type": "Answer",
+          "text": "You have unsaved changes",
+          "comment": { "@type": "Comment", "text": "It says nothing about your working tree." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The remote is unreachable",
+          "comment": { "@type": "Comment", "text": "It is entirely local and unrelated to the remote." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does .gitignore do about a file already committed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nothing: it only affects untracked files",
+        "comment": { "@type": "Comment", "text": "You must untrack it first with git rm --cached, or Git keeps following it regardless." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "It removes it from history",
+          "comment": { "@type": "Comment", "text": "Nothing in .gitignore touches history." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It stops tracking it from now on",
+          "comment": { "@type": "Comment", "text": "It does not. The file stays tracked until you untrack it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It deletes it from your disk",
+          "comment": { "@type": "Comment", "text": "It never deletes anything." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git pull is equivalent to:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "git fetch followed by a merge",
+        "comment": { "@type": "Comment", "text": "Which is why a pull can create a merge commit you did not ask for, and why fetch first is often calmer." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "git fetch followed by a reset",
+          "comment": { "@type": "Comment", "text": "Reset is not part of pull, and would throw work away." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git push in reverse",
+          "comment": { "@type": "Comment", "text": "Push and pull are not symmetrical operations." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git clone for an existing repository",
+          "comment": { "@type": "Comment", "text": "Clone creates a repository; pull updates one." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You cloned a repository. How much history did you get?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All of it, every commit",
+        "comment": { "@type": "Comment", "text": "Unless you asked for a shallow clone, you have the entire history and can work offline." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Only the latest commit",
+          "comment": { "@type": "Comment", "text": "That is a shallow clone, which you have to request." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Only the default branch's files",
+          "comment": { "@type": "Comment", "text": "You get the files and the full history behind them." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Only what the server chooses to send",
+          "comment": { "@type": "Comment", "text": "The server sends everything for a normal clone." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is origin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The default nickname for the remote you cloned from",
+        "comment": { "@type": "Comment", "text": "It is only a name. You can rename it, have several remotes, or none at all." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The first commit in the repository",
+          "comment": { "@type": "Comment", "text": "That is the root commit." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The main branch",
+          "comment": { "@type": "Comment", "text": "The branch is usually main; origin is the remote." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A GitHub-specific concept",
+          "comment": { "@type": "Comment", "text": "It is plain Git and works with any host, or none." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git cherry-pick does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copies one commit onto your current branch",
+        "comment": { "@type": "Comment", "text": "The original stays where it is; you get a new commit with the same change." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Moves a commit between branches",
+          "comment": { "@type": "Comment", "text": "It copies. The original is untouched." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Merges only part of a branch",
+          "comment": { "@type": "Comment", "text": "It applies whole commits, not partial merges." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Selects which files to commit",
+          "comment": { "@type": "Comment", "text": "That is what staging does." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Your push is rejected as non-fast-forward. What does that mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The remote has commits you do not have",
+        "comment": { "@type": "Comment", "text": "Git refuses rather than discarding them. Pull, reconcile, then push." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your commit message is invalid",
+          "comment": { "@type": "Comment", "text": "Git does not judge messages." }
+        },
+        {
+          "@type": "Answer",
+          "text": "You lack permission",
+          "comment": { "@type": "Comment", "text": "That is a different error about access." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your branch does not exist remotely",
+          "comment": { "@type": "Comment", "text": "That gives a no upstream error instead." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does git log show you?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The commits reachable from where you are",
+        "comment": { "@type": "Comment", "text": "It walks backwards from HEAD, so commits on other branches are not listed unless you ask." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Every commit in the repository",
+          "comment": { "@type": "Comment", "text": "Only those reachable from your current position, by default." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your uncommitted changes",
+          "comment": { "@type": "Comment", "text": "That is git status and git diff." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The remote's history",
+          "comment": { "@type": "Comment", "text": "Only what you have fetched, and only from your position." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A conflict happens when:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both sides changed the same part of the same file",
+        "comment": { "@type": "Comment", "text": "Git merges everything it safely can and stops only where it would have to guess." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Two branches have the same name",
+          "comment": { "@type": "Comment", "text": "Names never conflict in that sense." }
+        },
+        {
+          "@type": "Answer",
+          "text": "You forgot to pull",
+          "comment": { "@type": "Comment", "text": "Being behind causes a rejected push, not a conflict." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A file was deleted",
+          "comment": { "@type": "Comment", "text": "That can conflict, but only if the other side also changed it." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git commit --amend does what to the previous commit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Replaces it with a new commit",
+        "comment": { "@type": "Comment", "text": "The hash changes, which is why amending something already pushed requires a force." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Edits it in place",
+          "comment": { "@type": "Comment", "text": "Commits are immutable. A replacement is built instead." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Adds a second commit",
+          "comment": { "@type": "Comment", "text": "It replaces rather than adds." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Only changes the message",
+          "comment": { "@type": "Comment", "text": "It can change the content too, and either way the hash changes." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is the reflog?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A record of everywhere HEAD has been",
+        "comment": { "@type": "Comment", "text": "It includes positions you abandoned, which is exactly why it can rescue them." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A log of remote activity",
+          "comment": { "@type": "Comment", "text": "It is entirely local and private to your clone." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The same as git log",
+          "comment": { "@type": "Comment", "text": "log walks history; reflog records your movements, including undone ones." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A list of conflicts",
+          "comment": { "@type": "Comment", "text": "It has nothing to do with conflicts." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Fast-forward means:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your branch label slid forward because it had nothing of its own",
+        "comment": { "@type": "Comment", "text": "No merge commit is created, which surprises people expecting one." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Git skipped some commits",
+          "comment": { "@type": "Comment", "text": "Nothing is skipped." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The merge was forced",
+          "comment": { "@type": "Comment", "text": "Nothing is forced; it was simply unambiguous." }
+        },
+        {
+          "@type": "Answer",
+          "text": "History was rewritten",
+          "comment": { "@type": "Comment", "text": "Nothing was rewritten; a label moved." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git switch -c feature does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Creates a branch at your current commit and moves onto it",
+        "comment": { "@type": "Comment", "text": "Two things at once: the label is created, and HEAD starts following it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Copies the current branch's files",
+          "comment": { "@type": "Comment", "text": "Nothing is copied." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Creates a branch on the remote",
+          "comment": { "@type": "Comment", "text": "It is local until you push it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Switches only if the branch exists",
+          "comment": { "@type": "Comment", "text": "The -c is precisely for creating it." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Which of these can lose uncommitted work permanently?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "git reset --hard",
+        "comment": { "@type": "Comment", "text": "It discards your working tree, and Git never had a copy of uncommitted work to give back." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "git revert",
+          "comment": { "@type": "Comment", "text": "Revert only adds a commit." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git branch",
+          "comment": { "@type": "Comment", "text": "Creating a label changes nothing." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git fetch",
+          "comment": { "@type": "Comment", "text": "Fetch touches nothing of yours." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does git diff show by default?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Changes in your working tree that are not staged",
+        "comment": { "@type": "Comment", "text": "Add --staged to see what you have staged instead, which trips people up constantly." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "All changes since the last commit",
+          "comment": { "@type": "Comment", "text": "Only the unstaged ones, by default." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Differences between branches",
+          "comment": { "@type": "Comment", "text": "That needs branch names as arguments." }
+        },
+        {
+          "@type": "Answer",
+          "text": "What you are about to push",
+          "comment": { "@type": "Comment", "text": "That is a comparison with the remote branch." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A shallow clone gives you:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Truncated history, but complete current files",
+        "comment": { "@type": "Comment", "text": "Useful in CI. It becomes a problem the moment you need older commits." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Fewer files",
+          "comment": { "@type": "Comment", "text": "Every file is present; only history is shortened." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A read-only copy",
+          "comment": { "@type": "Comment", "text": "You can commit and push normally." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Only one branch's files",
+          "comment": { "@type": "Comment", "text": "Branch limiting is a separate option." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Where does git stash store your changes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Locally, in your own repository",
+        "comment": { "@type": "Comment", "text": "A stash never travels. It is not pushed and a colleague cannot see it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "On the remote",
+          "comment": { "@type": "Comment", "text": "Stashes are never pushed." }
+        },
+        {
+          "@type": "Answer",
+          "text": "In a temporary file outside Git",
+          "comment": { "@type": "Comment", "text": "Git stores them as objects in your repository." }
+        },
+        {
+          "@type": "Answer",
+          "text": "In the staging area",
+          "comment": { "@type": "Comment", "text": "The staging area is cleared, not used as storage." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What happens to commits on a branch you delete?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They survive until Git garbage-collects unreachable objects",
+        "comment": { "@type": "Comment", "text": "Deleting a branch removes a label. The reflog can still find the commits for a while." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "They are deleted immediately",
+          "comment": { "@type": "Comment", "text": "Nothing is deleted at the moment you delete a label." }
+        },
+        {
+          "@type": "Answer",
+          "text": "They move to main",
+          "comment": { "@type": "Comment", "text": "Commits never move on their own." }
+        },
+        {
+          "@type": "Answer",
+          "text": "They are pushed to the remote",
+          "comment": { "@type": "Comment", "text": "Deleting a branch pushes nothing." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git push -u origin feature does what the -u adds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sets the branch to track origin/feature",
+        "comment": { "@type": "Comment", "text": "After that, plain git push and git pull know where to go." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Forces the push",
+          "comment": { "@type": "Comment", "text": "Forcing is --force, and is a very different thing." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Creates the remote repository",
+          "comment": { "@type": "Comment", "text": "The repository must already exist." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Uploads untracked files",
+          "comment": { "@type": "Comment", "text": "Push only ever sends commits." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "If two branches never touched the same file, merging them will:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Combine both sets of changes with no conflict",
+        "comment": { "@type": "Comment", "text": "Git merges by content, so unrelated changes combine cleanly." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Always conflict",
+          "comment": { "@type": "Comment", "text": "Conflicts need overlapping edits." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Keep only the newer branch",
+          "comment": { "@type": "Comment", "text": "Nothing is discarded." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Require a rebase first",
+          "comment": { "@type": "Comment", "text": "No it does not." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is a fork, on GitHub?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your own copy of someone else's repository, on the server",
+        "comment": { "@type": "Comment", "text": "It is how you contribute to a project you cannot push to directly." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A branch in the original repository",
+          "comment": { "@type": "Comment", "text": "A fork is a separate repository." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A clone on your machine",
+          "comment": { "@type": "Comment", "text": "That is a clone; a fork lives on GitHub." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A permanent split",
+          "comment": { "@type": "Comment", "text": "Usually it stays connected: you sync and send pull requests back." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git rm --cached <file> does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stops tracking the file but leaves it on disk",
+        "comment": { "@type": "Comment", "text": "This is the command that finally makes .gitignore apply to something already committed." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Deletes the file",
+          "comment": { "@type": "Comment", "text": "Plain git rm does that; --cached keeps it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Removes it from history",
+          "comment": { "@type": "Comment", "text": "History is untouched." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Unstages a change",
+          "comment": { "@type": "Comment", "text": "That is git restore --staged." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Which is true of git checkout compared with switch and restore?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "checkout does the jobs of both, which is why the newer pair exists",
+        "comment": { "@type": "Comment", "text": "switch changes branches, restore changes files. Splitting them removed a lot of ambiguity." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "checkout is deprecated and removed",
+          "comment": { "@type": "Comment", "text": "It still works and is not going anywhere." }
+        },
+        {
+          "@type": "Answer",
+          "text": "checkout only changes branches",
+          "comment": { "@type": "Comment", "text": "It also restores files, which is the confusing part." }
+        },
+        {
+          "@type": "Answer",
+          "text": "switch can restore files too",
+          "comment": { "@type": "Comment", "text": "It cannot; that is restore's job." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does origin/main represent in your repository?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Where main was on the remote the last time you looked",
+        "comment": { "@type": "Comment", "text": "It is a local record, updated by fetch, not a live view of the server." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The live state of the server",
+          "comment": { "@type": "Comment", "text": "It only updates when you fetch or pull." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your own main branch",
+          "comment": { "@type": "Comment", "text": "That is just main, and the two can differ." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A branch you can commit to directly",
+          "comment": { "@type": "Comment", "text": "You commit to main and push; you do not commit to origin/main." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You committed a secret and pushed it. What is the honest first step?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rotate the secret, because it must be considered compromised",
+        "comment": { "@type": "Comment", "text": "Rewriting history is worth doing, but the key is already out. Revoking it is what actually protects you." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Delete the commit and move on",
+          "comment": { "@type": "Comment", "text": "The secret was public; removing it does not un-share it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Force push immediately",
+          "comment": { "@type": "Comment", "text": "Do that too, but it is not the first thing that matters." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Make the repository private",
+          "comment": { "@type": "Comment", "text": "Anyone who saw it still has it." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git merge --abort during a conflict does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Returns you to exactly where you were before the merge",
+        "comment": { "@type": "Comment", "text": "This is why a conflict is never a trap: the way out is always available." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Keeps the resolved files",
+          "comment": { "@type": "Comment", "text": "It abandons the whole attempt." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Deletes the other branch",
+          "comment": { "@type": "Comment", "text": "It touches no branches." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Commits what has been resolved so far",
+          "comment": { "@type": "Comment", "text": "It commits nothing." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Why does Git store snapshots rather than differences?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It makes reading any version fast and simple",
+        "comment": { "@type": "Comment", "text": "Diffs are computed when you ask for them; storage is content-addressed snapshots with shared unchanged files." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "It uses less space",
+          "comment": { "@type": "Comment", "text": "Snapshots plus deduplication is efficient, but speed and simplicity are the point." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Because diffs are unreliable",
+          "comment": { "@type": "Comment", "text": "Diffs are perfectly reliable; they are just derived." }
+        },
+        {
+          "@type": "Answer",
+          "text": "To support conflicts",
+          "comment": { "@type": "Comment", "text": "Conflict handling does not depend on it." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Two people clone the same repository. Whose is the real one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All of them: every clone is a complete repository",
+        "comment": { "@type": "Comment", "text": "That is what distributed means. The server copy is only special by agreement." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The one on the server",
+          "comment": { "@type": "Comment", "text": "It is a clone like any other, conventionally treated as canonical." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The first one cloned",
+          "comment": { "@type": "Comment", "text": "Order confers nothing." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Whichever has the most commits",
+          "comment": { "@type": "Comment", "text": "Size confers nothing either." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git restore <file> does what?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Throws away your uncommitted changes to that file",
+        "comment": { "@type": "Comment", "text": "One of the few genuinely unrecoverable commands, because the work was never recorded." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Restores a deleted commit",
+          "comment": { "@type": "Comment", "text": "It works on files, not commits." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Unstages the file",
+          "comment": { "@type": "Comment", "text": "That needs --staged." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Pulls the file from the remote",
+          "comment": { "@type": "Comment", "text": "It restores from your own repository." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does the index refer to in Git?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Another name for the staging area",
+        "comment": { "@type": "Comment", "text": "Index, staging area, and cache are three names for the same thing, which does not help newcomers." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A list of all files in history",
+          "comment": { "@type": "Comment", "text": "There is no such single list." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The commit graph",
+          "comment": { "@type": "Comment", "text": "That is the object database." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A search index",
+          "comment": { "@type": "Comment", "text": "Git has no search index." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Why might git status show a file as both staged and unstaged?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You staged it, then changed it again",
+        "comment": { "@type": "Comment", "text": "The staged snapshot and the current file differ, so both states are true at once." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Git is confused",
+          "comment": { "@type": "Comment", "text": "It is precise; it is describing two different snapshots." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The file is corrupt",
+          "comment": { "@type": "Comment", "text": "Nothing is wrong with the file." }
+        },
+        {
+          "@type": "Answer",
+          "text": "It is in .gitignore",
+          "comment": { "@type": "Comment", "text": "Ignored files are not listed like that." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git branch -d refuses to delete a branch. Why?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It has commits that are not merged anywhere else",
+        "comment": { "@type": "Comment", "text": "Git is protecting work. -D overrides it, and should make you pause." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "The branch is checked out on the remote",
+          "comment": { "@type": "Comment", "text": "That is not something -d checks." }
+        },
+        {
+          "@type": "Answer",
+          "text": "You lack permission",
+          "comment": { "@type": "Comment", "text": "Local branches have no permissions." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The branch has a tag",
+          "comment": { "@type": "Comment", "text": "Tags do not block deletion." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is the practical difference between merge and rebase?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Merge preserves what happened; rebase rewrites it into a straight line",
+        "comment": { "@type": "Comment", "text": "Neither is correct in general. It is a choice between an honest record and a readable one." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Rebase is faster",
+          "comment": { "@type": "Comment", "text": "Speed is irrelevant at normal scale." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Merge loses commits",
+          "comment": { "@type": "Comment", "text": "Merge loses nothing." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Rebase is safer",
+          "comment": { "@type": "Comment", "text": "Rebase is the riskier of the two, because it rewrites." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You want the exact state of the remote, discarding local commits. Which?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "git reset --hard origin/main",
+        "comment": { "@type": "Comment", "text": "It moves your branch to match the remote and discards anything of your own." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "git pull",
+          "comment": { "@type": "Comment", "text": "Pull would merge your commits in rather than discard them." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git fetch",
+          "comment": { "@type": "Comment", "text": "Fetch changes nothing of yours." }
+        },
+        {
+          "@type": "Answer",
+          "text": "git clean",
+          "comment": { "@type": "Comment", "text": "Clean removes untracked files, not commits." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "git clean -fd removes:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Untracked files and directories",
+        "comment": { "@type": "Comment", "text": "Git never had copies of them, so this is genuinely unrecoverable. Run it with -n first." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Ignored files only",
+          "comment": { "@type": "Comment", "text": "Those need -x as well." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Staged changes",
+          "comment": { "@type": "Comment", "text": "Staged changes are not touched." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Old branches",
+          "comment": { "@type": "Comment", "text": "It works on files, not refs." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does a commit hash actually describe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The content, the parents, the author and the message together",
+        "comment": { "@type": "Comment", "text": "Change any one of them and you get a different commit, which is why rewriting always produces new hashes." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A random unique number",
+          "comment": { "@type": "Comment", "text": "Nothing about it is random." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The time it was made",
+          "comment": { "@type": "Comment", "text": "Time is part of it, but only part." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Its position in the branch",
+          "comment": { "@type": "Comment", "text": "Position is not stored; parents are." }
         }
       ]
     }
@@ -387,6 +1602,6 @@
   <script src="hello.js"></script>
   <script src="render.js"></script>
   <script src="stepper.js?v=3"></script>
-  <script src="quiz.js?v=2"></script>
+  <script src="quiz.js?v=3"></script>
   <script src="learn.js?v=4"></script>  <script src="offline.js?v=2"></script></body>
 </html>

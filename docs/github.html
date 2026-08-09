@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=50">
+  <link rel="stylesheet" href="style.css?v=51">
   <!-- quizschema:start -->
 <script type="application/ld+json">
 {
@@ -52,17 +52,17 @@
         {
           "@type": "Answer",
           "text": "A copy of your changed files",
-          "comment": { "@type": "Comment", "text": "No copying happens. The commits are already on GitHub before the pull request exists." }
+          "comment": { "@type": "Comment", "text": "No copying happens. The commits are already on GitHub." }
         },
         {
           "@type": "Answer",
           "text": "A patch file emailed to the maintainer",
-          "comment": { "@type": "Comment", "text": "That is the older mailing-list workflow. Git supports it, but it is not what a pull request is." }
+          "comment": { "@type": "Comment", "text": "That is the older mailing-list workflow." }
         },
         {
           "@type": "Answer",
           "text": "A backup of your branch",
-          "comment": { "@type": "Comment", "text": "A pull request protects nothing. Your branch is safe because you pushed it, not because you proposed it." }
+          "comment": { "@type": "Comment", "text": "It protects nothing; pushing did that." }
         }
       ]
     },
@@ -73,13 +73,13 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Does not have it until you pull",
-        "comment": { "@type": "Comment", "text": "Two different places moved: GitHub's main, and later yours. This is the step people forget, and then wonder why their main looks stale." }
+        "comment": { "@type": "Comment", "text": "Two different places moved: GitHub's main, and later yours. This is the step people forget." }
       },
       "suggestedAnswer": [
         {
           "@type": "Answer",
           "text": "Has the change already",
-          "comment": { "@type": "Comment", "text": "It does not. Nothing reaches your machine on its own." }
+          "comment": { "@type": "Comment", "text": "Nothing reaches your machine on its own." }
         },
         {
           "@type": "Answer",
@@ -89,7 +89,7 @@
         {
           "@type": "Answer",
           "text": "Updates the next time you commit",
-          "comment": { "@type": "Comment", "text": "Committing adds to your history; it never brings anything down from GitHub." }
+          "comment": { "@type": "Comment", "text": "Committing never brings anything down." }
         }
       ]
     },
@@ -100,23 +100,23 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "git pull, then push again",
-        "comment": { "@type": "Comment", "text": "The rejection means origin has work you do not. Bring it in, resolve anything that conflicts, then push." }
+        "comment": { "@type": "Comment", "text": "The rejection means origin has work you do not. Bring it in, resolve, then push." }
       },
       "suggestedAnswer": [
         {
           "@type": "Answer",
           "text": "git push --force",
-          "comment": { "@type": "Comment", "text": "This is the answer that loses somebody's work. Force overwrites the commits you have not seen." }
+          "comment": { "@type": "Comment", "text": "This is the answer that loses somebody's work." }
         },
         {
           "@type": "Answer",
           "text": "Delete the branch and start over",
-          "comment": { "@type": "Comment", "text": "Nothing is wrong with your branch; it is just missing a commit from someone else." }
+          "comment": { "@type": "Comment", "text": "Nothing is wrong with your branch." }
         },
         {
           "@type": "Answer",
           "text": "Clone the repository again",
-          "comment": { "@type": "Comment", "text": "A fresh clone throws away your work to avoid a one-command fix." }
+          "comment": { "@type": "Comment", "text": "That throws away your work to avoid a one-command fix." }
         }
       ]
     },
@@ -127,23 +127,455 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Your own copy of someone else's repository, on GitHub",
-        "comment": { "@type": "Comment", "text": "It is a server-side copy under your account, which is how you contribute somewhere you cannot push to directly." }
+        "comment": { "@type": "Comment", "text": "A server-side copy under your account, which is how you contribute where you cannot push." }
       },
       "suggestedAnswer": [
         {
           "@type": "Answer",
           "text": "A branch with a different name",
-          "comment": { "@type": "Comment", "text": "A branch lives in one repository. A fork is a separate repository." }
+          "comment": { "@type": "Comment", "text": "A branch lives in one repository." }
         },
         {
           "@type": "Answer",
           "text": "A clone on your machine",
-          "comment": { "@type": "Comment", "text": "That is a clone. A fork exists on GitHub, and you usually clone your fork afterwards." }
+          "comment": { "@type": "Comment", "text": "That is a clone; you usually clone your fork afterwards." }
         },
         {
           "@type": "Answer",
           "text": "A permanent split from the original",
-          "comment": { "@type": "Comment", "text": "It can be, but usually a fork stays connected: you sync from upstream and send pull requests back." }
+          "comment": { "@type": "Comment", "text": "Usually it stays connected." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is a protected branch for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stopping direct pushes so changes arrive by pull request",
+        "comment": { "@type": "Comment", "text": "It is a rule on the server. Your local Git knows nothing about it until a push is refused." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Making a branch read-only forever",
+          "comment": { "@type": "Comment", "text": "You can still change it, through review." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Backing up the branch",
+          "comment": { "@type": "Comment", "text": "It provides no backup." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Preventing merge conflicts",
+          "comment": { "@type": "Comment", "text": "It has no effect on conflicts." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "GitHub Actions runs your workflow. Where does it run?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a fresh machine GitHub provides, per job",
+        "comment": { "@type": "Comment", "text": "Nothing persists between jobs unless you cache it or pass an artifact, which explains a lot of confusing failures." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "On your own machine",
+          "comment": { "@type": "Comment", "text": "It runs on GitHub's runners unless you host your own." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Inside your repository",
+          "comment": { "@type": "Comment", "text": "The repository holds the definition, not the execution." }
+        },
+        {
+          "@type": "Answer",
+          "text": "On the branch's server",
+          "comment": { "@type": "Comment", "text": "Branches have no server of their own." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A workflow fails with permission denied to github-actions. The usual cause is:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The job's token is read-only by default",
+        "comment": { "@type": "Comment", "text": "Grant only what the job needs, at job level, with a permissions block." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your account lacks access",
+          "comment": { "@type": "Comment", "text": "The bot's token is the one being refused, not you." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The runner is offline",
+          "comment": { "@type": "Comment", "text": "That produces a queued job, not a permission error." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The branch is protected",
+          "comment": { "@type": "Comment", "text": "That gives a different, clearer refusal." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does a GitHub release add on top of a tag?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Notes and downloadable assets attached to that tag",
+        "comment": { "@type": "Comment", "text": "The tag is the Git part; the release is GitHub's layer on top of it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Nothing, they are the same",
+          "comment": { "@type": "Comment", "text": "A release is built on a tag but is not the tag." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A protected branch",
+          "comment": { "@type": "Comment", "text": "Unrelated." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A new branch",
+          "comment": { "@type": "Comment", "text": "No branch is created." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Pages is not showing your latest push. The first thing worth checking is:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Whether the deploy actually ran and succeeded",
+        "comment": { "@type": "Comment", "text": "A failed or missing workflow is far more common than a caching problem." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your DNS settings",
+          "comment": { "@type": "Comment", "text": "Only relevant with a custom domain." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your browser cache",
+          "comment": { "@type": "Comment", "text": "Worth clearing, but rarely the real cause." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Whether the repository is public",
+          "comment": { "@type": "Comment", "text": "Pages works on private repositories on paid plans too." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "You opened a pull request and then pushed another commit to the branch. What happens?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The pull request updates to include it",
+        "comment": { "@type": "Comment", "text": "A pull request tracks the branch, so it always shows the branch's current state." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Nothing until you reopen it",
+          "comment": { "@type": "Comment", "text": "It updates automatically." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A second pull request is created",
+          "comment": { "@type": "Comment", "text": "One branch, one open pull request." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The pull request closes",
+          "comment": { "@type": "Comment", "text": "It stays open." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does gh pr checkout do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fetches someone's pull request branch onto your machine",
+        "comment": { "@type": "Comment", "text": "The fastest way to actually run a contribution before approving it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Merges the pull request",
+          "comment": { "@type": "Comment", "text": "That is gh pr merge." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Approves it",
+          "comment": { "@type": "Comment", "text": "That is gh pr review." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Creates a pull request",
+          "comment": { "@type": "Comment", "text": "That is gh pr create." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Squash merging a pull request produces:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One commit on the target branch",
+        "comment": { "@type": "Comment", "text": "The branch's individual commits are collapsed, which is why the branch history disappears." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A merge commit with two parents",
+          "comment": { "@type": "Comment", "text": "That is an ordinary merge." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The branch's commits, replayed",
+          "comment": { "@type": "Comment", "text": "That is a rebase merge." }
+        },
+        {
+          "@type": "Answer",
+          "text": "No commit at all",
+          "comment": { "@type": "Comment", "text": "Something must land, or nothing merged." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Why does your fork say it is behind by dozens of commits?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The original repository moved on and your fork did not follow",
+        "comment": { "@type": "Comment", "text": "A fork is a snapshot in time. Syncing is your job, not GitHub's." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "You deleted commits",
+          "comment": { "@type": "Comment", "text": "Nothing was deleted." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your clone is broken",
+          "comment": { "@type": "Comment", "text": "It is perfectly healthy, just out of date." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The original was force pushed",
+          "comment": { "@type": "Comment", "text": "Possible, but being behind is simply normal drift." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does CODEOWNERS do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Requests review automatically from the right people for changed paths",
+        "comment": { "@type": "Comment", "text": "It routes review by file path, which is how large repositories stay reviewable." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Locks files to their owner",
+          "comment": { "@type": "Comment", "text": "It requests review; it does not lock." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Transfers ownership of the repository",
+          "comment": { "@type": "Comment", "text": "It does nothing of the sort." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Lists contributors",
+          "comment": { "@type": "Comment", "text": "That is generated from history." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "A GitHub Issue and a pull request are related how?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A pull request is an issue that also proposes a change",
+        "comment": { "@type": "Comment", "text": "They share numbering and much of their machinery, which is why a pull request can close an issue." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "They are entirely separate systems",
+          "comment": { "@type": "Comment", "text": "They share the same underlying model." }
+        },
+        {
+          "@type": "Answer",
+          "text": "An issue becomes a pull request automatically",
+          "comment": { "@type": "Comment", "text": "It does not." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A pull request must have an issue",
+          "comment": { "@type": "Comment", "text": "It is a convention in some projects, not a rule." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does the .github directory do in a repository?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Holds GitHub's own configuration: workflows, templates, and community files",
+        "comment": { "@type": "Comment", "text": "It is where GitHub looks; Git itself attaches no meaning to it." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Stores Git's internal data",
+          "comment": { "@type": "Comment", "text": "That is .git, which is different." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Is ignored by Git",
+          "comment": { "@type": "Comment", "text": "It is tracked like any other directory." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Contains your Pages site",
+          "comment": { "@type": "Comment", "text": "Pages usually serves from docs or a branch." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Secret scanning blocked your push. What has actually happened?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GitHub recognised a credential in the commits you tried to push",
+        "comment": { "@type": "Comment", "text": "The push never landed, which is the good news. Remove it from the commits and rotate it anyway." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Your account was compromised",
+          "comment": { "@type": "Comment", "text": "Nothing about your account is implied." }
+        },
+        {
+          "@type": "Answer",
+          "text": "The repository is now public",
+          "comment": { "@type": "Comment", "text": "Visibility did not change." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Your token expired",
+          "comment": { "@type": "Comment", "text": "That is an authentication error instead." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What is the difference between a draft pull request and an ordinary one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A draft cannot be merged and signals it is not ready",
+        "comment": { "@type": "Comment", "text": "Useful for showing work early without inviting a final review." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "A draft is private",
+          "comment": { "@type": "Comment", "text": "Anyone who can see the repository can see it." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A draft does not run checks",
+          "comment": { "@type": "Comment", "text": "Checks usually still run." }
+        },
+        {
+          "@type": "Answer",
+          "text": "A draft expires",
+          "comment": { "@type": "Comment", "text": "It stays until you mark it ready or close it." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "Someone force pushed to a shared branch you are working on. You should:",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fetch, then reset your branch onto the new remote state, keeping your own work aside",
+        "comment": { "@type": "Comment", "text": "Their history is now the truth. Rebase or cherry-pick your commits onto it rather than merging the old shape back in." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Force push your version back",
+          "comment": { "@type": "Comment", "text": "That starts a fight and loses somebody's work." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Pull normally",
+          "comment": { "@type": "Comment", "text": "Pull would merge two now-divergent histories into a mess." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Delete your clone",
+          "comment": { "@type": "Comment", "text": "Drastic and unnecessary." }
+        }
+      ]
+    },
+    {
+      "@type": "Question",
+      "eduQuestionType": "Multiple choice",
+      "name": "What does gh repo fork --clone do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Forks the repository on GitHub and clones your fork locally",
+        "comment": { "@type": "Comment", "text": "The two steps most contributions start with, in one command." }
+      },
+      "suggestedAnswer": [
+        {
+          "@type": "Answer",
+          "text": "Clones the original repository",
+          "comment": { "@type": "Comment", "text": "It clones your fork, not the original." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Creates a branch",
+          "comment": { "@type": "Comment", "text": "No branch is created." }
+        },
+        {
+          "@type": "Answer",
+          "text": "Opens a pull request",
+          "comment": { "@type": "Comment", "text": "That comes later." }
         }
       ]
     }
@@ -389,6 +821,6 @@
   <script src="hello.js"></script>
   <script src="render.js"></script>
   <script src="stepper.js"></script>
-  <script src="quiz.js?v=2"></script>
+  <script src="quiz.js?v=3"></script>
   <script src="github.js?v=2"></script>  <script src="offline.js?v=2"></script></body>
 </html>
