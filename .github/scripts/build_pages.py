@@ -12,6 +12,8 @@ import json
 from html import escape
 from pathlib import Path
 
+import danger
+
 ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
 START, END = "<!-- errors:start -->", "<!-- errors:end -->"
@@ -165,7 +167,7 @@ def cheatsheet_section(sec):
     for item in sec["items"]:
         # The site's own sheet grades the same three ways the cards and the PDF
         # do. It used to show one shade of red for two different levels.
-        level = item.get("level", "safe")
+        level = "read" if danger.reads_only(item["c"]) else item.get("level", "safe")
         out.append(f'    <div class="cs-row cs-{level}">')
         out.append(f"      <code>{escape(item['c'])}</code>")
         out.append(f"      <span>{escape(item['d'])}</span>")

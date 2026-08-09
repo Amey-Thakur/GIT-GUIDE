@@ -67,19 +67,19 @@
         <p class="lede">Every command worth knowing, one line each. Commands in red rewrite history or can destroy work; each has a full answer with its undo in <a href="./">the finder</a>.</p>
         <div class="dl-grid" aria-label="Downloads">
           <a class="dl" href="assets/git-guide.pdf" download>
-            <span class="thumb"><img src="assets/pdf-cover.png?v=6" alt="Cover of the Git Guide PDF"></span>
+            <span class="thumb"><img src="assets/pdf-cover.png?v=7" alt="Cover of the Git Guide PDF"></span>
             <span class="dl-text"><span class="dl-name">Git Guide</span><span class="dl-meta">PDF · the complete guide</span></span>
           </a>
           <a class="dl" href="assets/cheatsheet-card.png" download>
-            <span class="thumb"><img src="assets/cheatsheet-card.png?v=6" alt="The daily commands card"></span>
+            <span class="thumb"><img src="assets/cheatsheet-card.png?v=7" alt="The daily commands card"></span>
             <span class="dl-text"><span class="dl-name">Daily card</span><span class="dl-meta">PNG · print one page</span></span>
           </a>
           <a class="dl" href="assets/cheatsheet-card-2.png" download>
-            <span class="thumb"><img src="assets/cheatsheet-card-2.png?v=6" alt="The beyond-daily commands card"></span>
+            <span class="thumb"><img src="assets/cheatsheet-card-2.png?v=7" alt="The beyond-daily commands card"></span>
             <span class="dl-text"><span class="dl-name">Beyond card</span><span class="dl-meta">PNG · the second page</span></span>
           </a>
           <a class="dl" href="assets/poster.png" download>
-            <span class="thumb"><img src="assets/poster.png?v=6" alt="The Git Guide poster"></span>
+            <span class="thumb"><img src="assets/poster.png?v=7" alt="The Git Guide poster"></span>
             <span class="dl-text"><span class="dl-name">Poster</span><span class="dl-meta">PNG · one sheet</span></span>
           </a>
         </div>
@@ -145,7 +145,7 @@
       <span>Windows line endings handled once; macOS and Linux use input</span>
       <button class="copy" data-cmd="git config --global core.autocrlf true" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git config --list --show-origin</code>
       <span>Every setting and the file it comes from</span>
       <button class="copy" data-cmd="git config --list --show-origin" aria-label="Copy command">Copy</button>
@@ -187,17 +187,17 @@
   <h2 id="the-daily-loop">The daily loop</h2>
   <p class="note">The nine commands that are most of Git.</p>
   <div class="cs-rows">
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git status -sb</code>
       <span>What changed, one line per file</span>
       <button class="copy" data-cmd="git status -sb" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git diff</code>
       <span>Unstaged edits, line by line</span>
       <button class="copy" data-cmd="git diff" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git diff --staged</code>
       <span>What the next commit will contain</span>
       <button class="copy" data-cmd="git diff --staged" aria-label="Copy command">Copy</button>
@@ -253,17 +253,17 @@
       <span>Back to the branch you just left</span>
       <button class="copy" data-cmd="git switch -" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git branch --show-current</code>
       <span>Where am I</span>
       <button class="copy" data-cmd="git branch --show-current" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git branch -vv</code>
       <span>Every local branch with its remote and ahead-behind state</span>
       <button class="copy" data-cmd="git branch -vv" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git branch -a</code>
       <span>Every branch, local and remote</span>
       <button class="copy" data-cmd="git branch -a" aria-label="Copy command">Copy</button>
@@ -365,7 +365,7 @@
       <span>Undo by adding an opposite commit; safe when pushed</span>
       <button class="copy" data-cmd="git revert &lt;hash&gt;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git reflog</code>
       <span>Every state you have been in; the safety net</span>
       <button class="copy" data-cmd="git reflog" aria-label="Copy command">Copy</button>
@@ -391,7 +391,7 @@
       <span>Set everything aside, untracked included</span>
       <button class="copy" data-cmd="git stash push -u -m &quot;&lt;label&gt;&quot;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git stash list</code>
       <span>What is shelved</span>
       <button class="copy" data-cmd="git stash list" aria-label="Copy command">Copy</button>
@@ -406,7 +406,7 @@
       <span>Bring a specific one back, keep it shelved</span>
       <button class="copy" data-cmd="git stash apply stash@{&lt;n&gt;}" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git stash show -p</code>
       <span>See inside before applying</span>
       <button class="copy" data-cmd="git stash show -p" aria-label="Copy command">Copy</button>
@@ -417,42 +417,42 @@
   <h2 id="inspect-and-search">Inspect and search</h2>
   <p class="note">Read history like a book with an index.</p>
   <div class="cs-rows">
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git log --oneline --graph --all</code>
       <span>The whole history as a graph</span>
       <button class="copy" data-cmd="git log --oneline --graph --all" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git log -p -- &lt;file&gt;</code>
       <span>Every change to one file; --follow crosses renames</span>
       <button class="copy" data-cmd="git log -p -- &lt;file&gt;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git log --grep=&quot;&lt;text&gt;&quot;</code>
       <span>Find commits by message</span>
       <button class="copy" data-cmd="git log --grep=&quot;&lt;text&gt;&quot;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git log -S &quot;&lt;text&gt;&quot;</code>
       <span>Find commits that added or removed this text</span>
       <button class="copy" data-cmd="git log -S &quot;&lt;text&gt;&quot;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git diff main...&lt;branch&gt;</code>
       <span>What the branch changed since it split; the pull request view</span>
       <button class="copy" data-cmd="git diff main...&lt;branch&gt;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git shortlog -sn --all</code>
       <span>Commits per author, ranked</span>
       <button class="copy" data-cmd="git shortlog -sn --all" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git blame -w &lt;file&gt;</code>
       <span>Who last touched each line, ignoring whitespace</span>
       <button class="copy" data-cmd="git blame -w &lt;file&gt;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git show &lt;hash&gt;</code>
       <span>One commit in full; --stat for files only</span>
       <button class="copy" data-cmd="git show &lt;hash&gt;" aria-label="Copy command">Copy</button>
@@ -462,7 +462,7 @@
       <span>Binary-search history for the commit that broke it</span>
       <button class="copy" data-cmd="git bisect start" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git branch -a --contains &lt;hash&gt;</code>
       <span>Which branches carry this commit</span>
       <button class="copy" data-cmd="git branch -a --contains &lt;hash&gt;" aria-label="Copy command">Copy</button>
@@ -488,7 +488,7 @@
       <span>Delete locally; push origin --delete &lt;tag&gt; for the remote</span>
       <button class="copy" data-cmd="git tag -d &lt;tag&gt;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git describe --tags</code>
       <span>Nearest release to where you stand</span>
       <button class="copy" data-cmd="git describe --tags" aria-label="Copy command">Copy</button>
@@ -673,7 +673,7 @@
       <span>Large binaries stored properly</span>
       <button class="copy" data-cmd="git lfs track &quot;*.psd&quot;" aria-label="Copy command">Copy</button>
     </div>
-    <div class="cs-row cs-safe">
+    <div class="cs-row cs-read">
       <code>git count-objects -vH</code>
       <span>How heavy is this repository really</span>
       <button class="copy" data-cmd="git count-objects -vH" aria-label="Copy command">Copy</button>

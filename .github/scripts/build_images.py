@@ -240,10 +240,11 @@ def sheet_card(sheet, wanted, title):
         )
         y += 16
         for item in sec["items"]:
-            # Three colours, from the one definition the whole repository uses.
-            # The key above promises three; showing two was a card contradicting
-            # its own legend.
-            colour = LEVEL_COLOUR[danger.level(item["c"])]
+            # Four readings, from the one definition the whole repository uses.
+            # Green is kept for the commands that only look, so it still means
+            # something; safe-but-writing stays plain.
+            colour = (SAFE if danger.reads_only(item["c"])
+                      else LEVEL_COLOUR[danger.level(item["c"])])
             size = fit_mono(item["c"])
             # A quiet stripe carries the eye across the gap between the columns.
             if stripe % 2 == 0:
@@ -267,8 +268,8 @@ def sheet_card(sheet, wanted, title):
     # what a reader is about to look at. Outlined chips promised a green the
     # sheet does not use: safe is the plain majority here, and painting
     # ninety-six lines green would leave amber and red nothing to stand out from.
-    KEY = [("git status", "safe", INK),
-           ("git rebase main", "rewrites history", HISTORY),
+    KEY = [("git status", "only looks", SAFE),
+           ("git rebase", "rewrites history", HISTORY),
            ("git reset --hard", "can lose work", DANGER)]
     key = ""
     kx = SHEET_W - 80
@@ -287,7 +288,7 @@ def sheet_card(sheet, wanted, title):
   <rect width="{SHEET_W}" height="{height}" fill="{PAPER}"/>
   {git_logo(80, 56, 64)}
   <text x="164" y="106" font-size="46" font-weight="700" fill="{INK}">{title}<tspan fill="{ACCENT}">.</tspan></text>
-  <text x="82" y="152" font-size="20" fill="{MUTED}">Colour is the cost. Every command here has its own undo, and its full answer, at amey-thakur.github.io/GIT-GUIDE</text>
+  <text x="82" y="152" font-size="20" fill="{MUTED}">Colour is the cost. Plain writes something you can get back. Every command has its own undo at amey-thakur.github.io/GIT-GUIDE</text>
   {key}
   {body}
   {footer(y - 20, SHEET_W, "Every Git and GitHub answer in one place.")}

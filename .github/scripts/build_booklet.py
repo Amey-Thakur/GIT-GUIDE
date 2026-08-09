@@ -77,7 +77,7 @@ def col(section):
     for it in section["items"]:
         # Three colours from the one shared definition, so the sheet in the PDF
         # and the card on the wall grade the same command the same way.
-        lvl = danger.level(it["c"])
+        lvl = "read" if danger.reads_only(it["c"]) else danger.level(it["c"])
         cls = f' class="lv-{lvl}"' if lvl != danger.SAFE else ""
         out.append(f'<div><code{cls}>{escape(it["c"])}</code><span>{escape(it["d"])}</span></div>')
     out.append("</div></div>")
@@ -490,6 +490,7 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
 .list div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.6mm 0; }}
 .list code {{ font-family: Consolas, monospace; font-size: 10.5pt; display: block; overflow-wrap: anywhere; }}
+.list code.lv-read {{ color: {SAFE}; }}
 .list code.lv-history {{ color: {HISTORY}; }}
 .list code.lv-destructive {{ color: {DANGER}; }}
 .list span {{ font-size: 9.5pt; color: {MUTED}; display: block; margin-top: 0.7mm; }}
