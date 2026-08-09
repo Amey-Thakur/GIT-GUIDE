@@ -45,12 +45,31 @@
 
   var sheet = null;
 
+  /* The sandbox is an input, so the page shortcuts deliberately stay out of it.
+     It has its own, and they are the ones a terminal has taught everybody. */
+  var SANDBOX = [
+    ["Tab", "Complete what you are typing"],
+    ["&uarr; &darr;", "Walk back through what you have run"],
+    ["Ctrl C", "Throw the line away"],
+    ["Ctrl L", "Clear the screen"],
+    ["Cmd K", "Clear the screen, on a Mac"]
+  ];
+
   function rows() {
     var out = "";
     GO.forEach(function (g) {
       out += '<div><kbd>g</kbd> <kbd>' + g[0] + "</kbd><span>" + g[2] + "</span></div>";
     });
     return out;
+  }
+
+  function sandboxRows() {
+    if (!document.getElementById("pin")) return "";
+    var out = '<div><h3>In the sandbox</h3><div class="keys-grid">';
+    SANDBOX.forEach(function (k) {
+      out += "<div><kbd>" + k[0] + "</kbd><span>" + k[1] + "</span></div>";
+    });
+    return out + "</div></div>";
   }
 
   function toggleSheet(force) {
@@ -74,6 +93,7 @@
             "</div>" +
             '<h3>Where they apply</h3><p class="keys-note">Shortcuts stay out of the way while you are typing, ' +
             "and never fire with Ctrl, Alt or Cmd held.</p></div>" +
+            sandboxRows() +
           "</div>" +
         "</div>";
       document.body.appendChild(sheet);
@@ -138,4 +158,21 @@
       if (s) { e.preventDefault(); s.focus(); s.select(); }
     }
   });
+
+  /* Nobody presses a key they were never told about. One quiet line in the
+     footer, on every page, opening the same sheet the ? key does. */
+  function addHint() {
+    var links = document.querySelector(".footer-links");
+    if (!links || document.querySelector(".keyhint")) return;
+    links.appendChild(document.createTextNode(" · "));
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "keyhint";
+    b.innerHTML = "Shortcuts <kbd>?</kbd>";
+    b.addEventListener("click", function () { toggleSheet(true); });
+    links.appendChild(b);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addHint);
+  else addHint();
 })();

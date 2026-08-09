@@ -47,6 +47,51 @@
   window.GGMakeClickable = makeClickable;
 
 
+
+  /* A diagram that only teaches while you are looking at it has taught you very
+     little. This turns the walkthrough into the sequence itself, drawn from the
+     steps so it cannot describe something the diagram did not show. Steps whose
+     "command" is really a caption, like (edit files), are left out. */
+  function buildRecipe(cfg, after) {
+    var real = [];
+    (cfg.steps || []).forEach(function (st) {
+      var c = (st.cmd || "").trim();
+      if (!c || c.charAt(0) === "(") return;
+      // Strip the parenthetical asides used for context in a caption.
+      c = c.replace(/\s*\([^)]*\)\s*$/, "").trim();
+      if (c && real.indexOf(c) === -1) real.push(c);
+    });
+    if (real.length < 2 || !after || !after.parentNode) return;
+
+    var box = document.createElement("details");
+    box.className = "recipe";
+
+    var sum = document.createElement("summary");
+    sum.textContent = "The commands this diagram covers";
+    box.appendChild(sum);
+
+    var p = document.createElement("p");
+    p.className = "recipe-note";
+    p.textContent = "In the order the diagram walks them. Every one carries its danger level and its undo in the finder.";
+    box.appendChild(p);
+
+    var pre = document.createElement("pre");
+    pre.className = "recipe-code";
+    var code = document.createElement("code");
+    code.textContent = real.join(String.fromCharCode(10));
+    pre.appendChild(code);
+    box.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy recipe-copy";
+    btn.textContent = "Copy all";
+    btn.setAttribute("data-cmd", real.join(String.fromCharCode(10)));
+    box.appendChild(btn);
+
+    after.parentNode.insertBefore(box, after.nextSibling);
+  }
+
   function initStepper(cfg) {
     var i = 0;
     var api = null;
@@ -89,6 +134,8 @@
         d.classList.toggle("active", n === i);
       });
     }
+
+    buildRecipe(cfg, prev.closest(".stepfoot") || prev.parentNode);
 
     prev.addEventListener("click", function () { if (i > 0) { i -= 1; apply(); } });
     next.addEventListener("click", function () { if (i < cfg.steps.length - 1) { i += 1; apply(); } });

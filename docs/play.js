@@ -18,6 +18,7 @@
   var outEl = document.getElementById("pout");
   var inEl = document.getElementById("pin");
   var statusEl = document.getElementById("pstatus");
+  var promptEl = document.getElementById("pprompt");
 
   /* ---------------------------------------------------------------- state */
 
@@ -60,8 +61,12 @@
       didPush: false, didFetch: false, didPullAfterReject: false,
       pushRejected: false, didOpenPR: false, didMergePR: false
     };
-    S.commits[root] = { id: root, parents: [], msg: "Initial commit" };
+    S.commits[root] = { id: root, parents: [], msg: "Initial commit", files: [], snap: {} };
     S.order.push(root);
+    // The legend shows a hash that is really on the graph, so what it explains is
+    // the thing being looked at.
+    var lgh = document.getElementById("lg-hash");
+    if (lgh) lgh.textContent = root.slice(0, 4);
     note("HEAD", "commit (initial): Initial commit");
     if (!quiet) {
       clear();
@@ -279,10 +284,27 @@
     ["git pull", "fetch, then merge"],
     ["gh pr create", "open a pull request for this branch"],
     ["gh pr merge", "merge the open pull request"],
+    ["git diff", "what changed, line by line"],
+    ["git diff --staged", "what the next commit would record"],
+    ["git show HEAD", "one commit in full"],
+    ["git blame <file>", "which commit last touched it, and why"],
+    ["git grep <text>", "search what Git tracks"],
+    ["git ls-files", "every path Git is following"],
+    ["git rev-parse HEAD", "the hash a name points at"],
+    ["git describe", "name this commit by the last tag behind it"],
+    ["git shortlog", "the history grouped by author"],
+    ["git rm --cached <file>", "stop tracking a file, keep it on disk"],
+    ["git mv <from> <to>", "rename a tracked file"],
+    ["git clean -n", "list the untracked files this would delete"],
+    ["git fsck", "the commits nothing points at any more"],
+    ["git config user.name", "who Git stamps on your commits"],
     ["teammate", "a colleague pushes, so you can meet a rejected push"],
+    ["ls", "what is in the folder"],
+    ["cat <file>", "read a file, markers and all"],
+    ["pwd", "where you are"],
     ["undo", "step the sandbox back one command"],
     ["reset", "start the sandbox over"],
-    ["clear", "clear this log"]
+    ["clear", "clear the screen, the same as Command K or Control L"]
   ];
 
   function showHelp() {
@@ -332,6 +354,8 @@
       return;
     }
 
+    if (SHELL[t[0]]) { SHELL[t[0]](t.slice(1)); return; }
+
     if (t[0] !== "git") {
       say("Commands start with <code>git</code> or <code>gh</code>. There is also <code>edit &lt;file&gt;</code>, " +
         "<code>teammate</code>, and <code>clear</code>.", "err");
@@ -340,10 +364,35 @@
 
     var cmd = t[1], a = t.slice(2);
     var fn = CMDS[cmd];
-    var READONLY = { status: 1, log: 1, reflog: 1, branch: 1, remote: 1, tag: 1 };
-    if (fn && !(READONLY[cmd] && a.length === 0)) snapshot();
+    /* Commands that only read never need a snapshot, and filling undo with them
+       makes the undo button useless. The second group reads when bare and writes
+       when given an argument. */
+    var READS = { status: 1, log: 1, reflog: 1, diff: 1, show: 1, blame: 1, grep: 1,
+                  fsck: 1, gc: 1, bisect: 1, describe: 1, shortlog: 1, help: 1, init: 1,
+                  "ls-files": 1, "rev-parse": 1 };
+    var READS_BARE = { branch: 1, remote: 1, tag: 1, config: 1 };
+    if (fn && !READS[cmd] && !(READS_BARE[cmd] && a.length === 0)) snapshot();
     if (fn) S.used[cmd] = true;
-    if (!fn) { say("<code>git " + esc(cmd || "") + "</code> is not something this sandbox models. Try the examples below.", "err"); return; }
+
+    if (!fn) {
+      if (!cmd) {
+        say("<code>git</code> on its own does nothing. Type <code>help</code> for " +
+          "everything here.", "err");
+        return;
+      }
+      if (EXPLAIN[cmd]) {
+        say("<code>git " + esc(cmd) + "</code> " + EXPLAIN[cmd] +
+          '<br><span class="m">Real, and not modelled here. Type <code>help</code> for ' +
+          "what this sandbox does run.</span>", "sys");
+        return;
+      }
+      var mean = didYouMean(cmd);
+      say("<code>git " + esc(cmd) + "</code> is not a Git command." +
+        (mean ? " Did you mean <code>git " + esc(mean) + "</code>?" : "") +
+        '<br><span class="m">Type <code>help</code> for everything this sandbox ' +
+        "understands.</span>", "err");
+      return;
+    }
     fn(a);
     // Read-only commands like status and log never redraw, so the lesson check
     // has to run here too or those lessons only register a command later.
@@ -363,7 +412,7 @@
     var base = remoteTip(b);
     if (base == null) { say("Nothing is on origin/" + esc(b) + " yet. Push first, then try again.", "err"); return; }
     var id = nextId();
-    S.commits[id] = { id: id, parents: [base], msg: "Teammate's fix" };
+    S.commits[id] = { id: id, parents: [base], msg: "Teammate's fix", files: [], snap: {} };
     S.order.push(id);
     S.remote.branches[b] = id;
     say("A teammate pushed <b>" + id + "</b> to <b>origin/" + esc(b) + "</b>. " +
@@ -522,6 +571,7 @@
     if (!f) { say("Which file? <code>git restore &lt;file&gt;</code>.", "err"); return; }
     if (S.files[f] == null) { say("No uncommitted change to <code>" + esc(f) + "</code>.", "err"); return; }
     delete S.files[f];
+    delete S.content[f];
     say("Discarded your changes to <code>" + esc(f) + "</code>. " +
       "<b>This one is not recoverable</b>: the work was never committed, so Git never had a copy.", "out");
     draw();
@@ -604,7 +654,9 @@
       if (!cur || !cur.parents.length) { say("Nothing to amend onto.", "err"); return; }
       var old = cur.id;
       var nid = nextId();
-      S.commits[nid] = { id: nid, parents: cur.parents, msg: (i !== -1 && a[i + 1]) ? msg : cur.msg };
+      S.commits[nid] = { id: nid, parents: cur.parents,
+        msg: (i !== -1 && a[i + 1]) ? msg : cur.msg,
+        files: (cur.files || []).slice(), snap: cur.snap || {} };
       S.order.push(nid);
       if (S.head.type === "branch") S.branches[S.head.name] = nid; else S.head.id = nid;
       S.staged = {};
@@ -919,6 +971,408 @@
   /* ------------------------------------------------------- click and drag */
 
   // Clicking a commit explains exactly what it is and what still points at it.
+
+  /* ---------------------------------------------------- reading the repository
+
+     Everything below exists so that typing something reasonable gets a real
+     answer. A sandbox that only accepts the commands its own lessons need is a
+     track, not a visualiser. */
+
+  function knownAt(f) {
+    return S.files[f] != null || S.staged[f] || contentAt(headId(), f) != null;
+  }
+
+  function bodyOf(f) {
+    return S.content[f] != null ? S.content[f] : contentAt(headId(), f);
+  }
+
+  function diffLines(f, was, now) {
+    var out = ["<b>" + esc(f) + "</b>"];
+    if (was == null && now == null) {
+      out.push('<span class="m">No contents recorded. <code>edit ' + esc(f) +
+        "</code> gives it a line to compare.</span>");
+      return out;
+    }
+    if (was != null) out.push('<span class="r">- ' + esc(was) + "</span>");
+    if (now != null) out.push('<span class="g">+ ' + esc(now) + "</span>");
+    return out;
+  }
+
+  CMDS.init = function () {
+    say("You are already inside a repository, so there is nothing to create. " +
+      "<code>git init</code> makes the hidden <code>.git</code> folder in a directory that " +
+      "has none, and everything on this page lives inside one." +
+      "<br>To start again from a single commit, type <code>reset</code>.", "sys");
+  };
+
+  CMDS.help = function () { showHelp(); };
+
+  CMDS.config = function (a) {
+    var key = a.filter(function (x) { return x.charAt(0) !== "-"; })[0];
+    if (!key) {
+      say("<code>user.name</code> and <code>user.email</code> are the two that matter. " +
+        "Git stamps them onto every commit you make, which is why a commit is never " +
+        "anonymous once it leaves your machine.", "out");
+      return;
+    }
+    say("Settings are not modelled here, because nothing on this page reaches a real " +
+      "repository. On your own machine <code>git config --global " + esc(key) +
+      "</code> writes to <code>~/.gitconfig</code>, and without <code>--global</code> it " +
+      "writes to that one repository.", "sys");
+  };
+
+  CMDS.diff = function (a) {
+    var staged = a.indexOf("--staged") !== -1 || a.indexOf("--cached") !== -1;
+    var names = staged ? Object.keys(S.staged) : Object.keys(S.files);
+    if (!names.length) {
+      say(staged
+        ? "Nothing is staged, so there is nothing to compare against the last commit."
+        : "No unstaged changes. Whatever you have staged is shown by " +
+          "<code>git diff --staged</code>.", "out");
+      return;
+    }
+    var lines = [];
+    names.forEach(function (f) {
+      lines = lines.concat(diffLines(f, contentAt(headId(), f), S.content[f]));
+    });
+    lines.push('<span class="m">' + (staged
+      ? "What the next commit would record, against the last one."
+      : "Your files against the last commit. Reading only: nothing moves.") + "</span>");
+    say(lines.join("<br>"), "out");
+  };
+
+  CMDS.show = function (a) {
+    var ref = a.filter(function (x) { return x.charAt(0) !== "-"; })[0] || "HEAD";
+    var id = resolve(ref);
+    if (!id) { say("Nothing here answers to <code>" + esc(ref) + "</code>.", "err"); return; }
+    var c = S.commits[id];
+    var lines = ["commit <b>" + id + "</b>"];
+    lines.push(c.parents.length
+      ? '<span class="m">parent ' + c.parents.join(" ") + "</span>"
+      : '<span class="m">the root commit, which has no parent</span>');
+    lines.push("&nbsp;&nbsp;&nbsp;&nbsp;" + esc(c.msg));
+    var fl = c.files || [];
+    if (!fl.length) lines.push('<span class="m">No files recorded against this one.</span>');
+    fl.forEach(function (f) {
+      var was = c.parents.length ? contentAt(c.parents[0], f) : null;
+      var now = c.snap && c.snap[f] != null ? c.snap[f] : null;
+      lines = lines.concat(diffLines(f, was, now));
+    });
+    say(lines.join("<br>"), "out");
+  };
+
+  CMDS["ls-files"] = function () {
+    var seen = {};
+    Object.keys(S.commits).forEach(function (id) {
+      (S.commits[id].files || []).forEach(function (f) { seen[f] = true; });
+    });
+    Object.keys(S.staged).forEach(function (f) { seen[f] = true; });
+    var all = Object.keys(seen).sort();
+    if (!all.length) { say("Nothing is tracked yet, because nothing has been committed.", "out"); return; }
+    say(all.map(esc).join("<br>") + '<br><span class="m">Every path Git is following. ' +
+      "An untracked file is one missing from this list.</span>", "out");
+  };
+
+  CMDS["rev-parse"] = function (a) {
+    var ref = a.filter(function (x) { return x.charAt(0) !== "-"; })[0] || "HEAD";
+    var id = resolve(ref);
+    if (!id) { say("<code>" + esc(ref) + "</code> does not name anything here.", "err"); return; }
+    say("<b>" + id + '</b><br><span class="m">That is what <code>' + esc(ref) +
+      "</code> means right now. Every name in Git is only a way of reaching one of " +
+      "these.</span>", "out");
+  };
+
+  CMDS.describe = function () {
+    var here = headId(), best = null, dist = 0, cur = here, n = 0;
+    while (cur && n < 500) {
+      var hit = Object.keys(S.tags).filter(function (t) { return S.tags[t] === cur; })[0];
+      if (hit) { best = hit; dist = n; break; }
+      var c = S.commits[cur];
+      if (!c || !c.parents.length) break;
+      cur = c.parents[0];
+      n++;
+    }
+    if (!best) {
+      say("No tag behind you yet. <code>git tag v1.0</code> puts one here, and then this " +
+        "command can name any commit by how far it has travelled since.", "out");
+      return;
+    }
+    say("<b>" + esc(best) + (dist === 0 ? "" : "-" + dist + "-g" + here) + "</b>" +
+      '<br><span class="m">' + (dist === 0
+        ? "Exactly on the tag."
+        : dist + " commit" + (dist === 1 ? "" : "s") + " past <b>" + esc(best) +
+          "</b>. This is where build numbers come from.") + "</span>", "out");
+  };
+
+  CMDS.shortlog = function () {
+    var mine = [], theirs = [];
+    S.order.forEach(function (id) {
+      var m = S.commits[id].msg;
+      if (m === "Teammate's fix") theirs.push(m); else mine.push(m);
+    });
+    var lines = ["<b>You</b> (" + mine.length + ")"];
+    mine.forEach(function (m) { lines.push("&nbsp;&nbsp;&nbsp;&nbsp;" + esc(m)); });
+    if (theirs.length) {
+      lines.push("<b>Teammate</b> (" + theirs.length + ")");
+      theirs.forEach(function (m) { lines.push("&nbsp;&nbsp;&nbsp;&nbsp;" + esc(m)); });
+    }
+    lines.push('<span class="m">The same history as <code>git log</code>, grouped by who ' +
+      "wrote it. This is how release notes get written.</span>");
+    say(lines.join("<br>"), "out");
+  };
+
+  CMDS.blame = function (a) {
+    var f = a.filter(function (x) { return x.charAt(0) !== "-"; })[0];
+    if (!f) { say("Which file? <code>git blame &lt;file&gt;</code>.", "err"); return; }
+    var cur = headId(), n = 0;
+    while (cur && n < 500) {
+      var c = S.commits[cur];
+      if (!c) break;
+      if (c.snap && c.snap[f] != null) {
+        say("<b>" + cur + "</b> " + esc(c.msg) + "<br>&nbsp;&nbsp;" + esc(c.snap[f]) +
+          '<br><span class="m">The last commit to touch <code>' + esc(f) +
+          "</code>. Blame answers who, and more usefully why, by pointing at the message " +
+          "behind the line.</span>", "out");
+        return;
+      }
+      if (!c.parents.length) break;
+      cur = c.parents[0];
+      n++;
+    }
+    say("<code>" + esc(f) + "</code> has never been committed on this branch.", "err");
+  };
+
+  CMDS.grep = function (a) {
+    var q = a.filter(function (x) { return x.charAt(0) !== "-"; })[0];
+    if (!q) { say("What are you looking for? <code>git grep &lt;text&gt;</code>.", "err"); return; }
+    var hits = [];
+    Object.keys(S.content).forEach(function (f) {
+      if (S.content[f].indexOf(q) !== -1) hits.push(esc(f) + ": " + esc(S.content[f]));
+    });
+    if (!hits.length) { say("No match for <code>" + esc(q) + "</code> in your working tree.", "out"); return; }
+    say(hits.join("<br>") + '<br><span class="m">Grep searches what Git tracks, which is ' +
+      "why it beats searching the folder.</span>", "out");
+  };
+
+  CMDS.fsck = function () {
+    var live = {};
+    Object.keys(S.branches).forEach(function (b) {
+      var anc = ancestors(S.branches[b]);
+      Object.keys(anc).forEach(function (x) { live[x] = true; });
+    });
+    if (S.head.type === "detached") {
+      var ha = ancestors(S.head.id);
+      Object.keys(ha).forEach(function (x) { live[x] = true; });
+    }
+    var lost = S.order.filter(function (id) { return !live[id]; });
+    if (!lost.length) {
+      say("No dangling commits. Everything on the graph is reachable from a branch.", "out");
+      return;
+    }
+    say(lost.map(function (id) {
+      return "dangling commit <b>" + id + "</b> " + esc(S.commits[id].msg);
+    }).join("<br>") + '<br><span class="m">These are the faded ones on the graph. They are ' +
+      "still on disk, which is the whole reason <code>git reflog</code> can save you.</span>", "out");
+  };
+
+  CMDS.gc = function () {
+    say("Nothing is collected here, deliberately: the faded commits are the point of the " +
+      "graph.<br>On a real repository <code>git gc</code> tidies loose objects, and it is " +
+      "the reason recovery has a deadline. An unreferenced commit survives for a while, " +
+      "and then it does not.", "sys");
+  };
+
+  CMDS.bisect = function () {
+    say("Not modelled here, because it needs a bug and a test to hunt with." +
+      "<br><code>git bisect start</code>, then mark one commit <code>bad</code> and an " +
+      "older one <code>good</code>. Git checks out the midpoint and halves what is left " +
+      "each time you answer, so a thousand commits take about ten guesses.", "sys");
+  };
+
+  CMDS.rm = function (a) {
+    var cached = a.indexOf("--cached") !== -1;
+    var f = a.filter(function (x) { return x.charAt(0) !== "-"; })[0];
+    if (!f) { say("Which file? <code>git rm &lt;file&gt;</code>.", "err"); return; }
+    if (!knownAt(f)) { say("<code>" + esc(f) + "</code> is not in this repository.", "err"); return; }
+    delete S.staged[f];
+    if (cached) {
+      S.files[f] = "untracked";
+      say("Stopped tracking <code>" + esc(f) + "</code>. The file stays where it is and Git " +
+        "lets go of it. This is the fix for something committed by mistake, and the next " +
+        "step is always a <code>.gitignore</code> entry.", "out");
+    } else {
+      delete S.files[f];
+      delete S.content[f];
+      S.staged[f] = true;
+      say("Deleted <code>" + esc(f) + "</code> and staged the deletion. Commit to record it. " +
+        "Every earlier commit still holds the file, so nothing committed is lost.", "out");
+    }
+    draw();
+  };
+
+  CMDS.mv = function (a) {
+    var plain = a.filter(function (x) { return x.charAt(0) !== "-"; });
+    if (plain.length < 2) { say("Two names needed: <code>git mv &lt;from&gt; &lt;to&gt;</code>.", "err"); return; }
+    var from = plain[0], to = plain[1];
+    if (!knownAt(from)) { say("<code>" + esc(from) + "</code> is not in this repository.", "err"); return; }
+    var body = bodyOf(from);
+    delete S.files[from];
+    delete S.staged[from];
+    delete S.content[from];
+    S.staged[to] = true;
+    if (body != null) S.content[to] = body;
+    say("Renamed <code>" + esc(from) + "</code> to <code>" + esc(to) + "</code> and staged it." +
+      "<br>Git records no rename. It sees one path gone and another arrived, and works out " +
+      "afterwards that the contents match. That is why a rename plus a heavy edit shows up " +
+      "as a delete and an add.", "out");
+    draw();
+  };
+
+  CMDS.clean = function (a) {
+    var flags = a.filter(function (x) { return x.charAt(0) === "-"; }).join("");
+    var force = flags.indexOf("f") !== -1;
+    var dry = flags.indexOf("n") !== -1;
+    var un = Object.keys(S.files).filter(function (f) { return S.files[f] === "untracked"; });
+    if (!un.length) { say("Nothing untracked to remove.", "out"); return; }
+    if (dry || !force) {
+      say("Would remove: <b>" + un.map(esc).join("</b>, <b>") + "</b><br>" +
+        (dry ? "That is all <code>-n</code> does. It shows you and stops."
+             : "Git refuses without <code>-f</code>, and it is right to. Run it with " +
+               "<code>-n</code> first to see the list."), "out");
+      return;
+    }
+    un.forEach(function (f) { delete S.files[f]; delete S.content[f]; });
+    say("Removed " + un.length + " untracked file" + (un.length === 1 ? "" : "s") + "." +
+      "<br><b>Nothing brings these back.</b> They were never committed, so Git never held a " +
+      "copy and the reflog cannot help. This is the quietest destructive command in Git.", "out");
+    draw();
+  };
+
+  /* Real commands this sandbox cannot run. Saying what they do beats refusing,
+     because whoever typed one has already decided it is what they want. */
+  var EXPLAIN = {
+    worktree: "opens a second working directory from the same repository, so two branches " +
+      "are checked out at once with no stashing and no second clone.",
+    submodule: "pins another repository inside this one at an exact commit. Powerful, and " +
+      "the usual reason a fresh clone arrives with empty folders.",
+    archive: "exports a commit as a zip or a tar, with no history attached.",
+    apply: "applies a patch file to your working tree without making a commit.",
+    am: "applies a mailbox of patches and commits each one, keeping the original author.",
+    "format-patch": "turns commits into patch files you can send by email.",
+    notes: "attaches a note to a commit without changing it, so the hash survives.",
+    bundle: "packs a repository, or part of one, into a single file you can carry.",
+    "filter-branch": "rewrites every commit in history. Superseded by git filter-repo, " +
+      "which is faster and much harder to misuse.",
+    rerere: "remembers how you resolved a conflict and replays your answer next time.",
+    "sparse-checkout": "checks out only part of a very large repository.",
+    maintenance: "runs the housekeeping a large repository needs, on a schedule.",
+    prune: "deletes unreachable objects. The command that finally ends recovery.",
+    lfs: "stores large files outside the repository and leaves a pointer behind.",
+    daemon: "serves repositories over the git protocol.",
+    "cat-file": "prints a raw object: a commit, a tree, or a blob. The floor of Git.",
+    "hash-object": "computes the ID Git would give some content. The whole naming scheme " +
+      "in one command.",
+    "update-index": "edits the index directly. Plumbing, and rarely what you want.",
+    "symbolic-ref": "reads or moves what HEAD points at, without touching your files.",
+    "verify-commit": "checks the signature on a commit."
+  };
+
+  // How far apart two words are, so a near miss can be named instead of refused.
+  function near(a, b) {
+    var prev = [], cur = [], i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur = [i];
+      for (j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1,
+          prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  function didYouMean(cmd) {
+    var best = null, score = 99;
+    Object.keys(CMDS).forEach(function (k) {
+      var d = near(cmd, k);
+      if (d < score) { score = d; best = k; }
+    });
+    return score <= Math.max(1, Math.floor(cmd.length / 3)) ? best : null;
+  }
+
+  /* Pressing the mouse on a focusable SVG group makes the browser draw its own
+     focus ring, in the text colour, which showed as a white box around a commit.
+     Refusing the default press stops the focus without stopping the click, so the
+     ring is left to keyboard users, who are the ones it is for. */
+  function noRing(e) { e.preventDefault(); }
+
+
+  /* The prompt an Oh My Zsh user sees on a Mac. It is live, not decoration: the
+     branch and the mark come from the same state the graph is drawn from, so
+     the prompt says what a real one is telling you. */
+  function promptHTML() {
+    return '<span class="pp-arrow">&#10140;</span>' +
+      '<span class="pp-dir">GIT-GUIDE</span>' +
+      '<span class="pp-git">git:(</span>' +
+      '<span class="pp-branch">' + esc(headName()) + "</span>" +
+      // A real prompt says so while a merge is unfinished, and that is exactly
+      // when someone needs telling.
+      (S.merging ? '<span class="pp-state">|MERGING</span>' : "") +
+      '<span class="pp-git">)</span>' +
+      (dirty() ? '<span class="pp-dirty">&#10007;</span>' : "");
+  }
+
+  function drawPrompt() { if (promptEl) promptEl.innerHTML = promptHTML(); }
+
+  /* The commands people type in a terminal without thinking about it. Each one
+     is cheap to answer, and refusing them is what makes a fake shell feel fake. */
+  var SHELL = {};
+
+  SHELL.pwd = function () {
+    say("<code>~/GIT-GUIDE</code>", "out");
+  };
+
+  SHELL.cd = function () {
+    say("There is one directory here and you are already in it. On your own machine " +
+      "<code>cd</code> is how you reach a repository, and every Git command fails " +
+      "until you have.", "sys");
+  };
+
+  SHELL.exit = function () {
+    say("Nothing to exit: this shell is a web page. <code>reset</code> starts it over, " +
+      "and <code>clear</code> just wipes the screen.", "sys");
+  };
+
+  SHELL.ls = function () {
+    var seen = {};
+    Object.keys(S.commits).forEach(function (id) {
+      (S.commits[id].files || []).forEach(function (f) { seen[f] = 1; });
+    });
+    Object.keys(S.staged).forEach(function (f) { seen[f] = 1; });
+    Object.keys(S.files).forEach(function (f) { seen[f] = 1; });
+    var all = Object.keys(seen).sort();
+    if (!all.length) {
+      say("The folder is empty. <code>edit app.js</code> puts something in it.", "out");
+      return;
+    }
+    say(all.map(esc).join("&nbsp;&nbsp;&nbsp;") + '<br><span class="m">Everything in the ' +
+      "folder. <code>git status</code> says which of them Git is following.</span>", "out");
+  };
+
+  SHELL.cat = function (a) {
+    var f = a.filter(function (x) { return x.charAt(0) !== "-"; })[0];
+    if (!f) { say("Which file? <code>cat &lt;file&gt;</code>.", "err"); return; }
+    var body = S.merging && S.merging.body[f] != null ? S.merging.body[f]
+      : S.content[f] != null ? S.content[f] : contentAt(headId(), f);
+    if (body == null) { say("cat: " + esc(f) + ": No such file or directory", "err"); return; }
+    var shown = esc(body).split(String.fromCharCode(10)).join("<br>");
+    say(shown + (S.merging && S.merging.body[f] != null
+      ? '<br><span class="m">This is what a conflict actually looks like on disk. Both ' +
+        "versions, and the markers Git left for you to delete.</span>"
+      : ""), "out");
+  };
+
   function inspect(id) {
     var c = S.commits[id];
     if (!c) return;
@@ -930,7 +1384,9 @@
       Object.keys(anc).forEach(function (x) { reachable[x] = true; });
     });
 
-    var bits = ["<b>" + id + "</b> " + esc(c.msg)];
+    var bits = ["<b>" + id + "</b> " + esc(c.msg),
+      '<span class="m">Those four characters are the start of this ID. Git names a commit ' +
+      "after the contents it holds, so the name is unique and can never change.</span>"];
     bits.push(c.parents.length === 0 ? "The root commit: it has no parent."
       : c.parents.length === 1 ? "Parent: " + c.parents[0]
       : "A merge, with two parents: " + c.parents.join(" and "));
@@ -1205,6 +1661,7 @@
       gnode.setAttribute("tabindex", "0");
       gnode.setAttribute("role", "button");
       gnode.setAttribute("aria-label", "Commit " + id + ", " + c.msg);
+      gnode.addEventListener("mousedown", noRing);
       gnode.addEventListener("click", function () { inspect(id); });
       gnode.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inspect(id); }
@@ -1230,6 +1687,7 @@
         gl.setAttribute("tabindex", "0");
         gl.setAttribute("role", "button");
         gl.setAttribute("aria-label", "Switch to branch " + text);
+        gl.addEventListener("mousedown", noRing);
         gl.addEventListener("click", onPick);
         gl.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); }
@@ -1276,6 +1734,7 @@
     drawnBefore = {};
     S.order.forEach(function (id) { drawnBefore[id] = true; });
 
+    drawPrompt();
     renderConflictEditor();
     checkLessons();
   }
@@ -1710,6 +2169,27 @@
   inEl.addEventListener("blur", function () { window.setTimeout(hideSuggestions, 120); });
 
   inEl.addEventListener("keydown", function (e) {
+    /* The two ways people already clear a terminal: Command K in Terminal on a
+       Mac, and Control L in any shell anywhere. Control K is left alone, because
+       macOS text fields use it to cut to the end of the line. */
+    var k = e.key.toLowerCase();
+
+    /* Control C throws the line away and prints the mark, the way it does in
+       every shell. A selection means the user is copying, so that is left alone. */
+    if (e.ctrlKey && !e.metaKey && k === "c" && inEl.selectionStart === inEl.selectionEnd) {
+      e.preventDefault();
+      say('<span class="p">' + promptHTML() + "</span> " + esc(inEl.value) + "^C", "cmd");
+      inEl.value = "";
+      hideSuggestions();
+      return;
+    }
+
+    if ((e.metaKey && k === "k") || (e.ctrlKey && !e.metaKey && k === "l")) {
+      e.preventDefault();
+      clear();
+      hideSuggestions();
+      return;
+    }
     if (e.key === "Tab") {
       var list = suggestionsFor(inEl.value);
       if (list.length) {
@@ -1723,11 +2203,12 @@
     if (e.key === "Enter") {
       var v = inEl.value.trim();
       if (!v) return;
-      say('<span class="p">$</span> ' + esc(v), "cmd");
+      say('<span class="p">' + promptHTML() + "</span> " + esc(v), "cmd");
       hist.unshift(v); hi = -1;
       inEl.value = "";
       hideSuggestions();
       try { run(v); } catch (err) { say("The sandbox tripped over that one. <code>reset</code> starts fresh.", "err"); }
+      drawPrompt();
     } else if (e.key === "ArrowUp") {
       if (hi + 1 < hist.length) { hi++; inEl.value = hist[hi]; e.preventDefault(); }
     } else if (e.key === "ArrowDown") {
