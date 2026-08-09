@@ -4,7 +4,7 @@ Purpose: Assemble Git Guide as a complete printable PDF: the model, every comman
 Author: Amey Thakur
 GitHub: https://github.com/Amey-Thakur
 Tech: Python 3 standard library; headless Chrome prints the PDF
-Description: Builds .github/assets/booklet.html (ignored) from docs/data and prints docs/assets/git-guide.pdf (committed, served). A4 landscape, dark, branded. Every page carries the same footer: avatar, author, clickable address, GitHub mark, tagline. No counts baked anywhere.
+Description: Builds .github/assets/booklet.html (ignored) from docs/data and prints docs/assets/git-guide.pdf (committed, served). A4 landscape, dark, branded. Every page carries the same footer: avatar, author, clickable address, GitHub mark, tagline. Any count on the cover is read from the data, never typed, so the PDF cannot claim a number the site does not have.
 Date: 2026-08-08
 """
 
@@ -164,7 +164,8 @@ def sheet_pages(sections):
     return out
 
 
-def cover():
+def cover(ints, errs):
+    # Counts come from the data, so the cover cannot outlive what is behind it.
     return page(f'''
 <div class="cover">
   {logo(160)}
@@ -172,17 +173,22 @@ def cover():
   <p class="tag">{TAGLINE}</p>
   <p class="tag2">Ask in plain language, or paste the error Git printed.<br>
   Exact commands, a danger level for each, and its undo.</p>
+  <p class="scale"><b class="g">{len(ints)}</b> answers <i>·</i> <b class="r">{len(errs)}</b> errors decoded
+  <i>·</i> <b class="y">{course()[2]}</b> lessons you can run</p>
   <p class="qual">an undo for everything <b>·</b> works offline <b>·</b> no trackers <b>·</b> MIT</p>
 </div>''')
 
 
-def foreword():
-    return page('''
+def foreword(ints, errs):
+    return page(f'''
 <div class="prose">
 <h2>A note from Amey</h2>
 <p>Git carries nearly every codebase on earth, and almost everyone learned it by accident: a command from a teammate, a midnight search, a ritual repeated without understanding.</p>
-<p>Git Guide exists to end that way of learning. Ask in plain language, or paste the error Git printed, and get the exact commands with the two things most resources never give: how dangerous each one is, and how to take it back.</p>
-<p>These pages are the portable half: the model, the full command reference, an undo for every situation, and the errors you will meet. The other half is a search box, where a thousand answers and five hundred decoded errors wait at <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a>.</p>
+<p>The gap was never which command to type. It is the question nobody answers first: <b>will this destroy my work, and can I get it back</b>. Documentation says what a command does, rarely what it costs.</p>
+<p>So every answer here carries two things. A danger level, in three words: <b class="g">safe</b>, <b class="y">rewrites history</b>, <b class="r">can lose work</b>. And its undo, or a plain statement that none exists.</p>
+<p>Read these in any order. The model comes first because everything else follows from it, and the errors near the back are worth a skim now, so meeting one later feels like recognition rather than panic.</p>
+<p>This is the portable half. The other half is at <a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/">amey-thakur.github.io/GIT-GUIDE</a>: a search box over the same {len(ints)} answers and {len(errs)} decoded errors, and a Git engine you can break on purpose and put back.</p>
+<p>That last one is the point. <b>Committed work is almost always recoverable. Uncommitted work is not.</b> Believe those two sentences and Git stops being something to be careful around.</p>
 <p class="sign">Amey</p>
 </div>''', "Foreword")
 
@@ -341,6 +347,61 @@ def error_pages(errs):
     return pages_out
 
 
+def course():
+    """The chapters and their lesson counts, read out of the sandbox itself.
+
+    The lessons live in play.js rather than in a JSON file, so this parses them
+    from the source. Typing the numbers here would mean the PDF, the page it
+    describes, and the README could all disagree the first time a lesson moves.
+    """
+    src = (DOCS / "play.js").read_text(encoding="utf-8")
+    chapters = [(int(n), name, blurb) for n, name, blurb in re.findall(
+        r'\{\s*n:\s*(\d+),\s*name:\s*"([^"]+)",\s*blurb:\s*"([^"]+)"', src)]
+    counts = {}
+    for ch in re.findall(r'\bch:\s*(\d+)', src):
+        counts[int(ch)] = counts.get(int(ch), 0) + 1
+    total = sum(counts.values())
+    if not chapters or not total:
+        raise SystemExit("build_booklet: could not read the course out of play.js")
+    return chapters, counts, total
+
+
+def practise_page():
+    """The one thing in the guide that cannot be printed, described on paper.
+
+    Everything else in this PDF is the portable half of the site. The sandbox is
+    not portable, and it is the strongest reason to open the address at the
+    bottom of every page, so it gets a page of its own that says what is waiting.
+    """
+    chapters, counts, total = course()
+    cards = "".join(
+        f'<div class="chcard"><b>{n}</b><div><strong>{escape(name)}</strong>'
+        f'<span>{escape(blurb)}</span>'
+        f'<em>{counts.get(n, 0)} lesson{"" if counts.get(n, 0) == 1 else "s"}</em></div></div>'
+        for n, name, blurb in chapters)
+    return page(f'''
+<h2>Practise on a graph you cannot break</h2>
+<p class="note bignote">A working Git engine runs inside the page at
+<a class="inl" href="https://amey-thakur.github.io/GIT-GUIDE/play.html">amey-thakur.github.io/GIT-GUIDE/play.html</a>.
+Not a simulation of the output: commits, branches, HEAD, the index, file contents and the reflog are all modelled,
+so a merge really makes a second parent and a rebase really abandons the originals.</p>
+<div class="chgrid">{cards}</div>
+<div class="band">
+  <h3 class="bandh">The two nobody lets you rehearse</h3>
+  <div class="bandgrid">
+    <div><strong>A conflict with the markers still in it</strong>
+      <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>
+      <span>The file opens for editing, both versions and all. Delete the markers, keep the version you
+      want, and the sandbox refuses the commit while any remain.</span></div>
+    <div><strong>The recovery drill, against a clock</strong>
+      <code>git reflog</code>
+      <span>Three commits of work go in, and the sandbox destroys them with a hard reset. The Undo button
+      is switched off, because on the day it happens to you there is no Undo. Bring them home and it tells
+      you how long you took.</span></div>
+  </div>
+</div>''', "Practise")
+
+
 def closing():
     doors = [("Finder", "ask anything, or paste the error", ""), ("Start", "zero to first push", "setup.html"),
              ("Learn", "the model, step by step", "learn.html"), ("Practise", "a real Git graph to play on", "play.html"),
@@ -385,10 +446,26 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .cover h1 {{ font-size: 64pt; margin-top: 10mm; }}
 .cover .tag {{ font-size: 20pt; font-weight: 600; margin-top: 8mm; }}
 .cover .tag2 {{ color: {MUTED}; font-size: 14.5pt; line-height: 1.7; margin-top: 8mm; }}
-.cover .qual {{ font-size: 13pt; margin-top: 10mm; }}
-.cover .qual b {{ color: {MUTED}; font-weight: 400; padding: 0 2mm; }}
-.prose {{ max-width: 235mm; }}
-.prose p {{ font-size: 16pt; line-height: 1.9; margin-bottom: 7.5mm; }}
+.cover .scale {{ font-size: 15pt; margin-top: 9mm; }}
+/* The three numbers take the three colours the whole guide uses: green for what
+   is safe to reach for, red for the errors, amber for the part that asks for
+   your attention. The key is learned here and holds on every page after. */
+.cover .scale b {{ font-weight: 700; }}
+.cover .scale .g {{ color: {SAFE}; }}
+.cover .scale .r {{ color: {DANGER}; }}
+.cover .scale .y {{ color: {HISTORY}; }}
+.cover .scale i {{ color: {MUTED}; font-style: normal; padding: 0 2mm; }}
+.cover .qual {{ font-size: 13pt; margin-top: 5mm; color: {MUTED}; }}
+.cover .qual b {{ color: {LINE}; font-weight: 400; padding: 0 2mm; }}
+/* Only the foreword uses this. Widening the measure rather than shrinking the
+   type is what buys the room: it removes whole lines without making the one
+   page of continuous prose in the guide feel cramped. */
+.prose {{ max-width: 254mm; }}
+.prose p {{ font-size: 13.5pt; line-height: 1.72; margin-bottom: 4mm; }}
+.prose b {{ font-weight: 700; }}
+.prose b.g {{ color: {SAFE}; }}
+.prose b.y {{ color: {HISTORY}; }}
+.prose b.r {{ color: {DANGER}; }}
 .prose .sign {{ color: {ACCENT}; font-weight: 700; font-size: 16pt; }}
 .diag {{ width: 100%; max-height: 96mm; margin-bottom: 7mm; }}
 .defs {{ display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 12mm; }}
@@ -427,6 +504,15 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .doors a {{ display: block; color: inherit; text-decoration: none;  border: 0.4mm solid {LINE}; border-radius: 3mm; padding: 5mm 5.5mm; background: {CARD};
   border-left: 1.4mm solid {ACCENT}; }}
 .doors b {{ color: {ACCENT}; font-size: 14.5pt; display: block; margin-bottom: 1.6mm; }}
+
+/* The six chapters of the sandbox course, three across so the rows sit level. */
+.chgrid {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4.5mm; margin: 6mm 0 7mm; }}
+.chcard {{ display: flex; gap: 4mm; align-items: flex-start; border: 0.4mm solid {LINE};
+  border-radius: 3mm; padding: 4.5mm 5mm; background: {CARD}; }}
+.chcard > b {{ color: {ACCENT}; font-size: 19pt; line-height: 1; min-width: 7mm; }}
+.chcard strong {{ display: block; font-size: 13pt; margin-bottom: 1.4mm; }}
+.chcard span {{ display: block; font-size: 10.5pt; color: {MUTED}; line-height: 1.55; }}
+.chcard em {{ display: block; font-style: normal; font-size: 9.5pt; color: {HISTORY}; margin-top: 2mm; }}
 .doors span {{ color: {MUTED}; font-size: 11.5pt; }}
 .bignote {{ font-size: 12.5pt; }}
 .legend {{ display: flex; align-items: center; gap: 6mm; margin: 0 0 6.5mm; }}
@@ -593,9 +679,9 @@ def safety_page():
 
 def main():
     sheet, errs, ints = data()
-    pages = [cover(), foreword(), model(), graph(), start()]
+    pages = [cover(ints, errs), foreword(ints, errs), model(), graph(), start()]
     pages += sheet_pages(sheet)
-    pages += [workflows(), github_page()]
+    pages += [workflows(), github_page(), practise_page()]
     pages += undo_pages(ints)
     pages += [recovery_page(), safety_page()]
     pages += essential_errors(errs)

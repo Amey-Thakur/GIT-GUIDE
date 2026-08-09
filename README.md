@@ -125,7 +125,7 @@ Every answer carries one of three danger levels.
 
 ## Pass it on
 
-Every answer and every decoded error has its own link, so when somebody asks a Git question you can send them the exact fix rather than the front page. [SHARE.md](SHARE.md) has those links, one-click share buttons, and copy you can paste as is.
+Every answer and every decoded error has its own link, so when somebody asks a Git question you can send them the exact fix rather than the front page. [SHARE.md](https://github.com/Amey-Thakur/GIT-GUIDE/blob/main/SHARE.md) has those links, one-click share buttons, and copy you can paste as is. On the site itself, **Share** in the footer of every page does the same thing.
 
 <br>
 
@@ -145,8 +145,8 @@ Four things to keep. Click any one to open it. Each is generated from this repos
 
 | | |
 | :---: | :---: |
-| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 22 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
-| **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>22 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
+| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
+| **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>23 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
 | [<img src="docs/assets/cheatsheet-card.png" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
 | **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**<br>The commands you reach for every day, on one page. The one to pin up. | **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**<br>Everything past the daily: history surgery, submodules, scale, recovery. |
 
