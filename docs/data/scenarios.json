@@ -25,6 +25,10 @@
           "next": "sync"
         },
         {
+          "label": "A conflict is blocking me",
+          "next": "conflict"
+        },
+        {
           "label": "My files are a mess",
           "next": "mess"
         },
@@ -35,6 +39,10 @@
         {
           "label": "Git is stuck mid-operation",
           "next": "stuck"
+        },
+        {
+          "label": "Something on GitHub is wrong",
+          "next": "gh"
         }
       ]
     },
@@ -182,6 +190,10 @@
         {
           "label": "a file exceeds 100 MB",
           "errleaf": "file-size-limit-exact"
+        },
+        {
+          "label": "Large files, and I want this to stop happening",
+          "leaf": "git-lfs"
         }
       ]
     },
@@ -279,6 +291,160 @@
         {
           "label": "An editor opened and trapped me",
           "leaf": "exit-vim"
+        }
+      ]
+    },
+    "conflict": {
+      "q": "What does the conflict look like?",
+      "opts": [
+        {
+          "label": "Conflict markers inside a file",
+          "errleaf": "merge-conflict-marker"
+        },
+        {
+          "label": "One side changed it, the other deleted it",
+          "errleaf": "conflict-modify-delete"
+        },
+        {
+          "label": "A binary file, which cannot be merged line by line",
+          "leaf": "binary-conflict"
+        },
+        {
+          "label": "I want one side to win, wholesale",
+          "leaf": "merge-take-side"
+        },
+        {
+          "label": "Which files are still conflicted?",
+          "leaf": "list-conflicts"
+        },
+        {
+          "label": "The same conflict keeps coming back",
+          "leaf": "rerere"
+        },
+        {
+          "label": "It is on a pull request, and I would rather use the browser",
+          "leaf": "resolve-conflicts-online"
+        },
+        {
+          "label": "I want out of this entirely",
+          "leaf": "abort-operation"
+        }
+      ]
+    },
+    "gh": {
+      "q": "Which part of GitHub?",
+      "opts": [
+        {
+          "label": "A pull request will not merge",
+          "next": "gh-pr"
+        },
+        {
+          "label": "A workflow is failing",
+          "next": "gh-actions"
+        },
+        {
+          "label": "My Pages site is wrong",
+          "next": "gh-pages"
+        },
+        {
+          "label": "I am blocked from pushing",
+          "next": "gh-access"
+        },
+        {
+          "label": "My fork is out of date",
+          "leaf": "sync-fork"
+        }
+      ]
+    },
+    "gh-pr": {
+      "q": "What is holding it up?",
+      "opts": [
+        {
+          "label": "It says the branch has conflicts",
+          "errleaf": "pr-has-conflicts"
+        },
+        {
+          "label": "A required check is expected but never ran",
+          "errleaf": "required-check-expected"
+        },
+        {
+          "label": "It needs an approving review",
+          "errleaf": "approving-review-required"
+        },
+        {
+          "label": "It was removed from the merge queue",
+          "errleaf": "merge-queue-removed"
+        },
+        {
+          "label": "I need to answer the review comments",
+          "leaf": "handle-review-feedback"
+        }
+      ]
+    },
+    "gh-actions": {
+      "q": "What does the run say?",
+      "opts": [
+        {
+          "label": "Permission to the repository denied to github-actions",
+          "errleaf": "gha-permission"
+        },
+        {
+          "label": "The job never started, for billing reasons",
+          "errleaf": "actions-billing-blocked"
+        },
+        {
+          "label": "It needs a secret it cannot see",
+          "leaf": "actions-secrets"
+        },
+        {
+          "label": "Nothing obvious: I just want to run it again",
+          "leaf": "rerun-checks"
+        }
+      ]
+    },
+    "gh-pages": {
+      "q": "What is wrong with the site?",
+      "opts": [
+        {
+          "label": "It is not showing my latest push",
+          "leaf": "pages-not-updating"
+        },
+        {
+          "label": "Files beginning with an underscore are missing",
+          "leaf": "nojekyll"
+        },
+        {
+          "label": "The deployment failed with a 404",
+          "errleaf": "pages-deploy-404"
+        },
+        {
+          "label": "I want it on my own domain",
+          "leaf": "pages-custom-domain"
+        }
+      ]
+    },
+    "gh-access": {
+      "q": "What does the refusal say?",
+      "opts": [
+        {
+          "label": "Write access to repository not granted",
+          "errleaf": "write-access-not-granted"
+        },
+        {
+          "label": "GH006: protected branch update failed",
+          "errleaf": "gh006-protected"
+        },
+        {
+          "label": "GH013: repository rule violations",
+          "errleaf": "repository-rule-violations"
+        },
+        {
+          "label": "Push cannot contain secrets",
+          "errleaf": "secret-scanning-push-blocked"
+        },
+        {
+          "label": "My SSO session has expired",
+          "errleaf": "sso-session-expired"
         }
       ]
     }
