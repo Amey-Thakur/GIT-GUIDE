@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=78">
+  <link rel="stylesheet" href="style.css?v=79">
 </head>
 <body>
 
@@ -197,13 +197,13 @@
     <p class="undo"><span>Undo</span> git reflog, then git reset --hard &lt;hash&gt; of your old state</p>
   </div>
   <div class="variant">
-    <p class="when">Keep your edits, just in case<span class="badge safe">Safe</span></p>
+    <p class="when">Keep your edits, just in case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git stash -u</code><button class="copy" type="button" data-cmd="git stash -u">Copy</button></div>
     <p class="note">Saves tracked and untracked changes to the stash first.</p>
     <div class="cmd"><code>git fetch origin</code><button class="copy" type="button" data-cmd="git fetch origin">Copy</button></div>
     <div class="cmd"><code>git reset --hard origin/&lt;branch&gt;</code><button class="copy" type="button" data-cmd="git reset --hard origin/&lt;branch&gt;">Copy</button></div>
     <p class="note">Recover the saved work later with git stash pop.</p>
-    <p class="undo"><span>Undo</span> git stash pop restores what you set aside</p>
+    <p class="undo"><span>Undo</span> git stash pop restores the edits you set aside; local commits need git reflog</p>
   </div>
   <p class="seealso">See also: <a href="#stash">stash</a>, <a href="#remove-untracked">remove untracked</a></p>
 </article>
@@ -260,7 +260,7 @@
   <h2>Change a commit message<a class="anchor" href="#edit-commit-message" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: amend message, fix commit message, reword commit, modify unpushed commit message, change commit message after push, change message of pushed commit</p>
   <div class="variant">
-    <p class="when">Last commit, not pushed<span class="badge safe">Safe</span></p>
+    <p class="when">Last commit, not pushed<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git commit --amend -m &quot;&lt;new message&gt;&quot;</code><button class="copy" type="button" data-cmd="git commit --amend -m &quot;&lt;new message&gt;&quot;">Copy</button></div>
     <p class="note">Drop the -m flag to write it in your editor.</p>
     <p class="undo"><span>Undo</span> git commit --amend -m &quot;&lt;old message&gt;&quot; again</p>
@@ -320,7 +320,7 @@
   <h2>Move recent commits to a new branch<a class="anchor" href="#move-commits-to-branch" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: committed to wrong branch, move commits off main, commits on wrong branch</p>
   <div class="variant">
-    <p class="when">The commits are not pushed<span class="badge history">Rewrites history</span></p>
+    <p class="when">The commits are not pushed<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git branch &lt;new-branch&gt;</code><button class="copy" type="button" data-cmd="git branch &lt;new-branch&gt;">Copy</button></div>
     <p class="note">The new branch now holds the commits. Your current branch still points at them too.</p>
     <div class="cmd"><code>git reset --hard HEAD~&lt;n&gt;</code><button class="copy" type="button" data-cmd="git reset --hard HEAD~&lt;n&gt;">Copy</button></div>
@@ -755,7 +755,7 @@
   <h2>Add a forgotten file to the last commit<a class="anchor" href="#add-to-last-commit" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: forgot file in commit, amend commit add file, include file in previous commit, amend without changing the message</p>
   <div class="variant">
-    <p class="when">Not pushed<span class="badge safe">Safe</span></p>
+    <p class="when">Not pushed<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git add &lt;file&gt;</code><button class="copy" type="button" data-cmd="git add &lt;file&gt;">Copy</button></div>
     <div class="cmd"><code>git commit --amend --no-edit</code><button class="copy" type="button" data-cmd="git commit --amend --no-edit">Copy</button></div>
     <p class="note">The file joins the last commit; the message stays.</p>
@@ -1032,7 +1032,7 @@
     <p class="undo"><span>Undo</span> git reflog has the original commit</p>
   </div>
   <div class="variant">
-    <p class="when">Many commits or the whole history<span class="badge history">Rewrites history</span></p>
+    <p class="when">Many commits or the whole history<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git filter-repo --mailmap &lt;mailmap-file&gt;</code><button class="copy" type="button" data-cmd="git filter-repo --mailmap &lt;mailmap-file&gt;">Copy</button></div>
     <p class="note">filter-repo (pip install git-filter-repo) rewrites every commit using a mailmap of old to new identities. Work on a fresh clone; every hash changes.</p>
     <p class="undo"><span>Undo</span> Keep the original clone until you are sure; there is no undo after force pushing</p>
@@ -1267,7 +1267,7 @@
   <h2>Merge or rebase, which to use<a class="anchor" href="#merge-vs-rebase" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: difference merge rebase, should i rebase, linear history</p>
   <div class="variant">
-    <p class="when">The rule that keeps teams safe<span class="badge safe">Safe</span></p>
+    <p class="when">The rule that keeps teams safe<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git merge &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git merge &lt;branch&gt;">Copy</button></div>
     <p class="note">Preserves history exactly as it happened, adds a merge commit. Always safe on shared branches.</p>
     <div class="cmd"><code>git rebase &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git rebase &lt;branch&gt;">Copy</button></div>
@@ -1565,7 +1565,7 @@
   <h2>Remove a committed secret or file from all history<a class="anchor" href="#remove-secret-from-history" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: committed password, remove env from history, leaked api key, purge file from repo, remove file from entire history, filter-branch replacement</p>
   <div class="variant">
-    <p class="when">Do these in this exact order<span class="badge history">Rewrites history</span></p>
+    <p class="when">Do these in this exact order<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>&lt;rotate the secret now&gt;</code><button class="copy" type="button" data-cmd="&lt;rotate the secret now&gt;">Copy</button></div>
     <p class="note">First, always. Once pushed, treat the key as public no matter what you delete; rotation is the only real fix.</p>
     <div class="cmd"><code>git filter-repo --invert-paths --path .env</code><button class="copy" type="button" data-cmd="git filter-repo --invert-paths --path .env">Copy</button></div>
@@ -1586,7 +1586,7 @@
     <p class="undo"><span>Undo</span> Nothing to undo</p>
   </div>
   <div class="variant">
-    <p class="when">Strip the giants from history<span class="badge history">Rewrites history</span></p>
+    <p class="when">Strip the giants from history<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git filter-repo --strip-blobs-bigger-than 10M</code><button class="copy" type="button" data-cmd="git filter-repo --strip-blobs-bigger-than 10M">Copy</button></div>
     <p class="note">Removes every blob over the threshold from all commits; it prints what it dropped. Fresh clone, backup, force push, teammates re-clone: same ritual as any history rewrite. filter-repo is not built into Git: install it with pip install git-filter-repo.</p>
     <p class="undo"><span>Undo</span> Only the backup clone</p>
@@ -1864,7 +1864,7 @@
   <h2>Delete all history and start the repository fresh<a class="anchor" href="#fresh-history" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: remove all commits, reset history, start over one commit, squash everything, squash all commits into one</p>
   <div class="variant">
-    <p class="when">Keep the files, drop every commit<span class="badge history">Rewrites history</span></p>
+    <p class="when">Keep the files, drop every commit<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch --orphan fresh</code><button class="copy" type="button" data-cmd="git switch --orphan fresh">Copy</button></div>
     <div class="cmd"><code>git add -A &amp;&amp; git commit -m &quot;Initial commit&quot;</code><button class="copy" type="button" data-cmd="git add -A &amp;&amp; git commit -m &quot;Initial commit&quot;">Copy</button></div>
     <div class="cmd"><code>git branch -M fresh main</code><button class="copy" type="button" data-cmd="git branch -M fresh main">Copy</button></div>
@@ -2025,7 +2025,7 @@
     <p class="undo"><span>Undo</span> git revert the revert commit</p>
   </div>
   <div class="variant">
-    <p class="when">Your own branch, nobody builds on it<span class="badge history">Rewrites history</span></p>
+    <p class="when">Your own branch, nobody builds on it<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git reset --hard &lt;last-good-hash&gt;</code><button class="copy" type="button" data-cmd="git reset --hard &lt;last-good-hash&gt;">Copy</button></div>
     <div class="cmd"><code>git push --force-with-lease</code><button class="copy" type="button" data-cmd="git push --force-with-lease">Copy</button></div>
     <p class="note">The remote branch now ends at the good commit. If a secret went up, deleting the commit is not enough: rotate it.</p>
@@ -2193,14 +2193,14 @@
   <h2>checkout vs switch vs restore, what replaced what<a class="anchor" href="#checkout-vs-switch" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: git checkout deprecated, switch or checkout, new git commands, restore vs checkout</p>
   <div class="variant">
-    <p class="when">The 2019 split, in one look<span class="badge safe">Safe</span></p>
+    <p class="when">The 2019 split, in one look<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git switch &lt;branch&gt;">Copy</button></div>
     <p class="note">Moving between branches. Refuses to lose your work, which checkout would not.</p>
     <div class="cmd"><code>git restore &lt;file&gt;</code><button class="copy" type="button" data-cmd="git restore &lt;file&gt;">Copy</button></div>
     <p class="note">Touching files: discard edits, unstage, pull old versions.</p>
     <div class="cmd"><code>git checkout &lt;anything&gt;</code><button class="copy" type="button" data-cmd="git checkout &lt;anything&gt;">Copy</button></div>
     <p class="note">Still does both jobs and is not going anywhere; the new pair exists because one command doing two unrelated things caused accidents.</p>
-    <p class="undo"><span>Undo</span> Nothing to undo; this is a choice of vocabulary</p>
+    <p class="undo"><span>Undo</span> git switch and git checkout are reversible; git restore &lt;file&gt; is not, because the edit was never committed</p>
   </div>
   <p class="seealso">See also: <a href="#create-branch">create branch</a>, <a href="#discard-changes">discard changes</a></p>
 </article>
@@ -2874,7 +2874,7 @@
   <h2>Move a tag to a different commit<a class="anchor" href="#move-tag" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: retag, tag wrong commit, force tag update</p>
   <div class="variant">
-    <p class="when">Point it where it should have been<span class="badge history">Rewrites history</span></p>
+    <p class="when">Point it where it should have been<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git tag -f &lt;tag&gt; &lt;hash&gt;</code><button class="copy" type="button" data-cmd="git tag -f &lt;tag&gt; &lt;hash&gt;">Copy</button></div>
     <div class="cmd"><code>git push origin &lt;tag&gt; --force</code><button class="copy" type="button" data-cmd="git push origin &lt;tag&gt; --force">Copy</button></div>
     <p class="note">Anyone who fetched the old tag keeps it until they delete it; moving a published release tag deserves an announcement.</p>
@@ -6074,7 +6074,7 @@
   <h2>Remove a huge file I committed but have not pushed<a class="anchor" href="#remove-big-file-unpushed" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: push rejected large file not pushed yet, undo committing big file, excise file before push</p>
   <div class="variant">
-    <p class="when">It went in with the last commit<span class="badge safe">Safe</span></p>
+    <p class="when">It went in with the last commit<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git rm --cached &lt;big-file&gt;</code><button class="copy" type="button" data-cmd="git rm --cached &lt;big-file&gt;">Copy</button></div>
     <p class="note">Out of the index, still on disk. Add it to .gitignore now.</p>
     <div class="cmd"><code>git commit --amend --no-edit</code><button class="copy" type="button" data-cmd="git commit --amend --no-edit">Copy</button></div>
@@ -6367,7 +6367,7 @@
   <h2>Retire a branch without losing it<a class="anchor" href="#archive-branch" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: archive a branch, keep branch history delete branch, tag before deleting branch</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git tag archive/&lt;branch&gt; &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git tag archive/&lt;branch&gt; &lt;branch&gt;">Copy</button></div>
     <p class="note">The tip is preserved under a tag; push it with git push origin archive/&lt;branch&gt;.</p>
     <div class="cmd"><code>git branch -D &lt;branch&gt; &amp;&amp; git push origin --delete &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git branch -D &lt;branch&gt; &amp;&amp; git push origin --delete &lt;branch&gt;">Copy</button></div>
@@ -6492,7 +6492,7 @@
   <h2>Two people on one branch without stepping on each other<a class="anchor" href="#shared-branch-etiquette" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: shared branch workflow, pair on same branch, teammate pushed while i worked</p>
   <div class="variant">
-    <p class="when">The rules<span class="badge safe">Safe</span></p>
+    <p class="when">The rules<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git pull --rebase</code><button class="copy" type="button" data-cmd="git pull --rebase">Copy</button></div>
     <p class="note">Before every push: your commits replay on top of theirs, no merge bubbles between teammates. Never rewrite commits that are already pushed to the shared branch, and announce any force push before it happens.</p>
     <p class="undo"><span>Undo</span> git rebase --abort mid-way</p>
@@ -6824,7 +6824,7 @@
   <h2>Amend the last commit or make a new one<a class="anchor" href="#amend-vs-new-commit" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: when to amend, amend etiquette, fix previous commit or commit again</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git commit --amend --no-edit</code><button class="copy" type="button" data-cmd="git commit --amend --no-edit">Copy</button></div>
     <p class="note">Amend while the commit is still yours alone: unpushed, unfinished, unpolished. Once pushed where others fetch, amending rewrites shared history; from then on, corrections are new commits.</p>
     <p class="undo"><span>Undo</span> git reflog holds the pre-amend commit</p>
@@ -6968,10 +6968,10 @@
   <h2>Get fewer merge conflicts in the first place<a class="anchor" href="#avoid-conflicts" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: minimize conflicts, conflicts constantly, team keeps conflicting</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git pull --rebase</code><button class="copy" type="button" data-cmd="git pull --rebase">Copy</button></div>
     <p class="note">Sync often and keep branches short: conflict odds grow with divergence time. Agree on a formatter so style edits stop colliding, and split files that everyone edits at once.</p>
-    <p class="undo"><span>Undo</span> Nothing to undo</p>
+    <p class="undo"><span>Undo</span> git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after</p>
   </div>
   <p class="seealso">See also: <a href="#shared-branch-etiquette">shared branch etiquette</a>, <a href="#long-lived-branch">long lived branch</a>, <a href="#rerere">rerere</a></p>
 </article>
@@ -7059,10 +7059,10 @@
     <p class="undo"><span>Undo</span> Nothing to undo</p>
   </div>
   <div class="variant">
-    <p class="when">ORIG_HEAD<span class="badge safe">Safe</span></p>
+    <p class="when">ORIG_HEAD<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git reset --hard ORIG_HEAD</code><button class="copy" type="button" data-cmd="git reset --hard ORIG_HEAD">Copy</button></div>
     <p class="note">Where HEAD stood before the last drastic move: merge, rebase, or reset. That is why it appears in so many undo recipes.</p>
-    <p class="undo"><span>Undo</span> ORIG_HEAD itself; the reflog if it was overwritten</p>
+    <p class="undo"><span>Undo</span> ORIG_HEAD itself, or the reflog if it was overwritten; uncommitted work is gone</p>
   </div>
   <p class="seealso">See also: <a href="#what-is-head">what is head</a>, <a href="#what-is-reflog">what is reflog</a>, <a href="#undo-merge">undo merge</a></p>
 </article>
@@ -7980,13 +7980,13 @@
   <h2>Which undo command do I need<a class="anchor" href="#undo-decision-tree" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: how to undo in git, revert reset restore checkout, which undo when</p>
   <div class="variant">
-    <p class="when">Nothing is committed yet<span class="badge safe">Safe</span></p>
+    <p class="when">Nothing is committed yet<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git restore &lt;file&gt;</code><button class="copy" type="button" data-cmd="git restore &lt;file&gt;">Copy</button></div>
     <p class="note">Discards edits in the working tree. git restore --staged &lt;file&gt; unstages without discarding.</p>
     <p class="undo"><span>Undo</span> None once discarded; the file was never recorded</p>
   </div>
   <div class="variant">
-    <p class="when">Committed, not pushed<span class="badge destructive">Destructive</span></p>
+    <p class="when">Committed, not pushed<span class="badge safe">Safe</span></p>
     <div class="cmd"><code>git reset --soft HEAD~1</code><button class="copy" type="button" data-cmd="git reset --soft HEAD~1">Copy</button></div>
     <p class="note">Removes the commit, keeps the work. --hard removes both. Rewriting is fine while the commits are still only yours.</p>
     <p class="undo"><span>Undo</span> git reset --soft HEAD@{1} through the reflog</p>
@@ -9021,7 +9021,7 @@
     <p class="undo"><span>Undo</span> Nothing to undo</p>
   </div>
   <div class="variant">
-    <p class="when">The fix<span class="badge safe">Safe</span></p>
+    <p class="when">The fix<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git branch -D &lt;branch&gt; &amp;&amp; git switch -c &lt;branch&gt; main</code><button class="copy" type="button" data-cmd="git branch -D &lt;branch&gt; &amp;&amp; git switch -c &lt;branch&gt; main">Copy</button></div>
     <p class="note">Delete and recreate from main rather than continuing on the old branch, which would re-propose the same changes.</p>
     <p class="undo"><span>Undo</span> git branch &lt;branch&gt; &lt;old-hash&gt; from the reflog</p>
@@ -9169,7 +9169,7 @@
   <h2>A release tag points at the wrong commit<a class="anchor" href="#undo-published-tag" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: tag on wrong commit, fix published tag, retag a release</p>
   <div class="variant">
-    <p class="when">Nobody has it yet<span class="badge safe">Safe</span></p>
+    <p class="when">Nobody has it yet<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git tag -f v2.1.0 &lt;correct-hash&gt; &amp;&amp; git push --force origin v2.1.0</code><button class="copy" type="button" data-cmd="git tag -f v2.1.0 &lt;correct-hash&gt; &amp;&amp; git push --force origin v2.1.0">Copy</button></div>
     <p class="note">Fast, and acceptable within minutes of publishing.</p>
     <p class="undo"><span>Undo</span> Retag to the previous hash</p>
@@ -9736,12 +9736,12 @@
   <h2>Handle database migration conflicts<a class="anchor" href="#database-migrations-git" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: two migrations same number, migration merge conflict, schema version clash</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git pull --rebase</code><button class="copy" type="button" data-cmd="git pull --rebase">Copy</button></div>
     <p class="note">Rebase before pushing so your migration lands after theirs and gets the later timestamp naturally.</p>
     <div class="cmd"><code>git mv migrations/0007_x.sql migrations/0009_x.sql</code><button class="copy" type="button" data-cmd="git mv migrations/0007_x.sql migrations/0009_x.sql">Copy</button></div>
     <p class="note">Renumber yours rather than editing theirs; a migration already applied elsewhere must never change.</p>
-    <p class="undo"><span>Undo</span> Rename back</p>
+    <p class="undo"><span>Undo</span> Rename the file back; git rebase --abort if the pull is still mid-rebase</p>
   </div>
   <p class="seealso">See also: <a href="#merge-conflict">merge conflict</a>, <a href="#pull-rebase">pull rebase</a>, <a href="#avoid-conflicts">avoid conflicts</a></p>
 </article>
@@ -9818,14 +9818,14 @@
   <h2>Prepare a private repository to go public<a class="anchor" href="#clean-history-before-public" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: make repo public safely, open sourcing checklist, publish internal project</p>
   <div class="variant">
-    <p class="when">Before flipping the switch<span class="badge safe">Safe</span></p>
+    <p class="when">Before flipping the switch<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>gitleaks git .</code><button class="copy" type="button" data-cmd="gitleaks git .">Copy</button></div>
     <p class="note">Scan the entire history, not the current files. Anything found must be rotated, not just deleted.</p>
     <div class="cmd"><code>git log --format=&quot;%an %ae&quot; | sort -u</code><button class="copy" type="button" data-cmd="git log --format=&quot;%an %ae&quot; | sort -u">Copy</button></div>
     <p class="note">Check which names and internal addresses the history will publish.</p>
     <div class="cmd"><code>git filter-repo --path &lt;internal-file&gt; --invert-paths</code><button class="copy" type="button" data-cmd="git filter-repo --path &lt;internal-file&gt; --invert-paths">Copy</button></div>
     <p class="note">Remove anything that must not ship, then add a license and README before publishing. filter-repo is not built into Git: install it with pip install git-filter-repo.</p>
-    <p class="undo"><span>Undo</span> Visibility can be flipped back, but anything fetched while public stays out there</p>
+    <p class="undo"><span>Undo</span> the backup clone, and nothing else; anything fetched while the repository was public stays out there regardless</p>
   </div>
   <p class="seealso">See also: <a href="#make-repo-private">make repo private</a>, <a href="#remove-secret-from-history">remove secret from history</a>, <a href="#add-license">add license</a></p>
 </article>
@@ -10294,7 +10294,7 @@
   <h2>Collapse an entire history into one commit<a class="anchor" href="#squash-all-history" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: single initial commit, flatten all history, start history over but keep files</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git checkout --orphan clean-start</code><button class="copy" type="button" data-cmd="git checkout --orphan clean-start">Copy</button></div>
     <p class="note">A branch with no parent, carrying your current files.</p>
     <div class="cmd"><code>git commit -m &quot;Initial commit&quot;</code><button class="copy" type="button" data-cmd="git commit -m &quot;Initial commit&quot;">Copy</button></div>
@@ -10362,8 +10362,10 @@
   <div class="variant">
     <p class="when">New files Git never saw<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git clean -n</code><button class="copy" type="button" data-cmd="git clean -n">Copy</button></div>
-    <p class="note">Only clean touches untracked files. Rehearse with -n first, because Git holds no copy of them at all.</p>
-    <p class="undo"><span>Undo</span> None</p>
+    <p class="note">Lists what would go. Deletes nothing, and it is the step to never skip.</p>
+    <div class="cmd"><code>git clean -fd</code><button class="copy" type="button" data-cmd="git clean -fd">Copy</button></div>
+    <p class="note">Deletes those untracked files and folders for good.</p>
+    <p class="undo"><span>Undo</span> None. Untracked files were never in Git, so no commit and no reflog holds them</p>
   </div>
   <p class="seealso">See also: <a href="#safe-commands-list">safe commands list</a>, <a href="#undo-clean">undo clean</a>, <a href="#discard-changes">discard changes</a></p>
 </article>
@@ -10951,7 +10953,7 @@
     <p class="undo"><span>Undo</span> git revert the commit</p>
   </div>
   <div class="variant">
-    <p class="when">Purge it from history<span class="badge history">Rewrites history</span></p>
+    <p class="when">Purge it from history<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git filter-repo --path node_modules --invert-paths</code><button class="copy" type="button" data-cmd="git filter-repo --path node_modules --invert-paths">Copy</button></div>
     <p class="note">Only worth it when the repository is painfully large. Everyone must reclone afterwards. filter-repo is not built into Git: install it with pip install git-filter-repo.</p>
     <p class="undo"><span>Undo</span> Only from a clone with the old history</p>
@@ -11164,14 +11166,14 @@
   <h2>revert, reset, and restore compared<a class="anchor" href="#revert-vs-reset-vs-restore" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: three r commands, restore vs reset, difference revert reset restore</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git restore &lt;path&gt;</code><button class="copy" type="button" data-cmd="git restore &lt;path&gt;">Copy</button></div>
     <p class="note">Files only: throw away working-tree or staged changes. Nothing about history moves.</p>
     <div class="cmd"><code>git reset &lt;hash&gt;</code><button class="copy" type="button" data-cmd="git reset &lt;hash&gt;">Copy</button></div>
     <p class="note">Moves the branch pointer. Rewrites your local history, so it belongs to unpushed work.</p>
     <div class="cmd"><code>git revert &lt;hash&gt;</code><button class="copy" type="button" data-cmd="git revert &lt;hash&gt;">Copy</button></div>
     <p class="note">Adds a new commit undoing an old one. The only safe undo for published history.</p>
-    <p class="undo"><span>Undo</span> Each has its own; revert is itself revertible</p>
+    <p class="undo"><span>Undo</span> revert is itself revertible and reset has the reflog; restore has nothing, which is the difference worth remembering</p>
   </div>
   <p class="seealso">See also: <a href="#revert-vs-reset">revert vs reset</a>, <a href="#reset-modes">reset modes</a>, <a href="#safe-commands-list">safe commands list</a></p>
 </article>
@@ -11500,7 +11502,7 @@
   <h2>Fix the author on the last commit only<a class="anchor" href="#amend-author-only" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: wrong author last commit, change author of head, fix committer on latest</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git config user.email &quot;&lt;right-address&gt;&quot;</code><button class="copy" type="button" data-cmd="git config user.email &quot;&lt;right-address&gt;&quot;">Copy</button></div>
     <p class="note">Set the identity first, or the amend repeats the mistake.</p>
     <div class="cmd"><code>git commit --amend --reset-author --no-edit</code><button class="copy" type="button" data-cmd="git commit --amend --reset-author --no-edit">Copy</button></div>
@@ -11599,12 +11601,12 @@
   <h2>How large a pull request should be<a class="anchor" href="#pull-request-size" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: pr too big, ideal pull request size, how many lines per pr</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git diff --shortstat main..HEAD</code><button class="copy" type="button" data-cmd="git diff --shortstat main..HEAD">Copy</button></div>
     <p class="note">Review quality falls off sharply past a few hundred changed lines. If the diff is larger, the split is usually obvious: refactor first, behaviour second.</p>
     <div class="cmd"><code>git switch -c part-1 &amp;&amp; git rebase -i</code><button class="copy" type="button" data-cmd="git switch -c part-1 &amp;&amp; git rebase -i">Copy</button></div>
     <p class="note">Splitting after the fact is work, but far less than the review it saves.</p>
-    <p class="undo"><span>Undo</span> Nothing to undo</p>
+    <p class="undo"><span>Undo</span> git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after</p>
   </div>
   <p class="seealso">See also: <a href="#review-large-pr">review large pr</a>, <a href="#stacked-prs">stacked prs</a>, <a href="#one-branch-per-task">one branch per task</a></p>
 </article>
@@ -11679,7 +11681,7 @@
   <h2>Why checkout was split into switch and restore<a class="anchor" href="#understand-checkout-vs-switch-restore" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: checkout does too much, switch and restore explained, why two new commands</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git switch &lt;branch&gt;">Copy</button></div>
     <p class="note">Moving between branches. Its own command because that is what checkout was mostly used for.</p>
     <div class="cmd"><code>git restore &lt;path&gt;</code><button class="copy" type="button" data-cmd="git restore &lt;path&gt;">Copy</button></div>
@@ -11692,7 +11694,7 @@
   <h2>I committed then immediately spotted a typo<a class="anchor" href="#commit-then-realize-mistake" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: fix commit right after making it, small mistake just committed, forgot something in last commit</p>
   <div class="variant">
-    <p class="when">Not pushed<span class="badge safe">Safe</span></p>
+    <p class="when">Not pushed<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git add &lt;file&gt; &amp;&amp; git commit --amend --no-edit</code><button class="copy" type="button" data-cmd="git add &lt;file&gt; &amp;&amp; git commit --amend --no-edit">Copy</button></div>
     <p class="note">Folds the fix into the commit you just made, message unchanged. The cleanest option while the commit is still private.</p>
     <p class="undo"><span>Undo</span> git reset --hard ORIG_HEAD</p>
@@ -12202,7 +12204,7 @@
   <h2>Conflicts appear after squashing<a class="anchor" href="#squash-then-conflict" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: squash created conflicts, conflict after combining commits, squashed branch conflicts with main</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git rebase --abort</code><button class="copy" type="button" data-cmd="git rebase --abort">Copy</button></div>
     <p class="note">Squashing collapses intermediate steps, so a conflict Git previously resolved in stages now lands all at once. Backing out costs nothing.</p>
     <div class="cmd"><code>git merge main &amp;&amp; git rebase -i main</code><button class="copy" type="button" data-cmd="git merge main &amp;&amp; git rebase -i main">Copy</button></div>
@@ -12392,7 +12394,7 @@
   <h2>I committed on main but wanted a branch<a class="anchor" href="#commit-then-branch" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: commit on wrong branch move it, meant to branch first, move last commit to a new branch</p>
   <div class="variant">
-    <p class="when">Not pushed<span class="badge safe">Safe</span></p>
+    <p class="when">Not pushed<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch -c fix/&lt;topic&gt;</code><button class="copy" type="button" data-cmd="git switch -c fix/&lt;topic&gt;">Copy</button></div>
     <p class="note">The new branch carries the commits with it, since a branch is only a label.</p>
     <div class="cmd"><code>git switch main &amp;&amp; git reset --hard origin/main</code><button class="copy" type="button" data-cmd="git switch main &amp;&amp; git reset --hard origin/main">Copy</button></div>
@@ -12640,12 +12642,12 @@
   <h2>Set up a repository for a hackathon<a class="anchor" href="#repo-for-a-hackathon" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: hackathon git setup, fast team repo, weekend project repository</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>gh repo create &lt;name&gt; --public --clone</code><button class="copy" type="button" data-cmd="gh repo create &lt;name&gt; --public --clone">Copy</button></div>
     <p class="note">Skip ceremony: no rulesets, no required reviews. Everyone pushes to main and communicates out loud.</p>
     <div class="cmd"><code>git pull --rebase</code><button class="copy" type="button" data-cmd="git pull --rebase">Copy</button></div>
     <p class="note">The one discipline worth keeping is pulling before pushing, which prevents the classic hackathon force-push disaster.</p>
-    <p class="undo"><span>Undo</span> Add protection later if the project survives</p>
+    <p class="undo"><span>Undo</span> git rebase --abort if the pull is mid-rebase; the repository can be made private or deleted later</p>
   </div>
   <p class="seealso">See also: <a href="#school-project-git">school project git</a>, <a href="#solo-workflow">solo workflow</a>, <a href="#repo-first-hour">repo first hour</a></p>
 </article>
@@ -12856,7 +12858,7 @@
   <h2>Two people editing the same file all day<a class="anchor" href="#two-people-same-file" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: constant conflicts on one file, we keep editing the same file, file always conflicts</p>
   <div class="variant">
-    <p class="when">Reduce the collisions<span class="badge safe">Safe</span></p>
+    <p class="when">Reduce the collisions<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git pull --rebase</code><button class="copy" type="button" data-cmd="git pull --rebase">Copy</button></div>
     <p class="note">Sync hourly rather than daily: small overlaps resolve trivially, whole-day divergence does not.</p>
     <div class="cmd"><code>git config rerere.enabled true</code><button class="copy" type="button" data-cmd="git config rerere.enabled true">Copy</button></div>
@@ -12875,7 +12877,7 @@
   <h2>I closed the terminal during a rebase<a class="anchor" href="#resume-interrupted-rebase" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: rebase interrupted, left a rebase half done, rebase in progress after restart</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git status</code><button class="copy" type="button" data-cmd="git status">Copy</button></div>
     <p class="note">Git keeps the rebase state on disk, so it survives a closed terminal or a reboot and tells you exactly where it stopped.</p>
     <div class="cmd"><code>git rebase --continue</code><button class="copy" type="button" data-cmd="git rebase --continue">Copy</button></div>
@@ -13433,12 +13435,12 @@
   <h2>Help people keep their forks of my project current<a class="anchor" href="#keep-forks-of-my-repo-updated" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: forks fall behind, help contributors sync, stale forks of my repo</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>gh repo sync &lt;fork&gt;</code><button class="copy" type="button" data-cmd="gh repo sync &lt;fork&gt;">Copy</button></div>
     <p class="note">Point contributors at the Sync fork button, which handles the common case without any Git knowledge.</p>
     <div class="cmd"><code>git rebase upstream/main</code><button class="copy" type="button" data-cmd="git rebase upstream/main">Copy</button></div>
     <p class="note">Document the manual path in CONTRIBUTING for anyone with local commits, and keep your default branch fast-forwardable so syncing stays trivial.</p>
-    <p class="undo"><span>Undo</span> Nothing to undo</p>
+    <p class="undo"><span>Undo</span> git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after</p>
   </div>
   <p class="seealso">See also: <a href="#sync-fork">sync fork</a>, <a href="#why-my-fork-shows-behind">why my fork shows behind</a>, <a href="#contributing-file">contributing file</a></p>
 </article>
@@ -13632,7 +13634,7 @@
   <h2>I pushed a secret to a public repository<a class="anchor" href="#commit-secrets-by-mistake-public" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: leaked api key on github, secret in public repo, exposed credentials pushed</p>
   <div class="variant">
-    <p class="when">In this order, immediately<span class="badge safe">Safe</span></p>
+    <p class="when">In this order, immediately<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>Rotate the credential now</code><button class="copy" type="button" data-cmd="Rotate the credential now">Copy</button></div>
     <p class="note">Assume it is compromised: public repositories are scraped within minutes. Rotation is the only step that actually protects you.</p>
     <div class="cmd"><code>git filter-repo --path &lt;file&gt; --invert-paths</code><button class="copy" type="button" data-cmd="git filter-repo --path &lt;file&gt; --invert-paths">Copy</button></div>
@@ -13789,7 +13791,7 @@
   <h2>Merge or rebase, decided in one line<a class="anchor" href="#decide-merge-or-rebase-today" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: merge or rebase quick answer, which should i use today, settle merge vs rebase</p>
   <div class="variant">
-    <p class="when">The rule<span class="badge safe">Safe</span></p>
+    <p class="when">The rule<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git rebase main</code><button class="copy" type="button" data-cmd="git rebase main">Copy</button></div>
     <p class="note">Rebase what is yours alone and unpublished, to keep the line straight.</p>
     <div class="cmd"><code>git merge main</code><button class="copy" type="button" data-cmd="git merge main">Copy</button></div>
@@ -13999,7 +14001,7 @@
   <h2>Recover after force pushing my own main<a class="anchor" href="#protect-my-main-from-myself" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: i force pushed main, broke my own main, undo my force push</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge history">Rewrites history</span></p>
     <div class="cmd"><code>git reflog</code><button class="copy" type="button" data-cmd="git reflog">Copy</button></div>
     <p class="note">Your clone still holds the pre-push tip; find its hash.</p>
     <div class="cmd"><code>git push --force-with-lease origin &lt;hash&gt;:main</code><button class="copy" type="button" data-cmd="git push --force-with-lease origin &lt;hash&gt;:main">Copy</button></div>

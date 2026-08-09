@@ -274,7 +274,7 @@
         },
         {
           "when": "Keep your edits, just in case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git stash -u",
@@ -289,7 +289,7 @@
               "n": "Recover the saved work later with git stash pop."
             }
           ],
-          "undo": "git stash pop restores what you set aside"
+          "undo": "git stash pop restores the edits you set aside; local commits need git reflog"
         }
       ],
       "seealso": [
@@ -430,7 +430,7 @@
       "variants": [
         {
           "when": "Last commit, not pushed",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git commit --amend -m \"<new message>\"",
@@ -565,7 +565,7 @@
       "variants": [
         {
           "when": "The commits are not pushed",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git branch <new-branch>",
@@ -1575,7 +1575,7 @@
       "variants": [
         {
           "when": "Not pushed",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git add <file>",
@@ -2233,7 +2233,7 @@
         },
         {
           "when": "Many commits or the whole history",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git filter-repo --mailmap <mailmap-file>",
@@ -2810,7 +2810,7 @@
       "variants": [
         {
           "when": "The rule that keeps teams safe",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git merge <branch>",
@@ -3519,7 +3519,7 @@
       "variants": [
         {
           "when": "Do these in this exact order",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "<rotate the secret now>",
@@ -3565,7 +3565,7 @@
         },
         {
           "when": "Strip the giants from history",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git filter-repo --strip-blobs-bigger-than 10M",
@@ -4237,7 +4237,7 @@
       "variants": [
         {
           "when": "Keep the files, drop every commit",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch --orphan fresh",
@@ -4628,7 +4628,7 @@
         },
         {
           "when": "Your own branch, nobody builds on it",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git reset --hard <last-good-hash>",
@@ -5020,7 +5020,7 @@
       "variants": [
         {
           "when": "The 2019 split, in one look",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch <branch>",
@@ -5035,7 +5035,7 @@
               "n": "Still does both jobs and is not going anywhere; the new pair exists because one command doing two unrelated things caused accidents."
             }
           ],
-          "undo": "Nothing to undo; this is a choice of vocabulary"
+          "undo": "git switch and git checkout are reversible; git restore <file> is not, because the edit was never committed"
         }
       ],
       "seealso": [
@@ -6597,7 +6597,7 @@
       "variants": [
         {
           "when": "Point it where it should have been",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git tag -f <tag> <hash>",
@@ -13997,7 +13997,7 @@
       "variants": [
         {
           "when": "It went in with the last commit",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git rm --cached <big-file>",
@@ -14678,7 +14678,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git tag archive/<branch> <branch>",
@@ -14969,7 +14969,7 @@
       "variants": [
         {
           "when": "The rules",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git pull --rebase",
@@ -15756,7 +15756,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git commit --amend --no-edit",
@@ -16103,14 +16103,14 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git pull --rebase",
               "n": "Sync often and keep branches short: conflict odds grow with divergence time. Agree on a formatter so style edits stop colliding, and split files that everyone edits at once."
             }
           ],
-          "undo": "Nothing to undo"
+          "undo": "git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after"
         }
       ],
       "seealso": [
@@ -16317,14 +16317,14 @@
         },
         {
           "when": "ORIG_HEAD",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git reset --hard ORIG_HEAD",
               "n": "Where HEAD stood before the last drastic move: merge, rebase, or reset. That is why it appears in so many undo recipes."
             }
           ],
-          "undo": "ORIG_HEAD itself; the reflog if it was overwritten"
+          "undo": "ORIG_HEAD itself, or the reflog if it was overwritten; uncommitted work is gone"
         }
       ],
       "seealso": [
@@ -18489,7 +18489,7 @@
       "variants": [
         {
           "when": "Nothing is committed yet",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git restore <file>",
@@ -18500,7 +18500,7 @@
         },
         {
           "when": "Committed, not pushed",
-          "danger": "destructive",
+          "danger": "safe",
           "cmds": [
             {
               "c": "git reset --soft HEAD~1",
@@ -20915,7 +20915,7 @@
         },
         {
           "when": "The fix",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git branch -D <branch> && git switch -c <branch> main",
@@ -21257,7 +21257,7 @@
       "variants": [
         {
           "when": "Nobody has it yet",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git tag -f v2.1.0 <correct-hash> && git push --force origin v2.1.0",
@@ -22576,7 +22576,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git pull --rebase",
@@ -22587,7 +22587,7 @@
               "n": "Renumber yours rather than editing theirs; a migration already applied elsewhere must never change."
             }
           ],
-          "undo": "Rename back"
+          "undo": "Rename the file back; git rebase --abort if the pull is still mid-rebase"
         }
       ],
       "seealso": [
@@ -22769,7 +22769,7 @@
       "variants": [
         {
           "when": "Before flipping the switch",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "gitleaks git .",
@@ -22784,7 +22784,7 @@
               "n": "Remove anything that must not ship, then add a license and README before publishing. filter-repo is not built into Git: install it with pip install git-filter-repo."
             }
           ],
-          "undo": "Visibility can be flipped back, but anything fetched while public stays out there"
+          "undo": "the backup clone, and nothing else; anything fetched while the repository was public stays out there regardless"
         }
       ],
       "seealso": [
@@ -23885,7 +23885,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git checkout --orphan clean-start",
@@ -24039,10 +24039,14 @@
           "cmds": [
             {
               "c": "git clean -n",
-              "n": "Only clean touches untracked files. Rehearse with -n first, because Git holds no copy of them at all."
+              "n": "Lists what would go. Deletes nothing, and it is the step to never skip."
+            },
+            {
+              "c": "git clean -fd",
+              "n": "Deletes those untracked files and folders for good."
             }
           ],
-          "undo": "None"
+          "undo": "None. Untracked files were never in Git, so no commit and no reflog holds them"
         }
       ],
       "seealso": [
@@ -25409,7 +25413,7 @@
         },
         {
           "when": "Purge it from history",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git filter-repo --path node_modules --invert-paths",
@@ -25906,7 +25910,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git restore <path>",
@@ -25921,7 +25925,7 @@
               "n": "Adds a new commit undoing an old one. The only safe undo for published history."
             }
           ],
-          "undo": "Each has its own; revert is itself revertible"
+          "undo": "revert is itself revertible and reset has the reflog; restore has nothing, which is the difference worth remembering"
         }
       ],
       "seealso": [
@@ -26691,7 +26695,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git config user.email \"<right-address>\"",
@@ -26922,7 +26926,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git diff --shortstat main..HEAD",
@@ -26933,7 +26937,7 @@
               "n": "Splitting after the fact is work, but far less than the review it saves."
             }
           ],
-          "undo": "Nothing to undo"
+          "undo": "git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after"
         }
       ],
       "seealso": [
@@ -27112,7 +27116,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch <branch>",
@@ -27143,7 +27147,7 @@
       "variants": [
         {
           "when": "Not pushed",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git add <file> && git commit --amend --no-edit",
@@ -28333,7 +28337,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git rebase --abort",
@@ -28781,7 +28785,7 @@
       "variants": [
         {
           "when": "Not pushed",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch -c fix/<topic>",
@@ -29364,7 +29368,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "gh repo create <name> --public --clone",
@@ -29375,7 +29379,7 @@
               "n": "The one discipline worth keeping is pulling before pushing, which prevents the classic hackathon force-push disaster."
             }
           ],
-          "undo": "Add protection later if the project survives"
+          "undo": "git rebase --abort if the pull is mid-rebase; the repository can be made private or deleted later"
         }
       ],
       "seealso": [
@@ -29874,7 +29878,7 @@
       "variants": [
         {
           "when": "Reduce the collisions",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git pull --rebase",
@@ -29916,7 +29920,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git status",
@@ -31239,7 +31243,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "gh repo sync <fork>",
@@ -31250,7 +31254,7 @@
               "n": "Document the manual path in CONTRIBUTING for anyone with local commits, and keep your default branch fast-forwardable so syncing stays trivial."
             }
           ],
-          "undo": "Nothing to undo"
+          "undo": "git rebase --abort while it is running, or git reset --hard ORIG_HEAD straight after"
         }
       ],
       "seealso": [
@@ -31711,7 +31715,7 @@
       "variants": [
         {
           "when": "In this order, immediately",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "Rotate the credential now",
@@ -32078,7 +32082,7 @@
       "variants": [
         {
           "when": "The rule",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git rebase main",
@@ -32577,7 +32581,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "history",
           "cmds": [
             {
               "c": "git reflog",

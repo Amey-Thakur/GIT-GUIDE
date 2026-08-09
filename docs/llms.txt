@@ -18,7 +18,7 @@ License: MIT
 
 - [Finder](https://amey-thakur.github.io/GIT-GUIDE/): search any Git question or paste an error, copy the answer.
 - [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html): the visual model: where code lives, what each command moves, branches and HEAD.
-- [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html): an in-browser Git engine; real commands against a live commit graph, with six challenges from a first commit to recovering an abandoned one.
+- [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html): an in-browser Git engine; real commands against a live commit graph, with twenty-three lessons from a first commit to opening a pull request, a conflict with real markers to resolve, and a timed recovery drill.
 - [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html): guided rescue triage from panic to recipe.
 - [Answers](https://amey-thakur.github.io/GIT-GUIDE/answers.html): every answer rendered as static HTML, no JavaScript required: question, variants, exact commands, danger level and undo for each.
 - [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html): every common Git error, decoded, statically rendered.
@@ -32,7 +32,7 @@ License: MIT
 - [git-guide.pdf](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf): the complete guide, printable: model, every command section, every error, the chapters.
 - [cheatsheet-card.png](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png): the daily commands on one printable card.
 - [cheatsheet-card-2.png](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png): everything beyond the daily, the second card.
-- [poster.png](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png): the eight doors and the danger levels, one sheet.
+- [poster.png](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png): the nine doors and the danger levels, one sheet.
 
 ## Community
 

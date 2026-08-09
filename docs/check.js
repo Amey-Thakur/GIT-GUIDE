@@ -34,6 +34,12 @@
             INDEX.push({
               cmd: c.c, note: c.n, danger: v.danger, undo: v.undo,
               when: v.when, id: i.id, q: i.q, tokens: tokenize(c.c),
+              // A danger level describes a whole recipe. When the recipe is one
+              // command, the level is unambiguously about that command; when it
+              // is five, the level belongs to the worst of them. Pasting
+              // git fetch must not inherit the warning from the hard reset that
+              // followed it on somebody else's card.
+              solo: v.cmds.length === 1,
               words: (i.q + " " + i.aka.join(" ")).toLowerCase()
             });
           });
@@ -42,13 +48,18 @@
       INDEX.sort(function (a, b) { return b.tokens.length - a.tokens.length; });
     });
 
-  // A command reduced to its meaningful words: the program, the subcommand, and its flags.
+  /* A command reduced to its meaningful words: the program, the subcommand, and
+     its flags. Case is folded on words but never on flags, because in Git the
+     case is the whole difference: -d refuses to delete an unmerged branch and
+     -D deletes it anyway. Lowercasing both made this checker answer "Safe" to
+     git branch -D, which is exactly the mistake it exists to prevent. */
   function tokenize(s) {
-    return s.toLowerCase()
+    return s
       .replace(/["']/g, " ")
       .split(/\s*(?:&&|\|\||;|\|)\s*/)[0]
       .split(/\s+/)
-      .filter(function (t) { return t && t.indexOf("<") === -1 && t !== "sudo"; });
+      .filter(function (t) { return t && t.indexOf("<") === -1 && t !== "sudo"; })
+      .map(function (t) { return t.charAt(0) === "-" ? t : t.toLowerCase(); });
   }
 
   function isFlag(t) { return t.charAt(0) === "-"; }
@@ -67,6 +78,7 @@
     var s = 100 + shared * 20 - extra * 15 - missing * 5;
     // Prefer the answer that is actually about this command.
     if (e.words.indexOf(typed[1]) !== -1) s += 8;
+    if (e.solo) s += 12;
     return s;
   }
 
@@ -98,6 +110,27 @@
     head.appendChild(GG.el("span", "cv-badge", LABEL[best.danger]));
     head.appendChild(GG.el("code", "cv-cmd", best.cmd));
     card.appendChild(head);
+
+    /* Answering about a command with different flags, without saying so, is how
+       a checker becomes worse than no checker. A flag can be the whole risk, and
+       so can a subcommand: stash drop and stash branch share nothing but a word. */
+    var entryFlags = best.tokens.filter(isFlag);
+    var off = typed.filter(isFlag).filter(function (t) { return entryFlags.indexOf(t) === -1; });
+
+    // A bare word in third place is a subcommand. Anything with a slash, a tilde
+    // or a digit is an argument, and arguments are expected to differ.
+    function subcommand(tokens) {
+      var w = tokens.slice(2).filter(function (t) { return !isFlag(t) && /^[a-z][a-z-]*$/.test(t); })[0];
+      return w || null;
+    }
+    var mine = subcommand(typed), theirs = subcommand(best.tokens);
+    if (mine && theirs && mine !== theirs) off.push(mine);
+
+    if (off.length) {
+      card.appendChild(GG.el("p", "cv-approx",
+        "Closest match, not an exact one. You typed " + off.join(", ") +
+        ", which this answer does not cover, and in Git one word can be the whole difference."));
+    }
 
     card.appendChild(GG.el("p", "cv-what", best.note));
     card.appendChild(GG.el("p", "cv-mean", MEANING[best.danger]));

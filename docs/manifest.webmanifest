@@ -8,7 +8,6 @@
   "background_color": "#141311",
   "theme_color": "#141311",
   "icons": [
-    { "src": "assets/git-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "assets/social-preview.png", "sizes": "1280x640", "type": "image/png" }
+    { "src": "assets/git-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }

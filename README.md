@@ -84,12 +84,13 @@ flowchart TD
 | [Finder](https://amey-thakur.github.io/GIT-GUIDE/) | Ask anything in plain language, or paste an error. Copy the answer. |
 | [Start](https://amey-thakur.github.io/GIT-GUIDE/setup.html) | Zero to first push in six ordered steps. |
 | [Learn](https://amey-thakur.github.io/GIT-GUIDE/learn.html) | Interactive diagrams: where code lives, what each command moves, branches and HEAD. |
-| [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html) | A real Git engine in the page. Run commands, watch the graph, recover what you break. |
+| [Practise](https://amey-thakur.github.io/GIT-GUIDE/play.html) | A real Git engine in the page. Twenty-three lessons, a conflict with real markers to delete, and a timed drill that destroys three commits so you can bring them back. |
 | [Fix](https://amey-thakur.github.io/GIT-GUIDE/fix.html) | A few questions, then the exact way out of any mess. |
 | [Errors](https://amey-thakur.github.io/GIT-GUIDE/errors.html) | Git's real error messages, decoded, with fixes. |
 | [GitHub](https://amey-thakur.github.io/GIT-GUIDE/github.html) | Pull requests, forks, Actions, releases, Pages, and the power moves, with the PR lifecycle as an interactive diagram. |
 | [Workflows](https://amey-thakur.github.io/GIT-GUIDE/workflows.html) | How individuals and teams actually run Git, solo to trunk-based. |
 | [Cheatsheet](https://amey-thakur.github.io/GIT-GUIDE/cheatsheet.html) | Every command worth knowing, one line each, danger-marked. |
+| [Answers](https://amey-thakur.github.io/GIT-GUIDE/answers.html) | All thousand, as plain HTML with no JavaScript needed. Filter by what a command can cost you. |
 
 <br>
 
@@ -144,8 +145,8 @@ Four things to keep. Click any one to open it. Each is generated from this repos
 
 | | |
 | :---: | :---: |
-| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 23 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
-| **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>23 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
+| [<img src="docs/assets/pdf-cover.png" alt="The Git Guide PDF, 22 pages" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) | [<img src="docs/assets/poster.png" alt="The poster: nine doors and three danger levels" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png) |
+| **[The guide, as a PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf)**<br>22 pages. The model, the cheat sheets, the undos, the errors worth knowing. Printable, and readable on a plane. | **[The poster](https://amey-thakur.github.io/GIT-GUIDE/assets/poster.png)**<br>Nine doors and the three danger levels on one sheet. Made for a wall, a slide, or a lab. |
 | [<img src="docs/assets/cheatsheet-card.png" alt="The daily card: the Git you use every day" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png) | [<img src="docs/assets/cheatsheet-card-2.png" alt="The beyond card: everything past the daily" width="380">](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png) |
 | **[The daily card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card.png)**<br>The commands you reach for every day, on one page. The one to pin up. | **[The beyond card](https://amey-thakur.github.io/GIT-GUIDE/assets/cheatsheet-card-2.png)**<br>Everything past the daily: history surgery, submodules, scale, recovery. |
 

@@ -78,7 +78,10 @@ self.addEventListener("fetch", function (e) {
       }
       return res;
     }).catch(function () {
-      return caches.match(req).then(function (hit) {
+      /* ignoreSearch, because assets are requested with a ?v= that changes on
+         every deploy. Matching the query exactly meant that the first offline
+         visit after a deploy found the page but not its stylesheet. */
+      return caches.match(req, { ignoreSearch: true }).then(function (hit) {
         if (hit) return hit;
         // Offline and never seen: the finder is always precached, and it holds
         // every answer, so it is a genuinely useful place to land.

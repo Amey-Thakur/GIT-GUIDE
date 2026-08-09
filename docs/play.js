@@ -205,6 +205,45 @@
     return out;
   }
 
+  // Every path any reachable commit has ever recorded.
+  function filesAt(tip) {
+    var out = {}, seen = {}, queue = [tip];
+    while (queue.length) {
+      var id = queue.shift();
+      if (!id || seen[id]) continue;
+      seen[id] = true;
+      var c = S.commits[id];
+      if (!c) continue;
+      (c.files || []).forEach(function (f) { out[f] = true; });
+      queue.push.apply(queue, c.parents);
+    }
+    return out;
+  }
+
+  /* Moving HEAD moves your files with it: that is the part of checkout people
+     forget, and it is why a dirty working tree makes Git hesitate. Work you have
+     not committed is yours rather than the commit's, so it survives the move,
+     which is what Git does whenever it can. */
+  function syncWorktree() {
+    var tip = headId();
+    var content = {}, tracked = {};
+    Object.keys(filesAt(tip)).forEach(function (f) {
+      tracked[f] = true;
+      var body = contentAt(tip, f);
+      if (body != null) content[f] = body;
+    });
+    Object.keys(S.files).forEach(function (f) {
+      if (S.content[f] != null) content[f] = S.content[f];
+      if (S.files[f] === "modified") tracked[f] = true;
+    });
+    Object.keys(S.staged).forEach(function (f) {
+      if (S.content[f] != null) content[f] = S.content[f];
+      tracked[f] = true;
+    });
+    S.content = content;
+    S.tracked = tracked;
+  }
+
   /* The most recent version of a file reachable from a commit. Walks first
      parents, which is enough for the shapes this sandbox can build. */
   function contentAt(tip, file) {
@@ -284,7 +323,10 @@
     ["git reflog", "everywhere HEAD has been, including what you abandoned"],
     ["git stash", "shelve your changes"],
     ["git stash pop", "take them back off the shelf"],
+    ["git stash list", "what is on the shelf"],
+    ["git stash drop", "throw the top entry away, with no way back"],
     ["git tag <name>", "a label that does not move"],
+    ["git tag -d <name>", "delete a tag here, not on the remote"],
     ["git clone <url>", "copy an existing repository, history and all"],
     ["git remote add origin <url>", "connect a GitHub repository"],
     ["git push -u origin <branch>", "publish a branch and track it"],
@@ -525,6 +567,7 @@
     if (isAncestor(theirs, mine)) { say("Already up to date.", "out"); return; }
     if (isAncestor(mine, theirs)) {
       S.branches[b] = theirs;
+      syncWorktree();
       note("HEAD", "pull " + b + ": fast-forward");
       say("<b>Fast-forward.</b> You had nothing of your own, so your branch slid up to origin.", "out");
       draw(); return;
@@ -562,7 +605,8 @@
       var head = remoteTip(open), base = remoteTip("main");
       if (base == null) { say("main is not on origin yet. Push it first.", "err"); return; }
       var id = nextId();
-      S.commits[id] = { id: id, parents: [base, head], msg: "Merge pull request from " + open };
+      S.commits[id] = { id: id, parents: [base, head], msg: "Merge pull request from " + open,
+                        files: [], snap: {} };
       S.order.push(id);
       S.remote.branches.main = id;
       S.prs[open].open = false;
@@ -739,6 +783,7 @@
       if (S.branches[name]) { say("A branch named " + esc(name) + " already exists.", "err"); return; }
       S.branches[name] = headId();
       S.head = { type: "branch", name: name };
+      syncWorktree();
       note("HEAD", "checkout: moving to " + name);
       say("Created and switched to <b>" + esc(name) + "</b>. Same commit, new pointer, and HEAD now follows it.", "out");
       draw(); return;
@@ -746,6 +791,7 @@
     if (S.branches[name] != null) {
       S.head = { type: "branch", name: name };
       S.switches = (S.switches || 0) + 1;
+      syncWorktree();
       note("HEAD", "checkout: moving to " + name);
       say("Switched to <b>" + esc(name) + "</b>.", "out");
       draw(); return;
@@ -754,6 +800,7 @@
     if (id) {
       S.head = { type: "detached", id: id };
       S.wasDetached = true;
+      syncWorktree();
       note("HEAD", "checkout: moving to " + id);
       say("You are in <b>detached HEAD</b> at " + id + ". Commits here belong to no branch. " +
         "<code>git switch -c &lt;name&gt;</code> keeps them; <code>git switch main</code> walks away.", "out");
@@ -809,6 +856,7 @@
     if (isAncestor(target, h)) { say("Already up to date. Everything in " + esc(name) + " is already here.", "out"); return; }
     if (isAncestor(h, target)) {
       if (S.head.type === "branch") S.branches[S.head.name] = target; else S.head.id = target;
+      syncWorktree();
       S.didFF = true;
       note("HEAD", "merge " + name + ": fast-forward");
       say("<b>Fast-forward.</b> Your branch had nothing of its own, so Git slid the pointer along. No merge commit exists.", "out");
@@ -841,7 +889,14 @@
       draw(); return;
     }
 
-    var id = commit("Merge branch '" + name + "'", [h, target], []);
+    /* A clean merge brings the other side's files across. Recording them on the
+       merge commit is what lets git show, cat and blame answer afterwards. */
+    var brought = Object.keys(theirs).filter(function (f) { return !mine[f]; });
+    brought.forEach(function (f) {
+      var body = contentAt(target, f);
+      if (body != null) { S.content[f] = body; S.tracked[f] = true; }
+    });
+    var id = commit("Merge branch '" + name + "'", [h, target], brought);
     note("HEAD", "merge " + name + ": merge commit");
     say("Created merge commit <b>" + id + "</b>, with <b>two parents</b>. Both histories are preserved exactly as they happened.", "out");
     draw();
@@ -881,13 +936,18 @@
     mine.reverse();
     var base = upstream, made = [];
     mine.forEach(function (old) {
+      var o = S.commits[old];
       var id = nextId();
-      S.commits[id] = { id: id, parents: [base], msg: S.commits[old].msg };
+      // Same changes, new commits. A replayed commit that carried no files was
+      // unreadable to git show and git blame the moment it landed.
+      S.commits[id] = { id: id, parents: [base], msg: o.msg,
+                        files: (o.files || []).slice(), snap: o.snap || {} };
       S.order.push(id);
       made.push(id);
       base = id;
     });
     S.branches[S.head.name] = base;
+    syncWorktree();
     S.didRebase = true;
     note("HEAD", "rebase onto " + name);
     say(REWRITES + "Replayed " + mine.length + " commit" + (mine.length === 1 ? "" : "s") + " onto " + esc(name) +
@@ -916,17 +976,26 @@
     if (S.head.type === "branch") S.branches[S.head.name] = id; else S.head.id = id;
     note("HEAD", "reset: moving to " + ref);
     if (mode === "--soft" && id !== was) S.didSoftReset = true;
+
+    /* The three modes differ in how far the reset reaches. Soft moves the branch
+       and stops. Mixed also resets the index, which is what unstaging means.
+       Hard goes one further and rewrites your files. Saying "your changes are
+       kept, unstaged" while leaving everything staged was simply untrue. */
+    var unstaged = 0, restored = [];
+    if (mode === "--mixed") {
+      Object.keys(S.staged).forEach(function (f) {
+        if (!S.removed[f]) { S.files[f] = "modified"; unstaged++; }
+      });
+      restored = Object.keys(S.removed);
+      S.staged = {};
+      S.removed = {};
+      syncWorktree();
+    }
     if (mode === "--hard") {
       S.staged = {};
       S.files = {};
       S.removed = {};
-      /* The index is whatever the new commit says it is. Rebuilding it here is
-         what makes a file that only ever existed in the commit you just dropped
-         disappear from git ls-files, rather than linger as a ghost entry. */
-      S.tracked = {};
-      Object.keys(ancestors(id)).forEach(function (c) {
-        (S.commits[c].files || []).forEach(function (f) { S.tracked[f] = true; });
-      });
+      syncWorktree();
       if (S.merging) {
         S.merging = null;
         say("The conflicted merge went with it: a hard reset abandons a merge in progress, " +
@@ -945,7 +1014,13 @@
     }
 
     say(REWRITES + "Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
-      (mode === "--hard" ? " Working tree wiped too." : mode === "--soft" ? " Your changes are still staged." : " Your changes are kept, unstaged.") +
+      (mode === "--hard" ? " Working tree wiped too."
+        : mode === "--soft" ? " Your changes are still staged."
+        : unstaged ? " " + unstaged + " file" + (unstaged === 1 ? "" : "s") + " unstaged, and the edits are still in your working tree."
+        : " The index was reset. Nothing was staged, so nothing moved.") +
+      (restored.length
+        ? "<br>" + restored.map(esc).join(", ") + " came back: the staged deletion was part of the index this reset threw away."
+        : "") +
       (was !== id && !stillHeld[was]
         ? "<br>" + was + " is <b>not deleted</b>, only unreferenced. <code>git reflog</code> still knows it."
         : ""), "out");
@@ -956,10 +1031,21 @@
     if (blockedByMerge("git revert")) return;
     var id = resolve(a[0] || "HEAD");
     if (!id) { say("Cannot resolve " + esc(a[0] || "HEAD") + ".", "err"); return; }
-    var nid = commit('Revert "' + S.commits[id].msg + '"', [headId()]);
+    var was = S.commits[id];
+    var files = (was.files || []).slice();
+    // A revert is a commit like any other, and the change it records is the
+    // change back. Putting the contents where they were is what makes it one.
+    var parent = was.parents[0];
+    files.forEach(function (f) {
+      var before = parent ? contentAt(parent, f) : null;
+      if (before == null) delete S.content[f]; else S.content[f] = before;
+    });
+    var nid = commit('Revert "' + was.msg + '"', [headId()], files);
     note("HEAD", "revert " + id);
     say("Added <b>" + nid + "</b>, a new commit that undoes " + id + ". Nothing was rewritten, " +
-      "which is what makes revert the safe undo on a shared branch.", "out");
+      "which is what makes revert the safe undo on a shared branch." +
+      (files.length ? " <code>" + files.map(esc).join("</code>, <code>") +
+        "</code> " + (files.length === 1 ? "is" : "are") + " back to the version before it." : ""), "out");
     draw();
   };
 
@@ -967,7 +1053,12 @@
     if (blockedByMerge("git cherry-pick")) return;
     var id = resolve(a[0]);
     if (!id) { say("Cannot resolve " + esc(a[0] || "") + ".", "err"); return; }
-    var nid = commit(S.commits[id].msg, [headId()]);
+    var src = S.commits[id];
+    var picked = (src.files || []).slice();
+    picked.forEach(function (f) {
+      if (src.snap && src.snap[f] != null) { S.content[f] = src.snap[f]; S.tracked[f] = true; }
+    });
+    var nid = commit(src.msg, [headId()], picked);
     S.didCherryPick = true;
     note("HEAD", "cherry-pick " + id);
     say("Copied " + id + " here as <b>" + nid + "</b>. Same change, new commit, and the original stays where it is.", "out");
@@ -976,9 +1067,35 @@
 
   CMDS.tag = function (a) {
     if (!a.length) { say(Object.keys(S.tags).join("<br>") || "no tags yet", "out"); return; }
-    var name = a.filter(function (x) { return x[0] !== "-"; })[0];
-    S.tags[name] = resolve(a[a.length - 1]) || headId();
-    say("Tagged " + esc(name) + ". Unlike a branch, a tag does not move when you commit.", "out");
+
+    if (a[0] === "-d") {
+      var doomed = a[1];
+      if (S.tags[doomed] == null) { say("No tag called " + esc(doomed || "") + ".", "err"); return; }
+      delete S.tags[doomed];
+      say("Deleted the tag " + esc(doomed) + " here. On the remote it lives on until " +
+        "<code>git push origin --delete " + esc(doomed) + "</code>, which is why a deleted tag " +
+        "keeps coming back for everyone else.", "out");
+      draw(); return;
+    }
+
+    /* A message is an argument, not a target, and the old parser read the last
+       word as the commit to tag. It also let a second tag of the same name look
+       like it worked while quietly leaving the tag where it was. */
+    var mi = a.indexOf("-m");
+    var msg = mi !== -1 ? a[mi + 1] : null;
+    var plain = a.filter(function (x) { return x.charAt(0) !== "-" && x !== msg; });
+    var name = plain[0];
+    if (!name) { say("Which name? <code>git tag v1.0</code>.", "err"); return; }
+    if (S.tags[name] != null) {
+      say("A tag called <b>" + esc(name) + "</b> already exists, and Git will not move it. " +
+        "That is what separates a tag from a branch. <code>git tag -d " + esc(name) +
+        "</code> first if you really mean to.", "err");
+      return;
+    }
+    var at = plain[1] ? resolve(plain[1]) : headId();
+    if (!at) { say("Cannot resolve " + esc(plain[1]) + ".", "err"); return; }
+    S.tags[name] = at;
+    say("Tagged " + esc(name) + " at " + at + ". Unlike a branch, a tag does not move when you commit.", "out");
     draw();
   };
 
@@ -1000,17 +1117,45 @@
 
   CMDS.stash = function (a) {
     if (blockedByMerge("git stash")) return;
+    if (a[0] === "list") {
+      if (!S.stash.length) { say("The shelf is empty.", "out"); return; }
+      say(S.stash.map(function (e, i) {
+        return "stash@{" + i + "}: WIP on " + esc(headName()) + " (" +
+          Object.keys(e.files).length + " file" + (Object.keys(e.files).length === 1 ? "" : "s") + ")";
+      }).join("<br>"), "out");
+      return;
+    }
     if (a[0] === "pop" || a[0] === "apply") {
       if (!S.stash.length) { say("No stash entries found.", "err"); return; }
       var e = a[0] === "pop" ? S.stash.shift() : S.stash[0];
-      Object.keys(e).forEach(function (f) { S.files[f] = e[f]; });
+      Object.keys(e.files).forEach(function (f) { S.files[f] = e.files[f]; });
+      Object.keys(e.content).forEach(function (f) { S.content[f] = e.content[f]; });
       if (a[0] === "pop") S.didStashPop = true;
-      say("Restored your changes to the working tree.", "out"); return;
+      say("Restored your changes to the working tree." +
+        (a[0] === "apply" ? " <b>apply</b> left the entry on the shelf; <b>pop</b> takes it off." : ""), "out");
+      draw(); return;
+    }
+    if (a[0] === "drop" || a[0] === "clear") {
+      if (!S.stash.length) { say("The shelf is already empty.", "err"); return; }
+      var gone = a[0] === "clear" ? S.stash.length : 1;
+      if (a[0] === "clear") S.stash = []; else S.stash.shift();
+      say("Dropped " + gone + " stash entr" + (gone === 1 ? "y" : "ies") + ". " +
+        "<b>There is no way back.</b> A dropped stash is not in any commit, so the reflog " +
+        "cannot help and neither can anything else.", "out");
+      return;
     }
     if (!dirty()) { say("No local changes to save.", "err"); return; }
-    S.stash.unshift(S.files);
+    /* The shelf has to hold the contents as well as the file names, or popping
+       restores a status with nothing behind it and cat prints the wrong thing. */
+    var shelf = { files: S.files, content: {} };
+    Object.keys(S.files).forEach(function (f) {
+      if (S.content[f] != null) shelf.content[f] = S.content[f];
+    });
+    S.stash.unshift(shelf);
     S.files = {}; S.staged = {}; S.removed = {};
+    syncWorktree();
     say("Saved your changes on the shelf and cleaned the working tree. <code>git stash pop</code> brings them back.", "out");
+    draw();
   };
 
   /* ------------------------------------------------------- click and drag */
@@ -1920,6 +2065,7 @@
       label(S.branches[n], n, "pbranch" + (on ? " on" : ""), on ? null : function () {
         S.head = { type: "branch", name: n };
         S.switches = (S.switches || 0) + 1;
+        syncWorktree();
         note("HEAD", "checkout: moving to " + n);
         say("Switched to <b>" + esc(n) + "</b>, the same as <code>git switch " + esc(n) + "</code>.", "out");
         draw();
