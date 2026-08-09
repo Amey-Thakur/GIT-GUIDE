@@ -112,7 +112,17 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   line-height: 0;
 }
 
-.gh-link:hover { color: var(--accent); border-color: var(--accent); }
+/* Hover moves the icon, never the frame. Each control answers in its own way:
+   the guide is a safe thing to take, so green; the GitHub mark keeps its own
+   identity and simply brightens; the theme control just lifts to full ink. */
+.gh-link:hover { border-color: var(--line); }
+
+.gh-link[aria-label*="PDF"]:hover { color: var(--safe); }
+
+.gh-link[aria-label*="GitHub"]:hover {
+  color: var(--ink);
+  filter: brightness(1.35) drop-shadow(0 0 5px color-mix(in srgb, var(--ink) 40%, transparent));
+}
 
 /* Header */
 
@@ -169,7 +179,8 @@ code, pre { font-family: var(--mono); font-size: 0.9em; }
   display: inline-flex;
 }
 
-.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle:hover { color: var(--ink); border-color: var(--line);
+                      filter: brightness(1.3) drop-shadow(0 0 5px color-mix(in srgb, var(--ink) 35%, transparent)); }
 
 .theme-toggle .tt-line { stroke: currentColor; stroke-width: 1.5; }
 .theme-toggle circle { stroke: currentColor; stroke-width: 1.5; fill: none; }
@@ -1375,3 +1386,7 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
 .nomatch { margin: 1.5rem 0; padding: 1.25rem 1.5rem; color: var(--muted);
            border: 1px dashed var(--line); border-radius: 10px; line-height: 1.7; }
 .nomatch b { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+
+/* A deep link should land with the heading clear of the top edge, not welded
+   to it. Every anchor target on the site gets the same breathing room. */
+[id] { scroll-margin-top: 1.75rem; }
