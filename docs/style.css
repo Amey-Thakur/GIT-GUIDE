@@ -301,6 +301,8 @@ a.chip { text-decoration: none; }
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .result h2 .anchor { color: var(--muted); font-size: 0.85rem; opacity: 0; }
@@ -462,11 +464,12 @@ a.footer-tag:hover { color: var(--accent); text-decoration: none; }
   display: block;
   color: var(--destructive);
   font-size: 0.95rem;
-  overflow-x: auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
-.errcard h2 { display: flex; align-items: baseline; gap: 0.5rem; }
+.errcard h2 { display: flex; align-items: baseline; gap: 0.5rem; min-width: 0; }
 .errcard h2 .anchor { color: var(--muted); font-size: 0.85rem; opacity: 0; }
 .errcard:hover h2 .anchor { opacity: 1; }
 
@@ -493,7 +496,7 @@ a.footer-tag:hover { color: var(--accent); text-decoration: none; }
 
 .wizard-q { font-size: 1.35rem; margin: 0.5rem 0 1rem; }
 
-.wizard-opts { display: grid; gap: 0.6rem; max-width: 34rem; }
+.wizard-opts { display: grid; gap: 0.7rem; }
 
 .wizard-opt {
   border: 1.5px solid var(--line);
@@ -517,7 +520,11 @@ a.footer-tag:hover { color: var(--accent); text-decoration: none; }
 
 .diagram-section h2 { font-size: 1.4rem; margin: 0 0 1rem; }
 
-.diagram { border: 1px solid var(--line); border-radius: 12px; background: var(--card); padding: 0.75rem; }
+.diagram { border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem 1.5rem;
+           background:
+             radial-gradient(circle, color-mix(in srgb, var(--muted) 16%, transparent) 1px,
+                             transparent 1px) 0 0 / 24px 24px,
+             var(--card); }
 
 .diagram svg { display: block; width: 100%; height: auto; }
 
@@ -765,7 +772,7 @@ kbd {
   .cs-rows { grid-template-columns: 1fr 1fr; align-items: start; }
   #error-list { display: block; columns: 2; column-gap: 1rem; }
   #error-list .errcard { break-inside: avoid; margin-bottom: 1rem; }
-  .wizard-opts { max-width: 40rem; grid-template-columns: 1fr 1fr; }
+  .wizard-opts { grid-template-columns: 1fr 1fr; }
 }
 
 /* Paper */
@@ -897,7 +904,7 @@ kbd {
 
 .pnotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
           gap: 2.5rem; margin-top: 2.5rem; padding-top: 2.25rem; border-top: 1px solid var(--line); }
-.pnotes h3 { font-size: 1rem; margin: 0 0 0.6rem; }
+.pnotes h2 { font-size: 1rem; margin: 0 0 0.6rem; }
 .pnotes p { margin: 0; color: var(--muted); font-size: 0.93rem; line-height: 1.7; }
 .pnotes code { font-family: var(--mono); font-size: 0.86rem; color: var(--ink); }
 
