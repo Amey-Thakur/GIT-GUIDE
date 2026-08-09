@@ -174,7 +174,7 @@
     <p class="undo"><span>Undo</span> git branch -m &lt;new&gt; &lt;old&gt;</p>
   </div>
   <div class="variant">
-    <p class="when">Already pushed<span class="badge history">Rewrites history</span></p>
+    <p class="when">Already pushed<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git branch -m &lt;old&gt; &lt;new&gt;</code><button class="copy" type="button" data-cmd="git branch -m &lt;old&gt; &lt;new&gt;">Copy</button></div>
     <p class="note">Rename locally first.</p>
     <div class="cmd"><code>git push -u origin &lt;new&gt;</code><button class="copy" type="button" data-cmd="git push -u origin &lt;new&gt;">Copy</button></div>
@@ -464,7 +464,7 @@
   <h2>Delete a tag, locally and on the remote<a class="anchor" href="#delete-tag" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: remove tag, delete remote tag, untag</p>
   <div class="variant">
-    <p class="when">Both places<span class="badge safe">Safe</span></p>
+    <p class="when">Both places<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git tag -d &lt;tag&gt;</code><button class="copy" type="button" data-cmd="git tag -d &lt;tag&gt;">Copy</button></div>
     <p class="note">Local.</p>
     <div class="cmd"><code>git push origin --delete &lt;tag&gt;</code><button class="copy" type="button" data-cmd="git push origin --delete &lt;tag&gt;">Copy</button></div>
@@ -538,7 +538,7 @@
   <h2>Remove a submodule<a class="anchor" href="#remove-submodule" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: delete submodule, unregister submodule</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git submodule deinit -f &lt;path&gt;</code><button class="copy" type="button" data-cmd="git submodule deinit -f &lt;path&gt;">Copy</button></div>
     <p class="note">Unregisters it.</p>
     <div class="cmd"><code>git rm -f &lt;path&gt;</code><button class="copy" type="button" data-cmd="git rm -f &lt;path&gt;">Copy</button></div>
@@ -1058,7 +1058,7 @@
   <h2>Rename the master branch to main<a class="anchor" href="#rename-master-to-main" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: change default branch, master to main, rename default branch, init.defaultBranch main, main vs master difference, change default branch on github</p>
   <div class="variant">
-    <p class="when">Local and remote<span class="badge history">Rewrites history</span></p>
+    <p class="when">Local and remote<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git branch -m master main</code><button class="copy" type="button" data-cmd="git branch -m master main">Copy</button></div>
     <div class="cmd"><code>git push -u origin main</code><button class="copy" type="button" data-cmd="git push -u origin main">Copy</button></div>
     <div class="cmd"><code>git push origin --delete master</code><button class="copy" type="button" data-cmd="git push origin --delete master">Copy</button></div>
@@ -2678,7 +2678,7 @@
   <h2>Rename a tag<a class="anchor" href="#rename-tag" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: change tag name, move tag name, retag release</p>
   <div class="variant">
-    <p class="when">Old name out, new name in<span class="badge history">Rewrites history</span></p>
+    <p class="when">Old name out, new name in<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git tag &lt;new&gt; &lt;old&gt;^{}</code><button class="copy" type="button" data-cmd="git tag &lt;new&gt; &lt;old&gt;^{}">Copy</button></div>
     <p class="note">The ^{} points the new tag at the same commit even when the old one is annotated.</p>
     <div class="cmd"><code>git tag -d &lt;old&gt; &amp;&amp; git push origin &lt;new&gt; --delete &lt;old&gt;</code><button class="copy" type="button" data-cmd="git tag -d &lt;old&gt; &amp;&amp; git push origin &lt;new&gt; --delete &lt;old&gt;">Copy</button></div>
@@ -4913,7 +4913,7 @@
   <h2>Fix an accidental repository inside a repository<a class="anchor" href="#nested-repo" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: adding embedded git repository warning, nested git repo, cloned inside my repo</p>
   <div class="variant">
-    <p class="when">It should be ordinary files<span class="badge safe">Safe</span></p>
+    <p class="when">It should be ordinary files<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>rm -rf &lt;folder&gt;/.git</code><button class="copy" type="button" data-cmd="rm -rf &lt;folder&gt;/.git">Copy</button></div>
     <p class="note">Delete the inner .git, then git add the folder. The warning came from that hidden folder.</p>
     <div class="cmd"><code>git rm --cached &lt;folder&gt; &amp;&amp; git add &lt;folder&gt;</code><button class="copy" type="button" data-cmd="git rm --cached &lt;folder&gt; &amp;&amp; git add &lt;folder&gt;">Copy</button></div>
@@ -8233,12 +8233,12 @@
     <p class="undo"><span>Undo</span> Nothing to undo</p>
   </div>
   <div class="variant">
-    <p class="when">Use the modern pair<span class="badge safe">Safe</span></p>
+    <p class="when">Use the modern pair<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git switch &lt;branch&gt;">Copy</button></div>
     <p class="note">Branches only, and it refuses ambiguous arguments.</p>
     <div class="cmd"><code>git restore &lt;file&gt;</code><button class="copy" type="button" data-cmd="git restore &lt;file&gt;">Copy</button></div>
     <p class="note">Files only. Same power, no chance of restoring a file when you meant to change branch.</p>
-    <p class="undo"><span>Undo</span> Each has its own undo; checkout still works for old habits</p>
+    <p class="undo"><span>Undo</span> git switch is reversible; git restore is not, because the edit it throws away was never committed</p>
   </div>
   <p class="seealso">See also: <a href="#checkout-vs-switch">checkout vs switch</a>, <a href="#restore-file">restore file</a>, <a href="#detached-head">detached head</a></p>
 </article>
@@ -8541,7 +8541,7 @@
   <h2>Start a branch with no files at all<a class="anchor" href="#empty-branch" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: orphan branch empty, branch with no history, clean slate branch</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git switch --orphan &lt;name&gt;</code><button class="copy" type="button" data-cmd="git switch --orphan &lt;name&gt;">Copy</button></div>
     <p class="note">A branch with no parent commit. Your files carry over staged, so clear them if you want a true blank start.</p>
     <div class="cmd"><code>git rm -rf .</code><button class="copy" type="button" data-cmd="git rm -rf .">Copy</button></div>
@@ -8852,7 +8852,7 @@
   <h2>Delete a branch on the server but keep mine<a class="anchor" href="#remove-remote-branch-only" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: delete remote branch only, remove branch from github not locally, clean server branches</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git push origin --delete &lt;branch&gt;</code><button class="copy" type="button" data-cmd="git push origin --delete &lt;branch&gt;">Copy</button></div>
     <p class="note">Removes it from the remote. Your local branch and its commits stay untouched.</p>
     <div class="cmd"><code>git branch --unset-upstream</code><button class="copy" type="button" data-cmd="git branch --unset-upstream">Copy</button></div>
@@ -10497,7 +10497,7 @@
     <p class="undo"><span>Undo</span> Nothing to undo</p>
   </div>
   <div class="variant">
-    <p class="when">Fix it<span class="badge history">Rewrites history</span></p>
+    <p class="when">Fix it<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git filter-repo --strip-blobs-bigger-than 10M</code><button class="copy" type="button" data-cmd="git filter-repo --strip-blobs-bigger-than 10M">Copy</button></div>
     <p class="note">Rewrites history without them, then force-push. Everyone must reclone. filter-repo is not built into Git: install it with pip install git-filter-repo.</p>
     <div class="cmd"><code>git lfs migrate import --include=&quot;*.zip&quot;</code><button class="copy" type="button" data-cmd="git lfs migrate import --include=&quot;*.zip&quot;">Copy</button></div>
@@ -12441,7 +12441,7 @@
   <h2>Convert a submodule back into normal files<a class="anchor" href="#stop-tracking-a-submodule" aria-label="Link to this answer">#</a></h2>
   <p class="aka">Also asked as: remove submodule keep files, flatten submodule into repo, submodule to regular folder</p>
   <div class="variant">
-    <p class="when">Standard case<span class="badge safe">Safe</span></p>
+    <p class="when">Standard case<span class="badge destructive">Destructive</span></p>
     <div class="cmd"><code>git submodule deinit -f &lt;path&gt; &amp;&amp; git rm --cached &lt;path&gt;</code><button class="copy" type="button" data-cmd="git submodule deinit -f &lt;path&gt; &amp;&amp; git rm --cached &lt;path&gt;">Copy</button></div>
     <p class="note">Removes the submodule registration while leaving the files on disk.</p>
     <div class="cmd"><code>rm -rf &lt;path&gt;/.git &amp;&amp; git add &lt;path&gt;</code><button class="copy" type="button" data-cmd="rm -rf &lt;path&gt;/.git &amp;&amp; git add &lt;path&gt;">Copy</button></div>

@@ -162,11 +162,12 @@
     return null;
   }
 
-  function commit(msg, parents, files) {
+  function commit(msg, parents, files, del) {
     var id = nextId();
     var snap = {};
     (files || []).forEach(function (f) { if (S.content[f] != null) snap[f] = S.content[f]; });
-    S.commits[id] = { id: id, parents: parents, msg: msg, files: files || [], snap: snap };
+    S.commits[id] = { id: id, parents: parents, msg: msg, files: files || [],
+                      snap: snap, del: del || [] };
     S.order.push(id);
     if (S.head.type === "branch") S.branches[S.head.name] = id;
     else S.head.id = id;
@@ -228,9 +229,10 @@
     var tip = headId();
     var content = {}, tracked = {};
     Object.keys(filesAt(tip)).forEach(function (f) {
-      tracked[f] = true;
       var body = contentAt(tip, f);
-      if (body != null) content[f] = body;
+      if (body == null) return;        // removed by a later commit, so it is gone
+      tracked[f] = true;
+      content[f] = body;
     });
     Object.keys(S.files).forEach(function (f) {
       if (S.content[f] != null) content[f] = S.content[f];
@@ -254,6 +256,9 @@
       seen[id] = true;
       var c = S.commits[id];
       if (!c) continue;
+      // The nearest commit wins, and a commit that deleted the path is an answer
+      // in itself. Without this, reverting an add gave the file straight back.
+      if (c.del && c.del.indexOf(file) !== -1) return null;
       if (c.snap && c.snap[file] != null) return c.snap[file];
       queue.push.apply(queue, c.parents);
     }
@@ -723,7 +728,8 @@
       var nid = nextId();
       S.commits[nid] = { id: nid, parents: cur.parents,
         msg: (i !== -1 && a[i + 1]) ? msg : cur.msg,
-        files: (cur.files || []).slice(), snap: cur.snap || {} };
+        files: (cur.files || []).slice(), snap: cur.snap || {},
+        del: (cur.del || []).slice() };
       S.order.push(nid);
       if (S.head.type === "branch") S.branches[S.head.name] = nid; else S.head.id = nid;
       S.staged = {};
@@ -739,9 +745,10 @@
       return;
     }
     var touched = Object.keys(S.staged);
+    var dropped = Object.keys(S.removed);
     S.staged = {};
     S.removed = {};
-    var id = commit(msg, [headId()], touched);
+    var id = commit(msg, [headId()], touched, dropped);
     S.didCommit = true;
     note("HEAD", "commit: " + msg);
     say("Committed <b>" + id + "</b> " + esc(msg) + ". The branch pointer moved with you.", "out");
@@ -941,7 +948,8 @@
       // Same changes, new commits. A replayed commit that carried no files was
       // unreadable to git show and git blame the moment it landed.
       S.commits[id] = { id: id, parents: [base], msg: o.msg,
-                        files: (o.files || []).slice(), snap: o.snap || {} };
+                        files: (o.files || []).slice(), snap: o.snap || {},
+                        del: (o.del || []).slice() };
       S.order.push(id);
       made.push(id);
       base = id;
@@ -1036,16 +1044,28 @@
     // A revert is a commit like any other, and the change it records is the
     // change back. Putting the contents where they were is what makes it one.
     var parent = was.parents[0];
+    var gone = [];
     files.forEach(function (f) {
       var before = parent ? contentAt(parent, f) : null;
-      if (before == null) delete S.content[f]; else S.content[f] = before;
+      if (before == null) {
+        delete S.content[f];
+        delete S.tracked[f];
+        gone.push(f);
+      } else {
+        S.content[f] = before;
+      }
     });
-    var nid = commit('Revert "' + was.msg + '"', [headId()], files);
+    var kept = files.filter(function (f) { return gone.indexOf(f) === -1; });
+    var nid = commit('Revert "' + was.msg + '"', [headId()], kept, gone);
     note("HEAD", "revert " + id);
     say("Added <b>" + nid + "</b>, a new commit that undoes " + id + ". Nothing was rewritten, " +
       "which is what makes revert the safe undo on a shared branch." +
-      (files.length ? " <code>" + files.map(esc).join("</code>, <code>") +
-        "</code> " + (files.length === 1 ? "is" : "are") + " back to the version before it." : ""), "out");
+      (kept.length ? " <code>" + kept.map(esc).join("</code>, <code>") +
+        "</code> " + (kept.length === 1 ? "is" : "are") + " back to the version before it." : "") +
+      (gone.length ? " <code>" + gone.map(esc).join("</code>, <code>") +
+        "</code> " + (gone.length === 1 ? "was" : "were") +
+        " added by that commit, so reverting it removes " +
+        (gone.length === 1 ? "the file" : "them") + " again." : ""), "out");
     draw();
   };
 
@@ -1055,10 +1075,12 @@
     if (!id) { say("Cannot resolve " + esc(a[0] || "") + ".", "err"); return; }
     var src = S.commits[id];
     var picked = (src.files || []).slice();
+    var removed = (src.del || []).slice();
     picked.forEach(function (f) {
       if (src.snap && src.snap[f] != null) { S.content[f] = src.snap[f]; S.tracked[f] = true; }
     });
-    var nid = commit(src.msg, [headId()], picked);
+    removed.forEach(function (f) { delete S.content[f]; delete S.tracked[f]; });
+    var nid = commit(src.msg, [headId()], picked, removed);
     S.didCherryPick = true;
     note("HEAD", "cherry-pick " + id);
     say("Copied " + id + " here as <b>" + nid + "</b>. Same change, new commit, and the original stays where it is.", "out");
@@ -1266,7 +1288,7 @@
   CMDS["ls-files"] = function () {
     // The index as it stands, not everything that has ever been committed. A
     // file removed two commits ago is still in history and is not in this list.
-    var all = Object.keys(S.tracked).sort();
+    var all = Object.keys(S.tracked).filter(function (f) { return !S.removed[f]; }).sort();
     if (!all.length) { say("Nothing is tracked yet, because nothing has been committed.", "out"); return; }
     say(all.map(esc).join("<br>") + '<br><span class="m">Every path Git is following. ' +
       "An untracked file is one missing from this list.</span>", "out");

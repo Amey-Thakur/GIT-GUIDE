@@ -18,6 +18,30 @@ DATA = ROOT / "docs" / "data"
 # Tab, newline and carriage return are the only control characters allowed.
 ALLOWED_CONTROL = chr(9) + chr(10) + chr(13)
 DANGER = {"safe", "history", "destructive"}
+RANK = {"safe": 0, "history": 1, "destructive": 2}
+
+# The badge on a card has to describe the worst thing on that card. Under-stating
+# it is the one failure this guide cannot have, and it is easy to introduce by
+# hand, so the rule is enforced rather than remembered. Every pattern below names
+# a command that can lose work or rewrite history no matter what surrounds it.
+DESTRUCTIVE_CMD = [
+    r"reset\s+--hard", r"\bclean\s+-[a-zA-Z]*f", r"checkout\s+--\s",
+    r"\brestore\s+(?!--staged)[^-]", r"push[^|]*--force(?!-with-lease|-if-includes)",
+    r"branch\s+-D\b", r"stash\s+(drop|clear)", r"reflog\s+expire", r"\bgc\s+--prune",
+    r"filter-branch", r"filter-repo", r"\brm\s+-rf", r"update-ref\s+-d",
+    r"push\s[^|]*--delete",
+]
+REWRITES_CMD = [
+    r"commit\s+--amend", r"\brebase\b(?!\s+--abort)", r"--force-with-lease", r"tag\s+-f",
+]
+
+# Recipes that look dangerous by pattern and provably are not. Each needs a
+# reason, because an allow-list without one becomes a place to hide things.
+DANGER_EXEMPT = {
+    ("split-subfolder-repo", 0):
+        "filter-repo runs inside a fresh clone in a new folder; the source repository "
+        "is never touched and the undo is to delete the clone",
+}
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 TEXT_SUFFIXES = {".md", ".html", ".css", ".js", ".json", ".txt", ".yml", ".yaml", ".py", ".svg"}
 
@@ -50,9 +74,22 @@ def check_intents(path):
         variants = it.get("variants", [])
         if not variants:
             err(f"{where}: no variants")
-        for v in variants:
+        for vi, v in enumerate(variants):
             if v.get("danger") not in DANGER:
                 err(f"{where}: unknown danger '{v.get('danger')}'")
+            elif (iid, vi) not in DANGER_EXEMPT:
+                worst = "safe"
+                for c in v.get("cmds", []):
+                    cmd = c.get("c", "")
+                    if "git config" in cmd:          # setting a preference runs nothing
+                        continue
+                    if any(re.search(p, cmd) for p in DESTRUCTIVE_CMD):
+                        worst = "destructive"
+                    elif worst != "destructive" and any(re.search(p, cmd) for p in REWRITES_CMD):
+                        worst = "history"
+                if RANK[v["danger"]] < RANK[worst]:
+                    err(f"{where}: variant {vi} is marked '{v['danger']}' but contains a "
+                        f"'{worst}' command: {[c.get('c') for c in v.get('cmds', [])]}")
             if not v.get("when"):
                 err(f"{where}: variant missing when")
             if not v.get("undo"):

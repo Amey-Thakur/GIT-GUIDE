@@ -222,7 +222,7 @@
         },
         {
           "when": "Already pushed",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git branch -m <old> <new>",
@@ -904,7 +904,7 @@
       "variants": [
         {
           "when": "Both places",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git tag -d <tag>",
@@ -1072,7 +1072,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git submodule deinit -f <path>",
@@ -2303,7 +2303,7 @@
       "variants": [
         {
           "when": "Local and remote",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git branch -m master main",
@@ -6134,7 +6134,7 @@
       "variants": [
         {
           "when": "Old name out, new name in",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git tag <new> <old>^{}",
@@ -11307,7 +11307,7 @@
       "variants": [
         {
           "when": "It should be ordinary files",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "rm -rf <folder>/.git",
@@ -19075,7 +19075,7 @@
         },
         {
           "when": "Use the modern pair",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch <branch>",
@@ -19086,7 +19086,7 @@
               "n": "Files only. Same power, no chance of restoring a file when you meant to change branch."
             }
           ],
-          "undo": "Each has its own undo; checkout still works for old habits"
+          "undo": "git switch is reversible; git restore is not, because the edit it throws away was never committed"
         }
       ],
       "seealso": [
@@ -19795,7 +19795,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git switch --orphan <name>",
@@ -20528,7 +20528,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git push origin --delete <branch>",
@@ -24350,7 +24350,7 @@
         },
         {
           "when": "Fix it",
-          "danger": "history",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git filter-repo --strip-blobs-bigger-than 10M",
@@ -28893,7 +28893,7 @@
       "variants": [
         {
           "when": "Standard case",
-          "danger": "safe",
+          "danger": "destructive",
           "cmds": [
             {
               "c": "git submodule deinit -f <path> && git rm --cached <path>",
