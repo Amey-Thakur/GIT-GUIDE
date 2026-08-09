@@ -65,6 +65,28 @@
     }
   }
 
+  /* A stack of past states. Everything in S is plain data, so a JSON round trip
+     is a complete and cheap snapshot. Experimenting is only fun when it is
+     reversible, and this is the sandbox's own undo, not Git's. */
+  var past = [];
+
+  function snapshot() {
+    try {
+      past.push(JSON.stringify(S));
+      if (past.length > 40) past.shift();
+    } catch (e) { /* nothing sensible to do; undo just will not reach this far */ }
+  }
+
+  function undo() {
+    if (!past.length) { say("Nothing left to undo.", "sys"); return; }
+    try {
+      S = JSON.parse(past.pop());
+    } catch (e) { say("That step cannot be undone.", "err"); return; }
+    say("Stepped back one command. <b>This is the sandbox's undo, not Git's</b>: " +
+      "real Git has no such button, which is why every answer on this site carries its own way back.", "sys");
+    draw();
+  }
+
   function note(ref, what) {
     S.reflog.unshift({ ref: ref, id: headId(), what: what });
     if (S.reflog.length > 40) S.reflog.pop();
@@ -137,6 +159,48 @@
       Object.keys(S.staged).length > 0;
   }
 
+  /* Every command the sandbox knows, with the shape people forget. */
+  var VOCAB = [
+    ["edit <file>", "change a file, standing in for your editor"],
+    ["git status", "what is changed right now"],
+    ["git add .", "stage everything for the next commit"],
+    ["git commit -m \"message\"", "record a snapshot"],
+    ["git commit --amend -m \"message\"", "replace the last commit"],
+    ["git restore <file>", "throw away an uncommitted change"],
+    ["git log", "the history behind you"],
+    ["git branch <name>", "create a label here"],
+    ["git branch -d <name>", "delete a label"],
+    ["git switch <name>", "move onto a branch"],
+    ["git switch -c <name>", "create a branch and move onto it"],
+    ["git merge <branch>", "join another branch into this one"],
+    ["git rebase <branch>", "replay your commits onto another base"],
+    ["git cherry-pick <hash>", "copy one commit to here"],
+    ["git revert HEAD", "add a commit that undoes the last one"],
+    ["git reset --soft HEAD~1", "drop the commit, keep the work"],
+    ["git reset --hard HEAD~1", "drop the commit and the work"],
+    ["git reflog", "everywhere HEAD has been, including what you abandoned"],
+    ["git stash", "shelve your changes"],
+    ["git stash pop", "take them back off the shelf"],
+    ["git tag <name>", "a label that does not move"],
+    ["git remote add origin <url>", "connect a GitHub repository"],
+    ["git push -u origin <branch>", "publish a branch and track it"],
+    ["git fetch", "update your origin labels, change nothing else"],
+    ["git pull", "fetch, then merge"],
+    ["gh pr create", "open a pull request for this branch"],
+    ["gh pr merge", "merge the open pull request"],
+    ["teammate", "a colleague pushes, so you can meet a rejected push"],
+    ["undo", "step the sandbox back one command"],
+    ["reset", "start the sandbox over"],
+    ["clear", "clear this log"]
+  ];
+
+  function showHelp() {
+    say("<b>Everything this sandbox understands.</b> Click any one to run it.<br>" +
+      VOCAB.map(function (v) {
+        return '<code>' + esc(v[0]) + "</code> <span class=\"m\">" + esc(v[1]) + "</span>";
+      }).join("<br>"), "out");
+  }
+
   /* ------------------------------------------------------------- commands */
 
   function run(line) {
@@ -148,6 +212,7 @@
 
     // A stand-in for editing a file in your editor. Not a Git command, and labelled as such.
     if (t[0] === "edit" || t[0] === "touch") {
+      snapshot();
       var f = t[1] || "notes.txt";
       S.files[f] = S.files[f] ? "modified" : "untracked";
       say("Edited <code>" + esc(f) + "</code>. Not a Git command: this stands for changing the file in your editor.", "sys");
@@ -157,9 +222,12 @@
     // A stand-in for a colleague pushing to the shared repository. Not a real
     // command, and labelled as such, but there is no other way to feel what a
     // rejected push is like.
-    if (t[0] === "teammate") { teammatePushes(); return; }
+    if (t[0] === "undo") { undo(); return; }
+    if (t[0] === "help" || t[0] === "?") { showHelp(); return; }
+    if (t[0] === "teammate") { snapshot(); teammatePushes(); return; }
 
     if (t[0] === "gh") {
+      snapshot();
       var g = GH[t[1]];
       if (!g) { say("This sandbox models <code>gh pr create</code> and <code>gh pr merge</code>.", "err"); return; }
       S.used["gh " + t[1]] = true;
@@ -176,6 +244,8 @@
 
     var cmd = t[1], a = t.slice(2);
     var fn = CMDS[cmd];
+    var READONLY = { status: 1, log: 1, reflog: 1, branch: 1, remote: 1, tag: 1 };
+    if (fn && !(READONLY[cmd] && a.length === 0)) snapshot();
     if (fn) S.used[cmd] = true;
     if (!fn) { say("<code>git " + esc(cmd || "") + "</code> is not something this sandbox models. Try the examples below.", "err"); return; }
     fn(a);
@@ -661,6 +731,8 @@
     return e;
   }
 
+  var drawnBefore = {};
+
   function draw() {
     var live = {};
     Object.keys(S.branches).forEach(function (b) {
@@ -752,6 +824,8 @@
     S.order.forEach(function (id) {
       var c = S.commits[id];
       var gnode = el("g", { class: "pnode" + (live[id] ? "" : " ghost") + (c.parents.length > 1 ? " merge" : "") });
+      // Newly arrived commits animate in, so cause and effect are obvious.
+      if (!drawnBefore[id]) gnode.classList.add("pnew");
       gnode.appendChild(el("circle", { cx: X(id), cy: Y(id), r: 19 }));
       var t = el("text", { x: X(id), y: Y(id) + 5, "text-anchor": "middle", class: "phash" });
       t.textContent = id.slice(0, 4);
@@ -835,6 +909,9 @@
         if (isAncestor(t, S.branches[b])) return ' · <span class="r">ahead of origin</span>';
         return ' · <span class="r">behind origin</span>';
       })();
+
+    drawnBefore = {};
+    S.order.forEach(function (id) { drawnBefore[id] = true; });
 
     checkLessons();
   }
@@ -1142,6 +1219,18 @@
       fresh.forEach(function (i) {
         say('<b class="g">Lesson ' + (i + 1) + " done: " + esc(LESSONS[i].t) + ".</b> " + LESSONS[i].done, "win");
       });
+      // A finished chapter is worth marking; it is the unit of real progress.
+      var chapsDone = {};
+      fresh.forEach(function (i) {
+        var c = LESSONS[i].ch;
+        var all = LESSONS.every(function (l, j) { return l.ch !== c || solved[j]; });
+        if (all) chapsDone[c] = true;
+      });
+      Object.keys(chapsDone).forEach(function (c) {
+        var ch = CHAPTERS[+c - 1];
+        say('<b class="g">Chapter ' + c + " complete: " + esc(ch.name) + ".</b> " + esc(ch.blurb) + ".", "cheer");
+      });
+
       var n = doneCount();
       if (n === LESSONS.length) {
         say('<b class="g">All ' + LESSONS.length + " lessons complete.</b> You have committed, branched, merged, " +
@@ -1188,15 +1277,69 @@
 
   function clear() { outEl.innerHTML = ""; }
 
+  /* Suggestions as you type. Nobody can use a terminal they cannot guess at,
+     and a beginner does not know that "switch" exists to be typed. */
+  var sugBox = document.getElementById("psuggest");
+
+  function suggestionsFor(text) {
+    var q = text.trim().toLowerCase();
+    if (!q) return [];
+    var starts = [], contains = [];
+    VOCAB.forEach(function (v) {
+      var c = v[0].toLowerCase();
+      if (c.indexOf(q) === 0) starts.push(v);
+      else if (c.indexOf(q) !== -1) contains.push(v);
+    });
+    return starts.concat(contains).slice(0, 5);
+  }
+
+  function renderSuggestions() {
+    if (!sugBox) return;
+    var list = suggestionsFor(inEl.value);
+    sugBox.innerHTML = "";
+    if (!list.length || !inEl.value.trim()) { sugBox.hidden = true; return; }
+    if (list.length === 1 && list[0][0] === inEl.value.trim()) { sugBox.hidden = true; return; }
+    list.forEach(function (v) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "psug";
+      b.innerHTML = "<code>" + esc(v[0]) + "</code><span>" + esc(v[1]) + "</span>";
+      b.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        inEl.value = v[0];
+        renderSuggestions();
+        inEl.focus();
+      });
+      sugBox.appendChild(b);
+    });
+    sugBox.hidden = false;
+  }
+
+  function hideSuggestions() { if (sugBox) { sugBox.hidden = true; } }
+
   var hist = [], hi = -1;
 
+  inEl.addEventListener("input", renderSuggestions);
+  inEl.addEventListener("blur", function () { window.setTimeout(hideSuggestions, 120); });
+
   inEl.addEventListener("keydown", function (e) {
+    if (e.key === "Tab") {
+      var list = suggestionsFor(inEl.value);
+      if (list.length) {
+        e.preventDefault();
+        inEl.value = list[0][0];
+        renderSuggestions();
+      }
+      return;
+    }
+    if (e.key === "Escape") { hideSuggestions(); return; }
     if (e.key === "Enter") {
       var v = inEl.value.trim();
       if (!v) return;
       say('<span class="p">$</span> ' + esc(v), "cmd");
       hist.unshift(v); hi = -1;
       inEl.value = "";
+      hideSuggestions();
       try { run(v); } catch (err) { say("The sandbox tripped over that one. <code>reset</code> starts fresh.", "err"); }
     } else if (e.key === "ArrowUp") {
       if (hi + 1 < hist.length) { hi++; inEl.value = hist[hi]; e.preventDefault(); }
@@ -1213,7 +1356,8 @@
       inEl.focus();
       return;
     }
-    if (e.target.closest("#preset")) { reset(); draw(); return; }
+    if (e.target.closest("#preset")) { past = []; reset(); draw(); return; }
+    if (e.target.closest("#pundo")) { undo(); return; }
 
     if (e.target.closest("#lsn-next")) {
       if (task < LESSONS.length - 1) { task += 1; renderLesson(); }
