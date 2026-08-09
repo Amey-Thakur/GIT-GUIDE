@@ -1049,8 +1049,10 @@ kbd {
 .course-note { margin: 0.5rem 0 1.5rem; color: var(--muted); font-size: 0.92rem; }
 
 .lsn-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.75rem; }
-/* Five chapters wrapped 4 + 1 and looked lopsided; give them their own row. */
-@media (min-width: 64rem) { .lsn-map { grid-template-columns: repeat(5, 1fr); gap: 1.1rem; } }
+/* Six chapters divide evenly into three columns by two rows. Five across left
+   a lone sixth chapter stranded on its own line, and wider columns mean the
+   lesson titles stop wrapping mid-phrase. */
+@media (min-width: 52rem) { .lsn-map { grid-template-columns: repeat(3, 1fr); gap: 2rem 2.25rem; } }
 .lsn-chap-h { margin: 0 0 0.15rem; font-size: 0.95rem; font-weight: 700; }
 .lsn-chap-h.is-done { color: var(--safe); }
 .lsn-chap-h.is-done::after { content: " \2713"; }

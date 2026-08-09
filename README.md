@@ -114,7 +114,8 @@ Every answer carries one of three danger levels.
 - **Current Git, not 2015 Git.** `git switch` and `git restore` first, `--force-with-lease` instead of `--force`.
 - **Real situations, not abstract syntax.** Answers split by the case you are in: not pushed, already pushed, teammates have it.
 - **Somewhere to practise.** A working Git engine in the browser: branch, merge, rebase, and recover a commit you thought you had destroyed, on a graph that redraws as you type.
-- **No dependencies, no ads, no tracking.** The site makes zero external requests, loads instantly, and keeps working offline and behind corporate proxies.
+- **No dependencies, no ads, no tracking.** The site makes zero external requests, so it loads instantly and works behind corporate proxies.
+- **It genuinely works offline.** A service worker caches the finder and all 1000 answers on your first visit, so the guide opens on a plane, on a train, or on a machine with no network at all. It is installable as an app too.
 
 > [!NOTE]
 > Git is not GitHub. Everything here works the same on GitLab, Bitbucket, Azure DevOps, and AWS CodeCommit, and much of Git needs no host at all: patches by mail, repositories over USB, air-gapped machines. The guide covers that world too.

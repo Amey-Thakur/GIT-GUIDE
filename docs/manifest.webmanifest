@@ -1,0 +1,14 @@
+{
+  "name": "Git Guide",
+  "short_name": "Git Guide",
+  "description": "Every Git and GitHub answer in one place. Exact commands, a danger level for each, and its undo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141311",
+  "theme_color": "#141311",
+  "icons": [
+    { "src": "assets/git-logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/social-preview.png", "sizes": "1280x640", "type": "image/png" }
+  ]
+}
