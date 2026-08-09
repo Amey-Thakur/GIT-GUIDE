@@ -935,3 +935,26 @@ kbd {
   .hookgrid { grid-template-columns: 1fr; gap: 2rem; }
   .hookart { order: -1; }
 }
+
+/* Clickable diagram parts. A shape drawn with fill:none has no interior to hit,
+   so each clickable group carries a transparent shape over its own bounds. Those
+   shapes must stay invisible: the surrounding rules paint every rect and circle
+   in the group, which drew them as a stray ring and a double-walled label. */
+.hitarea, .phit { cursor: pointer; }
+.zone rect.hitarea, .arrow rect.hitarea,
+.pnode circle.phit, .pclick rect.phit,
+.pnode:hover circle.phit, .pclick:hover rect.phit {
+  fill: transparent; stroke: none; stroke-width: 0; opacity: 1;
+}
+.zone, .arrow, .pnode, .pclick { cursor: pointer; }
+.zone:focus-visible, .arrow:focus-visible, .pnode:focus-visible, .pclick:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px;
+}
+.pnode:hover circle { stroke: var(--accent); }
+.pclick:hover rect { stroke: var(--accent); }
+.pclick:hover text { fill: var(--accent); }
+
+/* The canvas is draggable, so say so with the cursor. */
+.pgraph { cursor: grab; overflow: auto; overscroll-behavior: contain; }
+.pgraph.dragging { cursor: grabbing; user-select: none; }
+.pgraph.dragging .pnode, .pgraph.dragging .pclick { cursor: grabbing; }

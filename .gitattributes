@@ -1,0 +1,37 @@
+# Normalise every text file to LF in the repository, and check it out as LF too.
+# Without this, a Windows clone with core.autocrlf=true rewrites line endings on
+# checkout, which shows up as whole-file diffs nobody made.
+* text=auto eol=lf
+
+# Explicit, so a new extension never gets guessed wrong.
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.py     text eol=lf
+*.yml    text eol=lf
+*.txt    text eol=lf
+*.xml    text eol=lf
+*.svg    text eol=lf
+*.cff    text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+
+# Binary: never touch these, and never try to diff them as text.
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+
+# Generated from docs/data by .github/scripts. Collapse them in pull requests so
+# a real change is not buried under thousands of rendered lines.
+docs/errors.html     linguist-generated=true
+docs/cheatsheet.html linguist-generated=true
+
+# GitHub counts a repository's language from these; the data is not the point.
+docs/data/*.json linguist-detectable=false

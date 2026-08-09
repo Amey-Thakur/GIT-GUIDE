@@ -13,6 +13,40 @@
 
   var first = null;
 
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  /* An SVG shape drawn with fill="none" has no interior to hit, so clicking
+     inside a zone box landed on the bare canvas and nothing happened. Give each
+     clickable group a transparent rectangle over its own bounds, and make it
+     reachable from the keyboard while we are here. */
+  function makeClickable(g, label, onPick) {
+    if (!g || g.dataset.hit) return;
+    var b;
+    try { b = g.getBBox(); } catch (err) { return; }
+    if (!b.width || !b.height) return;
+    var pad = 8;
+    var r = document.createElementNS(SVGNS, "rect");
+    r.setAttribute("x", b.x - pad);
+    r.setAttribute("y", b.y - pad);
+    r.setAttribute("width", b.width + pad * 2);
+    r.setAttribute("height", b.height + pad * 2);
+    r.setAttribute("fill", "transparent");
+    r.setAttribute("class", "hitarea");
+    g.insertBefore(r, g.firstChild);
+    g.dataset.hit = "1";
+
+    g.setAttribute("tabindex", "0");
+    g.setAttribute("role", "button");
+    if (label) g.setAttribute("aria-label", label);
+    g.addEventListener("click", onPick);
+    g.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); }
+    });
+  }
+
+  window.GGMakeClickable = makeClickable;
+
+
   function initStepper(cfg) {
     var i = 0;
     var api = null;

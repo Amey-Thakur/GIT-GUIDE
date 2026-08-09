@@ -49,8 +49,13 @@
   /* Click any zone or arrow to jump straight to its step. */
   var JUMP = { "z-wt": 0, "a-add": 1, "z-stage": 1, "a-commit": 2, "z-local": 2,
                "a-push": 3, "z-remote": 3, "a-fetch": 4, "a-merge": 5, "a-restore": 6 };
+  var LABEL = { "z-wt": "Working tree", "z-stage": "Staging area", "z-local": "Local repository",
+                "z-remote": "Remote", "a-add": "git add", "a-commit": "git commit", "a-push": "git push",
+                "a-fetch": "git fetch", "a-merge": "git merge or pull", "a-restore": "git restore" };
   Object.keys(JUMP).forEach(function (id) {
     var e = document.getElementById(id);
-    if (e && d1) e.addEventListener("click", function () { d1.goto(JUMP[id]); });
+    if (e && d1) {
+      window.GGMakeClickable(e, "Jump to the step for " + LABEL[id], function () { d1.goto(JUMP[id]); });
+    }
   });
 })();

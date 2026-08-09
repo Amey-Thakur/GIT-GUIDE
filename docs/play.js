@@ -403,6 +403,68 @@
     say("Saved your changes on the shelf and cleaned the working tree. <code>git stash pop</code> brings them back.", "out");
   };
 
+  /* ------------------------------------------------------- click and drag */
+
+  // Clicking a commit explains exactly what it is and what still points at it.
+  function inspect(id) {
+    var c = S.commits[id];
+    if (!c) return;
+    var refs = Object.keys(S.branches).filter(function (b) { return S.branches[b] === id; });
+    var tags = Object.keys(S.tags).filter(function (t) { return S.tags[t] === id; });
+    var reachable = {};
+    Object.keys(S.branches).forEach(function (b) {
+      var anc = ancestors(S.branches[b]);
+      Object.keys(anc).forEach(function (x) { reachable[x] = true; });
+    });
+
+    var bits = ["<b>" + id + "</b> " + esc(c.msg)];
+    bits.push(c.parents.length === 0 ? "The root commit: it has no parent."
+      : c.parents.length === 1 ? "Parent: " + c.parents[0]
+      : "A merge, with two parents: " + c.parents.join(" and "));
+    if (refs.length) bits.push("Pointed at by <b>" + refs.map(esc).join("</b>, <b>") + "</b>.");
+    if (tags.length) bits.push("Tagged <b>" + tags.map(esc).join("</b>, <b>") + "</b>.");
+    if (id === headId()) bits.push("This is where <b>HEAD</b> is: your next commit lands on top of it.");
+    if (!reachable[id]) {
+      bits.push('<span class="r">Nothing points at this one any more.</span> It is not deleted: ' +
+        "<code>git reset --hard " + id + "</code> brings it back.");
+    } else if (!refs.length) {
+      bits.push("Reachable as history from a branch, so it is safe.");
+    }
+    say(bits.join("<br>"), "out");
+  }
+
+  // Drag anywhere on the canvas to move the graph around.
+  (function enablePan() {
+    var box = svg.parentNode;
+    if (!box) return;
+    var down = false, sx = 0, sy = 0, sl = 0, st = 0, moved = 0;
+
+    box.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      down = true; moved = 0;
+      sx = e.clientX; sy = e.clientY;
+      sl = box.scrollLeft; st = box.scrollTop;
+      box.classList.add("dragging");
+    });
+    box.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy;
+      moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
+      box.scrollLeft = sl - dx;
+      box.scrollTop = st - dy;
+      if (moved > 4) e.preventDefault();
+    });
+    function end() { down = false; box.classList.remove("dragging"); }
+    box.addEventListener("pointerup", end);
+    box.addEventListener("pointerleave", end);
+    box.addEventListener("pointercancel", end);
+
+    // A drag that ends over a commit must not also count as a click on it.
+    box.addEventListener("click", function (e) {
+      if (moved > 4) { e.stopPropagation(); e.preventDefault(); moved = 0; }
+    }, true);
+  })();
+
   /* --------------------------------------------------------------- layout */
 
   var SVGNS = "http://www.w3.org/2000/svg";
@@ -452,14 +514,14 @@
 
     // GY clears a commit's caption before the next lane's branch label starts;
     // PADY leaves room for two pointers stacked above the top lane.
-    var GX = 108, GY = 96, PADX = 60, PADY = 70;
+    var GX = 140, GY = 118, PADX = 74, PADY = 84;
     var maxG = 0, maxL = 0;
     S.order.forEach(function (id) {
       if (gen[id] > maxG) maxG = gen[id];
       if (lane[id] > maxL) maxL = lane[id];
     });
     // The 48 below is the caption's height plus its descender.
-    var W = Math.max(PADX * 2 + maxG * GX, 150), H = PADY + maxL * GY + 48;
+    var W = Math.max(PADX * 2 + maxG * GX, 190), H = PADY + maxL * GY + 56;
 
     var SCALE = 1.45;   // legible without magnifying a three-commit graph absurdly
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
@@ -505,12 +567,23 @@
       var title = el("title");
       title.textContent = id + "  " + c.msg + (live[id] ? "" : "  (unreferenced: recoverable with git reflog)");
       gnode.appendChild(title);
+
+      // A generous invisible target, so the commit is easy to hit by mouse.
+      var hit = el("circle", { cx: X(id), cy: Y(id), r: 30, fill: "transparent", class: "phit" });
+      gnode.insertBefore(hit, gnode.firstChild);
+      gnode.setAttribute("tabindex", "0");
+      gnode.setAttribute("role", "button");
+      gnode.setAttribute("aria-label", "Commit " + id + ", " + c.msg);
+      gnode.addEventListener("click", function () { inspect(id); });
+      gnode.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inspect(id); }
+      });
       svg.appendChild(gnode);
     });
 
     // Branch and tag pointers, stacked above their commit.
     var stack = {};
-    function label(id, text, cls) {
+    function label(id, text, cls, onPick) {
       var k = id;
       stack[k] = (stack[k] || 0) + 1;
       var y = Y(id) - 26 - (stack[k] - 1) * 22;
@@ -520,12 +593,29 @@
       var tx = el("text", { x: X(id), y: y + 2, "text-anchor": "middle" });
       tx.textContent = text;
       gl.appendChild(tx);
+      if (onPick) {
+        gl.insertBefore(el("rect", { x: X(id) - w / 2 - 6, y: y - 19, width: w + 12, height: 32,
+                                     fill: "transparent", class: "phit" }), gl.firstChild);
+        gl.setAttribute("tabindex", "0");
+        gl.setAttribute("role", "button");
+        gl.setAttribute("aria-label", "Switch to branch " + text);
+        gl.addEventListener("click", onPick);
+        gl.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); }
+        });
+        gl.classList.add("pclick");
+      }
       svg.appendChild(gl);
     }
     Object.keys(S.tags).forEach(function (t) { label(S.tags[t], t, "ptag"); });
     names.forEach(function (n) {
       var on = S.head.type === "branch" && S.head.name === n;
-      label(S.branches[n], n, "pbranch" + (on ? " on" : ""));
+      label(S.branches[n], n, "pbranch" + (on ? " on" : ""), on ? null : function () {
+        S.head = { type: "branch", name: n };
+        note("HEAD", "checkout: moving to " + n);
+        say("Switched to <b>" + esc(n) + "</b>, the same as <code>git switch " + esc(n) + "</code>.", "out");
+        draw();
+      });
     });
     if (S.head.type === "detached") label(S.head.id, "HEAD", "pbranch on detached");
     else label(S.branches[S.head.name], "HEAD", "phead");
