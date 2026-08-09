@@ -406,6 +406,9 @@ a.chip { text-decoration: none; }
    leads there rather than through the accent. */
 .copy:hover { color: var(--safe); border-color: var(--safe); }
 .copy.done { color: var(--safe); border-color: var(--safe); }
+/* The clipboard was refused, so the command has been selected instead. Yellow,
+   because this is an instruction rather than a failure. */
+.copy.warn { color: var(--history); border-color: var(--history); }
 
 .note { color: var(--muted); font-size: 0.92rem; margin: 0.15rem 0 0.6rem; }
 
@@ -1129,8 +1132,10 @@ html::-webkit-scrollbar-corner { background: var(--paper); }
 /* Three buttons, three jobs, three colours: grey goes back, amber offers help,
    accent moves you on. Amber is the site's "here is a hand" colour, the same
    tier as a warning: worth noticing, never alarming. */
-#lsn-hint { border-color: var(--history); color: var(--history); }
-#lsn-hint:hover { background: var(--history); color: var(--paper); }
+/* Asking for a hint is the one thing on the page that is neither an action nor
+   a risk, so it keeps yellow to itself wherever it appears. */
+#lsn-hint, #drill-help { border-color: var(--history); color: var(--history); }
+#lsn-hint:hover, #drill-help:hover { background: var(--history); color: var(--paper); }
 
 .pgraph-help { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin: 0.9rem 0 0;
                font-size: 0.88rem; color: var(--muted); }
@@ -1151,6 +1156,91 @@ html::-webkit-scrollbar-corner { background: var(--paper); }
 .lg-chip-head { background: var(--accent); color: #fff; font-weight: 700; }
 .lg-chip-branch { border: 1.5px solid var(--muted); color: var(--muted); }
 .lg-chip-tag { border: 1.5px dashed var(--history); color: var(--history); }
+
+/* ---- Filtering a thousand answers by what they cost -----------------------
+   "Which of these can lose my work" is a question worth being able to ask, and
+   the answer is a few dozen commands rather than the answers that contain one.
+   So the filter works on commands, and the counts beside it are live. */
+.dangerbar { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+             margin-top: 1rem; }
+.dangerbar-lead { font-size: 0.84rem; color: var(--muted); margin-right: 0.15rem; }
+.dchip { font: inherit; font-size: 0.84rem; cursor: pointer; display: inline-flex;
+         align-items: center; gap: 0.45rem; padding: 0.32rem 0.75rem; border-radius: 999px;
+         background: transparent; border: 1px solid var(--line); color: var(--muted); }
+.dchip .dnum { font-family: var(--mono); font-size: 0.76rem; opacity: 0.75; }
+/* Off reads as off: no colour, and the row still says what is missing. */
+.dchip:not(.on) { opacity: 0.5; text-decoration: line-through; }
+.dchip.lvl-safe.on { border-color: var(--safe); color: var(--safe); }
+.dchip.lvl-history.on { border-color: var(--history); color: var(--history); }
+.dchip.lvl-destructive.on { border-color: var(--destructive); color: var(--destructive); }
+.dchip:hover { border-color: var(--ink); color: var(--ink); }
+.dchip:not(.on):hover { opacity: 0.8; }
+
+/* ---- Four ways to undo ---------------------------------------------------
+   The same graph every time, so the only thing that changes between the four is
+   the thing worth comparing. It borrows the sandbox's commit shapes deliberately:
+   one picture language across the whole site is worth more than four pretty ones. */
+.undo-picker { margin: 1.5rem 0 0.25rem; }
+/* The cost of a command is legible before you pick it, not after. */
+.undo-chip { font-family: var(--mono); font-size: 0.84rem; }
+.undo-chip.lvl-safe { color: var(--safe); }
+.undo-chip.lvl-history { color: var(--history); }
+.undo-chip.lvl-destructive { color: var(--destructive); }
+.undo-chip.lvl-safe:hover, .undo-chip.lvl-safe.active { border-color: var(--safe); color: var(--safe); }
+.undo-chip.lvl-history:hover, .undo-chip.lvl-history.active { border-color: var(--history); color: var(--history); }
+.undo-chip.lvl-destructive:hover, .undo-chip.lvl-destructive.active { border-color: var(--destructive); color: var(--destructive); }
+.undo-chip.active { font-weight: 600; }
+.undo-diagram { margin-top: 1.25rem; }
+.undo-diagram svg { width: 100%; height: auto; }
+.undo-diagram .pnode, .undo-diagram .pbranch, .undo-diagram .phead { cursor: default; }
+.undo-diagram .pnode:hover circle { stroke: var(--ink); }
+.undo-diagram .pnode.ghost:hover circle {
+  stroke: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
+.undo-read { margin-top: 1.5rem; }
+.undo-cmd { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin: 0 0 1.1rem; }
+.undo-cmd code { font-family: var(--mono); font-size: 0.95rem; color: var(--ink);
+                 background: var(--code-bg); padding: 0.3rem 0.6rem; border-radius: 6px; }
+.undo-facts { margin: 0; display: grid; gap: 0.9rem; }
+.undo-facts > div { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 1.25rem;
+                    align-items: baseline; }
+.undo-facts dt { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;
+                 text-transform: uppercase; color: var(--muted); }
+.undo-facts dd { margin: 0; color: var(--ink); line-height: 1.7; }
+
+@media (max-width: 46rem) {
+  .undo-facts > div { grid-template-columns: 1fr; gap: 0.25rem; }
+}
+
+/* ---- The recovery drill --------------------------------------------------
+   Reading that the reflog saves you is not the same as having been saved by it.
+   The card is calm until it runs, and then the clock is the loudest thing on
+   the page, because that is the whole point of rehearsing under pressure. */
+.drill { margin-top: 2.5rem; padding: 1.75rem 1.9rem; border: 1px solid var(--line);
+         border-left: 4px solid var(--history); border-radius: 12px; background: var(--card); }
+.drill.running { border-left-color: var(--destructive); }
+.drill-tag { margin: 0 0 0.5rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.07em;
+             text-transform: uppercase; color: var(--history); }
+.drill.running .drill-tag { color: var(--destructive); }
+.drill-row { display: flex; align-items: flex-start; justify-content: space-between;
+             gap: 2.5rem; }
+.drill-text { min-width: 0; }
+.drill-text h2 { margin: 0 0 0.6rem; font-size: 1.25rem; }
+.drill-text p { margin: 0; color: var(--muted); line-height: 1.7; max-width: 46rem; }
+.drill-side { flex: none; text-align: right; }
+.drill-clock { display: block; font-family: var(--mono); font-size: 1.9rem; font-weight: 700;
+               color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.drill.running .drill-clock { color: var(--destructive); }
+.drill-best { display: block; margin-top: 0.35rem; font-family: var(--mono);
+              font-size: 0.78rem; color: var(--safe); }
+.drill-hint { max-width: 46rem; }
+.drill-foot { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.4rem; }
+
+@media (max-width: 46rem) {
+  .drill-row { flex-direction: column; gap: 1.2rem; }
+  .drill-side { text-align: left; }
+}
 
 .coursewrap { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .course-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem;

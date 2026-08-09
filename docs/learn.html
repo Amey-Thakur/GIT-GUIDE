@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=73">
+  <link rel="stylesheet" href="style.css?v=78">
   <!-- quizschema:start -->
 <script type="application/ld+json">
 {
@@ -1617,6 +1617,30 @@
       </div>
     </section>
 
+    <section class="diagram-section" aria-label="Four ways to undo">
+      <div class="wrap">
+        <h2>Four ways to undo, and what each one costs</h2>
+        <p class="note">Every one of these is called undo by somebody. They are not interchangeable, and picking the wrong one is how work gets lost. Same three commits and one uncommitted edit every time. Pick a command and watch what it leaves behind.</p>
+
+        <div class="chips undo-picker" id="undo-picker" role="group" aria-label="Pick an undo"></div>
+
+        <div class="diagram undo-diagram">
+          <svg id="undo-svg" role="img" aria-label="A three commit history, redrawn to show what the chosen undo does to it"></svg>
+        </div>
+
+        <div class="undo-read" aria-live="polite">
+          <p class="undo-cmd"><code id="undo-cmd"></code><span class="badge safe" id="undo-badge"></span></p>
+          <dl class="undo-facts">
+            <div><dt>Reach for it when</dt><dd id="undo-when"></dd></div>
+            <div><dt>History</dt><dd id="undo-history"></dd></div>
+            <div><dt>Your files</dt><dd id="undo-files"></dd></div>
+            <div><dt>Safe on a shared branch</dt><dd id="undo-shared"></dd></div>
+            <div><dt>Way back</dt><dd id="undo-back"></dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
     <section class="quiz-section" aria-label="Check yourself">
       <div class="wrap">
         <h2>Check yourself</h2>
@@ -1642,9 +1666,10 @@
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
-  <script src="render.js"></script>
+  <script src="render.js?v=2"></script>
   <script src="stepper.js?v=8"></script>
   <script src="quiz.js?v=5"></script>
+  <script src="undo.js?v=1"></script>
   <script src="learn.js?v=8"></script>
   <script src="keys.js?v=3"></script>
   <script src="totop.js?v=2"></script>

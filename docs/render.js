@@ -20,23 +20,55 @@
     return e;
   }
 
+  /* The clipboard can refuse: an insecure context, a locked-down browser, a
+     window that has lost focus. The old code assumed it never would, so a denied
+     copy left a button that appeared to do nothing and an unhandled rejection in
+     the console. Now it falls back, and if even that fails it selects the command
+     and says which keys to press, which is the honest answer. */
   function copyText(text, button) {
+    var reset = function () {
+      button.textContent = "Copy";
+      button.classList.remove("done", "warn");
+    };
     var done = function () {
       button.textContent = "Copied";
       button.classList.add("done");
-      setTimeout(function () { button.textContent = "Copy"; button.classList.remove("done"); }, 1500);
+      setTimeout(reset, 1500);
     };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done);
-    } else {
+    var manual = function () {
+      var code = button.parentNode && button.parentNode.querySelector("code");
+      if (code && window.getSelection && document.createRange) {
+        var range = document.createRange();
+        range.selectNodeContents(code);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+      button.textContent = "Ctrl C";
+      button.classList.add("warn");
+      setTimeout(reset, 2500);
+    };
+
+    function legacy() {
       var ta = document.createElement("textarea");
       ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:0;left:-9999px;";
       document.body.appendChild(ta);
       ta.select();
-      document.execCommand("copy");
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
       document.body.removeChild(ta);
-      done();
+      return ok;
     }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (legacy()) done(); else manual();
+      });
+      return;
+    }
+    if (legacy()) done(); else manual();
   }
 
   function copyButton(text) {

@@ -5,7 +5,7 @@
   Author: Amey Thakur
   GitHub: https://github.com/Amey-Thakur
   Tech: HTML5, vanilla JavaScript, inline SVG, GitHub Pages
-  Description: A working Git engine in the browser. Commits, branches, HEAD, the index, and the reflog are all modelled, so merge really creates a second parent and rebase really abandons the originals. Six challenges take you from a first commit to recovering work you thought you had destroyed.
+  Description: A working Git engine in the browser. Commits, branches, HEAD, the index, file contents and the reflog are all modelled, so merge really creates a second parent, a conflict really has markers to delete, and rebase really abandons the originals. Twenty-three lessons take you from a first commit to opening a pull request, and the recovery drill destroys three commits on purpose and starts a clock.
   Date: 2026-08-08
 -->
 <html lang="en">
@@ -18,7 +18,7 @@
   <meta name="description" content="Twenty-three interactive Git and GitHub lessons with a real Git engine in the page. Commit, branch, merge, rebase, push, open a pull request, and fix a rejected push, watching the commit graph answer every command. Free, no sign-in, nothing to install.">
   <link rel="canonical" href="https://amey-thakur.github.io/GIT-GUIDE/play.html">
   <meta property="og:title" content="Learn Git and GitHub by doing it: 23 interactive lessons">
-  <meta property="og:description" content="A real Git engine in the page. Sixteen lessons, from your first commit to rescuing work you thought you had lost.">
+  <meta property="og:description" content="A real Git engine in the page. Twenty-three lessons, from your first commit to rescuing work you thought you had lost.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://amey-thakur.github.io/GIT-GUIDE/play.html">
   <meta property="og:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=73">
+  <link rel="stylesheet" href="style.css?v=78">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -178,6 +178,31 @@
           <button class="chip pex" type="button">git pull</button>
         </div>
 
+        <div class="drill" id="pdrill">
+          <p class="drill-tag">The drill</p>
+          <div class="drill-row">
+            <div class="drill-text">
+              <h2 id="drill-title">Get it back.</h2>
+              <p id="drill-body">Three commits of real work go in, and then this sandbox destroys them
+                for you with a hard reset. Nothing points at them any more. The reflog still does.
+                Bring the branch home, and find out how long it takes you. Starting the drill clears
+                the sandbox, and the Undo button is switched off while it runs, because Git has
+                no such button on the day it happens.</p>
+            </div>
+            <div class="drill-side">
+              <span class="drill-clock" id="drill-clock" aria-live="off">0.0s</span>
+              <span class="drill-best" id="drill-best"></span>
+            </div>
+          </div>
+          <p class="lsn-hint-text drill-hint" id="drill-hint" hidden></p>
+          <div class="drill-foot">
+            <button id="drill-go" class="wizard-opt lsn-primary" type="button">Start the drill</button>
+            <button id="drill-help" class="wizard-opt" type="button" hidden
+                    aria-controls="drill-hint" aria-expanded="false">Ask Amey</button>
+            <button id="drill-stop" class="wizard-opt" type="button" hidden>Stop</button>
+          </div>
+        </div>
+
         <div class="coursewrap">
           <div class="course-head">
             <h2>The course</h2>
@@ -193,7 +218,7 @@
         <div class="pnotes">
           <div>
             <h2>What it understands</h2>
-            <p><code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>restore</code>, <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>log</code>, <code>reflog</code>, <code>status</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash. <code>edit &lt;file&gt;</code> stands in for changing a file in your editor, and <code>teammate</code> stands in for a colleague pushing to the shared repository. On the GitHub side: <code>git remote add</code>, <code>git push</code>, <code>git fetch</code>, <code>git pull</code>, <code>gh pr create</code>, <code>gh pr merge</code>.</p>
+            <p>Everything that changes history: <code>add</code>, <code>commit</code> (with <code>--amend</code>), <code>restore</code>, <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code>, <code>rebase</code>, <code>reset</code>, <code>revert</code>, <code>cherry-pick</code>, <code>tag</code>, <code>stash</code>, <code>rm</code>, <code>mv</code>, <code>clean</code>. Everything that only reads it: <code>status</code>, <code>log</code>, <code>reflog</code>, <code>diff</code>, <code>show</code>, <code>blame</code>, <code>grep</code>, <code>ls-files</code>, <code>rev-parse</code>, <code>describe</code>, <code>shortlog</code>, <code>fsck</code>. References work as they really do: <code>main</code>, <code>HEAD</code>, <code>HEAD~2</code>, <code>HEAD^</code>, a tag, or a short hash. The shell answers too: <code>ls</code>, <code>cat</code>, <code>pwd</code>, <code>cd</code>, <code>clear</code>. <code>edit &lt;file&gt;</code> stands in for changing a file in your editor, and <code>teammate</code> stands in for a colleague pushing to the shared repository. On the GitHub side: <code>git clone</code>, <code>git remote add</code>, <code>git push</code>, <code>git fetch</code>, <code>git pull</code>, <code>gh pr create</code>, <code>gh pr merge</code>. Anything else real, from <code>worktree</code> to <code>filter-branch</code>, is explained rather than refused, and a typo gets the command you meant.</p>
           </div>
           <div>
             <h2>Why the faded circles matter</h2>
@@ -225,7 +250,7 @@
 
   <script src="theme.js"></script>
   <script src="hello.js"></script>
-  <script src="play.js?v=24"></script>
+  <script src="play.js?v=27"></script>
   <script src="keys.js?v=3"></script>
   <script src="totop.js?v=2"></script>
   <script src="offline.js?v=2"></script>

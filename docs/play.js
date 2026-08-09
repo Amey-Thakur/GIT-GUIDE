@@ -51,6 +51,7 @@
       stash: [],
       reflog: [],
       rescued: false,
+      drill: null,       // { target, at, helped } while the recovery drill runs
       used: {},          // which commands have been run at least once
       switches: 0,       // branch switches, for the "move between branches" lesson
       didFF: false, didSoftReset: false, didAmend: false, didRebase: false,
@@ -89,6 +90,11 @@
   }
 
   function undo() {
+    if (S.drill) {
+      say("Not during the drill. Git has no undo button on the day this happens, " +
+        "which is the whole reason the drill exists. <code>git reflog</code>.", "err");
+      return;
+    }
     if (!past.length) { say("Nothing left to undo.", "sys"); return; }
     try {
       S = JSON.parse(past.pop());
@@ -327,7 +333,7 @@
     if (!t.length) return;
 
     if (t[0] === "clear") { clear(); return; }
-    if (t[0] === "reset" && t.length === 1) { reset(); draw(); return; }
+    if (t[0] === "reset" && t.length === 1) { endDrill(); reset(); draw(); return; }
 
     // A stand-in for editing a file in your editor. Not a Git command, and labelled as such.
     if (t[0] === "edit" || t[0] === "touch") {
@@ -927,9 +933,22 @@
           "the same as <code>git merge --abort</code> would have.", "sys");
       }
     }
+    /* Only say a commit was left behind when one actually was. Resetting onto
+       where you already stand, or onto a descendant, leaves nothing stranded,
+       and claiming otherwise is the kind of small lie that costs trust. */
+    var stillHeld = {};
+    Object.keys(S.branches).forEach(function (b) {
+      Object.keys(ancestors(S.branches[b])).forEach(function (c) { stillHeld[c] = true; });
+    });
+    if (S.head.type === "detached") {
+      Object.keys(ancestors(S.head.id)).forEach(function (c) { stillHeld[c] = true; });
+    }
+
     say(REWRITES + "Moved <b>" + esc(headName()) + "</b> back to " + id + " with <code>" + esc(mode) + "</code>." +
       (mode === "--hard" ? " Working tree wiped too." : mode === "--soft" ? " Your changes are still staged." : " Your changes are kept, unstaged.") +
-      "<br>" + was + " is <b>not deleted</b>, only unreferenced. <code>git reflog</code> still knows it.", "out");
+      (was !== id && !stillHeld[was]
+        ? "<br>" + was + " is <b>not deleted</b>, only unreferenced. <code>git reflog</code> still knows it."
+        : ""), "out");
     draw();
   };
 
@@ -1415,6 +1434,157 @@
       : ""), "out");
   };
 
+
+  /* ------------------------------------------------------------------ the drill
+
+     Everything about recovery is easy to agree with and hard to believe until it
+     has happened to you. This makes it happen, on purpose, with a clock running. */
+
+  var DRILL_BEST = "gg-drill-best";
+  var drillTimer = null;
+
+  var drillEls = {
+    box: document.getElementById("pdrill"),
+    title: document.getElementById("drill-title"),
+    body: document.getElementById("drill-body"),
+    clock: document.getElementById("drill-clock"),
+    best: document.getElementById("drill-best"),
+    go: document.getElementById("drill-go"),
+    help: document.getElementById("drill-help"),
+    stop: document.getElementById("drill-stop"),
+    hint: document.getElementById("drill-hint")
+  };
+
+  function bestTime() {
+    try {
+      var v = parseFloat(window.localStorage.getItem(DRILL_BEST));
+      return isFinite(v) && v > 0 ? v : null;
+    } catch (e) { return null; }
+  }
+
+  function saveBest(secs) {
+    try {
+      var b = bestTime();
+      if (b == null || secs < b) window.localStorage.setItem(DRILL_BEST, String(secs));
+    } catch (e) { /* it simply will not persist */ }
+  }
+
+  function showBest() {
+    if (!drillEls.best) return;
+    var b = bestTime();
+    drillEls.best.textContent = b == null ? "" : "best " + b.toFixed(1) + "s";
+  }
+
+  function drillSeconds() {
+    if (!S.drill || !S.drill.at) return 0;
+    return (Date.now() - S.drill.at) / 1000;
+  }
+
+  function tickClock() {
+    if (!drillEls.clock) return;
+    drillEls.clock.textContent = drillSeconds().toFixed(1) + "s";
+  }
+
+  function drillButtons(running) {
+    if (!drillEls.go) return;
+    drillEls.go.textContent = running ? "Start over" : "Start the drill";
+    if (drillEls.help) {
+      drillEls.help.hidden = !running;
+      drillEls.help.setAttribute("aria-expanded", "false");
+    }
+    if (drillEls.stop) drillEls.stop.hidden = !running;
+    if (drillEls.hint) drillEls.hint.hidden = true;
+    if (drillEls.box) drillEls.box.classList.toggle("running", !!running);
+  }
+
+  function endDrill() {
+    if (drillTimer) { window.clearInterval(drillTimer); drillTimer = null; }
+    S.drill = null;
+    drillButtons(false);
+  }
+
+  function startDrill() {
+    past = [];                       // no undo, the same as the day it happens
+    reset(true);
+    clear();
+    var root = headId();
+
+    [["parser.js", "Add the parser"],
+     ["parser.js", "Handle empty input"],
+     ["tests.js", "Cover the off-by-one"]].forEach(function (w) {
+      S.content[w[0]] = "the work in " + w[1].toLowerCase();
+      S.tracked[w[0]] = true;
+      commit(w[1], [headId()], [w[0]]);
+      note("HEAD", "commit: " + w[1]);
+    });
+
+    var lost = headId();
+    S.branches.main = root;
+    S.files = {}; S.staged = {}; S.removed = {}; S.tracked = {}; S.content = {};
+    note("HEAD", "reset: moving to HEAD~3");
+
+    S.drill = { target: lost, at: Date.now(), helped: false };
+
+    say("Three commits of real work, and then:", "sys");
+    say('<span class="p">' + promptHTML() + "</span> git reset --hard HEAD~3", "cmd");
+    say("<b>Gone.</b> Three commits of work, and <code>main</code> is back at the beginning. " +
+      "Look at the graph: they are faded, not deleted." +
+      "<br>Nothing points at <b>" + lost + "</b> any more, so no branch can find it and " +
+      "<code>git log</code> will not show it." +
+      '<br><span class="m">One thing still remembers where HEAD has been. Get ' +
+      "<code>main</code> back onto that commit. The clock is running.</span>", "err");
+
+    drillButtons(true);
+    tickClock();
+    if (drillTimer) window.clearInterval(drillTimer);
+    drillTimer = window.setInterval(tickClock, 100);
+    draw();
+    if (drillEls.box) drillEls.box.scrollIntoView({ block: "nearest" });
+  }
+
+  /* The answer belongs in the card the question was asked from. Printing it into
+     the terminal, which is most of a screen away, read as the button doing
+     nothing at all. */
+  function drillHelp() {
+    if (!S.drill || !drillEls.hint) return;
+    S.drill.helped = true;
+    var open = drillEls.hint.hidden;
+    drillEls.hint.innerHTML =
+      "<code>git reflog</code> lists everywhere HEAD has been, newest first. The commit you " +
+      "want is the line directly below the reset, and the hash is the first thing on it. " +
+      "Then <code>git reset --hard &lt;hash&gt;</code> puts <b>main</b> back onto it." +
+      '<br><span class="m">A time set with help still counts. The run after this one, ' +
+      "without it, is the one that means something.</span>";
+    drillEls.hint.hidden = !open;
+    if (drillEls.help) drillEls.help.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  /* Won when the lost tip is reachable again from where you are standing. Any
+     route counts: reset, branch, cherry-pick, merge. Git does not care how the
+     work came home, and neither does this. */
+  function checkDrill() {
+    if (!S.drill) return;
+    var here = headId();
+    if (here !== S.drill.target && !isAncestor(S.drill.target, here)) return;
+    var secs = drillSeconds();
+    var was = bestTime();
+    saveBest(secs);
+    showBest();
+    endDrill();
+    if (drillEls.clock) drillEls.clock.textContent = secs.toFixed(1) + "s";
+    say("<b>Recovered in " + secs.toFixed(1) + " seconds.</b> " +
+      (was != null && secs < was ? "A new best. " : "") +
+      "Nothing was ever destroyed. The commits sat there the whole time, unreferenced, " +
+      "waiting for something to point at them again." +
+      "<br>That is the fact worth carrying out of here: <b>committed work is almost always " +
+      "recoverable</b>. Uncommitted work is not, which is why <code>git commit</code> early " +
+      "is the cheapest insurance in software." +
+      '<br><span class="m">The sandbox is yours again, with the rescued commits still in it. ' +
+      "<b>Reset the sandbox</b>, under The course, puts it back to one commit.</span>", "win");
+  }
+
+  showBest();
+
   function inspect(id) {
     var c = S.commits[id];
     if (!c) return;
@@ -1779,6 +1949,7 @@
     drawPrompt();
     renderConflictEditor();
     checkLessons();
+    checkDrill();
   }
 
   /* ------------------------------------------------------------- the course */
@@ -2265,7 +2436,23 @@
       inEl.focus();
       return;
     }
-    if (e.target.closest("#preset")) { past = []; reset(); draw(); return; }
+    if (e.target.closest("#drill-go")) { startDrill(); return; }
+    if (e.target.closest("#drill-help")) { drillHelp(); return; }
+    /* Stopping has to hand the sandbox back clean. The drill leaves three
+       abandoned commits and a branch at the beginning, and carrying on with a
+       lesson against that wreckage is confusing rather than instructive. */
+    if (e.target.closest("#drill-stop")) {
+      endDrill();
+      past = [];
+      reset(true);
+      clear();
+      say("Drill stopped, and the sandbox is back to a fresh repository so the lessons " +
+        "above make sense again.<br>The commits from the drill went with it. Start it " +
+        "again whenever you want another go.", "sys");
+      draw();
+      return;
+    }
+    if (e.target.closest("#preset")) { past = []; endDrill(); reset(); draw(); return; }
     if (e.target.closest("#pundo")) { undo(); return; }
 
     if (e.target.closest("#lsn-next")) {
