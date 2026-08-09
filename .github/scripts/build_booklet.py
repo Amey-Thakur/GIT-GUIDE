@@ -68,19 +68,100 @@ def page(body, title=""):
 
 
 def col(section):
-    out = [f"<h2>{escape(section['title'])}</h2>"]
+    out = ['<div class="csec">', f"<h2>{escape(section['title'])}</h2>"]
     if section.get("note"):
         out.append(f'<p class="note">{escape(section["note"])}</p>')
     out.append('<div class="list">')
     for it in section["items"]:
         cls = ' class="danger"' if it.get("danger") else ""
         out.append(f'<div><code{cls}>{escape(it["c"])}</code><span>{escape(it["d"])}</span></div>')
-    out.append("</div>")
+    out.append("</div></div>")
     return "".join(out)
 
 
-def pair_page(a, b, title):
-    return page(f'<div class="cols"><div>{col(a)}</div><div>{col(b)}</div></div>', title)
+
+# One extra idea per section, used only when a page would otherwise run short.
+SECTION_TIPS = {
+    "History surgery": [
+        ("Rewrite only what is yours", "git log --oneline origin/main..HEAD",
+         "Anything listed here is unpushed and safe to reshape."),
+        ("Never the shared branch", "git push --force-with-lease",
+         "Refuses the push if the remote moved, which plain --force will not."),
+    ],
+    "Submodules": [
+        ("Clone one that has them", "git clone --recurse-submodules <url>",
+         "A plain clone leaves the folders empty and confusing."),
+        ("Or repair it afterwards", "git submodule update --init --recursive",
+         "Fills them in without recloning."),
+    ],
+    "Stash": [
+        ("Label it or lose it", 'git stash push -u -m "<what it was>"',
+         "An unlabelled stash is a mystery by Thursday. The -u includes untracked files."),
+        ("Look before you apply", "git stash show -p stash@{0}",
+         "Shows the patch so nothing lands unseen."),
+    ],
+    "Tags and releases": [
+        ("Tags do not travel by default", "git push origin <tag>",
+         "A normal push leaves them behind; push.followTags makes it automatic."),
+        ("Annotated for anything public", 'git tag -a v1.0.0 -m "Release v1.0.0"',
+         "Carries an author, date, and message; lightweight tags carry none."),
+    ],
+    "Start a project": [
+        ("Publish a folder you already have", "gh repo create <name> --private --source . --push",
+         "Creates the repository, wires the remote, and pushes, in one command."),
+        ("Ignore noise from the first commit", "curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
+         "Far easier than removing it from history later."),
+    ],
+    "Scale and speed": [
+        ("Clone a huge repository fast", "git clone --filter=blob:none <url>",
+         "Full history, file contents on demand. Nothing is missing later."),
+        ("Keep it fast", "git maintenance start",
+         "Schedules the upkeep that keeps log and status quick."),
+    ],
+    "Files and ignoring": [
+        ("The rule people miss", "git rm -r --cached <path>",
+         "Ignoring never untracks what is already committed; this does."),
+        ("Find the rule that matched", "git check-ignore -v <path>",
+         "Names the file, line, and pattern responsible."),
+    ],
+    "No host at all": [
+        ("A repository in one file", "git bundle create repo.bundle --all",
+         "Clone straight from it. Crosses air gaps and email."),
+        ("Any folder can be a remote", "git init --bare /path/repo.git",
+         "No server, no account, still a real remote.")
+    ],
+}
+
+
+def tips_band(sections, room):
+    """A short band of related answers, for pages that would otherwise run light."""
+    picked = []
+    for sec in sections:
+        for t in SECTION_TIPS.get(sec["title"], []):
+            picked.append(t)
+    if not picked:
+        return ""
+    items = "".join(
+        f'<div><strong>{escape(t)}</strong><code>{escape(c)}</code><span>{escape(d)}</span></div>'
+        for t, c, d in picked[:room])
+    return f'<div class="band"><h3 class="bandh">Worth knowing</h3><div class="bandgrid">{items}</div></div>'
+
+
+def sheet_pages(sections):
+    """Two sections a page, matched by length so both columns end level."""
+    order = sorted(sections, key=lambda x: -len(x["items"]))
+    out = []
+    for n in range(0, len(order), 2):
+        a = order[n]
+        b = order[n + 1] if n + 1 < len(order) else None
+        left = col(a)
+        right = col(b) if b else ""
+        weight = len(a["items"]) + (len(b["items"]) if b else 0)
+        room = 4 if weight <= 9 else (2 if weight <= 12 else 0)
+        band = tips_band([x for x in (a, b) if x], room) if room else ""
+        out.append(page(f'<div class="cols"><div>{left}</div><div>{right}</div></div>{band}',
+                        "Cheat sheet"))
+    return out
 
 
 def cover():
@@ -313,6 +394,16 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .defs div {{ font-size: 12pt; color: {MUTED}; line-height: 1.6; }}
 .defs b {{ color: {INK}; font-family: Consolas, monospace; }}
 .note {{ color: {MUTED}; font-size: 10.5pt; margin-bottom: 4mm; }}
+
+.band {{ margin-top: 9mm; border-top: 0.4mm solid {LINE}; padding-top: 5mm; }}
+.bandh {{ font-size: 11pt; color: {MUTED}; margin-bottom: 3.5mm; letter-spacing: 0.02em; }}
+.bandgrid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 4.5mm 14mm; }}
+.bandgrid div {{ border-left: 1mm solid {ACCENT}; padding-left: 4mm; }}
+.bandgrid strong {{ display: block; font-size: 11.5pt; margin-bottom: 1.2mm; }}
+.bandgrid code {{ display: block; font-family: Consolas, monospace; font-size: 10pt;
+  color: {ACCENT}; overflow-wrap: anywhere; }}
+.bandgrid span {{ display: block; font-size: 9.5pt; color: {MUTED}; margin-top: 1mm; }}
+.cols > div > .csec + .csec {{ margin-top: 9mm; }}
 .cols {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14mm; }}
 .list div {{ border-bottom: 0.3mm solid {LINE}; padding: 1.6mm 0; }}
 .list code {{ font-family: Consolas, monospace; font-size: 10.5pt; display: block; overflow-wrap: anywhere; }}
@@ -326,7 +417,7 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .step code {{ font-family: Consolas, monospace; font-size: 10.5pt; background: #23211d; border-radius: 2mm; padding: 1.6mm 3mm; display: inline-block; }}
 .rules {{ font-size: 11.5pt; color: {MUTED}; line-height: 1.75; margin-top: 8mm; max-width: 250mm; }}
 .rules b {{ color: {INK}; }}
-.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.5mm 0; }}
+.errs div {{ border-bottom: 0.3mm solid {LINE}; padding: 2.2mm 0; }}
 .errs code {{ font-family: Consolas, monospace; font-size: 10pt; color: {DANGER}; overflow-wrap: anywhere; }}
 .errs p {{ font-size: 9.3pt; color: {MUTED}; margin-top: 0.8mm; }}
 .list.inline code {{ display: inline; }}
@@ -343,7 +434,7 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 
 .pbody {{ display: block; }}
 .undos {{ display: grid; gap: 2.2mm; margin-top: 3mm; }}
-.undo {{ display: grid; grid-template-columns: 52mm 1fr 26mm; align-items: center; gap: 4mm;
+.undo {{ display: grid; grid-template-columns: 63mm 1fr 27mm; align-items: center; gap: 4mm;
         border-bottom: 0.3mm solid {LINE}; padding-bottom: 2.2mm; }}
 .undo strong {{ font-size: 11pt; }}
 .undo code {{ font-family: Consolas, monospace; font-size: 10.2pt; color: {ACCENT}; overflow-wrap: anywhere; }}
@@ -351,16 +442,17 @@ h2 {{ font-size: 18.5pt; margin-bottom: 4mm; border-left: 1.4mm solid {ACCENT}; 
 .d-safe {{ color: #3fb950; }}
 .d-history {{ color: #d29922; }}
 .d-destructive {{ color: {DANGER}; }}
-.errs b {{ display: block; font-family: Consolas, monospace; font-size: 9.6pt; color: {ACCENT};
-          font-weight: 400; margin-top: 1mm; overflow-wrap: anywhere; }}
+.errs b {{ display: block; font-family: Consolas, monospace; font-size: 9.8pt; color: {INK};
+          font-weight: 400; margin-top: 1.4mm; overflow-wrap: anywhere; }}
 .safeties {{ display: grid; gap: 4mm; margin-top: 4mm; }}
 .safety {{ border-left: 1.2mm solid; padding-left: 5mm; }}
 .safety strong {{ display: block; font-size: 13pt; }}
 .safety span {{ display: block; color: {MUTED}; font-size: 10.5pt; margin: 1mm 0 1.5mm; }}
 .subh {{ font-size: 13pt; margin: 7mm 0 2.5mm; color: {MUTED}; }}
-.rehearse div {{ display: flex; gap: 4mm; align-items: baseline; }}
-.rehearse code {{ display: inline; min-width: 62mm; color: {INK}; }}
-.rehearse span {{ display: inline; margin: 0; }}
+.rehearse div {{ display: grid; grid-template-columns: 82mm 1fr; gap: 6mm;
+  align-items: baseline; padding: 2mm 0; }}
+.rehearse code {{ display: block; color: {INK}; }}
+.rehearse span {{ display: block; margin: 0; }}
 .safety code {{ font-family: Consolas, monospace; font-size: 10pt; color: {INK}; }}
 .legend em {{ margin-left: auto; font-style: normal; color: {MUTED}; font-size: 11pt; }}
 '''
@@ -385,6 +477,10 @@ UNDO_PICKS = [
     ("remove-file-from-last-commit", "A file must leave the last commit"),
     ("stash", "Need a clean tree for five minutes"),
     ("undo-git-init", "Made a repository by accident"),
+    ("restore-deleted-file", "A file was deleted commits ago"),
+    ("reset-to-remote", "Start over from what the remote has"),
+    ("undo-revert", "Reverted something you needed back"),
+    ("recover-uncommitted-after-reset", "Reset --hard took uncommitted work"),
 ]
 
 ERROR_PICKS = [
@@ -408,7 +504,7 @@ def undo_pages(intents):
         v = i["variants"][0]
         rows.append((situation, v["cmds"][0]["c"], v["danger"]))
     out = []
-    per = 9
+    per = 11
     for n in range(0, len(rows), per):
         items = "".join(
             f'<div class="undo"><strong>{escape(sit)}</strong>'
@@ -496,18 +592,8 @@ def safety_page():
 
 def main():
     sheet, errs, ints = data()
-    by = {s["title"]: s for s in sheet}
-    order = sorted(sheet, key=lambda x: -len(x["items"]))
-    pairs = []
-    lo, hi = 0, len(order) - 1
-    while lo < hi:
-        a, b = order[lo], order[hi]
-        pairs.append((a["title"], b["title"], a["title"]))
-        lo += 1
-        hi -= 1
-
     pages = [cover(), foreword(), model(), graph(), start()]
-    pages += [pair_page(by[a], by[b], t) for a, b, t in pairs]
+    pages += sheet_pages(sheet)
     pages += [workflows(), github_page()]
     pages += undo_pages(ints)
     pages += [recovery_page(), safety_page()]
