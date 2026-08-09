@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://amey-thakur.github.io/GIT-GUIDE/assets/social-preview.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/git-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=58">
+  <link rel="stylesheet" href="style.css?v=61">
   <!-- quizschema:start -->
 <script type="application/ld+json">
 {
@@ -659,7 +659,13 @@
         <div class="cmd"><code>git push -u origin fix-login-timeout</code><button class="copy" data-cmd="git push -u origin fix-login-timeout" aria-label="Copy command">Copy</button></div>
         <div class="cmd"><code>gh pr create --fill</code><button class="copy" data-cmd="gh pr create --fill" aria-label="Copy command">Copy</button></div>
         <p class="note">Or click the yellow "Compare &amp; pull request" banner GitHub shows after the push. Open it as a draft if it is not ready for review.</p>
-        <p>What separates a good PR from a painful one: it is small enough to review in one sitting, its description says why rather than what, and it stays alive by responding to review with new commits, not force pushes, until the reviewer approves. On your own PR branch, rebasing to clean up before merge is normal; add <code>Fixes #123</code> to the description and the issue closes itself on merge.</p>
+        <p>Three things separate a pull request people enjoy reviewing from one they avoid.</p>
+        <ul class="tips">
+          <li><b>Small</b><span>Reviewable in one sitting. Length is the main reason a review stalls.</span></li>
+          <li><b>Says why</b><span>The description explains the reason. The diff already shows the what.</span></li>
+          <li><b>Answers with commits</b><span>Respond to review by pushing more commits, never by force pushing, so the conversation keeps its history.</span></li>
+        </ul>
+        <p class="note">Rebasing your own branch to tidy it before merge is fine. Put <code>Fixes #123</code> in the description and the issue closes itself when it merges.</p>
         <p class="note">Review one locally with <a href="index.html#checkout-pr">check out a pull request</a>; keep your branch current with <a href="index.html#rebase-onto-main">rebase onto main</a>.</p>
 
         <h2 id="pr-life">The life of a pull request</h2>
@@ -705,7 +711,14 @@
         <p class="note">Fork, clone, branch, commit, push to your fork, open the PR against the original. The original repository is conventionally the remote named upstream; <a href="index.html#sync-fork">keep your fork in sync</a> before every new branch.</p>
 
         <h2 id="issues">Issues that get fixed</h2>
-        <p>An issue that names the version, the exact steps, what happened, and what you expected gets fixed. One topic per issue, real error text pasted as text, and a minimal reproduction beats a paragraph of description. Reference code precisely: press <kbd>y</kbd> on any file view to get a permalink to that exact commit, then click a line number to link the line.</p>
+        <p>An issue with these four gets fixed. An issue without them gets questions.</p>
+        <ul class="tips">
+          <li><b>The version</b><span>Yours, and the platform. Half of all bugs are already fixed upstream.</span></li>
+          <li><b>The exact steps</b><span>What you ran, in order, so somebody else can reach the same place.</span></li>
+          <li><b>Both outcomes</b><span>What happened, and what you expected instead.</span></li>
+          <li><b>The real error</b><span>Pasted as text, not a screenshot, so it can be searched.</span></li>
+        </ul>
+        <p class="note">One topic per issue, and a minimal reproduction beats any amount of description.</p>
 
         <h2 id="actions">GitHub Actions</h2>
         <p>Actions runs commands for you on every push: tests, checks, deploys. One file in the repository is the whole setup. This very site validates its data and house style on every commit with a workflow of a dozen lines:</p>
@@ -731,7 +744,16 @@
         <div class="cmd"><code>gh run watch</code><button class="copy" data-cmd="gh run watch" aria-label="Copy command">Copy</button></div>
 
         <h2 id="power">Power moves</h2>
-        <p>Press <kbd>.</kbd> in any repository and it opens in a browser VS Code. Press <kbd>t</kbd> to fuzzy-find any file, <kbd>/</kbd> to search code. Append <code>.patch</code> to any commit URL for the raw patch, or <code>#L10-L20</code> to link exact lines. Blame view has a "view blame prior to this change" button that digs through reformats. Your profile README is a repository named after your username. And drag any image into an issue or PR comment to host it instantly.</p>
+        <p>Six things the interface never tells you.</p>
+        <ul class="tips">
+          <li><kbd>.</kbd><span>Opens the repository in a browser VS Code, from any page.</span></li>
+          <li><kbd>t</kbd><span>Fuzzy-find any file. <kbd>/</kbd> searches the code.</span></li>
+          <li><code>.patch</code><span>Append it to a commit URL for the raw patch.</span></li>
+          <li><code>#L10-L20</code><span>Append it to a file URL to link exact lines.</span></li>
+          <li><kbd>y</kbd><span>Turns a file URL into a permalink to that exact commit, so your link never rots.</span></li>
+          <li><b>Drag an image</b><span>Straight into any issue or comment, and GitHub hosts it.</span></li>
+        </ul>
+        <p class="note">Blame has a <em>view blame prior to this change</em> button, which digs past a reformat to the commit that actually changed the line.</p>
 
         <h2 id="protection">Protect the branch</h2>
         <p>On a team, nobody writes to main directly, not even you. Settings, Rules, one ruleset: require a pull request, require the checks to pass. Rulesets replaced classic branch protection and can target several branches at once. From that moment main cannot break by accident, only by review. Assign reviewers by path with a CODEOWNERS file:</p>
@@ -739,7 +761,11 @@
         <p class="note">Whoever owns a path is requested automatically on every pull request that touches it.</p>
 
         <h2 id="profile">Your profile is a repository</h2>
-        <p>Create a repository named exactly your username and its README becomes the top of your profile. Pin the six repositories that represent you best. And know the one rule of the contribution graph: commits count only when their author email matches an address on your GitHub account, which is why a <a href="index.html#first-time-setup">wrong git identity</a> quietly erases your work from it.</p>
+        <ul class="tips">
+          <li><b>Name it after yourself</b><span>A repository named exactly your username puts its README at the top of your profile. This guide's author does it at <a href="https://github.com/Amey-Thakur">Amey-Thakur</a>, if you want to see one working.</span></li>
+          <li><b>Pin six</b><span>The six that represent you, not the six most recent.</span></li>
+          <li><b>Check your email</b><span>Commits count on the contribution graph only when the author email matches an address on your account. A <a href="index.html#first-time-setup">wrong git identity</a> quietly erases months of work from it.</span></li>
+        </ul>
 
 
         <h2 id="security">The security you get for free</h2>

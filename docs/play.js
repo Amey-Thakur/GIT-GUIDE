@@ -333,7 +333,7 @@
 
   CMDS.clone = function (a) {
     var url = a.filter(function (x) { return x[0] !== "-"; })[0] ||
-              "https://github.com/you/project.git";
+              "https://github.com/Amey-Thakur/GIT-GUIDE.git";
     // Cloning replaces whatever is here, exactly as it would in a fresh folder.
     past = [];
     reset(true);
@@ -362,7 +362,7 @@
       return;
     }
     if (a[0] === "add") {
-      var url = a[2] || "https://github.com/you/project.git";
+      var url = a[2] || "https://github.com/Amey-Thakur/GIT-GUIDE.git";
       S.remote = { url: url, branches: {} };
       say("Added <b>origin</b> pointing at " + esc(url) + ". Nothing has been sent yet: " +
         "a remote is only an address until you push.", "out");
@@ -1277,14 +1277,14 @@
     { id: "clone", ch: 6, t: "Start from a repository that already exists",
       goal: "Clone a repository and see what you were given.",
       why: "Most people meet Git by cloning, not by starting empty. A clone brings the whole history, not a snapshot, and configures the remote and tracking for you.",
-      hint: "<code>git clone https://github.com/you/project.git</code>, then <code>git log</code> to see the history came too.",
+      hint: "<code>git clone https://github.com/Amey-Thakur/GIT-GUIDE.git</code>, then <code>git log</code> to see the history came too.",
       done: "Everything a new repository needs, in one command: full history, origin configured, and main already tracking origin/main.",
       ok: function () { return !!S.used.clone; } },
 
     { id: "remote-add", ch: 6, t: "Connect your repository to GitHub",
       goal: "Add a remote called origin.",
       why: "Git works perfectly with no server at all. A remote is just an address you have given a nickname, and adding one sends nothing.",
-      hint: "<code>git remote add origin https://github.com/you/project.git</code>, then <code>git remote -v</code> to see it.",
+      hint: "<code>git remote add origin https://github.com/Amey-Thakur/GIT-GUIDE.git</code>, then <code>git remote -v</code> to see it.",
       done: "origin is only a nickname for a URL. Your history is still entirely local until you push.",
       ok: function () { return !!S.remote; } },
 
@@ -1387,7 +1387,7 @@
     var hint = document.getElementById("lsn-hint-text");
     if (hint) { hint.innerHTML = k.hint; hint.hidden = true; }
     var hbtn = document.getElementById("lsn-hint");
-    if (hbtn) { hbtn.textContent = "Show me how"; hbtn.setAttribute("aria-expanded", "false"); }
+    if (hbtn) { hbtn.textContent = "Ask Amey"; hbtn.setAttribute("aria-expanded", "false"); }
 
     var badge = document.getElementById("lsn-state");
     if (badge) {
@@ -1622,7 +1622,7 @@
       var btn = document.getElementById("lsn-hint");
       if (box) {
         box.hidden = !box.hidden;
-        btn.textContent = box.hidden ? "Show me how" : "Hide the hint";
+        btn.textContent = box.hidden ? "Ask Amey" : "Hide it";
         btn.setAttribute("aria-expanded", box.hidden ? "false" : "true");
       }
       return;

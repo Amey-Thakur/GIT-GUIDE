@@ -1050,6 +1050,12 @@ kbd {
 .lsn-primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 .lsn-primary:hover:not(:disabled) { background: var(--accent); color: #fff; }
 
+/* Three buttons, three jobs, three colours: grey goes back, amber offers help,
+   accent moves you on. Amber is the site's "here is a hand" colour, the same
+   tier as a warning: worth noticing, never alarming. */
+#lsn-hint { border-color: var(--history); color: var(--history); }
+#lsn-hint:hover { background: var(--history); color: var(--paper); }
+
 .pgraph-help { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin: 0.9rem 0 0;
                font-size: 0.88rem; color: var(--muted); }
 .pgraph-help b { color: var(--ink); font-weight: 600; }
@@ -1325,3 +1331,23 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
    the sandbox and the commit graph, so they take the same amber. */
 #w-2 .tag, #w-5 .tag { stroke: var(--history); }
 #w-2 .tagtext, #w-5 .tagtext { fill: var(--history); }
+
+/* A scannable tip list. The lead is what you are looking for, so it sits in its
+   own column and you can find it without reading the sentence beside it. */
+.tips { list-style: none; margin: 0.9rem 0 0; padding: 0; display: grid; gap: 0.7rem; }
+.tips li { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+           gap: 0.3rem 1.25rem; align-items: baseline; padding-bottom: 0.7rem;
+           border-bottom: 1px solid var(--line); }
+.tips li:last-child { border-bottom: 0; padding-bottom: 0; }
+/* The lead is always an element, never a bare text node: a text node cannot
+   be selected, and :first-child then styled the description by mistake. */
+.tips li > b { font-weight: 600; color: var(--ink); }
+.tips kbd, .tips code { font-family: var(--mono); font-size: 0.88rem; color: var(--accent);
+                        background: var(--code-bg); border-radius: 5px; padding: 0.1rem 0.4rem;
+                        justify-self: start; }
+.tips span { color: var(--muted); line-height: 1.65; }
+.tips span code, .tips span kbd { background: none; padding: 0; color: var(--accent); }
+
+@media (max-width: 40rem) {
+  .tips li { grid-template-columns: 1fr; gap: 0.2rem; }
+}
