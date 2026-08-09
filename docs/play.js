@@ -2368,7 +2368,19 @@
     var prev = document.getElementById("lsn-prev");
     var next = document.getElementById("lsn-next");
     if (prev) prev.disabled = task === 0;
-    if (next) next.disabled = task === LESSONS.length - 1;
+
+    /* A dead button at the end of the last lesson is a dead end. From here Next
+       goes to the first lesson still outstanding, and once there are none it
+       says so instead. */
+    var pending = LESSONS.map(function (_, i) { return i; }).filter(function (i) { return !solved[i]; });
+    var last = task === LESSONS.length - 1;
+    if (next) {
+      next.disabled = last && !pending.length;
+      next.textContent = last && pending.length ? "Next unfinished" : "Next";
+    }
+
+    var finale = document.getElementById("lsn-finale");
+    if (finale) finale.hidden = pending.length > 0;
 
     renderMap();
   }
@@ -2601,8 +2613,13 @@
     if (e.target.closest("#preset")) { past = []; endDrill(); reset(); draw(); return; }
     if (e.target.closest("#pundo")) { undo(); return; }
 
+    if (e.target.closest("#finale-drill")) { startDrill(); return; }
+
     if (e.target.closest("#lsn-next")) {
-      if (task < LESSONS.length - 1) { task += 1; renderLesson(); }
+      if (task < LESSONS.length - 1) { task += 1; renderLesson(); return; }
+      // On the last one, carry on to whatever is still outstanding.
+      var todo = LESSONS.map(function (_, i) { return i; }).filter(function (i) { return !solved[i]; })[0];
+      if (todo != null) { task = todo; renderLesson(); }
       return;
     }
     if (e.target.closest("#lsn-prev")) {

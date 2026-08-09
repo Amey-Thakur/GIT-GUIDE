@@ -219,11 +219,11 @@
       shareBox.className = "keys";
       shareBox.setAttribute("role", "dialog");
       shareBox.setAttribute("aria-modal", "true");
-      shareBox.setAttribute("aria-label", "Share this");
+      shareBox.setAttribute("aria-label", "Share Git Guide");
       var url = shareUrl();
       shareBox.innerHTML =
         '<div class="keys-card">' +
-          '<div class="keys-head"><h2>Share this</h2>' +
+          '<div class="keys-head"><h2>Share Git Guide</h2>' +
           '<button type="button" class="keys-x" aria-label="Close">Close</button></div>' +
           '<p class="keys-note share-lead">Send somebody the exact fix, not the front page. ' +
           "Every answer and every decoded error has its own link: click the " +

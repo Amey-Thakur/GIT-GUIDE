@@ -1097,6 +1097,19 @@ html::-webkit-scrollbar-corner { background: var(--paper); }
 
 /* ---- The course: lesson panel, legend, and map -------------------------- */
 
+/* Finishing something should look like finishing something. Green, because that
+   is what green has meant on every page up to here. */
+.finale { border: 1px solid var(--line); border-left: 4px solid var(--safe); border-radius: 12px;
+          background: color-mix(in srgb, var(--safe) 5%, var(--card));
+          padding: 1.75rem 1.9rem; margin-bottom: 2rem; }
+.finale-tag { margin: 0 0 0.5rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.07em;
+              text-transform: uppercase; color: var(--safe); }
+.finale h2 { margin: 0 0 0.8rem; font-size: 1.35rem; }
+.finale p { margin: 0 0 0.8rem; color: var(--muted); line-height: 1.75; max-width: 52rem; }
+.finale-next { color: var(--ink) !important; }
+.finale-acts { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.3rem; }
+.finale-acts a.wizard-opt { text-decoration: none; }
+
 .lesson { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px;
           background: var(--card); padding: 1.5rem 1.75rem; margin-bottom: 2rem; }
 .lesson-top { display: flex; align-items: flex-start; justify-content: space-between;
