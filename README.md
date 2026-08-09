@@ -122,6 +122,12 @@ Every answer carries one of three danger levels.
 
 <br>
 
+## Pass it on
+
+Every answer and every decoded error has its own link, so when somebody asks a Git question you can send them the exact fix rather than the front page. [SHARE.md](SHARE.md) has those links, one-click share buttons, and copy you can paste as is.
+
+<br>
+
 ## Ask, answer, build on it
 
 Every answer on the site also lives in [Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions), where you can ask follow-ups or request answers that are missing. Real questions decide what gets added next.
