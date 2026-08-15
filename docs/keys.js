@@ -263,7 +263,20 @@
     sh.type = "button";
     sh.className = "keyhint sharehint";
     sh.textContent = "Share";
-    sh.addEventListener("click", function () { toggleShare(true); });
+    sh.addEventListener("click", function () {
+      /* A phone has a better share sheet than this page could draw, and it
+         reaches the apps somebody actually uses. The panel is the fallback for
+         everywhere without one, and for anyone who dismisses it. */
+      if (navigator.share) {
+        navigator.share({
+          title: document.title,
+          text: "Every Git command with a danger level and its undo.",
+          url: location.href.split("?")[0]
+        }).catch(function () { toggleShare(true); });
+        return;
+      }
+      toggleShare(true);
+    });
     links.appendChild(sh);
 
     links.appendChild(document.createTextNode(" · "));

@@ -1635,6 +1635,12 @@ a.chip:hover, a.copy:hover, a.dl:hover, a.footer-tag:hover, a.brand:hover,
    quiet line on every page. Hidden on narrow screens, where there is no
    keyboard to press and the line would only take up room. */
 .keyhint { display: none; }
+/* Share is not a keyboard shortcut. It shares the hint's look, and it must not
+   share the hint's hiding: a phone has no keyboard but is the likeliest place
+   somebody wants to pass a link on. */
+.keyhint.sharehint { display: inline; font: inherit; color: var(--muted);
+                     cursor: pointer; background: transparent; border: 0; padding: 0; }
+.keyhint.sharehint:hover { color: var(--safe); }
 @media (min-width: 64rem) {
   .keyhint { display: inline; font: inherit; color: var(--muted); cursor: pointer;
              background: transparent; border: 0; padding: 0; }
