@@ -13,6 +13,7 @@ how dangerous it is, and how to undo it.
 
 <img alt="Answers" src="https://img.shields.io/badge/dynamic/json?label=answers&query=%24.intents.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Fintents.json&color=39FF14">
 <img alt="Errors decoded" src="https://img.shields.io/badge/dynamic/json?label=errors%20decoded&query=%24.errors.length&url=https%3A%2F%2Famey-thakur.github.io%2FGIT-GUIDE%2Fdata%2Ferrors.json&color=F05133">
+<a href="https://github.com/Amey-Thakur"><img alt="Curated by Amey Thakur" src="https://img.shields.io/badge/curated%20by-Amey%20Thakur-0969DA"></a>
 <img alt="License" src="https://img.shields.io/github/license/Amey-Thakur/GIT-GUIDE?color=lightgrey&label=license">
 
 <br><br>
