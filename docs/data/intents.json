@@ -33276,6 +33276,1003 @@
           ]
         }
       ]
+    },
+    {
+      "id": "markdown-math",
+      "q": "Write mathematics in a README or issue",
+      "aka": [
+        "latex in markdown",
+        "formula in readme",
+        "mathjax github",
+        "equations in markdown"
+      ],
+      "seealso": [
+        "github-markdown",
+        "readme-structure"
+      ],
+      "variants": [
+        {
+          "when": "A block, which is the reliable form",
+          "danger": "safe",
+          "undo": "Delete the fence",
+          "cmds": [
+            {
+              "c": "```math\\n\\\\frac{a}{b}\\n```",
+              "n": "A math fence has no delimiters to escape and never collides with Markdown emphasis."
+            },
+            {
+              "c": "$x^2$ inline, $$a+b$$ for a block",
+              "n": "Dollar form works too, but $$a+b$$ written mid-sentence renders inline, not as a block."
+            },
+            {
+              "c": "Prices like $5 and $HOME are safe",
+              "n": "The rule is about what follows the closing dollar, so escaping every dollar in prose is unnecessary."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "markdown-footnotes",
+      "q": "Add footnotes to Markdown",
+      "aka": [
+        "reference note markdown",
+        "citation in readme",
+        "[^1] github"
+      ],
+      "seealso": [
+        "github-markdown",
+        "readme-structure"
+      ],
+      "variants": [
+        {
+          "when": "Anywhere except a wiki",
+          "danger": "safe",
+          "undo": "Delete the reference and its definition",
+          "cmds": [
+            {
+              "c": "A claim[^1]\\n\\n[^1]: The source.",
+              "n": "Footnotes always render at the end of the document, never where you wrote them."
+            },
+            {
+              "c": "[^long-note]: hyphenated labels are fine",
+              "n": "A label containing a space silently breaks, and its definition line is swallowed into the footnote defined above it, so you lose two at once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "markdown-image-size",
+      "q": "Resize an image in a README",
+      "aka": [
+        "make image smaller readme",
+        "img width markdown",
+        "scale picture in readme"
+      ],
+      "seealso": [
+        "readme-images",
+        "github-markdown"
+      ],
+      "variants": [
+        {
+          "when": "Markdown alone cannot size an image",
+          "danger": "safe",
+          "undo": "Remove the tag and use plain Markdown",
+          "cmds": [
+            {
+              "c": "<img src=\"logo.png\" width=\"200\" alt=\"Logo\">",
+              "n": "The width and align attributes survive GitHub's sanitiser."
+            },
+            {
+              "c": "style=\"width:200px\" is stripped",
+              "n": "GitHub replaces the style attribute with its own, so only the width attribute works. class and loading are dropped too."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "markdown-nested-fence",
+      "q": "Show a code fence inside a code fence",
+      "aka": [
+        "escape backticks markdown",
+        "code block inside code block",
+        "nested fences"
+      ],
+      "seealso": [
+        "github-markdown",
+        "readme-structure"
+      ],
+      "variants": [
+        {
+          "when": "Documenting Markdown itself",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "Use four backticks around a three-backtick block",
+              "n": "The outer fence simply needs more backticks than the inner one."
+            },
+            {
+              "c": "~~~js also works and carries a language",
+              "n": "A tilde fence lets you nest a backtick fence without counting backticks at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-api-slurp",
+      "q": "Get one JSON array out of a paginated gh api call",
+      "aka": [
+        "gh api paginate jq broken",
+        "concatenated json gh",
+        "gh api one array"
+      ],
+      "seealso": [
+        "gh-api-pagination",
+        "github-api",
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "Piping paginated output into jq",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api --paginate --slurp repos/{owner}/{repo}/issues",
+              "n": "Without --slurp each page is printed as its own JSON document, so a parser only sees page one or fails outright."
+            },
+            {
+              "c": "--slurp cannot be combined with --jq or --template",
+              "n": "Slurp first, then pipe into jq as a second step."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-api-input-body",
+      "q": "Send a JSON body with gh api",
+      "aka": [
+        "gh api post json file",
+        "gh api request body",
+        "gh api --input"
+      ],
+      "seealso": [
+        "github-api",
+        "gh-api-sends-strings-not-numbers"
+      ],
+      "variants": [
+        {
+          "when": "The body is a file or comes from stdin",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api repos/{owner}/{repo}/rulesets --input ruleset.json",
+              "n": "Reads the whole request body from a file."
+            },
+            {
+              "c": "echo '{\"name\":\"main\"}' | gh api repos/{owner}/{repo}/rulesets --input -",
+              "n": "A dash reads the body from stdin."
+            },
+            {
+              "c": "--input demotes every -f field to the query string",
+              "n": "So --input body.json -f draft=true does not set draft. Put everything in the file."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-api-nested-params",
+      "q": "Send nested or array parameters with gh api",
+      "aka": [
+        "gh api array parameter",
+        "gh api nested field",
+        "gh api list value"
+      ],
+      "seealso": [
+        "github-api",
+        "gh-api-sends-strings-not-numbers"
+      ],
+      "variants": [
+        {
+          "when": "The endpoint expects an object or a list",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api -X PATCH /orgs/{org}/properties/schema -F 'properties[][property_name]=environment'",
+              "n": "Bracket syntax builds nested structures from flags."
+            },
+            {
+              "c": "-F 'key[]=' clears a list",
+              "n": "An empty bracket pair produces an empty array, which is the only way to clear a list field from the CLI."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-output-formatting",
+      "q": "Format gh output as a table or coloured list",
+      "aka": [
+        "gh template",
+        "gh pretty output",
+        "gh json formatting",
+        "tablerow"
+      ],
+      "seealso": [
+        "github-cli-config",
+        "gh-api-pagination"
+      ],
+      "variants": [
+        {
+          "when": "Scripting a readable report",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh pr list --json number,title,updatedAt --template '{{range .}}{{tablerow .number .title (timeago .updatedAt)}}{{end}}{{tablerender}}'",
+              "n": "pluck, join, color, autocolor, timeago, hyperlink, truncate, tablerow and tablerender are all available."
+            },
+            {
+              "c": "Nothing prints until tablerender is called",
+              "n": "Forgetting it produces silent empty output rather than an error."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-pr-checks-exit-codes",
+      "q": "Use gh pr checks in a script without false failures",
+      "aka": [
+        "gh pr checks exit code",
+        "ci reports pending as failure",
+        "gh pr checks pending"
+      ],
+      "seealso": [
+        "check-a-pr-is-safe",
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "Gating on checks in automation",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh pr checks <number> --required --json name,bucket --jq '.[] | select(.bucket==\"fail\")'",
+              "n": "bucket is derived by gh, not returned by the API. It collapses state into pass, fail, pending, skipping and cancel."
+            },
+            {
+              "c": "Exit code 8 means checks are still pending",
+              "n": "The usual `if ! gh pr checks` treats an unfinished run as a failure, which is the common bug."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-force-tty",
+      "q": "Keep gh colours and layout when piping output",
+      "aka": [
+        "gh no colour when piped",
+        "gh output plain in pipe",
+        "gh_force_tty"
+      ],
+      "seealso": [
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "Piping into less, a file, or another tool",
+          "danger": "safe",
+          "undo": "Unset the variable",
+          "cmds": [
+            {
+              "c": "GH_FORCE_TTY=1 gh pr list | less -R",
+              "n": "Forces the interactive rendering."
+            },
+            {
+              "c": "GH_FORCE_TTY=100 gh pr list > pr.txt",
+              "n": "A number is treated as the column width, and a percentage such as 80% is applied to the terminal width."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-telemetry",
+      "q": "Turn off gh CLI telemetry",
+      "aka": [
+        "gh cli tracking",
+        "opt out gh analytics",
+        "do_not_track gh"
+      ],
+      "seealso": [
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "You would rather it sent nothing",
+          "danger": "safe",
+          "undo": "Unset the variable, or gh config set telemetry enabled",
+          "cmds": [
+            {
+              "c": "export GH_TELEMETRY=false",
+              "n": "Collected since v2.91.0. The environment variable takes precedence over the config value, and over DO_NOT_TRACK."
+            },
+            {
+              "c": "GH_TELEMETRY=log gh pr list",
+              "n": "Prints exactly what would have been sent, without sending it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-extensions-pin",
+      "q": "Stop a gh extension from updating",
+      "aka": [
+        "pin gh extension version",
+        "gh extension upgrade skipped",
+        "freeze gh extension"
+      ],
+      "seealso": [
+        "gh-extensions",
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "A newer version broke something",
+          "danger": "safe",
+          "undo": "Reinstall without --pin",
+          "cmds": [
+            {
+              "c": "gh extension install owner/gh-tool --pin v1.2.3",
+              "n": "Freezes that extension at a tag or commit."
+            },
+            {
+              "c": "gh extension upgrade --all skips pinned extensions quietly",
+              "n": "It reports that pinned extensions cannot be upgraded and moves on, so a pinned extension rots while you believe everything is current."
+            },
+            {
+              "c": "gh extension upgrade owner/gh-tool --force",
+              "n": "The only way past a pin."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graphql-query-cost",
+      "q": "Find out what a GraphQL query will cost before running it",
+      "aka": [
+        "graphql rate limit points",
+        "how expensive is my graphql query",
+        "dryrun graphql"
+      ],
+      "seealso": [
+        "api-rate-limits",
+        "github-api"
+      ],
+      "variants": [
+        {
+          "when": "Before running something expensive",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api graphql -f query='{rateLimit(dryRun:true){cost nodeCount limit} viewer{login}}'",
+              "n": "Prices the query without executing it."
+            },
+            {
+              "c": "dryRun makes the whole document a no-op",
+              "n": "Every other field returns empty, so you can price a query or run it, never both at once."
+            },
+            {
+              "c": "Cost comes from the page size you ask for",
+              "n": "first: 100 on a connection that returns two items still bills for 100."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graphql-node-limit",
+      "q": "GraphQL rejects my query even though I have rate limit left",
+      "aka": [
+        "graphql node count exceeded",
+        "query too complex github",
+        "500000 nodes"
+      ],
+      "seealso": [
+        "graphql-query-cost",
+        "api-rate-limits"
+      ],
+      "variants": [
+        {
+          "when": "Nested connections multiply",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "Node count is a separate ceiling of 500,000 per call",
+              "n": "It is independent of your point budget, so a query can be well inside the budget and still be rejected."
+            },
+            {
+              "c": "Three nested 100-wide connections is over a million nodes",
+              "n": "Reduce first: on the inner connections rather than the outer one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rest-api-version-header",
+      "q": "Pin or upgrade the REST API version",
+      "aka": [
+        "x-github-api-version",
+        "github api breaking change",
+        "api version 2022-11-28"
+      ],
+      "seealso": [
+        "github-api",
+        "api-rate-limits"
+      ],
+      "variants": [
+        {
+          "when": "You depend on today's response shape",
+          "danger": "safe",
+          "undo": "Remove the header to return to the default version",
+          "cmds": [
+            {
+              "c": "curl -H 'X-GitHub-Api-Version: 2026-03-10' https://api.github.com/repos/{owner}/{repo}",
+              "n": "Omitting the header does not give you the latest. It pins you to 2022-11-28, so the header's real job is opting in."
+            },
+            {
+              "c": "gh api versions",
+              "n": "Lists the supported versions. An unsupported one returns 410 Gone rather than 400."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "api-list-every-file",
+      "q": "List every file in a repository with one API call",
+      "aka": [
+        "github api file tree",
+        "list all paths repo api",
+        "git trees recursive"
+      ],
+      "seealso": [
+        "github-api",
+        "download-single-file"
+      ],
+      "variants": [
+        {
+          "when": "You want paths, not contents",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api 'repos/{owner}/{repo}/git/trees/main?recursive=1' --jq '.tree[] | select(.type==\"blob\") | .path'",
+              "n": "One call for the whole tree."
+            },
+            {
+              "c": "recursive treats any value as true",
+              "n": "Including the string false, so recursive=false still recurses. Check the truncated field on large repositories."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "api-compare-limits",
+      "q": "The compare API is missing commits or files",
+      "aka": [
+        "compare endpoint truncated",
+        "github api compare 250",
+        "diff api incomplete"
+      ],
+      "seealso": [
+        "github-api",
+        "compare-on-github"
+      ],
+      "variants": [
+        {
+          "when": "Comparing two distant refs",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api 'repos/{owner}/{repo}/compare/v1.0.0...v2.0.0'",
+              "n": "Returns at most 250 commits, with no flag saying it truncated."
+            },
+            {
+              "c": "The files array appears only on the first page",
+              "n": "And holds at most 300 files for the whole comparison, so paginating does not recover the rest."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "api-events-window",
+      "q": "The Events API is missing older activity",
+      "aka": [
+        "github events api limit",
+        "events only 300",
+        "activity api history"
+      ],
+      "seealso": [
+        "github-api",
+        "api-rate-limits"
+      ],
+      "variants": [
+        {
+          "when": "Building anything on public activity",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "Up to 300 events, and only the last 30 days",
+              "n": "Both limits apply at once. The widely repeated 90 days figure is wrong."
+            },
+            {
+              "c": "Delivery can lag up to six hours",
+              "n": "So it is unsuitable for anything needing to be current."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "github-ip-ranges",
+      "q": "Get GitHub's IP ranges for a firewall allowlist",
+      "aka": [
+        "github ip addresses",
+        "allowlist github firewall",
+        "github meta endpoint"
+      ],
+      "seealso": [
+        "github-api"
+      ],
+      "variants": [
+        {
+          "when": "Opening a corporate firewall",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api meta --jq '.hooks[]'",
+              "n": "The ranges webhooks are delivered from."
+            },
+            {
+              "c": "gh api meta --jq '.ssh_key_fingerprints'",
+              "n": "Verify github.com host keys before trusting known_hosts."
+            },
+            {
+              "c": "These ranges change without notice",
+              "n": "Pinning a firewall to a snapshot is how CI mysteriously breaks weeks later. Refetch on a schedule."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "git-backfill",
+      "q": "Fill in a blobless clone without recloning",
+      "aka": [
+        "hydrate partial clone",
+        "git backfill",
+        "download missing blobs"
+      ],
+      "seealso": [
+        "repo-size-vs-clone-time",
+        "clone-at-commit"
+      ],
+      "variants": [
+        {
+          "when": "A partial clone has become slow to work in",
+          "danger": "safe",
+          "undo": "Nothing to undo, the objects are simply present",
+          "cmds": [
+            {
+              "c": "git backfill",
+              "n": "Downloads missing blobs in batches instead of one at a time, which is what makes an unhydrated partial clone painful."
+            },
+            {
+              "c": "git backfill --min-batch-size=50000",
+              "n": "The default batch size. On a large monorepo the first run can pull most of what you skipped."
+            },
+            {
+              "c": "The command is marked experimental",
+              "n": "Its behaviour may change between Git versions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clone-one-pull-request-only",
+      "q": "Clone only one pull request, nothing else",
+      "aka": [
+        "shallow clone a pr",
+        "clone single ref",
+        "git clone --revision"
+      ],
+      "seealso": [
+        "branch-from-a-pull-request",
+        "fetch-every-pull-request-ref",
+        "clone-at-commit"
+      ],
+      "variants": [
+        {
+          "when": "A throwaway checkout of one pull request",
+          "danger": "safe",
+          "undo": "Delete the directory",
+          "cmds": [
+            {
+              "c": "git clone --revision=refs/pull/123/head --depth=1 --filter=blob:none <url> pr123",
+              "n": "Fetches that ref and nothing else."
+            },
+            {
+              "c": "The result has no fetch refspec at all",
+              "n": "So a later git fetch does nothing and the clone is a dead end. Add a refspec, or clone normally if you plan to keep working in it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blame-ignore-revs-broken",
+      "q": "git blame fails with invalid object name",
+      "aka": [
+        "blame ignore revs error",
+        "fatal invalid object name blame",
+        "blame.ignoreRevsFile broken"
+      ],
+      "seealso": [
+        "blame-ignore-revs",
+        "blame-line",
+        "why-commit-signed-locally"
+      ],
+      "variants": [
+        {
+          "when": "The ignore file has a short hash, or does not exist",
+          "danger": "safe",
+          "undo": "git config --unset blame.ignoreRevsFile",
+          "cmds": [
+            {
+              "c": "Use full 40-character hashes only",
+              "n": "An abbreviated hash makes every blame in the repository fail with fatal: invalid object name."
+            },
+            {
+              "c": "git config --global blame.ignoreRevsFile ':(optional).git-blame-ignore-revs'",
+              "n": "Without the optional prefix, a global setting breaks blame in every repository that has no such file. The prefix arrived in Git 2.52."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rebase-update-refs",
+      "q": "Rebase a stack of branches in one pass",
+      "aka": [
+        "stacked pull requests rebase",
+        "update dependent branches",
+        "git rebase --update-refs"
+      ],
+      "seealso": [
+        "rebase-onto",
+        "force-push-safely"
+      ],
+      "variants": [
+        {
+          "when": "Several branches sit on top of one another",
+          "danger": "history",
+          "undo": "git reflog, then git reset --hard to the previous tip of each branch",
+          "cmds": [
+            {
+              "c": "git rebase --update-refs main",
+              "n": "Moves every branch pointer in the stack, not just the one you are on."
+            },
+            {
+              "c": "git config --global rebase.updateRefs true",
+              "n": "Makes it the default."
+            },
+            {
+              "c": "Branches checked out in a worktree are not updated",
+              "n": "Which bites exactly the people who use worktrees to review."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devcontainer-docker-not-available",
+      "q": "Docker commands fail in my dev container setup",
+      "aka": [
+        "docker in oncreatecommand",
+        "docker not available devcontainer",
+        "prebuild docker fails"
+      ],
+      "seealso": [
+        "devcontainer",
+        "codespaces",
+        "codespaces-costs-more-than-expected"
+      ],
+      "variants": [
+        {
+          "when": "The command runs during creation",
+          "danger": "safe",
+          "undo": "Move the command back",
+          "cmds": [
+            {
+              "c": "Move it to postCreateCommand",
+              "n": "Docker-in-Docker works there but not in onCreateCommand, and therefore never during a prebuild."
+            },
+            {
+              "c": "If any lifecycle script exits non-zero, every later script is skipped",
+              "n": "With no obvious error, which is why half-built containers look mysterious."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copilot-instruction-files",
+      "q": "Give Copilot standing instructions for a repository",
+      "aka": [
+        "copilot-instructions.md",
+        "agents.md",
+        "custom instructions repo",
+        "teach copilot our style"
+      ],
+      "seealso": [
+        "gh-copilot",
+        "copilot-code-review"
+      ],
+      "variants": [
+        {
+          "when": "One file for the whole repository",
+          "danger": "safe",
+          "undo": "Delete the file",
+          "cmds": [
+            {
+              "c": ".github/copilot-instructions.md",
+              "n": "Applies repository-wide."
+            },
+            {
+              "c": ".github/instructions/NAME.instructions.md",
+              "n": "Path-scoped. The applyTo key is required, and without it the file does nothing at all."
+            },
+            {
+              "c": "AGENTS.md",
+              "n": "One or many, and the nearest file in the directory tree wins. CLAUDE.md and GEMINI.md are root-only."
+            },
+            {
+              "c": "On github.com, path-specific instructions reach only the cloud agent and code review",
+              "n": "Copilot Chat on the website ignores them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copilot-mcp-secrets",
+      "q": "Give the Copilot cloud agent access to an MCP server",
+      "aka": [
+        "copilot mcp configuration",
+        "copilot_mcp secret",
+        "agent mcp server github"
+      ],
+      "seealso": [
+        "copilot-instruction-files",
+        "gh-copilot"
+      ],
+      "variants": [
+        {
+          "when": "The server needs a token",
+          "danger": "safe",
+          "undo": "Remove the server from the configuration",
+          "cmds": [
+            {
+              "c": "Settings, Copilot, Cloud agent, MCP configuration",
+              "n": "Where the server list lives."
+            },
+            {
+              "c": "Name the secret COPILOT_MCP_<NAME>",
+              "n": "Only secrets carrying that prefix are visible to the MCP configuration. A correctly written secret under any other name is silently invisible."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "github-mcp-server-scope",
+      "q": "Limit what the GitHub MCP server can see or do",
+      "aka": [
+        "mcp readonly github",
+        "x-mcp-toolsets",
+        "github mcp lockdown",
+        "restrict mcp tools"
+      ],
+      "seealso": [
+        "copilot-mcp-secrets",
+        "github-api"
+      ],
+      "variants": [
+        {
+          "when": "Reducing what an agent can reach",
+          "danger": "safe",
+          "undo": "Point the client back at the default URL",
+          "cmds": [
+            {
+              "c": "https://api.githubcopilot.com/mcp/readonly",
+              "n": "Read-only. The default /mcp/ URL exposes only context, repos, issues, pull_requests and users, which is why teams conclude other tools do not exist."
+            },
+            {
+              "c": "https://api.githubcopilot.com/mcp/x/all",
+              "n": "Every toolset."
+            },
+            {
+              "c": "X-MCP-Toolsets: repos,issues",
+              "n": "Choose toolsets per request. X-MCP-Readonly and X-MCP-Lockdown are the other two headers."
+            },
+            {
+              "c": "X-MCP-Lockdown: true",
+              "n": "Filters public issue and pull request detail, because those bodies are attacker-controlled text flowing straight into an agent's context."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copilot-code-review-setup",
+      "q": "Copilot's review misses type errors and imports",
+      "aka": [
+        "copilot review no dependencies",
+        "copilot-code-review.yml",
+        "improve copilot review"
+      ],
+      "seealso": [
+        "copilot-code-review",
+        "copilot-instruction-files"
+      ],
+      "variants": [
+        {
+          "when": "Reviews run without your project installed",
+          "danger": "safe",
+          "undo": "Delete the workflow file",
+          "cmds": [
+            {
+              "c": ".github/workflows/copilot-code-review.yml",
+              "n": "Its own setup file, separate from the cloud agent's. Almost nobody knows it exists, and without it reviews run with no dependencies, so Copilot cannot resolve imports."
+            },
+            {
+              "c": "REVIEW.md is read too",
+              "n": "Along with copilot-instructions.md, instructions/**, AGENTS.md, CLAUDE.md and GEMINI.md. There is no copilot-review-instructions.md; that path is a common invention."
+            },
+            {
+              "c": "Copilot always leaves a Comment review",
+              "n": "It never approves, never blocks, and never counts toward required approvals."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "immutable-releases",
+      "q": "Stop a published release from being changed",
+      "aka": [
+        "lock a release",
+        "immutable release github",
+        "prevent tag moving"
+      ],
+      "seealso": [
+        "create-release",
+        "download-release",
+        "branch-vs-tag-vs-release"
+      ],
+      "variants": [
+        {
+          "when": "You need the artefacts to be tamper-evident",
+          "danger": "safe",
+          "undo": "Deleting the release is possible, but the tag name is gone permanently",
+          "cmds": [
+            {
+              "c": "Enable immutable releases in repository or organisation settings",
+              "n": "The tag is locked to a commit and the attached files cannot change."
+            },
+            {
+              "c": "Attach every asset before publishing",
+              "n": "Adding one afterwards is impossible, so the draft-first sequence is mandatory rather than advisory."
+            },
+            {
+              "c": "Deleting the release burns the tag name",
+              "n": "You may delete the tag, but you can never reuse that name."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "release-notes-shaping",
+      "q": "Control what appears in autogenerated release notes",
+      "aka": [
+        "release.yml categories",
+        "exclude labels release notes",
+        "group release notes"
+      ],
+      "seealso": [
+        "create-release",
+        "immutable-releases",
+        "download-release"
+      ],
+      "variants": [
+        {
+          "when": "The generated notes are noisy",
+          "danger": "safe",
+          "undo": "Delete the file to return to the default notes",
+          "cmds": [
+            {
+              "c": ".github/release.yml",
+              "n": "One top-level changelog key, with exclude.labels, exclude.authors and an ordered categories list."
+            },
+            {
+              "c": "Categories are evaluated in order",
+              "n": "And the * label is the catch-all, so put it last or it swallows everything."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "codeowners-order",
+      "q": "CODEOWNERS is requesting the wrong reviewers",
+      "aka": [
+        "codeowners not working",
+        "codeowners precedence",
+        "wrong code owner assigned"
+      ],
+      "seealso": [
+        "codeowners",
+        "branch-protection"
+      ],
+      "variants": [
+        {
+          "when": "The file parses but assigns badly",
+          "danger": "safe",
+          "undo": "Restore the previous CODEOWNERS file",
+          "cmds": [
+            {
+              "c": "The last matching pattern wins",
+              "n": "So a catch-all such as * @org/everyone at the bottom, which reads like a fallback, disables every specific rule above it. Put it first."
+            },
+            {
+              "c": "docs/* matches one level, /docs/ is recursive",
+              "n": "Nothing warns you, and nested files silently go to the wrong owner."
+            },
+            {
+              "c": "Invalid lines are skipped silently",
+              "n": "As is any team without write access to the repository."
+            },
+            {
+              "c": "The file is read from the pull request's base branch",
+              "n": "So a pull request that adds itself as an owner cannot apply that rule to itself."
+            }
+          ]
+        }
+      ]
     }
   ]
 }

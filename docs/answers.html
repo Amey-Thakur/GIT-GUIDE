@@ -14291,6 +14291,439 @@
   </div>
   <p class="seealso">See also: <a href="#readme-structure">readme structure</a>, <a href="#readme-images">readme images</a>, <a href="#readme-badges">readme badges</a></p>
 </article>
+<article class="result" id="markdown-math">
+  <h2>Write mathematics in a README or issue<a class="anchor" href="#markdown-math" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: latex in markdown, formula in readme, mathjax github, equations in markdown</p>
+  <div class="variant">
+    <p class="when">A block, which is the reliable form<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>```math\n\\frac{a}{b}\n```</code><button class="copy" type="button" data-cmd="```math\n\\frac{a}{b}\n```">Copy</button></div>
+    <p class="note">A math fence has no delimiters to escape and never collides with Markdown emphasis.</p>
+    <div class="cmd"><code>$x^2$ inline, $$a+b$$ for a block</code><button class="copy" type="button" data-cmd="$x^2$ inline, $$a+b$$ for a block">Copy</button></div>
+    <p class="note">Dollar form works too, but $$a+b$$ written mid-sentence renders inline, not as a block.</p>
+    <div class="cmd"><code>Prices like $5 and $HOME are safe</code><button class="copy" type="button" data-cmd="Prices like $5 and $HOME are safe">Copy</button></div>
+    <p class="note">The rule is about what follows the closing dollar, so escaping every dollar in prose is unnecessary.</p>
+    <p class="undo"><span>Undo</span> Delete the fence</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-markdown">github markdown</a>, <a href="#readme-structure">readme structure</a></p>
+</article>
+<article class="result" id="markdown-footnotes">
+  <h2>Add footnotes to Markdown<a class="anchor" href="#markdown-footnotes" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: reference note markdown, citation in readme, [^1] github</p>
+  <div class="variant">
+    <p class="when">Anywhere except a wiki<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>A claim[^1]\n\n[^1]: The source.</code><button class="copy" type="button" data-cmd="A claim[^1]\n\n[^1]: The source.">Copy</button></div>
+    <p class="note">Footnotes always render at the end of the document, never where you wrote them.</p>
+    <div class="cmd"><code>[^long-note]: hyphenated labels are fine</code><button class="copy" type="button" data-cmd="[^long-note]: hyphenated labels are fine">Copy</button></div>
+    <p class="note">A label containing a space silently breaks, and its definition line is swallowed into the footnote defined above it, so you lose two at once.</p>
+    <p class="undo"><span>Undo</span> Delete the reference and its definition</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-markdown">github markdown</a>, <a href="#readme-structure">readme structure</a></p>
+</article>
+<article class="result" id="markdown-image-size">
+  <h2>Resize an image in a README<a class="anchor" href="#markdown-image-size" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: make image smaller readme, img width markdown, scale picture in readme</p>
+  <div class="variant">
+    <p class="when">Markdown alone cannot size an image<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>&lt;img src=&quot;logo.png&quot; width=&quot;200&quot; alt=&quot;Logo&quot;&gt;</code><button class="copy" type="button" data-cmd="&lt;img src=&quot;logo.png&quot; width=&quot;200&quot; alt=&quot;Logo&quot;&gt;">Copy</button></div>
+    <p class="note">The width and align attributes survive GitHub&#x27;s sanitiser.</p>
+    <div class="cmd"><code>style=&quot;width:200px&quot; is stripped</code><button class="copy" type="button" data-cmd="style=&quot;width:200px&quot; is stripped">Copy</button></div>
+    <p class="note">GitHub replaces the style attribute with its own, so only the width attribute works. class and loading are dropped too.</p>
+    <p class="undo"><span>Undo</span> Remove the tag and use plain Markdown</p>
+  </div>
+  <p class="seealso">See also: <a href="#readme-images">readme images</a>, <a href="#github-markdown">github markdown</a></p>
+</article>
+<article class="result" id="markdown-nested-fence">
+  <h2>Show a code fence inside a code fence<a class="anchor" href="#markdown-nested-fence" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: escape backticks markdown, code block inside code block, nested fences</p>
+  <div class="variant">
+    <p class="when">Documenting Markdown itself<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Use four backticks around a three-backtick block</code><button class="copy" type="button" data-cmd="Use four backticks around a three-backtick block">Copy</button></div>
+    <p class="note">The outer fence simply needs more backticks than the inner one.</p>
+    <div class="cmd"><code>~~~js also works and carries a language</code><button class="copy" type="button" data-cmd="~~~js also works and carries a language">Copy</button></div>
+    <p class="note">A tilde fence lets you nest a backtick fence without counting backticks at all.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-markdown">github markdown</a>, <a href="#readme-structure">readme structure</a></p>
+</article>
+<article class="result" id="gh-api-slurp">
+  <h2>Get one JSON array out of a paginated gh api call<a class="anchor" href="#gh-api-slurp" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh api paginate jq broken, concatenated json gh, gh api one array</p>
+  <div class="variant">
+    <p class="when">Piping paginated output into jq<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api --paginate --slurp repos/{owner}/{repo}/issues</code><button class="copy" type="button" data-cmd="gh api --paginate --slurp repos/{owner}/{repo}/issues">Copy</button></div>
+    <p class="note">Without --slurp each page is printed as its own JSON document, so a parser only sees page one or fails outright.</p>
+    <div class="cmd"><code>--slurp cannot be combined with --jq or --template</code><button class="copy" type="button" data-cmd="--slurp cannot be combined with --jq or --template">Copy</button></div>
+    <p class="note">Slurp first, then pipe into jq as a second step.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#gh-api-pagination">gh api pagination</a>, <a href="#github-api">github api</a>, <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="gh-api-input-body">
+  <h2>Send a JSON body with gh api<a class="anchor" href="#gh-api-input-body" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh api post json file, gh api request body, gh api --input</p>
+  <div class="variant">
+    <p class="when">The body is a file or comes from stdin<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api repos/{owner}/{repo}/rulesets --input ruleset.json</code><button class="copy" type="button" data-cmd="gh api repos/{owner}/{repo}/rulesets --input ruleset.json">Copy</button></div>
+    <p class="note">Reads the whole request body from a file.</p>
+    <div class="cmd"><code>echo &#x27;{&quot;name&quot;:&quot;main&quot;}&#x27; | gh api repos/{owner}/{repo}/rulesets --input -</code><button class="copy" type="button" data-cmd="echo &#x27;{&quot;name&quot;:&quot;main&quot;}&#x27; | gh api repos/{owner}/{repo}/rulesets --input -">Copy</button></div>
+    <p class="note">A dash reads the body from stdin.</p>
+    <div class="cmd"><code>--input demotes every -f field to the query string</code><button class="copy" type="button" data-cmd="--input demotes every -f field to the query string">Copy</button></div>
+    <p class="note">So --input body.json -f draft=true does not set draft. Put everything in the file.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#gh-api-sends-strings-not-numbers">gh api sends strings not numbers</a></p>
+</article>
+<article class="result" id="gh-api-nested-params">
+  <h2>Send nested or array parameters with gh api<a class="anchor" href="#gh-api-nested-params" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh api array parameter, gh api nested field, gh api list value</p>
+  <div class="variant">
+    <p class="when">The endpoint expects an object or a list<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api -X PATCH /orgs/{org}/properties/schema -F &#x27;properties[][property_name]=environment&#x27;</code><button class="copy" type="button" data-cmd="gh api -X PATCH /orgs/{org}/properties/schema -F &#x27;properties[][property_name]=environment&#x27;">Copy</button></div>
+    <p class="note">Bracket syntax builds nested structures from flags.</p>
+    <div class="cmd"><code>-F &#x27;key[]=&#x27; clears a list</code><button class="copy" type="button" data-cmd="-F &#x27;key[]=&#x27; clears a list">Copy</button></div>
+    <p class="note">An empty bracket pair produces an empty array, which is the only way to clear a list field from the CLI.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#gh-api-sends-strings-not-numbers">gh api sends strings not numbers</a></p>
+</article>
+<article class="result" id="gh-output-formatting">
+  <h2>Format gh output as a table or coloured list<a class="anchor" href="#gh-output-formatting" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh template, gh pretty output, gh json formatting, tablerow</p>
+  <div class="variant">
+    <p class="when">Scripting a readable report<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh pr list --json number,title,updatedAt --template &#x27;{{range .}}{{tablerow .number .title (timeago .updatedAt)}}{{end}}{{tablerender}}&#x27;</code><button class="copy" type="button" data-cmd="gh pr list --json number,title,updatedAt --template &#x27;{{range .}}{{tablerow .number .title (timeago .updatedAt)}}{{end}}{{tablerender}}&#x27;">Copy</button></div>
+    <p class="note">pluck, join, color, autocolor, timeago, hyperlink, truncate, tablerow and tablerender are all available.</p>
+    <div class="cmd"><code>Nothing prints until tablerender is called</code><button class="copy" type="button" data-cmd="Nothing prints until tablerender is called">Copy</button></div>
+    <p class="note">Forgetting it produces silent empty output rather than an error.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-cli-config">github cli config</a>, <a href="#gh-api-pagination">gh api pagination</a></p>
+</article>
+<article class="result" id="gh-pr-checks-exit-codes">
+  <h2>Use gh pr checks in a script without false failures<a class="anchor" href="#gh-pr-checks-exit-codes" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh pr checks exit code, ci reports pending as failure, gh pr checks pending</p>
+  <div class="variant">
+    <p class="when">Gating on checks in automation<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh pr checks &lt;number&gt; --required --json name,bucket --jq &#x27;.[] | select(.bucket==&quot;fail&quot;)&#x27;</code><button class="copy" type="button" data-cmd="gh pr checks &lt;number&gt; --required --json name,bucket --jq &#x27;.[] | select(.bucket==&quot;fail&quot;)&#x27;">Copy</button></div>
+    <p class="note">bucket is derived by gh, not returned by the API. It collapses state into pass, fail, pending, skipping and cancel.</p>
+    <div class="cmd"><code>Exit code 8 means checks are still pending</code><button class="copy" type="button" data-cmd="Exit code 8 means checks are still pending">Copy</button></div>
+    <p class="note">The usual `if ! gh pr checks` treats an unfinished run as a failure, which is the common bug.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#check-a-pr-is-safe">check a pr is safe</a>, <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="gh-force-tty">
+  <h2>Keep gh colours and layout when piping output<a class="anchor" href="#gh-force-tty" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh no colour when piped, gh output plain in pipe, gh_force_tty</p>
+  <div class="variant">
+    <p class="when">Piping into less, a file, or another tool<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>GH_FORCE_TTY=1 gh pr list | less -R</code><button class="copy" type="button" data-cmd="GH_FORCE_TTY=1 gh pr list | less -R">Copy</button></div>
+    <p class="note">Forces the interactive rendering.</p>
+    <div class="cmd"><code>GH_FORCE_TTY=100 gh pr list &gt; pr.txt</code><button class="copy" type="button" data-cmd="GH_FORCE_TTY=100 gh pr list &gt; pr.txt">Copy</button></div>
+    <p class="note">A number is treated as the column width, and a percentage such as 80% is applied to the terminal width.</p>
+    <p class="undo"><span>Undo</span> Unset the variable</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="gh-telemetry">
+  <h2>Turn off gh CLI telemetry<a class="anchor" href="#gh-telemetry" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh cli tracking, opt out gh analytics, do_not_track gh</p>
+  <div class="variant">
+    <p class="when">You would rather it sent nothing<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>export GH_TELEMETRY=false</code><button class="copy" type="button" data-cmd="export GH_TELEMETRY=false">Copy</button></div>
+    <p class="note">Collected since v2.91.0. The environment variable takes precedence over the config value, and over DO_NOT_TRACK.</p>
+    <div class="cmd"><code>GH_TELEMETRY=log gh pr list</code><button class="copy" type="button" data-cmd="GH_TELEMETRY=log gh pr list">Copy</button></div>
+    <p class="note">Prints exactly what would have been sent, without sending it.</p>
+    <p class="undo"><span>Undo</span> Unset the variable, or gh config set telemetry enabled</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="gh-extensions-pin">
+  <h2>Stop a gh extension from updating<a class="anchor" href="#gh-extensions-pin" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: pin gh extension version, gh extension upgrade skipped, freeze gh extension</p>
+  <div class="variant">
+    <p class="when">A newer version broke something<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh extension install owner/gh-tool --pin v1.2.3</code><button class="copy" type="button" data-cmd="gh extension install owner/gh-tool --pin v1.2.3">Copy</button></div>
+    <p class="note">Freezes that extension at a tag or commit.</p>
+    <div class="cmd"><code>gh extension upgrade --all skips pinned extensions quietly</code><button class="copy" type="button" data-cmd="gh extension upgrade --all skips pinned extensions quietly">Copy</button></div>
+    <p class="note">It reports that pinned extensions cannot be upgraded and moves on, so a pinned extension rots while you believe everything is current.</p>
+    <div class="cmd"><code>gh extension upgrade owner/gh-tool --force</code><button class="copy" type="button" data-cmd="gh extension upgrade owner/gh-tool --force">Copy</button></div>
+    <p class="note">The only way past a pin.</p>
+    <p class="undo"><span>Undo</span> Reinstall without --pin</p>
+  </div>
+  <p class="seealso">See also: <a href="#gh-extensions">gh extensions</a>, <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="graphql-query-cost">
+  <h2>Find out what a GraphQL query will cost before running it<a class="anchor" href="#graphql-query-cost" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: graphql rate limit points, how expensive is my graphql query, dryrun graphql</p>
+  <div class="variant">
+    <p class="when">Before running something expensive<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api graphql -f query=&#x27;{rateLimit(dryRun:true){cost nodeCount limit} viewer{login}}&#x27;</code><button class="copy" type="button" data-cmd="gh api graphql -f query=&#x27;{rateLimit(dryRun:true){cost nodeCount limit} viewer{login}}&#x27;">Copy</button></div>
+    <p class="note">Prices the query without executing it.</p>
+    <div class="cmd"><code>dryRun makes the whole document a no-op</code><button class="copy" type="button" data-cmd="dryRun makes the whole document a no-op">Copy</button></div>
+    <p class="note">Every other field returns empty, so you can price a query or run it, never both at once.</p>
+    <div class="cmd"><code>Cost comes from the page size you ask for</code><button class="copy" type="button" data-cmd="Cost comes from the page size you ask for">Copy</button></div>
+    <p class="note">first: 100 on a connection that returns two items still bills for 100.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#api-rate-limits">api rate limits</a>, <a href="#github-api">github api</a></p>
+</article>
+<article class="result" id="graphql-node-limit">
+  <h2>GraphQL rejects my query even though I have rate limit left<a class="anchor" href="#graphql-node-limit" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: graphql node count exceeded, query too complex github, 500000 nodes</p>
+  <div class="variant">
+    <p class="when">Nested connections multiply<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Node count is a separate ceiling of 500,000 per call</code><button class="copy" type="button" data-cmd="Node count is a separate ceiling of 500,000 per call">Copy</button></div>
+    <p class="note">It is independent of your point budget, so a query can be well inside the budget and still be rejected.</p>
+    <div class="cmd"><code>Three nested 100-wide connections is over a million nodes</code><button class="copy" type="button" data-cmd="Three nested 100-wide connections is over a million nodes">Copy</button></div>
+    <p class="note">Reduce first: on the inner connections rather than the outer one.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#graphql-query-cost">graphql query cost</a>, <a href="#api-rate-limits">api rate limits</a></p>
+</article>
+<article class="result" id="rest-api-version-header">
+  <h2>Pin or upgrade the REST API version<a class="anchor" href="#rest-api-version-header" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: x-github-api-version, github api breaking change, api version 2022-11-28</p>
+  <div class="variant">
+    <p class="when">You depend on today&#x27;s response shape<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>curl -H &#x27;X-GitHub-Api-Version: 2026-03-10&#x27; https://api.github.com/repos/{owner}/{repo}</code><button class="copy" type="button" data-cmd="curl -H &#x27;X-GitHub-Api-Version: 2026-03-10&#x27; https://api.github.com/repos/{owner}/{repo}">Copy</button></div>
+    <p class="note">Omitting the header does not give you the latest. It pins you to 2022-11-28, so the header&#x27;s real job is opting in.</p>
+    <div class="cmd"><code>gh api versions</code><button class="copy" type="button" data-cmd="gh api versions">Copy</button></div>
+    <p class="note">Lists the supported versions. An unsupported one returns 410 Gone rather than 400.</p>
+    <p class="undo"><span>Undo</span> Remove the header to return to the default version</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#api-rate-limits">api rate limits</a></p>
+</article>
+<article class="result" id="api-list-every-file">
+  <h2>List every file in a repository with one API call<a class="anchor" href="#api-list-every-file" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: github api file tree, list all paths repo api, git trees recursive</p>
+  <div class="variant">
+    <p class="when">You want paths, not contents<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api &#x27;repos/{owner}/{repo}/git/trees/main?recursive=1&#x27; --jq &#x27;.tree[] | select(.type==&quot;blob&quot;) | .path&#x27;</code><button class="copy" type="button" data-cmd="gh api &#x27;repos/{owner}/{repo}/git/trees/main?recursive=1&#x27; --jq &#x27;.tree[] | select(.type==&quot;blob&quot;) | .path&#x27;">Copy</button></div>
+    <p class="note">One call for the whole tree.</p>
+    <div class="cmd"><code>recursive treats any value as true</code><button class="copy" type="button" data-cmd="recursive treats any value as true">Copy</button></div>
+    <p class="note">Including the string false, so recursive=false still recurses. Check the truncated field on large repositories.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#download-single-file">download single file</a></p>
+</article>
+<article class="result" id="api-compare-limits">
+  <h2>The compare API is missing commits or files<a class="anchor" href="#api-compare-limits" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: compare endpoint truncated, github api compare 250, diff api incomplete</p>
+  <div class="variant">
+    <p class="when">Comparing two distant refs<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api &#x27;repos/{owner}/{repo}/compare/v1.0.0...v2.0.0&#x27;</code><button class="copy" type="button" data-cmd="gh api &#x27;repos/{owner}/{repo}/compare/v1.0.0...v2.0.0&#x27;">Copy</button></div>
+    <p class="note">Returns at most 250 commits, with no flag saying it truncated.</p>
+    <div class="cmd"><code>The files array appears only on the first page</code><button class="copy" type="button" data-cmd="The files array appears only on the first page">Copy</button></div>
+    <p class="note">And holds at most 300 files for the whole comparison, so paginating does not recover the rest.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#compare-on-github">compare on github</a></p>
+</article>
+<article class="result" id="api-events-window">
+  <h2>The Events API is missing older activity<a class="anchor" href="#api-events-window" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: github events api limit, events only 300, activity api history</p>
+  <div class="variant">
+    <p class="when">Building anything on public activity<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Up to 300 events, and only the last 30 days</code><button class="copy" type="button" data-cmd="Up to 300 events, and only the last 30 days">Copy</button></div>
+    <p class="note">Both limits apply at once. The widely repeated 90 days figure is wrong.</p>
+    <div class="cmd"><code>Delivery can lag up to six hours</code><button class="copy" type="button" data-cmd="Delivery can lag up to six hours">Copy</button></div>
+    <p class="note">So it is unsuitable for anything needing to be current.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#api-rate-limits">api rate limits</a></p>
+</article>
+<article class="result" id="github-ip-ranges">
+  <h2>Get GitHub&#x27;s IP ranges for a firewall allowlist<a class="anchor" href="#github-ip-ranges" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: github ip addresses, allowlist github firewall, github meta endpoint</p>
+  <div class="variant">
+    <p class="when">Opening a corporate firewall<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api meta --jq &#x27;.hooks[]&#x27;</code><button class="copy" type="button" data-cmd="gh api meta --jq &#x27;.hooks[]&#x27;">Copy</button></div>
+    <p class="note">The ranges webhooks are delivered from.</p>
+    <div class="cmd"><code>gh api meta --jq &#x27;.ssh_key_fingerprints&#x27;</code><button class="copy" type="button" data-cmd="gh api meta --jq &#x27;.ssh_key_fingerprints&#x27;">Copy</button></div>
+    <p class="note">Verify github.com host keys before trusting known_hosts.</p>
+    <div class="cmd"><code>These ranges change without notice</code><button class="copy" type="button" data-cmd="These ranges change without notice">Copy</button></div>
+    <p class="note">Pinning a firewall to a snapshot is how CI mysteriously breaks weeks later. Refetch on a schedule.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a></p>
+</article>
+<article class="result" id="git-backfill">
+  <h2>Fill in a blobless clone without recloning<a class="anchor" href="#git-backfill" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: hydrate partial clone, git backfill, download missing blobs</p>
+  <div class="variant">
+    <p class="when">A partial clone has become slow to work in<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>git backfill</code><button class="copy" type="button" data-cmd="git backfill">Copy</button></div>
+    <p class="note">Downloads missing blobs in batches instead of one at a time, which is what makes an unhydrated partial clone painful.</p>
+    <div class="cmd"><code>git backfill --min-batch-size=50000</code><button class="copy" type="button" data-cmd="git backfill --min-batch-size=50000">Copy</button></div>
+    <p class="note">The default batch size. On a large monorepo the first run can pull most of what you skipped.</p>
+    <div class="cmd"><code>The command is marked experimental</code><button class="copy" type="button" data-cmd="The command is marked experimental">Copy</button></div>
+    <p class="note">Its behaviour may change between Git versions.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo, the objects are simply present</p>
+  </div>
+  <p class="seealso">See also: <a href="#repo-size-vs-clone-time">repo size vs clone time</a>, <a href="#clone-at-commit">clone at commit</a></p>
+</article>
+<article class="result" id="clone-one-pull-request-only">
+  <h2>Clone only one pull request, nothing else<a class="anchor" href="#clone-one-pull-request-only" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: shallow clone a pr, clone single ref, git clone --revision</p>
+  <div class="variant">
+    <p class="when">A throwaway checkout of one pull request<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>git clone --revision=refs/pull/123/head --depth=1 --filter=blob:none &lt;url&gt; pr123</code><button class="copy" type="button" data-cmd="git clone --revision=refs/pull/123/head --depth=1 --filter=blob:none &lt;url&gt; pr123">Copy</button></div>
+    <p class="note">Fetches that ref and nothing else.</p>
+    <div class="cmd"><code>The result has no fetch refspec at all</code><button class="copy" type="button" data-cmd="The result has no fetch refspec at all">Copy</button></div>
+    <p class="note">So a later git fetch does nothing and the clone is a dead end. Add a refspec, or clone normally if you plan to keep working in it.</p>
+    <p class="undo"><span>Undo</span> Delete the directory</p>
+  </div>
+  <p class="seealso">See also: <a href="#branch-from-a-pull-request">branch from a pull request</a>, <a href="#fetch-every-pull-request-ref">fetch every pull request ref</a>, <a href="#clone-at-commit">clone at commit</a></p>
+</article>
+<article class="result" id="blame-ignore-revs-broken">
+  <h2>git blame fails with invalid object name<a class="anchor" href="#blame-ignore-revs-broken" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: blame ignore revs error, fatal invalid object name blame, blame.ignoreRevsFile broken</p>
+  <div class="variant">
+    <p class="when">The ignore file has a short hash, or does not exist<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Use full 40-character hashes only</code><button class="copy" type="button" data-cmd="Use full 40-character hashes only">Copy</button></div>
+    <p class="note">An abbreviated hash makes every blame in the repository fail with fatal: invalid object name.</p>
+    <div class="cmd"><code>git config --global blame.ignoreRevsFile &#x27;:(optional).git-blame-ignore-revs&#x27;</code><button class="copy" type="button" data-cmd="git config --global blame.ignoreRevsFile &#x27;:(optional).git-blame-ignore-revs&#x27;">Copy</button></div>
+    <p class="note">Without the optional prefix, a global setting breaks blame in every repository that has no such file. The prefix arrived in Git 2.52.</p>
+    <p class="undo"><span>Undo</span> git config --unset blame.ignoreRevsFile</p>
+  </div>
+  <p class="seealso">See also: <a href="#blame-ignore-revs">blame ignore revs</a>, <a href="#blame-line">blame line</a>, <a href="#why-commit-signed-locally">why commit signed locally</a></p>
+</article>
+<article class="result" id="rebase-update-refs">
+  <h2>Rebase a stack of branches in one pass<a class="anchor" href="#rebase-update-refs" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: stacked pull requests rebase, update dependent branches, git rebase --update-refs</p>
+  <div class="variant">
+    <p class="when">Several branches sit on top of one another<span class="badge history">Rewrites history</span></p>
+    <div class="cmd"><code>git rebase --update-refs main</code><button class="copy" type="button" data-cmd="git rebase --update-refs main">Copy</button></div>
+    <p class="note">Moves every branch pointer in the stack, not just the one you are on.</p>
+    <div class="cmd"><code>git config --global rebase.updateRefs true</code><button class="copy" type="button" data-cmd="git config --global rebase.updateRefs true">Copy</button></div>
+    <p class="note">Makes it the default.</p>
+    <div class="cmd"><code>Branches checked out in a worktree are not updated</code><button class="copy" type="button" data-cmd="Branches checked out in a worktree are not updated">Copy</button></div>
+    <p class="note">Which bites exactly the people who use worktrees to review.</p>
+    <p class="undo"><span>Undo</span> git reflog, then git reset --hard to the previous tip of each branch</p>
+  </div>
+  <p class="seealso">See also: <a href="#rebase-onto">rebase onto</a>, <a href="#force-push-safely">force push safely</a></p>
+</article>
+<article class="result" id="devcontainer-docker-not-available">
+  <h2>Docker commands fail in my dev container setup<a class="anchor" href="#devcontainer-docker-not-available" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: docker in oncreatecommand, docker not available devcontainer, prebuild docker fails</p>
+  <div class="variant">
+    <p class="when">The command runs during creation<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Move it to postCreateCommand</code><button class="copy" type="button" data-cmd="Move it to postCreateCommand">Copy</button></div>
+    <p class="note">Docker-in-Docker works there but not in onCreateCommand, and therefore never during a prebuild.</p>
+    <div class="cmd"><code>If any lifecycle script exits non-zero, every later script is skipped</code><button class="copy" type="button" data-cmd="If any lifecycle script exits non-zero, every later script is skipped">Copy</button></div>
+    <p class="note">With no obvious error, which is why half-built containers look mysterious.</p>
+    <p class="undo"><span>Undo</span> Move the command back</p>
+  </div>
+  <p class="seealso">See also: <a href="#devcontainer">devcontainer</a>, <a href="#codespaces">codespaces</a>, <a href="#codespaces-costs-more-than-expected">codespaces costs more than expected</a></p>
+</article>
+<article class="result" id="copilot-instruction-files">
+  <h2>Give Copilot standing instructions for a repository<a class="anchor" href="#copilot-instruction-files" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: copilot-instructions.md, agents.md, custom instructions repo, teach copilot our style</p>
+  <div class="variant">
+    <p class="when">One file for the whole repository<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>.github/copilot-instructions.md</code><button class="copy" type="button" data-cmd=".github/copilot-instructions.md">Copy</button></div>
+    <p class="note">Applies repository-wide.</p>
+    <div class="cmd"><code>.github/instructions/NAME.instructions.md</code><button class="copy" type="button" data-cmd=".github/instructions/NAME.instructions.md">Copy</button></div>
+    <p class="note">Path-scoped. The applyTo key is required, and without it the file does nothing at all.</p>
+    <div class="cmd"><code>AGENTS.md</code><button class="copy" type="button" data-cmd="AGENTS.md">Copy</button></div>
+    <p class="note">One or many, and the nearest file in the directory tree wins. CLAUDE.md and GEMINI.md are root-only.</p>
+    <div class="cmd"><code>On github.com, path-specific instructions reach only the cloud agent and code review</code><button class="copy" type="button" data-cmd="On github.com, path-specific instructions reach only the cloud agent and code review">Copy</button></div>
+    <p class="note">Copilot Chat on the website ignores them.</p>
+    <p class="undo"><span>Undo</span> Delete the file</p>
+  </div>
+  <p class="seealso">See also: <a href="#gh-copilot">gh copilot</a>, <a href="#copilot-code-review">copilot code review</a></p>
+</article>
+<article class="result" id="copilot-mcp-secrets">
+  <h2>Give the Copilot cloud agent access to an MCP server<a class="anchor" href="#copilot-mcp-secrets" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: copilot mcp configuration, copilot_mcp secret, agent mcp server github</p>
+  <div class="variant">
+    <p class="when">The server needs a token<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Settings, Copilot, Cloud agent, MCP configuration</code><button class="copy" type="button" data-cmd="Settings, Copilot, Cloud agent, MCP configuration">Copy</button></div>
+    <p class="note">Where the server list lives.</p>
+    <div class="cmd"><code>Name the secret COPILOT_MCP_&lt;NAME&gt;</code><button class="copy" type="button" data-cmd="Name the secret COPILOT_MCP_&lt;NAME&gt;">Copy</button></div>
+    <p class="note">Only secrets carrying that prefix are visible to the MCP configuration. A correctly written secret under any other name is silently invisible.</p>
+    <p class="undo"><span>Undo</span> Remove the server from the configuration</p>
+  </div>
+  <p class="seealso">See also: <a href="#copilot-instruction-files">copilot instruction files</a>, <a href="#gh-copilot">gh copilot</a></p>
+</article>
+<article class="result" id="github-mcp-server-scope">
+  <h2>Limit what the GitHub MCP server can see or do<a class="anchor" href="#github-mcp-server-scope" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: mcp readonly github, x-mcp-toolsets, github mcp lockdown, restrict mcp tools</p>
+  <div class="variant">
+    <p class="when">Reducing what an agent can reach<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://api.githubcopilot.com/mcp/readonly</code><button class="copy" type="button" data-cmd="https://api.githubcopilot.com/mcp/readonly">Copy</button></div>
+    <p class="note">Read-only. The default /mcp/ URL exposes only context, repos, issues, pull_requests and users, which is why teams conclude other tools do not exist.</p>
+    <div class="cmd"><code>https://api.githubcopilot.com/mcp/x/all</code><button class="copy" type="button" data-cmd="https://api.githubcopilot.com/mcp/x/all">Copy</button></div>
+    <p class="note">Every toolset.</p>
+    <div class="cmd"><code>X-MCP-Toolsets: repos,issues</code><button class="copy" type="button" data-cmd="X-MCP-Toolsets: repos,issues">Copy</button></div>
+    <p class="note">Choose toolsets per request. X-MCP-Readonly and X-MCP-Lockdown are the other two headers.</p>
+    <div class="cmd"><code>X-MCP-Lockdown: true</code><button class="copy" type="button" data-cmd="X-MCP-Lockdown: true">Copy</button></div>
+    <p class="note">Filters public issue and pull request detail, because those bodies are attacker-controlled text flowing straight into an agent&#x27;s context.</p>
+    <p class="undo"><span>Undo</span> Point the client back at the default URL</p>
+  </div>
+  <p class="seealso">See also: <a href="#copilot-mcp-secrets">copilot mcp secrets</a>, <a href="#github-api">github api</a></p>
+</article>
+<article class="result" id="copilot-code-review-setup">
+  <h2>Copilot&#x27;s review misses type errors and imports<a class="anchor" href="#copilot-code-review-setup" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: copilot review no dependencies, copilot-code-review.yml, improve copilot review</p>
+  <div class="variant">
+    <p class="when">Reviews run without your project installed<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>.github/workflows/copilot-code-review.yml</code><button class="copy" type="button" data-cmd=".github/workflows/copilot-code-review.yml">Copy</button></div>
+    <p class="note">Its own setup file, separate from the cloud agent&#x27;s. Almost nobody knows it exists, and without it reviews run with no dependencies, so Copilot cannot resolve imports.</p>
+    <div class="cmd"><code>REVIEW.md is read too</code><button class="copy" type="button" data-cmd="REVIEW.md is read too">Copy</button></div>
+    <p class="note">Along with copilot-instructions.md, instructions/**, AGENTS.md, CLAUDE.md and GEMINI.md. There is no copilot-review-instructions.md; that path is a common invention.</p>
+    <div class="cmd"><code>Copilot always leaves a Comment review</code><button class="copy" type="button" data-cmd="Copilot always leaves a Comment review">Copy</button></div>
+    <p class="note">It never approves, never blocks, and never counts toward required approvals.</p>
+    <p class="undo"><span>Undo</span> Delete the workflow file</p>
+  </div>
+  <p class="seealso">See also: <a href="#copilot-code-review">copilot code review</a>, <a href="#copilot-instruction-files">copilot instruction files</a></p>
+</article>
+<article class="result" id="immutable-releases">
+  <h2>Stop a published release from being changed<a class="anchor" href="#immutable-releases" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: lock a release, immutable release github, prevent tag moving</p>
+  <div class="variant">
+    <p class="when">You need the artefacts to be tamper-evident<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>Enable immutable releases in repository or organisation settings</code><button class="copy" type="button" data-cmd="Enable immutable releases in repository or organisation settings">Copy</button></div>
+    <p class="note">The tag is locked to a commit and the attached files cannot change.</p>
+    <div class="cmd"><code>Attach every asset before publishing</code><button class="copy" type="button" data-cmd="Attach every asset before publishing">Copy</button></div>
+    <p class="note">Adding one afterwards is impossible, so the draft-first sequence is mandatory rather than advisory.</p>
+    <div class="cmd"><code>Deleting the release burns the tag name</code><button class="copy" type="button" data-cmd="Deleting the release burns the tag name">Copy</button></div>
+    <p class="note">You may delete the tag, but you can never reuse that name.</p>
+    <p class="undo"><span>Undo</span> Deleting the release is possible, but the tag name is gone permanently</p>
+  </div>
+  <p class="seealso">See also: <a href="#create-release">create release</a>, <a href="#download-release">download release</a>, <a href="#branch-vs-tag-vs-release">branch vs tag vs release</a></p>
+</article>
+<article class="result" id="release-notes-shaping">
+  <h2>Control what appears in autogenerated release notes<a class="anchor" href="#release-notes-shaping" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: release.yml categories, exclude labels release notes, group release notes</p>
+  <div class="variant">
+    <p class="when">The generated notes are noisy<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>.github/release.yml</code><button class="copy" type="button" data-cmd=".github/release.yml">Copy</button></div>
+    <p class="note">One top-level changelog key, with exclude.labels, exclude.authors and an ordered categories list.</p>
+    <div class="cmd"><code>Categories are evaluated in order</code><button class="copy" type="button" data-cmd="Categories are evaluated in order">Copy</button></div>
+    <p class="note">And the * label is the catch-all, so put it last or it swallows everything.</p>
+    <p class="undo"><span>Undo</span> Delete the file to return to the default notes</p>
+  </div>
+  <p class="seealso">See also: <a href="#create-release">create release</a>, <a href="#immutable-releases">immutable releases</a>, <a href="#download-release">download release</a></p>
+</article>
+<article class="result" id="codeowners-order">
+  <h2>CODEOWNERS is requesting the wrong reviewers<a class="anchor" href="#codeowners-order" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: codeowners not working, codeowners precedence, wrong code owner assigned</p>
+  <div class="variant">
+    <p class="when">The file parses but assigns badly<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>The last matching pattern wins</code><button class="copy" type="button" data-cmd="The last matching pattern wins">Copy</button></div>
+    <p class="note">So a catch-all such as * @org/everyone at the bottom, which reads like a fallback, disables every specific rule above it. Put it first.</p>
+    <div class="cmd"><code>docs/* matches one level, /docs/ is recursive</code><button class="copy" type="button" data-cmd="docs/* matches one level, /docs/ is recursive">Copy</button></div>
+    <p class="note">Nothing warns you, and nested files silently go to the wrong owner.</p>
+    <div class="cmd"><code>Invalid lines are skipped silently</code><button class="copy" type="button" data-cmd="Invalid lines are skipped silently">Copy</button></div>
+    <p class="note">As is any team without write access to the repository.</p>
+    <div class="cmd"><code>The file is read from the pull request&#x27;s base branch</code><button class="copy" type="button" data-cmd="The file is read from the pull request&#x27;s base branch">Copy</button></div>
+    <p class="note">So a pull request that adds itself as an owner cannot apply that rule to itself.</p>
+    <p class="undo"><span>Undo</span> Restore the previous CODEOWNERS file</p>
+  </div>
+  <p class="seealso">See also: <a href="#codeowners">codeowners</a>, <a href="#branch-protection">branch protection</a></p>
+</article>
 <!-- answers:end -->
       </div>
     </section>

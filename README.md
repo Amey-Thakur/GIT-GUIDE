@@ -147,7 +147,7 @@ This guide answers what you are trying to *do* with Git and GitHub. Its companio
 
 URL parameters that change what a page gives you, the one-word hostname swaps that turn a repository into an editor or a prompt or a server your AI can read, keyboard shortcuts nobody documents, the search syntax with its undocumented index limits, and a list of the tips every other article still repeats that stopped working.
 
-Sixteen of its answers live here too, searchable alongside everything else, because a question about GitHub is still a question you arrive at from the same search box.
+Forty-seven of its answers live here too, searchable alongside everything else, because a question about GitHub is still a question you arrive at from the same search box.
 
 <br>
 
