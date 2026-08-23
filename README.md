@@ -132,6 +132,24 @@ Every answer and every decoded error has its own link, so when somebody asks a G
 
 <br>
 
+## Its companion repository
+
+This guide answers what you are trying to *do* with Git and GitHub. Its companion answers what GitHub can do that you never knew about.
+
+<div align="center">
+
+[<img src="https://raw.githubusercontent.com/Amey-Thakur/GITHUB-TRICKS/main/.github/social/address-bar.png" alt="GitHub Tricks: the GitHub you did not know you had" width="560">](https://github.com/Amey-Thakur/GITHUB-TRICKS)
+
+**[GITHUB-TRICKS](https://github.com/Amey-Thakur/GITHUB-TRICKS)**
+
+</div>
+
+URL parameters that change what a page gives you, the one-word hostname swaps that turn a repository into an editor or a prompt or a server your AI can read, keyboard shortcuts nobody documents, the search syntax with its undocumented index limits, and a list of the tips every other article still repeats that stopped working.
+
+Sixteen of its answers live here too, searchable alongside everything else, because a question about GitHub is still a question you arrive at from the same search box.
+
+<br>
+
 ## Ask, answer, build on it
 
 Every answer on the site also lives in [Discussions](https://github.com/Amey-Thakur/GIT-GUIDE/discussions), where you can ask follow-ups or request answers that are missing. Real questions decide what gets added next.

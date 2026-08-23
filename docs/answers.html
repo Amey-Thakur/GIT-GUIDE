@@ -14077,6 +14077,220 @@
   </div>
   <p class="seealso">See also: <a href="#access-tokens">access tokens</a>, <a href="#stop-asking-for-username">stop asking for username</a>, <a href="#stop-committing-passwords">stop committing passwords</a></p>
 </article>
+<article class="result" id="link-to-a-line-in-a-readme">
+  <h2>Link to one line of a README or Markdown file<a class="anchor" href="#link-to-a-line-in-a-readme" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: link to a line in markdown, readme line anchor, permalink to a readme line, highlight a line in a md file, plain=1</p>
+  <div class="variant">
+    <p class="when">The file renders as Markdown, so it has no line numbers<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://github.com/&lt;owner&gt;/&lt;repo&gt;/blob/&lt;sha&gt;/README.md?plain=1#L14</code><button class="copy" type="button" data-cmd="https://github.com/&lt;owner&gt;/&lt;repo&gt;/blob/&lt;sha&gt;/README.md?plain=1#L14">Copy</button></div>
+    <p class="note">plain=1 turns off Markdown rendering, which is what gives the file line numbers. Without it the #L14 anchor resolves to nothing and the link quietly lands at the top of the page.</p>
+    <div class="cmd"><code>Press y first to pin the URL to a commit</code><button class="copy" type="button" data-cmd="Press y first to pin the URL to a commit">Copy</button></div>
+    <p class="note">A branch URL moves when the file changes. The commit form keeps pointing at the line you meant.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#readme-structure">readme structure</a>, <a href="#compare-on-github">compare on github</a>, <a href="#readme-not-rendering">readme not rendering</a></p>
+</article>
+<article class="result" id="hide-whitespace-in-a-diff">
+  <h2>Hide whitespace-only changes in a diff on GitHub<a class="anchor" href="#hide-whitespace-in-a-diff" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: ignore whitespace github, reindentation noise in a pull request, w=1, diff without formatting changes</p>
+  <div class="variant">
+    <p class="when">A reformatting commit is burying the real change<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://github.com/&lt;owner&gt;/&lt;repo&gt;/pull/&lt;number&gt;/files?w=1</code><button class="copy" type="button" data-cmd="https://github.com/&lt;owner&gt;/&lt;repo&gt;/pull/&lt;number&gt;/files?w=1">Copy</button></div>
+    <p class="note">Works on a pull request, a commit, and a compare URL.</p>
+    <div class="cmd"><code>https://github.com/&lt;owner&gt;/&lt;repo&gt;/commit/&lt;sha&gt;?diff=split&amp;w=1</code><button class="copy" type="button" data-cmd="https://github.com/&lt;owner&gt;/&lt;repo&gt;/commit/&lt;sha&gt;?diff=split&amp;w=1">Copy</button></div>
+    <p class="note">Combines with the split view. Both parameters are undocumented but long-standing.</p>
+    <p class="undo"><span>Undo</span> Remove the parameter, or use w=0</p>
+  </div>
+  <p class="seealso">See also: <a href="#compare-on-github">compare on github</a>, <a href="#check-a-pr-is-safe">check a pr is safe</a>, <a href="#review-large-pr">review large pr</a></p>
+</article>
+<article class="result" id="get-someones-public-keys">
+  <h2>Get a GitHub user&#x27;s public SSH or PGP keys<a class="anchor" href="#get-someones-public-keys" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: download someone&#x27;s ssh key, authorized_keys from github, user public key url, github user gpg key</p>
+  <div class="variant">
+    <p class="when">Populating authorized_keys, or verifying a signature<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>curl https://github.com/&lt;username&gt;.keys</code><button class="copy" type="button" data-cmd="curl https://github.com/&lt;username&gt;.keys">Copy</button></div>
+    <p class="note">One SSH public key per line, ready to append to authorized_keys.</p>
+    <div class="cmd"><code>curl https://github.com/&lt;username&gt;.gpg</code><button class="copy" type="button" data-cmd="curl https://github.com/&lt;username&gt;.gpg">Copy</button></div>
+    <p class="note">An armored PGP block. For an account with no key this does not 404: it returns a well-formed but empty block, so check the body rather than the status code.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#ssh-key-github">ssh key github</a>, <a href="#sign-commits">sign commits</a>, <a href="#verify-signatures">verify signatures</a></p>
+</article>
+<article class="result" id="download-a-repo-without-git">
+  <h2>Download a repository without cloning it<a class="anchor" href="#download-a-repo-without-git" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: get a repo as a zip, tarball url github, download without git installed, archive url</p>
+  <div class="variant">
+    <p class="when">You want the files, not the history<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>curl -L -o repo.tar.gz https://github.com/&lt;owner&gt;/&lt;repo&gt;/archive/refs/heads/main.tar.gz</code><button class="copy" type="button" data-cmd="curl -L -o repo.tar.gz https://github.com/&lt;owner&gt;/&lt;repo&gt;/archive/refs/heads/main.tar.gz">Copy</button></div>
+    <p class="note">Any branch. Swap heads for tags to take a tag, and .zip for a zip.</p>
+    <div class="cmd"><code>curl -L -o repo.zip https://github.com/&lt;owner&gt;/&lt;repo&gt;/archive/&lt;full-sha&gt;.zip</code><button class="copy" type="button" data-cmd="curl -L -o repo.zip https://github.com/&lt;owner&gt;/&lt;repo&gt;/archive/&lt;full-sha&gt;.zip">Copy</button></div>
+    <p class="note">A commit works too. All of these redirect to codeload.github.com, which strict firewalls block, and none of them include the wiki.</p>
+    <p class="undo"><span>Undo</span> Delete the downloaded archive</p>
+  </div>
+  <p class="seealso">See also: <a href="#download-single-file">download single file</a>, <a href="#clone-at-commit">clone at commit</a>, <a href="#repo-size-vs-clone-time">repo size vs clone time</a></p>
+</article>
+<article class="result" id="find-unclaimed-issues">
+  <h2>Find issues nobody is working on<a class="anchor" href="#find-unclaimed-issues" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: issues with no pull request, unclaimed issues, good first issue nobody took, linked pr filter</p>
+  <div class="variant">
+    <p class="when">Looking for something to pick up in a busy repository<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>repo:&lt;owner&gt;/&lt;repo&gt; is:issue is:open -linked:pr</code><button class="copy" type="button" data-cmd="repo:&lt;owner&gt;/&lt;repo&gt; is:issue is:open -linked:pr">Copy</button></div>
+    <p class="note">Paste into the issue search box. Only a closing reference counts, so an issue merely mentioned by a pull request still shows as unclaimed.</p>
+    <div class="cmd"><code>gh issue list --search &#x27;is:open -linked:pr&#x27; --repo &lt;owner&gt;/&lt;repo&gt;</code><button class="copy" type="button" data-cmd="gh issue list --search &#x27;is:open -linked:pr&#x27; --repo &lt;owner&gt;/&lt;repo&gt;">Copy</button></div>
+    <p class="note">The same filter from the terminal.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#issue-search">issue search</a>, <a href="#issue-develop">issue develop</a>, <a href="#first-pull-request-nerves">first pull request nerves</a></p>
+</article>
+<article class="result" id="refresh-a-stale-badge">
+  <h2>A badge or external image in the README will not update<a class="anchor" href="#refresh-a-stale-badge" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: badge stuck on old value, camo cache, readme image not refreshing, shields badge stale</p>
+  <div class="variant">
+    <p class="when">The source updated but GitHub still shows the old image<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>curl -X PURGE https://camo.githubusercontent.com/&lt;hash&gt;</code><button class="copy" type="button" data-cmd="curl -X PURGE https://camo.githubusercontent.com/&lt;hash&gt;">Copy</button></div>
+    <p class="note">GitHub proxies every external image through camo and caches it. Right-click the stale badge and copy its image address to get this URL.</p>
+    <div class="cmd"><code>Fix the origin&#x27;s Cache-Control header</code><button class="copy" type="button" data-cmd="Fix the origin&#x27;s Cache-Control header">Copy</button></div>
+    <p class="note">The durable fix. GitHub&#x27;s own docs ask you to use PURGE sparingly, because it forces every viewer to refetch.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo, the cache simply refills</p>
+  </div>
+  <p class="seealso">See also: <a href="#readme-badges">readme badges</a>, <a href="#readme-images">readme images</a>, <a href="#honest-readme-badges">honest readme badges</a></p>
+</article>
+<article class="result" id="repo-as-an-mcp-server">
+  <h2>Let an AI assistant read a repository without installing anything<a class="anchor" href="#repo-as-an-mcp-server" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: mcp server for a github repo, give claude a repository, point an llm at a repo, gitmcp</p>
+  <div class="variant">
+    <p class="when">Your assistant supports MCP<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://gitmcp.io/&lt;owner&gt;/&lt;repo&gt;</code><button class="copy" type="button" data-cmd="https://gitmcp.io/&lt;owner&gt;/&lt;repo&gt;">Copy</button></div>
+    <p class="note">Use this as the MCP server URL. Public repositories only.</p>
+    <div class="cmd"><code>https://gitmcp.io/docs</code><button class="copy" type="button" data-cmd="https://gitmcp.io/docs">Copy</button></div>
+    <p class="note">A floating endpoint that can be pointed at any repository during a session. Convenient, and the riskier of the two, so prefer the scoped form.</p>
+    <p class="undo"><span>Undo</span> Remove the server from your assistant&#x27;s configuration</p>
+  </div>
+  <p class="seealso">See also: <a href="#repo-as-one-prompt">repo as one prompt</a>, <a href="#github-api">github api</a>, <a href="#git-vs-github">git vs github</a></p>
+</article>
+<article class="result" id="repo-as-one-prompt">
+  <h2>Turn a whole repository into one text file for a prompt<a class="anchor" href="#repo-as-one-prompt" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: repo to text for llm, codebase as a single file, paste a repo into chatgpt, gitingest</p>
+  <div class="variant">
+    <p class="when">You need the code as context, not as a checkout<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://gitingest.com/&lt;owner&gt;/&lt;repo&gt;</code><button class="copy" type="button" data-cmd="https://gitingest.com/&lt;owner&gt;/&lt;repo&gt;">Copy</button></div>
+    <p class="note">Swap github for gitingest in any repository URL. The web form skips files over 50 kB by default, so lockfiles and generated code drop out silently.</p>
+    <div class="cmd"><code>pip install gitingest &amp;&amp; gitingest https://github.com/&lt;owner&gt;/&lt;repo&gt;</code><button class="copy" type="button" data-cmd="pip install gitingest &amp;&amp; gitingest https://github.com/&lt;owner&gt;/&lt;repo&gt;">Copy</button></div>
+    <p class="note">The same thing locally, where you control the size limit.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#repo-as-an-mcp-server">repo as an mcp server</a>, <a href="#download-a-repo-without-git">download a repo without git</a>, <a href="#repo-size-vs-clone-time">repo size vs clone time</a></p>
+</article>
+<article class="result" id="read-a-repo-in-vs-code-online">
+  <h2>Read a repository in VS Code without cloning it<a class="anchor" href="#read-a-repo-in-vs-code-online" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: vs code in the browser, github1s, browse code in an editor online, open repo in web editor</p>
+  <div class="variant">
+    <p class="when">Reading only<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>https://github1s.com/&lt;owner&gt;/&lt;repo&gt;</code><button class="copy" type="button" data-cmd="https://github1s.com/&lt;owner&gt;/&lt;repo&gt;">Copy</button></div>
+    <p class="note">Insert 1s after github. Read-only, and a private repository needs a token pasted into the status bar.</p>
+    <div class="cmd"><code>Press . on any repository page</code><button class="copy" type="button" data-cmd="Press . on any repository page">Copy</button></div>
+    <p class="note">GitHub&#x27;s own editor at github.dev, which can write. There is no compute behind it, so no terminal and no builds.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#edit-on-github">edit on github</a>, <a href="#codespaces">codespaces</a>, <a href="#download-single-file">download single file</a></p>
+</article>
+<article class="result" id="fetch-every-pull-request-ref">
+  <h2>Fetch every pull request branch, including closed ones<a class="anchor" href="#fetch-every-pull-request-ref" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: get all prs locally, refs/pull refspec, checkout any pull request, list every pr ref</p>
+  <div class="variant">
+    <p class="when">You want them all, once<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>git config --add remote.origin.fetch &#x27;+refs/pull/*/head:refs/remotes/origin/pr/*&#x27;</code><button class="copy" type="button" data-cmd="git config --add remote.origin.fetch &#x27;+refs/pull/*/head:refs/remotes/origin/pr/*&#x27;">Copy</button></div>
+    <p class="note">Then git fetch origin. GitHub never deletes a pull request ref, so this list only ever grows.</p>
+    <div class="cmd"><code>git ls-remote origin &#x27;refs/pull/&lt;number&gt;/*&#x27;</code><button class="copy" type="button" data-cmd="git ls-remote origin &#x27;refs/pull/&lt;number&gt;/*&#x27;">Copy</button></div>
+    <p class="note">Check what exists first. The /head ref is always there; the /merge ref is a simulated merge GitHub creates only when it can, and it is missing far more often than people expect.</p>
+    <p class="undo"><span>Undo</span> git config --unset-all remote.origin.fetch, then re-add the default refspec</p>
+  </div>
+  <p class="seealso">See also: <a href="#branch-from-a-pull-request">branch from a pull request</a>, <a href="#check-out-a-pull-request-diff-only">check out a pull request diff only</a>, <a href="#check-a-pr-is-safe">check a pr is safe</a></p>
+</article>
+<article class="result" id="gh-api-sends-strings-not-numbers">
+  <h2>gh api rejects my value or ignores my boolean<a class="anchor" href="#gh-api-sends-strings-not-numbers" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: gh api -f vs -F, gh api true not working, gh api sends string, gh api type coercion</p>
+  <div class="variant">
+    <p class="when">A boolean or number flag appears to do nothing<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>gh api --method PATCH repos/{owner}/{repo} -F has_issues=false</code><button class="copy" type="button" data-cmd="gh api --method PATCH repos/{owner}/{repo} -F has_issues=false">Copy</button></div>
+    <p class="note">-F types the value. -f would send the string &quot;false&quot;, which endpoints reject or ignore, and that is almost always the cause.</p>
+    <div class="cmd"><code>gh api -X GET search/issues -f q=&#x27;is:open&#x27;</code><button class="copy" type="button" data-cmd="gh api -X GET search/issues -f q=&#x27;is:open&#x27;">Copy</button></div>
+    <p class="note">Any -f or -F also flips the request to POST, so a GET endpoint needs -X GET spelled out.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#github-api">github api</a>, <a href="#gh-api-pagination">gh api pagination</a>, <a href="#github-cli-config">github cli config</a></p>
+</article>
+<article class="result" id="required-check-stuck-pending">
+  <h2>A required check sits pending forever and blocks the merge<a class="anchor" href="#required-check-stuck-pending" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: expected waiting for status to be reported, required check never runs, path filter blocks pull request, skipped check blocks merge</p>
+  <div class="variant">
+    <p class="when">The workflow is skipped by a paths or branches filter<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>A skipped workflow is not a passed workflow</code><button class="copy" type="button" data-cmd="A skipped workflow is not a passed workflow">Copy</button></div>
+    <p class="note">GitHub leaves the check Pending forever and no timeout converts it. This is by design and catches almost everyone.</p>
+    <div class="cmd"><code>Add a second workflow with the same job name on the complementary paths that exits 0</code><button class="copy" type="button" data-cmd="Add a second workflow with the same job name on the complementary paths that exits 0">Copy</button></div>
+    <p class="note">The required check then always reports, whichever files changed.</p>
+    <p class="undo"><span>Undo</span> Remove the second workflow if you change approach</p>
+  </div>
+  <p class="seealso">See also: <a href="#actions-conditionals">actions conditionals</a>, <a href="#branch-protection">branch protection</a>, <a href="#github-actions-start">github actions start</a></p>
+</article>
+<article class="result" id="codespaces-costs-more-than-expected">
+  <h2>My Codespaces bill is higher than the hours I worked<a class="anchor" href="#codespaces-costs-more-than-expected" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: codespaces core hours, codespace quota used up fast, codespaces billing surprise, why is my codespace expensive</p>
+  <div class="variant">
+    <p class="when">The quota disappeared faster than wall-clock time<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>The free quota is core-hours, not hours</code><button class="copy" type="button" data-cmd="The free quota is core-hours, not hours">Copy</button></div>
+    <p class="note">120 core-hours is 60 hours on a 2-core machine and 15 hours on an 8-core one. The docs column reads Compute time, which is why people read it as wall-clock.</p>
+    <div class="cmd"><code>gh codespace stop -c &lt;codespace-name&gt;</code><button class="copy" type="button" data-cmd="gh codespace stop -c &lt;codespace-name&gt;">Copy</button></div>
+    <p class="note">Closing the browser tab does not stop a codespace. It keeps billing until the idle timeout, 30 minutes by default.</p>
+    <div class="cmd"><code>gh codespace list</code><button class="copy" type="button" data-cmd="gh codespace list">Copy</button></div>
+    <p class="note">An asterisk after the branch means uncommitted or unpushed work. Deleting a codespace does not reduce this month&#x27;s storage bill, only the rate it accrues.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo, but stop idle codespaces to slow the accrual</p>
+  </div>
+  <p class="seealso">See also: <a href="#codespaces">codespaces</a>, <a href="#actions-billing">actions billing</a>, <a href="#codespaces-dotfiles">codespaces dotfiles</a></p>
+</article>
+<article class="result" id="merge-queue-never-merges">
+  <h2>The merge queue accepts my pull request but never merges it<a class="anchor" href="#merge-queue-never-merges" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: merge queue stuck, merge_group trigger, merge queue checks never run, queued forever github</p>
+  <div class="variant">
+    <p class="when">Required checks never start once the pull request enters the queue<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>on:
+  merge_group:</code><button class="copy" type="button" data-cmd="on:
+  merge_group:">Copy</button></div>
+    <p class="note">Every workflow whose check is required must listen for this event. Without it GitHub does not trigger the checks at all and the queue waits indefinitely.</p>
+    <div class="cmd"><code>gh-readonly-queue/&lt;base-branch&gt;</code><button class="copy" type="button" data-cmd="gh-readonly-queue/&lt;base-branch&gt;">Copy</button></div>
+    <p class="note">The temporary branches the queue builds on. Seeing them is a sign the queue is working, not a stray branch to delete.</p>
+    <p class="undo"><span>Undo</span> Remove the trigger if you stop using a merge queue</p>
+  </div>
+  <p class="seealso">See also: <a href="#required-check-stuck-pending">required check stuck pending</a>, <a href="#branch-protection">branch protection</a>, <a href="#github-actions-start">github actions start</a></p>
+</article>
+<article class="result" id="readme-anchor-breaks-off-github">
+  <h2>My README anchor link works on GitHub but breaks everywhere else<a class="anchor" href="#readme-anchor-breaks-off-github" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: user-content prefix, readme anchor not working elsewhere, heading link broken on npm, markdown anchor id changed</p>
+  <div class="variant">
+    <p class="when">The link works when you click it, and fails for a crawler or another host<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>GitHub rewrites every id you write to user-content-&lt;your-id&gt;</code><button class="copy" type="button" data-cmd="GitHub rewrites every id you write to user-content-&lt;your-id&gt;">Copy</button></div>
+    <p class="note">So &lt;a name=&quot;install&quot;&gt; becomes name=&quot;user-content-install&quot;. On github.com the client-side script still resolves your original link, which is why it looks fine to you.</p>
+    <div class="cmd"><code>Link to the heading GitHub generated instead</code><button class="copy" type="button" data-cmd="Link to the heading GitHub generated instead">Copy</button></div>
+    <p class="note">Spaces become single hyphens, and a stripped ampersand leaves its spacing behind, so C++ &amp; C# becomes #c--c with two hyphens.</p>
+    <p class="undo"><span>Undo</span> Nothing to undo</p>
+  </div>
+  <p class="seealso">See also: <a href="#readme-structure">readme structure</a>, <a href="#readme-not-rendering">readme not rendering</a>, <a href="#link-to-a-line-in-a-readme">link to a line in a readme</a></p>
+</article>
+<article class="result" id="readme-callout-colours">
+  <h2>Add a coloured note or warning box to a README<a class="anchor" href="#readme-callout-colours" aria-label="Link to this answer">#</a></h2>
+  <p class="aka">Also asked as: github alerts, note tip important warning caution, coloured callout markdown, admonition github</p>
+  <div class="variant">
+    <p class="when">You want the blue, green, purple, amber or red box<span class="badge safe">Safe</span></p>
+    <div class="cmd"><code>&gt; [!NOTE]
+&gt; Context worth knowing.</code><button class="copy" type="button" data-cmd="&gt; [!NOTE]
+&gt; Context worth knowing.">Copy</button></div>
+    <p class="note">The five types are NOTE blue, TIP green, IMPORTANT purple, WARNING amber and CAUTION red. Keywords are case-insensitive.</p>
+    <div class="cmd"><code>The marker must be the first line of the blockquote</code><button class="copy" type="button" data-cmd="The marker must be the first line of the blockquote">Copy</button></div>
+    <p class="note">And alerts do not nest: inside a details block, a list item or another blockquote they silently degrade to plain text, which is why the popular collapsible-with-a-callout pattern does not work.</p>
+    <p class="undo"><span>Undo</span> Delete the marker line</p>
+  </div>
+  <p class="seealso">See also: <a href="#readme-structure">readme structure</a>, <a href="#readme-images">readme images</a>, <a href="#readme-badges">readme badges</a></p>
+</article>
 <!-- answers:end -->
       </div>
     </section>

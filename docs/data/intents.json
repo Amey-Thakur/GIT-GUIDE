@@ -6,7 +6,7 @@
   "_tech": "JSON, consumed by app.js and served raw for scripts and AI agents",
   "_description": "Seed set covers the highest-voted Git questions on Stack Overflow plus daily essentials. Modern commands (switch, restore) first, legacy forms noted.",
   "_date": "2026-08-07",
-  "updated": "2026-08-08",
+  "updated": "2026-08-22",
   "danger_levels": {
     "safe": "Changes nothing you cannot get back.",
     "history": "Rewrites commit history. Coordinate before doing this to shared branches.",
@@ -32758,6 +32758,523 @@
         "access-tokens",
         "stop-asking-for-username",
         "stop-committing-passwords"
+      ]
+    },
+    {
+      "id": "link-to-a-line-in-a-readme",
+      "q": "Link to one line of a README or Markdown file",
+      "aka": [
+        "link to a line in markdown",
+        "readme line anchor",
+        "permalink to a readme line",
+        "highlight a line in a md file",
+        "plain=1"
+      ],
+      "seealso": [
+        "readme-structure",
+        "compare-on-github",
+        "readme-not-rendering"
+      ],
+      "variants": [
+        {
+          "when": "The file renders as Markdown, so it has no line numbers",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "https://github.com/<owner>/<repo>/blob/<sha>/README.md?plain=1#L14",
+              "n": "plain=1 turns off Markdown rendering, which is what gives the file line numbers. Without it the #L14 anchor resolves to nothing and the link quietly lands at the top of the page."
+            },
+            {
+              "c": "Press y first to pin the URL to a commit",
+              "n": "A branch URL moves when the file changes. The commit form keeps pointing at the line you meant."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hide-whitespace-in-a-diff",
+      "q": "Hide whitespace-only changes in a diff on GitHub",
+      "aka": [
+        "ignore whitespace github",
+        "reindentation noise in a pull request",
+        "w=1",
+        "diff without formatting changes"
+      ],
+      "seealso": [
+        "compare-on-github",
+        "check-a-pr-is-safe",
+        "review-large-pr"
+      ],
+      "variants": [
+        {
+          "when": "A reformatting commit is burying the real change",
+          "danger": "safe",
+          "undo": "Remove the parameter, or use w=0",
+          "cmds": [
+            {
+              "c": "https://github.com/<owner>/<repo>/pull/<number>/files?w=1",
+              "n": "Works on a pull request, a commit, and a compare URL."
+            },
+            {
+              "c": "https://github.com/<owner>/<repo>/commit/<sha>?diff=split&w=1",
+              "n": "Combines with the split view. Both parameters are undocumented but long-standing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "get-someones-public-keys",
+      "q": "Get a GitHub user's public SSH or PGP keys",
+      "aka": [
+        "download someone's ssh key",
+        "authorized_keys from github",
+        "user public key url",
+        "github user gpg key"
+      ],
+      "seealso": [
+        "ssh-key-github",
+        "sign-commits",
+        "verify-signatures"
+      ],
+      "variants": [
+        {
+          "when": "Populating authorized_keys, or verifying a signature",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "curl https://github.com/<username>.keys",
+              "n": "One SSH public key per line, ready to append to authorized_keys."
+            },
+            {
+              "c": "curl https://github.com/<username>.gpg",
+              "n": "An armored PGP block. For an account with no key this does not 404: it returns a well-formed but empty block, so check the body rather than the status code."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "download-a-repo-without-git",
+      "q": "Download a repository without cloning it",
+      "aka": [
+        "get a repo as a zip",
+        "tarball url github",
+        "download without git installed",
+        "archive url"
+      ],
+      "seealso": [
+        "download-single-file",
+        "clone-at-commit",
+        "repo-size-vs-clone-time"
+      ],
+      "variants": [
+        {
+          "when": "You want the files, not the history",
+          "danger": "safe",
+          "undo": "Delete the downloaded archive",
+          "cmds": [
+            {
+              "c": "curl -L -o repo.tar.gz https://github.com/<owner>/<repo>/archive/refs/heads/main.tar.gz",
+              "n": "Any branch. Swap heads for tags to take a tag, and .zip for a zip."
+            },
+            {
+              "c": "curl -L -o repo.zip https://github.com/<owner>/<repo>/archive/<full-sha>.zip",
+              "n": "A commit works too. All of these redirect to codeload.github.com, which strict firewalls block, and none of them include the wiki."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "find-unclaimed-issues",
+      "q": "Find issues nobody is working on",
+      "aka": [
+        "issues with no pull request",
+        "unclaimed issues",
+        "good first issue nobody took",
+        "linked pr filter"
+      ],
+      "seealso": [
+        "issue-search",
+        "issue-develop",
+        "first-pull-request-nerves"
+      ],
+      "variants": [
+        {
+          "when": "Looking for something to pick up in a busy repository",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "repo:<owner>/<repo> is:issue is:open -linked:pr",
+              "n": "Paste into the issue search box. Only a closing reference counts, so an issue merely mentioned by a pull request still shows as unclaimed."
+            },
+            {
+              "c": "gh issue list --search 'is:open -linked:pr' --repo <owner>/<repo>",
+              "n": "The same filter from the terminal."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "refresh-a-stale-badge",
+      "q": "A badge or external image in the README will not update",
+      "aka": [
+        "badge stuck on old value",
+        "camo cache",
+        "readme image not refreshing",
+        "shields badge stale"
+      ],
+      "seealso": [
+        "readme-badges",
+        "readme-images",
+        "honest-readme-badges"
+      ],
+      "variants": [
+        {
+          "when": "The source updated but GitHub still shows the old image",
+          "danger": "safe",
+          "undo": "Nothing to undo, the cache simply refills",
+          "cmds": [
+            {
+              "c": "curl -X PURGE https://camo.githubusercontent.com/<hash>",
+              "n": "GitHub proxies every external image through camo and caches it. Right-click the stale badge and copy its image address to get this URL."
+            },
+            {
+              "c": "Fix the origin's Cache-Control header",
+              "n": "The durable fix. GitHub's own docs ask you to use PURGE sparingly, because it forces every viewer to refetch."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repo-as-an-mcp-server",
+      "q": "Let an AI assistant read a repository without installing anything",
+      "aka": [
+        "mcp server for a github repo",
+        "give claude a repository",
+        "point an llm at a repo",
+        "gitmcp"
+      ],
+      "seealso": [
+        "repo-as-one-prompt",
+        "github-api",
+        "git-vs-github"
+      ],
+      "variants": [
+        {
+          "when": "Your assistant supports MCP",
+          "danger": "safe",
+          "undo": "Remove the server from your assistant's configuration",
+          "cmds": [
+            {
+              "c": "https://gitmcp.io/<owner>/<repo>",
+              "n": "Use this as the MCP server URL. Public repositories only."
+            },
+            {
+              "c": "https://gitmcp.io/docs",
+              "n": "A floating endpoint that can be pointed at any repository during a session. Convenient, and the riskier of the two, so prefer the scoped form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repo-as-one-prompt",
+      "q": "Turn a whole repository into one text file for a prompt",
+      "aka": [
+        "repo to text for llm",
+        "codebase as a single file",
+        "paste a repo into chatgpt",
+        "gitingest"
+      ],
+      "seealso": [
+        "repo-as-an-mcp-server",
+        "download-a-repo-without-git",
+        "repo-size-vs-clone-time"
+      ],
+      "variants": [
+        {
+          "when": "You need the code as context, not as a checkout",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "https://gitingest.com/<owner>/<repo>",
+              "n": "Swap github for gitingest in any repository URL. The web form skips files over 50 kB by default, so lockfiles and generated code drop out silently."
+            },
+            {
+              "c": "pip install gitingest && gitingest https://github.com/<owner>/<repo>",
+              "n": "The same thing locally, where you control the size limit."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "read-a-repo-in-vs-code-online",
+      "q": "Read a repository in VS Code without cloning it",
+      "aka": [
+        "vs code in the browser",
+        "github1s",
+        "browse code in an editor online",
+        "open repo in web editor"
+      ],
+      "seealso": [
+        "edit-on-github",
+        "codespaces",
+        "download-single-file"
+      ],
+      "variants": [
+        {
+          "when": "Reading only",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "https://github1s.com/<owner>/<repo>",
+              "n": "Insert 1s after github. Read-only, and a private repository needs a token pasted into the status bar."
+            },
+            {
+              "c": "Press . on any repository page",
+              "n": "GitHub's own editor at github.dev, which can write. There is no compute behind it, so no terminal and no builds."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fetch-every-pull-request-ref",
+      "q": "Fetch every pull request branch, including closed ones",
+      "aka": [
+        "get all prs locally",
+        "refs/pull refspec",
+        "checkout any pull request",
+        "list every pr ref"
+      ],
+      "seealso": [
+        "branch-from-a-pull-request",
+        "check-out-a-pull-request-diff-only",
+        "check-a-pr-is-safe"
+      ],
+      "variants": [
+        {
+          "when": "You want them all, once",
+          "danger": "safe",
+          "undo": "git config --unset-all remote.origin.fetch, then re-add the default refspec",
+          "cmds": [
+            {
+              "c": "git config --add remote.origin.fetch '+refs/pull/*/head:refs/remotes/origin/pr/*'",
+              "n": "Then git fetch origin. GitHub never deletes a pull request ref, so this list only ever grows."
+            },
+            {
+              "c": "git ls-remote origin 'refs/pull/<number>/*'",
+              "n": "Check what exists first. The /head ref is always there; the /merge ref is a simulated merge GitHub creates only when it can, and it is missing far more often than people expect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gh-api-sends-strings-not-numbers",
+      "q": "gh api rejects my value or ignores my boolean",
+      "aka": [
+        "gh api -f vs -F",
+        "gh api true not working",
+        "gh api sends string",
+        "gh api type coercion"
+      ],
+      "seealso": [
+        "github-api",
+        "gh-api-pagination",
+        "github-cli-config"
+      ],
+      "variants": [
+        {
+          "when": "A boolean or number flag appears to do nothing",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "gh api --method PATCH repos/{owner}/{repo} -F has_issues=false",
+              "n": "-F types the value. -f would send the string \"false\", which endpoints reject or ignore, and that is almost always the cause."
+            },
+            {
+              "c": "gh api -X GET search/issues -f q='is:open'",
+              "n": "Any -f or -F also flips the request to POST, so a GET endpoint needs -X GET spelled out."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "required-check-stuck-pending",
+      "q": "A required check sits pending forever and blocks the merge",
+      "aka": [
+        "expected waiting for status to be reported",
+        "required check never runs",
+        "path filter blocks pull request",
+        "skipped check blocks merge"
+      ],
+      "seealso": [
+        "actions-conditionals",
+        "branch-protection",
+        "github-actions-start"
+      ],
+      "variants": [
+        {
+          "when": "The workflow is skipped by a paths or branches filter",
+          "danger": "safe",
+          "undo": "Remove the second workflow if you change approach",
+          "cmds": [
+            {
+              "c": "A skipped workflow is not a passed workflow",
+              "n": "GitHub leaves the check Pending forever and no timeout converts it. This is by design and catches almost everyone."
+            },
+            {
+              "c": "Add a second workflow with the same job name on the complementary paths that exits 0",
+              "n": "The required check then always reports, whichever files changed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "codespaces-costs-more-than-expected",
+      "q": "My Codespaces bill is higher than the hours I worked",
+      "aka": [
+        "codespaces core hours",
+        "codespace quota used up fast",
+        "codespaces billing surprise",
+        "why is my codespace expensive"
+      ],
+      "seealso": [
+        "codespaces",
+        "actions-billing",
+        "codespaces-dotfiles"
+      ],
+      "variants": [
+        {
+          "when": "The quota disappeared faster than wall-clock time",
+          "danger": "safe",
+          "undo": "Nothing to undo, but stop idle codespaces to slow the accrual",
+          "cmds": [
+            {
+              "c": "The free quota is core-hours, not hours",
+              "n": "120 core-hours is 60 hours on a 2-core machine and 15 hours on an 8-core one. The docs column reads Compute time, which is why people read it as wall-clock."
+            },
+            {
+              "c": "gh codespace stop -c <codespace-name>",
+              "n": "Closing the browser tab does not stop a codespace. It keeps billing until the idle timeout, 30 minutes by default."
+            },
+            {
+              "c": "gh codespace list",
+              "n": "An asterisk after the branch means uncommitted or unpushed work. Deleting a codespace does not reduce this month's storage bill, only the rate it accrues."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "merge-queue-never-merges",
+      "q": "The merge queue accepts my pull request but never merges it",
+      "aka": [
+        "merge queue stuck",
+        "merge_group trigger",
+        "merge queue checks never run",
+        "queued forever github"
+      ],
+      "seealso": [
+        "required-check-stuck-pending",
+        "branch-protection",
+        "github-actions-start"
+      ],
+      "variants": [
+        {
+          "when": "Required checks never start once the pull request enters the queue",
+          "danger": "safe",
+          "undo": "Remove the trigger if you stop using a merge queue",
+          "cmds": [
+            {
+              "c": "on:\n  merge_group:",
+              "n": "Every workflow whose check is required must listen for this event. Without it GitHub does not trigger the checks at all and the queue waits indefinitely."
+            },
+            {
+              "c": "gh-readonly-queue/<base-branch>",
+              "n": "The temporary branches the queue builds on. Seeing them is a sign the queue is working, not a stray branch to delete."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "readme-anchor-breaks-off-github",
+      "q": "My README anchor link works on GitHub but breaks everywhere else",
+      "aka": [
+        "user-content prefix",
+        "readme anchor not working elsewhere",
+        "heading link broken on npm",
+        "markdown anchor id changed"
+      ],
+      "seealso": [
+        "readme-structure",
+        "readme-not-rendering",
+        "link-to-a-line-in-a-readme"
+      ],
+      "variants": [
+        {
+          "when": "The link works when you click it, and fails for a crawler or another host",
+          "danger": "safe",
+          "undo": "Nothing to undo",
+          "cmds": [
+            {
+              "c": "GitHub rewrites every id you write to user-content-<your-id>",
+              "n": "So <a name=\"install\"> becomes name=\"user-content-install\". On github.com the client-side script still resolves your original link, which is why it looks fine to you."
+            },
+            {
+              "c": "Link to the heading GitHub generated instead",
+              "n": "Spaces become single hyphens, and a stripped ampersand leaves its spacing behind, so C++ & C# becomes #c--c with two hyphens."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "readme-callout-colours",
+      "q": "Add a coloured note or warning box to a README",
+      "aka": [
+        "github alerts",
+        "note tip important warning caution",
+        "coloured callout markdown",
+        "admonition github"
+      ],
+      "seealso": [
+        "readme-structure",
+        "readme-images",
+        "readme-badges"
+      ],
+      "variants": [
+        {
+          "when": "You want the blue, green, purple, amber or red box",
+          "danger": "safe",
+          "undo": "Delete the marker line",
+          "cmds": [
+            {
+              "c": "> [!NOTE]\n> Context worth knowing.",
+              "n": "The five types are NOTE blue, TIP green, IMPORTANT purple, WARNING amber and CAUTION red. Keywords are case-insensitive."
+            },
+            {
+              "c": "The marker must be the first line of the blockquote",
+              "n": "And alerts do not nest: inside a details block, a list item or another blockquote they silently degrade to plain text, which is why the popular collapsible-with-a-callout pattern does not work."
+            }
+          ]
+        }
       ]
     }
   ]
