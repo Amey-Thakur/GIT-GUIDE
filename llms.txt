@@ -1,0 +1,26 @@
+# Git Guide
+
+> Every Git and GitHub answer in one place. Ask in plain language, get the
+> exact commands with danger levels and undo.
+
+Licence: CC BY 4.0, attribution required
+Repository created: 7 August 2026
+
+## What is in this repository
+
+- docs, 52 files
+- Git and GitHub Guide.pdf
+- SHARE.md
+
+## Subject terms
+
+cheatsheet, developer-tools, documentation, education, git, git-cheatsheet,
+git-commands, git-guide, git-tutorial, github, github-pages, guide,
+learn-git, open-source, tutorial, version-control
+
+## Where this sits
+
+- This repository: https://github.com/Amey-Thakur/GIT-GUIDE
+- Project page: https://amey-thakur.github.io/GIT-GUIDE/
+- Author: https://github.com/Amey-Thakur
+- Research notes and reflections: https://amey-thakur.github.io/

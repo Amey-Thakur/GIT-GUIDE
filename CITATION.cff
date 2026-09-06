@@ -32,3 +32,7 @@ keywords:
   - learn-git
   - developer-tools
   - education
+identifiers:
+  - type: other
+    value: "2026-08-07"
+    description: "Date this repository was created on GitHub."
