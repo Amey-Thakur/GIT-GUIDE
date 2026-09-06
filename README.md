@@ -149,6 +149,13 @@ URL parameters that change what a page gives you, the one-word hostname swaps th
 
 Forty-seven of its answers live here too, searchable alongside everything else, because a question about GitHub is still a question you arrive at from the same search box.
 
+> [!IMPORTANT]
+> **Both repositories in one document: [Git and GitHub Guide](Git%20and%20GitHub%20Guide.pdf)**
+>
+> A companion that indexes this guide and [GITHUB-TRICKS](https://github.com/Amey-Thakur/GITHUB-TRICKS) together, so the answers and the tricks read as one path rather than two repositories you have to know about separately. Distinct from the [23 page guide PDF](https://amey-thakur.github.io/GIT-GUIDE/assets/git-guide.pdf) above, which is generated from this repository's own data.
+>
+> [![Read it here](https://img.shields.io/badge/Read-in%20the%20browser-0969DA?style=flat&logo=readthedocs&logoColor=white)](Git%20and%20GitHub%20Guide.pdf) [![Download the PDF](https://img.shields.io/badge/Download-the%20PDF-EC1C24?style=flat&logo=adobeacrobatreader&logoColor=white)](https://github.com/Amey-Thakur/GIT-GUIDE/raw/main/Git%20and%20GitHub%20Guide.pdf)
+
 <br>
 
 ## Ask, answer, build on it
