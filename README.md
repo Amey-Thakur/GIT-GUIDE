@@ -117,7 +117,7 @@ Every answer carries one of three danger levels.
 - **Real situations, not abstract syntax.** Answers split by the case you are in: not pushed, already pushed, teammates have it.
 - **Somewhere to practise.** A working Git engine in the browser: branch, merge, rebase, and recover a commit you thought you had destroyed, on a graph that redraws as you type.
 - **No dependencies, no ads, no tracking.** The site makes zero external requests, so it loads instantly and works behind corporate proxies.
-- **It genuinely works offline.** A service worker caches the finder and all 1000 answers on your first visit, so the guide opens on a plane, on a train, or on a machine with no network at all. It is installable as an app too.
+- **It genuinely works offline.** A service worker caches the finder and all 1,047 answers on your first visit, so the guide opens on a plane, on a train, or on a machine with no network at all. It is installable as an app too.
 
 > [!CAUTION]
 > The reflog is the safety net under almost every Git mistake, and it only holds commits. Work you have never committed is not in Git at all, so `git restore`, `git checkout -- <file>` and `git clean -fd` have no way back from anywhere. Committing early is the cheapest insurance in software.
