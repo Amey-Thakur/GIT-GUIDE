@@ -6,7 +6,7 @@
   <text x="82" y="306" font-size="42" font-weight="600" fill="#e9e6df">answer in one place.</text>
   <text x="82" y="360" font-size="24" fill="#9b968b">Every command carries how much it can cost you,</text>
   <text x="82" y="394" font-size="24" fill="#9b968b">and its own way back.</text>
-  <text x="82" y="448" font-size="21" fill="#e9e6df"><tspan font-weight="700" fill="#63b378">1000</tspan> answers<tspan fill="#9b968b">  ·  </tspan><tspan font-weight="700" fill="#e5776b">500</tspan> errors decoded<tspan fill="#9b968b">  ·  </tspan><tspan font-weight="700" fill="#d3a53a">23</tspan> lessons</text>
+  <text x="82" y="448" font-size="21" fill="#e9e6df"><tspan font-weight="700" fill="#63b378">1047</tspan> answers<tspan fill="#9b968b">  ·  </tspan><tspan font-weight="700" fill="#e5776b">500</tspan> errors decoded<tspan fill="#9b968b">  ·  </tspan><tspan font-weight="700" fill="#d3a53a">23</tspan> lessons</text>
   <text x="82" y="486" font-size="21" fill="#e9e6df">works offline<tspan fill="#9b968b">  ·  </tspan>no sign-in<tspan fill="#9b968b">  ·  </tspan>no trackers<tspan fill="#9b968b">  ·  </tspan><tspan fill="#f05133" font-weight="700">MIT</tspan></text>
   <rect x="690" y="176" width="510" height="66" rx="14" fill="#1c1a18" stroke="#f05133" stroke-width="2"/>
   <text x="716" y="218" font-size="25" fill="#e9e6df">undo the last commit</text>

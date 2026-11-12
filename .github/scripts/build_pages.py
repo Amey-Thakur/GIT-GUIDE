@@ -9,6 +9,7 @@ Date: 2026-08-07
 """
 
 import json
+import re
 from html import escape
 from pathlib import Path
 
@@ -200,7 +201,22 @@ def main():
     if answers_page.exists():
         cards = "\n".join(answer_card(i) for i in intents_full)
         replace_block(answers_page, AN_START, AN_END, cards)
-        print(f"answers.html: {len(intents_full)} answers rendered")
+        # The page title and the share description state the count, and both
+        # were typed by hand. They said 1000 while the body rendered 1,047,
+        # which is the one number a search result shows. Derive them from the
+        # same data the cards come from, as everything else here is.
+        head = answers_page.read_text(encoding="utf-8")
+        shown = f"{len(intents_full):,}"
+        head, n_title = re.subn(r"(<title>Every Git answer: )[\d,]+( questions)",
+                                rf"\g<1>{shown}\g<2>", head, count=1)
+        head, n_desc = re.subn(r'(og:description" content=")[\d,]+( questions)',
+                               rf"\g<1>{shown}\g<2>", head, count=1)
+        if not (n_title and n_desc):
+            raise SystemExit("build_pages: answers.html head no longer "
+                             "carries the count where this expects it")
+        answers_page.write_text(head, encoding="utf-8")
+        print(f"answers.html: {len(intents_full)} answers rendered, "
+              f"head states {shown}")
 
     quizzes = json.loads((DOCS / "data" / "quizzes.json").read_text(encoding="utf-8"))["quizzes"]
     for quiz in quizzes:
